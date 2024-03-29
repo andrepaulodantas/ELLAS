@@ -33,7 +33,7 @@ export default function ComponentesPage() {
           </div>
           <div className="flex flex-col items-start justify-start w-[70%] md:w-full gap-9">
             <div className="flex flex-col w-[77%] gap-5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
-              <div className="flex flex-col items-start justify-center w-full sm:w-full gap-[11px] p-5 bg-white-A700 shadow-xs rounded-[20px]">
+              <div className="flex flex-col items-start justify-center w-full sm:w-full gap-[11px] p-5 bg-white-A700 shadow-sm rounded-[20px]">
                 <div className="flex flex-row justify-start items-center gap-[13px]">
                   <Img src="images/img_iconx18_red_300_03.svg" alt="políticas_one" className="h-[18px] w-[18px]" />
                   <Heading as="h2" className="!text-red-300_03">
@@ -44,7 +44,7 @@ export default function ComponentesPage() {
                   Que tipos de políticas, processos ou práticas de gênero existem na América Latina?
                 </Text>
               </div>
-              <div className="flex flex-col items-start justify-center w-full sm:w-full gap-[11px] p-5 bg-red-50_01 shadow-xs rounded-[20px]">
+              <div className="flex flex-col items-start justify-center w-full sm:w-full gap-[11px] p-5 bg-red-50_01 shadow-sm rounded-[20px]">
                 <div className="flex flex-row justify-start items-center gap-[13px]">
                   <Img src="images/img_iconx18_red_300_03.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
                   <Heading as="h3" className="!text-red-300_03">

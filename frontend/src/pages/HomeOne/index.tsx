@@ -19,7 +19,7 @@ export default function HomeOnePage() {
       </Helmet>
       <div className="flex flex-col items-center justify-start w-full bg-white-A700">
         <header className="flex justify-center items-center w-full">
-          <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-sm">
+          <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
             <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 md:px-5 max-w-[1023px]">
               <Img
                 src="images/img_logo_ellas_portal_prancheta.png"
@@ -27,31 +27,31 @@ export default function HomeOnePage() {
                 className="w-[13%] md:w-full md:h-[55px] object-cover"
               />
               <div className="flex flex-row md:flex-col justify-between items-center w-[69%] md:w-full md:gap-10">
-                <ul className="flex flex-row sm:flex-col justify-between items-center w-auto sm:gap-10">
+                <ul className="flex flex-row justify-between items-center w-[60%] md:w-full gap-5">
                   <li>
-                    <a href="#">
+                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
                       <Heading as="p">Início</Heading>
-                    </a>
+                    </button>
                   </li>
                   <li>
-                    <a href="#" className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Text />
-                    </a>
+                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                      <Heading as="p">Sobre</Heading>
+                    </button>
                   </li>
                   <li>
-                    <a href="#" className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Text />
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
+                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
                       <Heading as="p">Apoie ELLAS</Heading>
-                    </a>
+                    </button>
                   </li>
                   <li>
-                    <a href="#" className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Text />
-                    </a>
+                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                      <Heading as="p">Contato</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                      <Heading as="p">FAQ</Heading>
+                    </button>
                   </li>
                 </ul>
                 <Button
@@ -77,25 +77,68 @@ export default function HomeOnePage() {
                 />
                 <div className="flex flex-row justify-start w-[89%] h-full left-0 bottom-0 top-0 p-[37px] m-auto sm:p-5 bg-gradient absolute">
                   <div className="flex flex-col items-end justify-start w-[60%] mt-[49px] ml-[3px]">
-                    <Heading size="2xl" as="h1" className="w-[73%] mr-[53px] md:mr-5 !leading-10">
+                    <Heading size="2xl" as="h1" className="w-[73%] mr-[120px] md:mr-5 !leading-10">
                       Dados abertos para Equidade de Gênero em Ciências e Tecnologia na América Latina
-                    </Heading>
-                    <div className="flex flex-row justify-between w-[41%] md:w-full mt-3 mr-[402px] md:mr-5">
-                      <Button color="white_A700_99" shape="circle" className="w-[38px] mb-3.5">
-                        <Img src="images/img_botao_icone_38px.svg" />
-                      </Button>
                       <Button
                         size="sm"
                         shape="round"
                         rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
-                        className="mt-3.5 gap-2.5 font-medium min-w-[138px]"
+                        className="mt-3.5 gap-2.5 font-medium min-w-[38px]"
                       >
                         Saiba mais
                       </Button>
-                    </div>
-                  </div>
+                      <div className="flex flex-row justify-start w-full mx-2.5 md:px-5 max-w-[723px]">
+                          <div className="flex flex-row md:flex-col justify-start items-center w-full gap-2.5 p-0 md:gap-5 bg-white-A700 rounded-[29px] m-3">
+                            <div className="flex flex-row sm:flex-col justify-start items-center w-[80%] md:w-full gap-2 sm:gap-5">
+                              <div className="flex flex-row justify-start items-center w-[45%] sm:w-full gap-5 p-[11px]">
+                                <Img
+                                  src="images/img_iconx18_1.svg"
+                                  alt="iconxeighteen"
+                                  className="h-[18px] w-[18px] ml-[3px]"
+                                />
+                                <Text as="p" className="!text-blue_gray-300_01">
+                                  Escolha uma Categoria
+                                </Text>
+                                <Img
+                                  src="images/img_iconx18_2.svg"
+                                  alt="iconxeighteen"
+                                  className="h-[18px] w-[18px] mr-[3px]"
+                                />
+                              </div>
+                              <Text size="5xl" as="p" className="!text-blue_gray-300_01 !font-normal">
+                                |
+                              </Text>
+                              <div className="flex flex-row justify-start items-center w-[52%] sm:w-full gap-[21px] p-[11px]">
+                                <Text as="p" className="ml-[3px] !text-blue_gray-300_01">
+                                  O que deseja perguntar aos dados?
+                                </Text>
+                                <Img
+                                  src="images/img_iconx18_2.svg"
+                                  alt="iconxeighteen"
+                                  className="h-[18px] w-[18px] mr-[3px]"
+                                />
+                              </div>
+                            </div>
+                            <Button
+                              color="red_300_03"
+                              size="sm"
+                              shape="round"
+                              rightIcon={<Img src="images/img_iconx18_white_a700_18x18.svg" alt="iconx18" />}
+                              className="mr-1 gap-2.5 font-medium min-w-[131px]"
+                            >
+                              Pesquisar
+                            </Button>
+                          </div>
+                        </div> 
+                    </Heading>                    
+                    <div className="flex flex-row justify-between w-[50%] md:w-full mr-[-800px] md:mr-0">
+                      <Button color="white_A700_9" shape="circle" className="w-[508px] mt-[-100px] md:mt-0">
+                        <Img src="images/img_women_home01_1.png" />
+                      </Button>                      
+                    </div> 
+                  </div>                  
                 </div>
-                <div className="w-[85%]">
+                {/* <div className="w-[100%]">
                   <Slider
                     autoPlay
                     autoPlayInterval={2000}
@@ -113,7 +156,7 @@ export default function HomeOnePage() {
                     }}
                     ref={sliderRef2}
                     className="right-[3%] bottom-0 top-0 m-auto absolute"
-                    items={[...Array(9)].map(() => (
+                    items={[...Array(3)].map(() => (
                       <React.Fragment key={Math.random()}>
                         <div className="flex flex-row justify-start w-full mx-2.5 md:px-5 max-w-[723px]">
                           <div className="flex flex-row md:flex-col justify-start items-center w-full gap-2.5 p-2 md:gap-5 bg-white-A700 rounded-[29px]">
@@ -161,7 +204,7 @@ export default function HomeOnePage() {
                       </React.Fragment>
                     ))}
                   />
-                </div>
+                </div> */}
               </div>
               <Heading size="2xl" as="h2" className="mt-[47px] text-center">
                 Explore os dados
@@ -255,7 +298,7 @@ export default function HomeOnePage() {
                           Selecione uma das perguntas mais pesquisadas para começar.
                         </Text>
                         <div className="w-full gap-12 grid-cols-2 md:grid-cols-1 md:gap-5 grid">
-                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-xs rounded-[20px]">
+                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
                             <div className="flex flex-row justify-start items-center gap-[13px]">
                               <Img
                                 src="images/img_iconx18_red_300_03.svg"
@@ -270,7 +313,7 @@ export default function HomeOnePage() {
                               Que tipos de políticas, processos ou práticas de gênero existem na América Latina?
                             </Text>
                           </div>
-                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-xs rounded-[20px]">
+                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
                             <div className="flex flex-row justify-start items-center gap-[13px]">
                               <Img
                                 src="images/img_iconx18_deep_orange_200.svg"
@@ -285,7 +328,7 @@ export default function HomeOnePage() {
                               Qual o gênero social do público-alvo atendido pelas iniciativas na América Latina?
                             </Text>
                           </div>
-                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-xs rounded-[20px]">
+                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
                             <div className="flex flex-row justify-start items-center gap-[13px]">
                               <Img
                                 src="images/img_iconx18_red_300_03.svg"
@@ -301,7 +344,7 @@ export default function HomeOnePage() {
                               nas áreas STEM?
                             </Text>
                           </div>
-                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-xs rounded-[20px]">
+                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
                             <div className="flex flex-row justify-start items-center gap-[13px]">
                               <Img
                                 src="images/img_iconx18_pink_300.svg"
@@ -316,7 +359,7 @@ export default function HomeOnePage() {
                               Quais são os tipos de impacto dos fatores contextuais nas instituições Latino-Americanas?
                             </Text>
                           </div>
-                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-xs rounded-[20px]">
+                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
                             <div className="flex flex-row justify-start items-center gap-[13px]">
                               <Img
                                 src="images/img_iconx18_deep_orange_200.svg"
@@ -331,7 +374,7 @@ export default function HomeOnePage() {
                               Quais iniciativas já foram implementadas ou ainda estão em fase de concepção?
                             </Text>
                           </div>
-                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-xs rounded-[20px]">
+                          <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
                             <div className="flex flex-row justify-start items-center gap-[13px]">
                               <Img
                                 src="images/img_iconx18_pink_300.svg"
@@ -397,7 +440,7 @@ export default function HomeOnePage() {
                         <Text size="s" as="p" className="w-[82%] !text-blue_gray-300_01 text-right">
                           Fonte: Portal ELLAS
                         </Text>
-                        <Img src="images/img_elementos.svg" alt="elementos_one" className="h-[16px] w-[16px] mt-0.5" />
+                        <Img src="images/img_mask_group.png" alt="elementos_one" className="h-[16px] w-[16px] mt-0.5" />
                       </div>
                     </div>
                     <Button
@@ -585,7 +628,7 @@ export default function HomeOnePage() {
                           className="flex gap-[47px] mx-[23.5px] md:ml-0"
                           items={[...Array(9)].map(() => (
                             <React.Fragment key={Math.random()}>
-                              <div className="flex flex-col items-center justify-start pb-[21px] gap-[19px] mx-[23.5px] sm:pb-5 sm:mx-5 bg-white-A700 shadow-xs rounded-[20px]">
+                              <div className="flex flex-col items-center justify-start pb-[21px] gap-[19px] mx-[23.5px] sm:pb-5 sm:mx-5 bg-white-A700 shadow-sm rounded-[20px]">
                                 <Img
                                   src="images/img_mask_group.png"
                                   alt="image"

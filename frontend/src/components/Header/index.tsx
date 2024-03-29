@@ -8,7 +8,7 @@ interface Props {
 export default function Header({ ...props }: Props) {
   return (
     <header {...props}>
-      <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-sm">
+      <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
         <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 md:px-5 max-w-[1023px]">
           <Img
             src="images/img_logo_ellas_portal_prancheta.png"

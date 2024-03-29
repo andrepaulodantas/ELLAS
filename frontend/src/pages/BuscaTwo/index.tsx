@@ -19,7 +19,7 @@ export default function BuscaTwoPage() {
       </Helmet>
       <div className="flex flex-col items-center justify-start w-full bg-red-50_01">
         <header className="flex justify-center items-center w-full">
-          <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-sm">
+          <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
             <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 md:px-5 max-w-[1023px]">
               <Img
                 src="images/img_logo_ellas_portal_prancheta.png"
@@ -185,19 +185,16 @@ export default function BuscaTwoPage() {
                         </Text>
                         <RadioGroup name="status1" className="flex flex-col mt-3.5">
                           <Radio
-                            shape="square"
                             value="ambos1"
                             label="Ambos"
                             className="mr-[62px] pl-1.5 gap-1.5 py-[3px] md:mr-5 text-gray-900"
                           />
                           <Radio
-                            shape="square"
                             value="ativo1"
                             label="Ativo"
                             className="mt-[15px] mr-[75px] pl-1.5 gap-1.5 py-[3px] md:mr-5 text-blue_gray-300_01"
                           />
                           <Radio
-                            shape="square"
                             value="inativo1"
                             label="Inativo"
                             className="mt-[15px] mr-16 pl-1.5 gap-1.5 py-[3px] md:mr-5 text-blue_gray-300_01"

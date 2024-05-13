@@ -1,5 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { Text, Img, Heading, Button, Slider } from "../../components";
 import AliceCarousel, { EventObject, DotsItem } from "react-alice-carousel";
 
@@ -10,6 +11,11 @@ export default function HomeOnePage() {
   const sliderRef1 = React.useRef<AliceCarousel>(null);
   const [sliderState2, setSliderState2] = React.useState(0);
   const sliderRef2 = React.useRef<AliceCarousel>(null);
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleNavigation = (path: string) => () => {
+    navigate(path);
+  };
 
   return (
     <>
@@ -29,27 +35,27 @@ export default function HomeOnePage() {
               <div className="flex flex-row md:flex-col justify-between items-center w-[69%] md:w-full md:gap-10">
                 <ul className="flex flex-row justify-between items-center w-[60%] md:w-full gap-5">
                   <li>
-                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                    <button onClick={handleNavigation('/')} className="cursor-pointer">
                       <Heading as="p">Início</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                    <button onClick={handleNavigation('/sobre')} className="cursor-pointer">
                       <Heading as="p">Sobre</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                    <button onClick={handleNavigation('/apoie-ellas')} className="cursor-pointer">
                       <Heading as="p">Apoie ELLAS</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                    <button onClick={handleNavigation('/contato')} className="cursor-pointer">
                       <Heading as="p">Contato</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={(e) => e.preventDefault()} className="cursor-pointer">
+                    <button onClick={handleNavigation('/faq')} className="cursor-pointer">
                       <Heading as="p">FAQ</Heading>
                     </button>
                   </li>
@@ -57,10 +63,10 @@ export default function HomeOnePage() {
                 <Button
                   size="sm"
                   shape="round"
-                  rightIcon={<Img src="images/img_iconx18.svg" alt="iconx18" />}
-                  className="gap-2.5 font-medium min-w-[106px]"
+                  rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
+                  onClick={handleNavigation('/fazerloginone')} // Navigate to FazerLoginOne
                 >
-                  Entrar
+                  Fazer Login
                 </Button>
               </div>
             </div>
@@ -84,6 +90,7 @@ export default function HomeOnePage() {
                         shape="round"
                         rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
                         className="mt-3.5 gap-2.5 font-medium min-w-[38px]"
+                        onClick={handleNavigation('/sobre')} // Navigate to Sobre
                       >
                         Saiba mais
                       </Button>
@@ -520,6 +527,7 @@ export default function HomeOnePage() {
                     shape="round"
                     rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
                     className="mt-6 gap-2.5 font-medium min-w-[138px] sm:min-w-full"
+                    onClick={handleNavigation('/sobre')} // Navigate to Sobre
                   >
                     Saiba mais
                   </Button>

@@ -1,20 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Img, Heading, Text } from "../components"; // Ajuste os imports conforme seu projeto
+import { Text, Img, Heading, Button, Slider } from "../../components";
 
-const HomePage: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  };
-
+const SobrePage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <header className="w-full p-3 bg-white-A700 shadow-xs fixed top-0 left-0 z-10">
@@ -23,30 +11,16 @@ const HomePage: React.FC = () => {
           <nav>
             <ul className="flex items-center space-x-4">
               <li><Link to="/" className="text-blue-700 hover:text-blue-900"><Heading as="p">Início</Heading></Link></li>
-              {isLoggedIn ? (
-                <li><Button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">Logout</Button></li>
-              ) : (
-                <li><Link to="/login"><Button className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded">Login</Button></Link></li>
-              )}
             </ul>
           </nav>
         </div>
       </header>
-      <main className="pt-20 p-5 w-full flex flex-col items-center justify-start">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
-          <Link to="/buscaone" className="p-6 bg-blue-100 hover:bg-blue-200 transition duration-300 ease-in-out rounded-lg shadow-lg text-center">
-            <Heading as="h3">Busca One</Heading>
-            <Text>Descrição da Busca One.</Text>
-          </Link>
-          <Link to="/buscatwo" className="p-6 bg-green-100 hover:bg-green-200 transition duration-300 ease-in-out rounded-lg shadow-lg text-center">
-            <Heading as="h3">Busca Two</Heading>
-            <Text>Descrição da Busca Two.</Text>
-          </Link>
-          <Link to="/buscatwoone" className="p-6 bg-red-100 hover:bg-red-200 transition duration-300 ease-in-out rounded-lg shadow-lg text-center">
-            <Heading as="h3">Busca Two One</Heading>
-            <Text>Descrição da Busca Two One.</Text>
-          </Link>
-        </div>
+      <main className="pt-20 p-5 w-full flex flex-col items-center justify-start text-center">
+        <Heading as="h1" size="xl" className="text-2xl font-bold my-5">Sobre Nós</Heading>
+        <Text className="mb-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</Text>
+        <Text className="mb-5">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.</Text>
+        <Img src="images/about_image.jpg" alt="About Us" className="max-w-md rounded-lg shadow-md"/>
+        <Text className="mt-5">Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi.</Text>
       </main>
       <div className="flex flex-row justify-center w-full">
                 <div className="flex flex-col items-center justify-start w-full">
@@ -163,4 +137,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default SobrePage;

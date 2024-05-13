@@ -1,17 +1,21 @@
 import React from "react";
 import { useRoutes } from "react-router-dom";
-import Home from "pages/Home";
-import NotFound from "pages/NotFound";
-import FazerLoginOne from "pages/FazerLoginOne";
-import HomeOne from "pages/HomeOne";
-import FazerLoginTwo from "pages/FazerLoginTwo";
-import FazerLoginThreeOne from "pages/FazerLoginThreeOne";
-import FazerLoginThree from "pages/FazerLoginThree";
-import BuscaOne from "pages/BuscaOne";
-import BuscaTwo from "pages/BuscaTwo";
-import BuscaTwoOne from "pages/BuscaTwoOne";
-import Estilos from "pages/Estilos";
-import Componentes from "pages/Componentes";
+import Home from "./pages/Home";
+import Sobre from "./pages/Sobre/Sobre";
+import NotFound from "./pages/NotFound";
+import FazerLoginOne from "./pages/FazerLoginOne";
+import HomeOne from "./pages/HomeOne/HomeOne";
+import FazerLoginTwo from "./pages/FazerLoginTwo";
+import FazerLoginThreeOne from "./pages/FazerLoginThreeOne";
+import FazerLoginThree from "./pages/FazerLoginThree";
+import BuscaOne from "./pages/BuscaOne";
+import BuscaTwo from "./pages/BuscaTwo";
+import BuscaTwoOne from "./pages/BuscaTwoOne";
+import Estilos from "./pages/Estilos";
+import Componentes from "./pages/Componentes";
+import ApoieEllas from "./pages/ApoieEllas/ApoieEllas"; // Adicionado
+import Contato from "./pages/Contato/Contato"; // Adicionado
+import Faq from "./pages/FAQ"; // Adicionado
 
 const ProjectRoutes = () => {
   let element = useRoutes([
@@ -19,11 +23,19 @@ const ProjectRoutes = () => {
     { path: "*", element: <NotFound /> },
     {
       path: "/",
-      element: <FazerLoginOne />,
+      element: <HomeOne />,
+    },
+    {
+      path: "sobre",
+      element: <Sobre />,
     },
     {
       path: "homeone",
       element: <HomeOne />,
+    },
+    {
+      path: "fazerloginone",
+      element: <FazerLoginOne />,
     },
     {
       path: "fazerlogintwo",
@@ -56,6 +68,18 @@ const ProjectRoutes = () => {
     {
       path: "componentes",
       element: <Componentes />,
+    },
+    {
+      path: "apoie-ellas", // Adicionado
+      element: <ApoieEllas />,
+    },
+    {
+      path: "contato", // Adicionado
+      element: <Contato />,
+    },
+    {
+      path: "faq", // Adicionado
+      element: <Faq />,
     },
   ]);
 

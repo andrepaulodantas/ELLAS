@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useState } from 'react';
 import { Helmet } from "react-helmet";
 import { Button, Img, Text, Input, Heading } from "../../components";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-export default function FazerLoginOnePage() {
+const FazerLoginOnePage: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3001/api/login', { email, senha: password });
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Falha no login. Verifique suas credenciais.');
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -72,22 +99,27 @@ export default function FazerLoginOnePage() {
               <Text as="p" className="w-[58%] mt-2.5 !text-gray-900 text-center !leading-5">
                 Olá, insira seus dados para entrar em sua conta
               </Text>
-              <div className="flex flex-col items-end justify-start w-full mt-[22px] mb-[11px] gap-[26px] md:px-5 max-w-[289px]">
+              <form onSubmit={handleSubmit} className="flex flex-col items-end justify-start w-full mt-[22px] mb-[11px] gap-[26px] md:px-5 max-w-[289px]">
                 <Input
                   shape="round"
                   name="email"
                   placeholder="E-mail"
                   prefix={<Img src="images/img_iconx18_blue_gray_300_01.svg" alt="iconx18" />}
                   className="w-full gap-[15px] border-blue_gray-100_02"
+                  value={email}
+                  onChange={handleEmailChange}
                 />
                 <Input
                   shape="round"
-                  name="formsenha_one"
+                  name="password"
                   placeholder="Senha"
                   prefix={<Img src="images/img_iconx18_blue_gray_300_01_18x18.svg" alt="iconx18" />}
                   suffix={<Img src="images/img_iconx18_18x18.svg" alt="iconx18" />}
                   className="w-full sm:w-full gap-[15px] border-blue_gray-100_02"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
+                {error && <Text size="xl" as="p" className="!text-red-300_03 text-center">{error}</Text>}
                 <Text size="xl" as="p" className="!text-red-300_03 text-center">
                   Esqueci minha senha
                 </Text>
@@ -97,18 +129,21 @@ export default function FazerLoginOnePage() {
                     shape="round"
                     rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
                     className="mb-px gap-2.5 sm:px-5 font-medium min-w-[166px]"
+                    type="submit"
                   >
                     Entrar
                   </Button>
-                  <Button size="sm" variant="outline" shape="round" className="min-w-[102px]">
+                  <Button size="sm" variant="outline" shape="round" className="min-w-[130px]">
                     Cadastre-se
                   </Button>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </>
   );
-}
+};
+
+export default FazerLoginOnePage;

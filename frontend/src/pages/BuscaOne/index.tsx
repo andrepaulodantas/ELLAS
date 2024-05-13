@@ -3,6 +3,8 @@ import { Helmet } from "react-helmet";
 import { Text, Img, Heading, Button, GoogleMap, Radio, RadioGroup, SelectBox } from "../../components";
 import { OptionProps } from "react-select";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
+import { Link } from "react-router-dom"; // Import Link
+
 
 const dropDownOptions = [
   { label: "Option1", value: "option1" },
@@ -31,9 +33,9 @@ export default function BuscaOnePage() {
                   <a href="#">
                     <Heading as="p">Início</Heading>
                   </a>
-                  <a href="#">
-                    <Text />
-                  </a>
+                  <Link to="/sobre" className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                    <Heading as="p">Sobre</Heading>
+                  </Link>
                   <a href="#">
                     <Text />
                   </a>

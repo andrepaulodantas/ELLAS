@@ -25,7 +25,7 @@ type InputProps = Omit<
     label: string;
     prefix: React.ReactNode;
     suffix: React.ReactNode;
-    onChange: Function;
+    onChange: (value: string) => void;
     shape: keyof typeof shapes;
     variant: keyof typeof variants;
     size: keyof typeof sizes;
@@ -43,7 +43,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       prefix,
       suffix,
       onChange,
-      shape = "",
+      shape = "round",
       variant = "fill",
       size = "xs",
       color = "white_A700",
@@ -52,22 +52,28 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-      if (onChange) onChange(e?.target?.value);
+      if (onChange) onChange(e.target.value);
     };
 
     return (
-      <>
-        <div
-          className={`${className} flex items-center justify-center border border-solid bg-white-A700 rounded-[10px] ${shapes[shape] || ""} ${variants[variant]?.[color as keyof (typeof variants)[typeof variant]] || variants[variant] || ""} ${sizes[size] || ""}`}
-        >
-          {!!label && label}
-          {!!prefix && prefix}
-          <input ref={ref} type={type} name={name} onChange={handleChange} placeholder={placeholder} {...restProps} />
-          {!!suffix && suffix}
-        </div>
-      </>
+      <div
+        className={`${className} flex items-center justify-center border border-solid ${shapes[shape]} ${variants[variant]?.[color]} ${sizes[size]}`}
+      >
+        {label && <span>{label}</span>}
+        {prefix && <span className="mr-2">{prefix}</span>}
+        <input
+          ref={ref}
+          type={type}
+          name={name}
+          onChange={handleChange}
+          placeholder={placeholder}
+          className="bg-transparent outline-none flex-1"
+          {...restProps}
+        />
+        {suffix && <span className="ml-2">{suffix}</span>}
+      </div>
     );
-  },
+  }
 );
 
 export { Input };

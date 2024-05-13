@@ -1,11 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button, Img, Text, Heading } from "./..";
 
 interface Props {
   className?: string;
 }
 
-export default function Header({ ...props }: Props) {
+const Header: React.FC<Props> = ({ ...props }) => {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    navigate(path);
+  };
+
+  const handleButtonClick = () => {
+    navigate('/fazerloginone');
+  };
+
   return (
     <header {...props}>
       <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
@@ -18,28 +30,28 @@ export default function Header({ ...props }: Props) {
           <div className="flex flex-row md:flex-col justify-between items-center w-[69%] md:w-full md:gap-10">
             <ul className="flex flex-row sm:flex-col justify-between items-center w-auto sm:gap-10">
               <li>
-                <a href="#">
+                <a href="/" onClick={handleNavigation('/')}>
                   <Heading as="p">Início</Heading>
                 </a>
               </li>
               <li>
-                <a href="#" className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                  <Text />
+                <a href="/sobre" onClick={handleNavigation('/sobre')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                  <Heading as="p">Sobre</Heading>
                 </a>
               </li>
               <li>
-                <a href="#" className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                  <Text />
-                </a>
-              </li>
-              <li>
-                <a href="#">
+                <a href="/apoie-ellas" onClick={handleNavigation('/apoie-ellas')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
                   <Heading as="p">Apoie ELLAS</Heading>
                 </a>
               </li>
               <li>
-                <a href="#" className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                  <Text />
+                <a href="/contato" onClick={handleNavigation('/contato')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                  <Heading as="p">Contato</Heading>
+                </a>
+              </li>
+              <li>
+                <a href="/faq" onClick={handleNavigation('/faq')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                  <Heading as="p">FAQ</Heading>
                 </a>
               </li>
             </ul>
@@ -48,6 +60,7 @@ export default function Header({ ...props }: Props) {
               shape="round"
               rightIcon={<Img src="images/img_iconx18.svg" alt="iconx18" />}
               className="gap-2.5 font-medium min-w-[106px]"
+              onClick={handleButtonClick} // Use handleButtonClick aqui
             >
               Entrar
             </Button>
@@ -56,4 +69,6 @@ export default function Header({ ...props }: Props) {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

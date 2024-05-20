@@ -1,19 +1,23 @@
-// src/queries.js
-const { session } = require('./neo4j');
+const neo4j = require('./neo4j');
 
-const getAllPersons = async () => {
-  const result = await session.run('MATCH (p:Person) RETURN p');
-  console.log("Result records:", result.records);
-  return result.records.map(record => {
-    const node = record.get('p');
-    console.log("Node properties:", node.properties);
-    return node.properties;
-  });
+async function customQuery() {
+  const session = neo4j.session();
+  const query = `
+    MATCH (n:Person)
+    RETURN n.name AS name, n.age AS age
+  `;
+
+  try {
+    const result = await session.run(query);
+    return result.records.map(record => ({
+      name: record.get('name'),
+      age: record.get('age')
+    }));
+  } finally {
+    await session.close();
+  }
+}
+
+module.exports = {
+  customQuery
 };
-
-const getPersonByName = async (name) => {
-  const result = await session.run('MATCH (p:Person {name: $name}) RETURN p', { name });
-  return result.records.map(record => record.get('p').properties);
-};
-
-module.exports = { getAllPersons, getPersonByName };

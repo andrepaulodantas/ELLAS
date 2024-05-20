@@ -17,6 +17,7 @@
     "neo4j-driver": "^5.20.0",
     "nodemon": "^3.1.0",
     "sequelize": "^6.37.1",
+    "sparql-http-client": "^3.0.0",
     "sqlite3": "^5.1.7"
   }
 }

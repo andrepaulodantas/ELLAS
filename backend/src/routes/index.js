@@ -1,12 +1,13 @@
-// src/routes/index.js
 const express = require('express');
-const pessoas = require('./pessoasRoute');
-const usuarios = require('./usuariosRoute');
-const neo4j = require('./neo4jRoute'); // Adicionar a rota do Neo4j
+const router = express.Router();
+const queriesRoute = require('./queriesRoute');
+const neo4jRoute = require('./neo4jRoute');
+const usuariosRoute = require('./usuariosRoute');
+const pessoasRoute = require('./pessoasRoute');
 
-module.exports = (app) => {
-  app.use(express.json());
-  app.use(pessoas);
-  app.use('/api', usuarios);
-  app.use('/api', neo4j); // Adicionar a rota do Neo4j com o prefixo /api
-};
+router.use('/queries', queriesRoute);
+router.use('/neo4j', neo4jRoute);
+router.use('/usuarios', usuariosRoute);
+router.use('/pessoas', pessoasRoute);
+
+module.exports = router;

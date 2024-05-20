@@ -1,16 +1,9 @@
-// src/neo4j.js
 const neo4j = require('neo4j-driver');
+const config = require('./config'); // Certifique-se de que o caminho está correto
 
 const driver = neo4j.driver(
-  'bolt://localhost:7687',
-  neo4j.auth.basic('neo4j', 'ellas2024')
+  config.neo4j.uri,
+  neo4j.auth.basic(config.neo4j.user, config.neo4j.password)
 );
 
-const session = driver.session();
-
-const closeConnection = async () => {
-  await session.close();
-  await driver.close();
-};
-
-module.exports = { session, closeConnection };
+module.exports = driver;

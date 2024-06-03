@@ -1,802 +1,366 @@
-const neo4j = require('../neo4j');
+const axios = require('axios');
 
-async function queryPoliciesCountries(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (policy:Person)
-    RETURN policy.Título_da_Publicação AS policyName, policy.COUNTRY AS countryName
-  `;
+const graphDBEndpoint = 'http://44.212.115.153:7200/repositories/EllasV2';
+const username = 'integracao';
+const password = 'Ellas@integration';
 
+// Function to execute SPARQL queries
+async function executeSparqlQuery(sparqlQuery) {
+  const auth = Buffer.from(`${username}:${password}`).toString('base64');
   try {
-    const result = await session.run(query);
-    const policies = result.records.map(record => ({
-      policyName: record.get('policyName'),
-      countryName: record.get('countryName')
-    }));
-    res.json(policies);
+    const response = await axios.post(
+      graphDBEndpoint,
+      `query=${encodeURIComponent(sparqlQuery)}`,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${auth}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error executing SPARQL query: ${error.message}`);
+  }
+}
+
+// Example of query function
+async function queryInitiativesInBrazil(req, res) {
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?countryName 
+    WHERE { 
+      ?initiative a Ellas:Initiative. 
+      ?initiative rdfs:label ?initiativeName. 
+      ?initiative Ellas:created_in ?country. 
+      ?country rdfs:label ?countryName. 
+      FILTER(?countryName="Brazil"@en).
+    }
+  `;
+  try {
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
+  }
+}
+
+async function queryPoliciesCountries(req, res) {
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?policyName ?countryName 
+    WHERE { 
+      ?policy a Ellas:Policy.
+      ?policy rdfs:label ?policyName.
+      ?policy Ellas:created_in ?country.
+      ?country rdfs:label ?countryName.
+    }
+  `;
+  try {
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 }
 
 async function queryPolicyTypes(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (policy:Person)
-    RETURN DISTINCT policy.Tipo_de_Política AS policyType, policy.COUNTRY AS countryName
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?policyType  
+    WHERE { 
+      ?policy a Ellas:Policy.
+      ?policy rdfs:label ?policyName.
+      ?policy Ellas:policy_type ?policyType.
+      ?policy Ellas:created_in ?country.
+      ?country rdfs:label ?countryName.
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const policyTypes = result.records.map(record => ({
-      policyType: record.get('policyType'),
-      countryName: record.get('countryName')
-    }));
-    res.json(policyTypes);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryPolicyPromotions(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (policy:Person)
-    RETURN policy.Título_da_Publicação AS policyName, policy.Results AS policyResults
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?policyName ?policyResults 
+    WHERE { 
+      ?policy a Ellas:Policy.
+      ?policy rdfs:label ?policyName.
+      ?policy Ellas:policy_description ?policyResults.   
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const policies = result.records.map(record => ({
-      policyName: record.get('policyName'),
-      policyResults: record.get('policyResults')
-    }));
-    res.json(policies);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryPoliciesByCountryAndDate(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (policy:Person)
-    WHERE toInteger(policy.Data_Início) > 2015 AND 
-          (policy.COUNTRY = 'Peru' OR policy.COUNTRY = 'Brazil' OR policy.COUNTRY = 'Bolivia')
-    RETURN policy.Título_da_Publicação AS policyName, policy.Data_Início AS startDate, policy.COUNTRY AS countryName
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    SELECT ?policyName ?start_date ?countryName 
+    WHERE { 
+      ?policy a Ellas:Policy.
+      ?policy rdfs:label ?policyName.
+      ?policy Ellas:created_in ?country.
+      ?country rdfs:label ?countryName.
+      ?policy Ellas:start_date ?start_date
+      filter(xsd:integer(?start_date) > 2015)
+      filter(regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
+      regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
+      regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))    
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const policies = result.records.map(record => ({
-      policyName: record.get('policyName'),
-      startDate: record.get('startDate'),
-      countryName: record.get('countryName')
-    }));
-    res.json(policies);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryInitiativesInBrazil(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.COUNTRY = 'Brazil'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.COUNTRY AS countryName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records
-      .map(record => ({
-        initiativeName: record.get('initiativeName'),
-        countryName: record.get('countryName')
-      }))
-      .filter(initiative => initiative.initiativeName !== null && initiative.countryName !== null);
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativeDataSource(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Data_Fonte AS datasource
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?datasource 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_data_source ?datasource
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const dataSources = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      datasource: record.get('datasource')
-    }));
-    res.json(dataSources);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativeSocialNetwork(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Link_Rede_Social AS link
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?link 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_socialmedia_link ?link
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const socialNetworks = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      link: record.get('link')
-    }));
-    res.json(socialNetworks);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativesOfProgram(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Tipo = 'Program'
-    RETURN initiative.Título_da_Publicação AS initiativeName
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName 
+    WHERE { 
+      ?initiative a Ellas:Program.
+      ?initiative rdfs:label ?initiativeName
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const programs = result.records.map(record => ({
-      initiativeName: record.get('initiativeName')
-    }));
-    res.json(programs);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryPublicPrivateInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Setor_Organizacional AS sector
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?sector 
+    WHERE { 
+      ?initiative a Ellas:Program.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_organization_sector ?sector
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const sectors = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      sector: record.get('sector')
-    }));
-    res.json(sectors);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryIndividualCoordinatedInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Tipo_Coordenador = 'Personal'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Tipo_Coordenador AS coordinatorType
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?coordinatorType 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_coordinator_type ?coordinatorType
+      FILTER(?coordinatorType = "Personal"@en)
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const individuals = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      coordinatorType: record.get('coordinatorType')
-    }));
-    res.json(individuals);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativeCoordinatorGender(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Gênero_Coordenador AS coordinatorGender
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?coordinatorGender 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_coordinator_gender ?coordinatorGender  
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const genders = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      coordinatorGender: record.get('coordinatorGender')
-    }));
-    res.json(genders);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativeObjective(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Objetivo AS objective
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?objective 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_objective ?objective
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const objectives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      objective: record.get('objective')
-    }));
-    res.json(objectives);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativeFormat(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Formato AS format
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?format 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:initiative_format ?format
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const formats = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      format: record.get('format')
-    }));
-    res.json(formats);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
   }
 }
 
 async function queryInitiativesForGirls(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Audiência_Alvo = 'Girls' OR initiative.Audiência_Alvo = 'Adolescents'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Audiência_Alvo AS targetAudienceAge
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceAge: record.get('targetAudienceAge')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryInitiativeTargetGender(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Gênero_Audiência_Alvo AS targetAudienceGender
-  `;
-
-  try {
-    const result = await session.run(query);
-    const genders = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceGender: record.get('targetAudienceGender')
-    }));
-    res.json(genders);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryInitiativesForBlackWomen(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Raça_Audiência_Alvo = 'Black' AND initiative.Gênero_Audiência_Alvo = 'Female'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Raça_Audiência_Alvo AS targetAudienceRace, initiative.Gênero_Audiência_Alvo AS targetAudienceGender
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceRace: record.get('targetAudienceRace'),
-      targetAudienceGender: record.get('targetAudienceGender')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function querySchoolLevelInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Nível_Educacional_Audiência_Alvo = 'Undergraduate'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Nível_Educacional_Audiência_Alvo AS targetAudienceEducationalLevel
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceEducationalLevel: record.get('targetAudienceEducationalLevel')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryInitiativesForVulnerableGroups(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Grupo_Vulnerável_Audiência_Alvo = 'disabilities'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Grupo_Vulnerável_Audiência_Alvo AS targetAudienceVulnerable
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceVulnerable: record.get('targetAudienceVulnerable')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function querySchoolCommunityInvolvement(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Stakeholders = 'School'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Stakeholders AS targetAudienceStakeholders
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceStakeholders: record.get('targetAudienceStakeholders')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryCityInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Cidade = 'Curitiba'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Cidade AS cityName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      cityName: record.get('cityName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryStateInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Estado = 'Paraná'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Estado AS stateName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      stateName: record.get('stateName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryAreaInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Área = 'Urban'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Área AS areaName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      areaName: record.get('areaName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryRegionInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Região = 'Coast'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Região AS regionName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      regionName: record.get('regionName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryInitiativesByReach(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Alcance = 'Local'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Alcance AS reach
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      reach: record.get('reach')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryFundedInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Financiado_Por AS organizationName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      organizationName: record.get('organizationName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryFundingSector(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Setor_Organizacional AS sector
-  `;
-
-  try {
-    const result = await session.run(query);
-    const sectors = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      sector: record.get('sector')
-    }));
-    res.json(sectors);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    await session.close();
-  }
-}
-
-async function queryActiveInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Status = 'Active'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Status AS status
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      status: record.get('status')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?targetAudienceAge 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:focused_on ?targetAudience.
+      ?targetAudience a Ellas:Target_Audience_Age.
+      ?targetAudience rdfs:label ?targetAudienceAge.
+      FILTER (regex(str(?targetAudienceAge), "teenagers") || regex(str(?targetAudienceAge), "Teenagers")
+        || regex(str(?targetAudienceAge), "children") || regex(str(?targetAudienceAge), "Children"))
     }
-}
-
-async function queryInitiativesByType(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Tipo AS type
   `;
-
   try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      type: record.get('type')
-    }));
-    res.json(initiatives);
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
-
-async function queryInitiativesByCountry(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.COUNTRY AS countryName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      countryName: record.get('countryName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function queryInitiativesByRegion(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Região AS regionName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      regionName: record.get('regionName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function queryInitiativesByCity(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Cidade AS cityName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      cityName: record.get('cityName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function queryInitiativesByState(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Estado AS stateName
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      stateName: record.get('stateName')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-/* In which countries the policy was applied? 
-
-Are these initiatives public or private? 
-
-PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select ?initiativeName ?sector where { 
-	?initiative a Ellas:Program.
-    ?initiative rdfs:label ?initiativeName.
-    ?initiative Ellas:initiative_organization_sector ?sector
-    
-} */
-
-async function queryInitiativesBySector(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Tipo = 'Program'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Setor_Organizacional AS sector
-  `;
-
-  try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      sector: record.get('sector')
-    }));
-    res.json(initiatives);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-/* What initiatives serve black women? 
-
-PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select ?initiativeName ?targetAudienceRace ?targetAudienceGender where { 
-	?initiative a Ellas:Initiative.
-    ?initiative rdfs:label ?initiativeName.
-    
-    ?initiative Ellas:focused_on ?targetAudience.
-    ?targetAudience a Ellas:Target_Audience_Race.
-    ?targetAudience rdfs:label ?targetAudienceRace.
-    
-    ?initiative Ellas:focused_on ?targetAudienceG.
-    ?targetAudienceG a Ellas:Target_Audience_Gender.
-    ?targetAudienceG rdfs:label ?targetAudienceGender.
-    
-    filter( regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black")   )
-    filter( regex(str(?targetAudienceGender), "Feminine"))
-} */
 
 async function queryInitiativesForBlackWomen(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Raça_Audiência_Alvo = 'Black' AND initiative.Gênero_Audiência_Al
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Raça_Audiência_Alvo AS targetAudienceRace, initiative.Gênero_Audiência_Alvo AS targetAudienceGender
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?targetAudienceRace ?targetAudienceGender 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:focused_on ?targetAudience.
+      ?targetAudience a Ellas:Target_Audience_Race.
+      ?targetAudience rdfs:label ?targetAudienceRace.
+      ?initiative Ellas:focused_on ?targetAudienceG.
+      ?targetAudienceG a Ellas:Target_Audience_Gender.
+      ?targetAudienceG rdfs:label ?targetAudienceGender.
+      FILTER (regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black"))
+      FILTER (regex(str(?targetAudienceGender), "Feminine"))
+    }
   `;
-
   try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceRace: record.get('targetAudienceRace'),
-      targetAudienceGender: record.get('targetAudienceGender')
-    }));
-    res.json(initiatives);
-  }
-  catch (error) {
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
-/*What initiatives are being developed <at a given school level>? 
-
-PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select ?initiativeName ?targetAudienceEducationalLevel where { 
-	?initiative a Ellas:Initiative.
-    ?initiative rdfs:label ?initiativeName.
-    
-    ?initiative Ellas:focused_on ?targetAudience.
-    ?targetAudience a Ellas:Target_Audience_EducationalLevel.
-    ?targetAudience rdfs:label ?targetAudienceEducationalLevel.   
-    
-    filter( regex(str(?targetAudienceEducationalLevel), "Undergraduate") || regex(str(?targetAudienceEducationalLevel), "undergraduate"))
-
-} */
-
 async function querySchoolLevelInitiatives(req, res) {
-  const session = neo4j.session();
-  const query = `
-    MATCH (initiative:Person)
-    WHERE initiative.Nível_Educacional_Audiência_Alvo = 'Undergraduate'
-    RETURN initiative.Título_da_Publicação AS initiativeName, initiative.Nível_Educacional_Audiência_Alvo AS targetAudienceEducationalLevel, initiative.LEVEL AS level
+  const sparqlQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> 
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+    SELECT ?initiativeName ?targetAudienceEducationalLevel 
+    WHERE { 
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:focused_on ?targetAudience.
+      ?targetAudience a Ellas:Target_Audience_EducationalLevel.
+      ?targetAudience rdfs:label ?targetAudienceEducationalLevel.   
+      FILTER (regex(str(?targetAudienceEducationalLevel), "Undergraduate") || regex(str(?targetAudienceEducationalLevel), "undergraduate"))
+    }
   `;
-  
   try {
-    const result = await session.run(query);
-    const initiatives = result.records.map(record => ({
-      initiativeName: record.get('initiativeName'),
-      targetAudienceEducationalLevel: record.get('targetAudienceEducationalLevel')
-    }));
-    res.json(initiatives);
-  }
-  catch (error) {
+    const data = await executeSparqlQuery(sparqlQuery);
+    res.json(data);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
 module.exports = {
+  queryInitiativesInBrazil,
   queryPoliciesCountries,
   queryPolicyTypes,
   queryPolicyPromotions,
   queryPoliciesByCountryAndDate,
-  queryInitiativesInBrazil,
   queryInitiativeDataSource,
   queryInitiativeSocialNetwork,
   queryInitiativesOfProgram,
@@ -806,25 +370,6 @@ module.exports = {
   queryInitiativeObjective,
   queryInitiativeFormat,
   queryInitiativesForGirls,
-  queryInitiativeTargetGender,
   queryInitiativesForBlackWomen,
   querySchoolLevelInitiatives,
-  queryInitiativesForVulnerableGroups,
-  querySchoolCommunityInvolvement,
-  queryCityInitiatives,
-  queryStateInitiatives,
-  queryAreaInitiatives,
-  queryRegionInitiatives,
-  queryInitiativesByReach,
-  queryFundedInitiatives,
-  queryFundingSector,
-  queryActiveInitiatives,
-  queryInitiativesByType,
-  queryInitiativesByCountry,
-  queryInitiativesByRegion,
-  queryInitiativesByCity,
-  queryInitiativesByState,
-  queryInitiativesBySector,
-  queryInitiativesForBlackWomen,
-  querySchoolLevelInitiatives
 };

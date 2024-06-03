@@ -1,0 +1,2136 @@
+{
+    "head": {
+        "vars": [
+            "initiativeName",
+            "countryName"
+        ]
+    },
+    "results": {
+        "bindings": [
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "{reprograma}"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "#include <girls> ufu"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "#include <gurias>"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "#include <meninas.uff>"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "|coda, girl| jo"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Afropyhton"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Agora sou dev | jaqueline"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ai girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Anitas - empoderando mulheres em tecnologia e empreendedorismo"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Aprenda a programar jogando"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Bitgirls ufmg"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Caliandras digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Catarinas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Cintia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Cloud girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Codai mulheres cientistas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Coletivo mirtha lina (cmin@)"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Compiladoras"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Computacao mulheres"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Conectadas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Corte de lovelace"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Cunhantã digital"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Damas - disseminação e apoio à participação de mulheres em áreas de stem"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Data girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Dev girls maringá"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Developer girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Divas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ei mana!"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas codam"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas na robotica"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas programam"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas.net - cefet mg"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas@computação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Elas++"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Emíli@s – armação em bits"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Fatech girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Fernanda lima | programação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "For girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Força meninas(go girls)"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Garota da ti"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Garotas applicadas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Garotas cientistas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Garotas de ti"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Garotas tech dos sertões de crateús"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Gecet: garotas nas engenharias, ciências exatas e tecnologias"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Giovanna moeller | programação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Girls in tech - brazil"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Girls power in programming"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Grace - grupo de alunas nas ciências exatas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Gurias na computacao"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Gurias tech"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "#include<gurias>"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Inspirada na computação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Isadora · front-end developer"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "It girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Katie: saindo do buraco negro e impulsionando as meninas para a computação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ladies that ux pelotas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ladies that ux são paulo"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Laiza | ti para garotas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Leti pires | tecnologia e dados"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Lyssa cavalcanti • tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Maia (meninas aprendendo inteligência artificial)"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mais mulheres na tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mais mulheres na ti"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Manas digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Manas game dev"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Marialab hackerspace"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mariana kobayashi"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meetup dev girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas aprendendo ia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas cientistas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas das geotecnologias"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais - regional bahia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais - regional sergipe"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais - rio pomba"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais - ufsc"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais do sudoeste da bahia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais ienh"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais ifmt"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais mt"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais na baixada fluminense"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais no cerrado"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais tchê missões"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais ufgd-dourados"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais do vale"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas digitais vale do itajaí"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas high-tech"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas na ciência"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas na computação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas nas ciências"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas paid’éguas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas programadoras usp"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meninas.comp"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mermãs digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Metabotix"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Meuhd"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mina tech brasil"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Minas coders"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Minas programam"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Minerv@s digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mocinhas da computação"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulher tech sim senhor"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres em dados [rede exclusiva para mulheres]"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres em stem²d ita"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres líderes na tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na computação ifsp campus sp"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na computação ufersa"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na computação-uepb"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na rota da tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Techs for women"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Womanscode"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na tecnologia (/mnt)"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na tecnologia baixada santista"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Mulheres na ti"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Nina talks"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Paragobyte girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Phpwomenbr"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pretalab"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pretas hackers"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Princesas da tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Program.ada ufrgs"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Programa de mentoria loggi + meninas digitais"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Programada"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Programadas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Programaria"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Projeto adas ufg"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Projeto alice"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Projeto meninas digitais na computação - unijui"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Projeto meninas++"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ps4w - programa sabará for women"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies - sorocaba/sp"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies blumenau"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies brasil"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies df"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies goiânia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies pb"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies porto alegre"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies rural"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies salvador"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies são carlos"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies são josé dos campos"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies sergipe"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies sul de minas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Pyladies teresina"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Python brasil só para mulheres"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Qa ladies"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "R ladies rio"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Rafa ballerini"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Residência wagikisa"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Sara das mercês"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Sheleadstech sp chapter"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Sheylla lima"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Silvia coelho | elas programam"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Sisters sororidade em si"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Start coding"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Stem para minas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Steph | dev backend"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Tech anne"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Techladies brasil"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Techmanas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Techno girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Technovation girls brasil"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Tela preta tech"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Thai | dev"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Thaíssa candella | tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Thayna | backend & tech"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "The fem tech"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ti <for> girls"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Tichers"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Ux para minas pretas"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Womakerscode - mulheres na tecnologia"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Women in data science salvador"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            },
+            {
+                "initiativeName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Women who code recife"
+                },
+                "countryName": {
+                    "xml:lang": "en",
+                    "type": "literal",
+                    "value": "Brazil"
+                }
+            }
+        ]
+    }
+}

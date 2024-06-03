@@ -1,6 +1,7 @@
+// src/components/Header/index.tsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Img, Text, Heading } from "./..";
+import { Button, Img, Text, Heading } from "../../components";
 
 interface Props {
   className?: string;
@@ -54,13 +55,18 @@ const Header: React.FC<Props> = ({ ...props }) => {
                   <Heading as="p">FAQ</Heading>
                 </a>
               </li>
+              <li>
+                <a href="/graph-view" onClick={handleNavigation('/graph-view')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                  <Heading as="p">Graph View</Heading>
+                </a>
+              </li>
             </ul>
             <Button
               size="sm"
               shape="round"
               rightIcon={<Img src="images/img_iconx18.svg" alt="iconx18" />}
               className="gap-2.5 font-medium min-w-[106px]"
-              onClick={handleButtonClick} // Use handleButtonClick aqui
+              onClick={handleButtonClick}
             >
               Entrar
             </Button>

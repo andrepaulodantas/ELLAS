@@ -1,13 +1,15 @@
+// src/App.tsx
 import React from "react";
-import Routes from "./Routes";
-import { BrowserRouter as Router } from "react-router-dom";
+import ProjectRoutes from "./routes/Routes";
+import Header from "./components/Header";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <Routes />
-    </Router>
+    <div className="App">
+      <Header className="header" />
+      <ProjectRoutes />
+    </div>
   );
-}
+};
 
 export default App;

@@ -1,4 +1,3 @@
-// src/routes/Routes.tsx
 import React from "react";
 import { useRoutes } from "react-router-dom";
 import Home from "../pages/Home";
@@ -38,7 +37,11 @@ const ProjectRoutes = () => {
     { path: "apoie-ellas", element: <ApoieEllas /> },
     { path: "contato", element: <Contato /> },
     { path: "faq", element: <Faq /> },
-    { path: "graph-view", element: <GraphView /> },
+    { path: "graph-view", element: <GraphView queryType="initiatives" /> },
+    { path: "policies-by-country", element: <GraphView queryType="policiesByCountry" /> },
+    { path: "policy-types", element: <GraphView queryType="policyTypes" /> },
+    { path: "policy-results", element: <GraphView queryType="policyResults" /> },
+    { path: "policies-by-country-and-date", element: <GraphView queryType="policiesByCountryAndDate" /> },
   ]);
 
   return element;

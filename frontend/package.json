@@ -5,6 +5,7 @@
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.6",
     "@googlemaps/react-wrapper": "^1.1.25",
+    "@react-pdf/renderer": "^3.4.4",
     "@tailwindcss/forms": "^0.5.7",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",

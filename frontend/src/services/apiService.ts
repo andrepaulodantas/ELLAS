@@ -86,7 +86,7 @@ export const fetchPoliciesByCountryAndDate = () => {
       ?policy rdfs:label ?policyName.
       ?policy Ellas:created_in ?country.
       ?country rdfs:label ?countryName.
-      ?policy Ellas:start_date ?start_date
+      ?policy Ellas:start_date ?start_date.
       FILTER(xsd:integer(?start_date) > 2015)
       FILTER(
         regex(str(?countryName), "Peru", "i") || 

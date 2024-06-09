@@ -1,62 +1,45 @@
-const UsuarioService = require('../services/UsuarioService');
-const bcrypt = require('bcryptjs');
+const { Usuario } = require('../models');
 
 class UsuarioController {
-  constructor() {
-    this.usuarioService = new UsuarioService();
-  }
-
   async pegaTodos(req, res) {
-    try {
-      const usuarios = await this.usuarioService.pegaTodosOsRegistros();
-      return res.status(200).json(usuarios);
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
+    const usuarios = await Usuario.findAll();
+    res.json(usuarios);
   }
 
   async pegaUm(req, res) {
-    const { id } = req.params;
-    try {
-      const usuario = await this.usuarioService.pegaUmRegistro({ id });
-      return res.status(200).json(usuario);
-    } catch (error) {
-      return res.status(500).json(error.message);
+    const usuario = await Usuario.findByPk(req.params.id);
+    if (usuario) {
+      res.json(usuario);
+    } else {
+      res.status(404).json({ error: 'Usuário não encontrado' });
     }
   }
 
   async cria(req, res) {
-    const novoUsuario = req.body;
-    try {
-      novoUsuario.senha = await bcrypt.hash(novoUsuario.senha, 10);
-      const usuarioCriado = await this.usuarioService.criaRegistro(novoUsuario);
-      return res.status(201).json(usuarioCriado);
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
+    const novoUsuario = await Usuario.create(req.body);
+    res.json(novoUsuario);
   }
 
   async atualiza(req, res) {
-    const { id } = req.params;
-    const novasInfos = req.body;
-    try {
-      if (novasInfos.senha) {
-        novasInfos.senha = await bcrypt.hash(novasInfos.senha, 10);
-      }
-      await this.usuarioService.atualizaRegistro(novasInfos, { id });
-      return res.status(200).json({ message: `Usuário ${id} atualizado` });
-    } catch (error) {
-      return res.status(500).json(error.message);
+    const [updated] = await Usuario.update(req.body, {
+      where: { id: req.params.id }
+    });
+    if (updated) {
+      const updatedUsuario = await Usuario.findByPk(req.params.id);
+      res.json(updatedUsuario);
+    } else {
+      res.status(404).json({ error: 'Usuário não encontrado' });
     }
   }
 
   async apaga(req, res) {
-    const { id } = req.params;
-    try {
-      await this.usuarioService.apagaRegistro({ id });
-      return res.status(200).json({ message: `Usuário ${id} apagado` });
-    } catch (error) {
-      return res.status(500).json(error.message);
+    const deleted = await Usuario.destroy({
+      where: { id: req.params.id }
+    });
+    if (deleted) {
+      res.json({ message: 'Usuário deletado' });
+    } else {
+      res.status(404).json({ error: 'Usuário não encontrado' });
     }
   }
 }

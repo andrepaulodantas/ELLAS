@@ -1,3 +1,4 @@
+// src/pages/FazerLoginOne/index.tsx
 import React, { useState } from 'react';
 import { Helmet } from "react-helmet";
 import { Button, Img, Text, Input, Heading } from "../../components";
@@ -11,7 +12,7 @@ const FazerLoginOnePage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleEmailChange = (value: string) => {
-    setEmail(value);
+  setEmail(value);
   };
 
   const handlePasswordChange = (value: string) => {
@@ -21,7 +22,7 @@ const FazerLoginOnePage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/api/login', { email, senha: password });
+      const response = await axios.post('http://localhost:3001/api/usuarios/login', { email, senha: password });
       const { token } = response.data;
       localStorage.setItem('token', token);
       navigate('/dashboard');
@@ -107,7 +108,7 @@ const FazerLoginOnePage: React.FC = () => {
                   prefix={<Img src="images/img_iconx18_blue_gray_300_01.svg" alt="iconx18" />}
                   className="w-full gap-[15px] border-blue_gray-100_02"
                   value={email}
-                  onChange={handleEmailChange}
+                  onChange={(e) => handleEmailChange(e)}
                 />
                 <Input
                   shape="round"
@@ -117,7 +118,7 @@ const FazerLoginOnePage: React.FC = () => {
                   suffix={<Img src="images/img_iconx18_18x18.svg" alt="iconx18" />}
                   className="w-full sm:w-full gap-[15px] border-blue_gray-100_02"
                   value={password}
-                  onChange={handlePasswordChange}
+                  onChange={(e) => handlePasswordChange(e)}
                 />
                 {error && <Text size="xl" as="p" className="!text-red-300_03 text-center">{error}</Text>}
                 <Text size="xl" as="p" className="!text-red-300_03 text-center">

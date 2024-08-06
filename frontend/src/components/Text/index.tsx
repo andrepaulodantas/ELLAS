@@ -1,5 +1,6 @@
 import React from "react";
 
+// Definição de tamanhos para diferentes classes de texto
 const sizes = {
   "5xl": "text-2xl font-medium leading-[29px]",
   xs: "text-[6px] font-medium",
@@ -12,13 +13,15 @@ const sizes = {
   md: "text-[10px] font-normal",
 };
 
+// Definindo as propriedades do componente Text
 export type TextProps = Partial<{
-  className: string;
-  as: any;
-  size: keyof typeof sizes;
+  className: string; // Classe CSS adicional
+  as: React.ElementType; // Tipo de elemento HTML ou componente React
+  size: keyof typeof sizes; // Tamanho do texto
 }> &
-  React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
+  React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>; // Propriedades HTML padrão
 
+// Definindo o componente Text como um componente funcional
 const Text: React.FC<React.PropsWithChildren<TextProps>> = ({
   children,
   className = "",
@@ -26,10 +29,13 @@ const Text: React.FC<React.PropsWithChildren<TextProps>> = ({
   size = "2xl",
   ...restProps
 }) => {
-  const Component = as || "p";
+  const Component = as || "p"; // Usa o elemento passado ou o padrão <p>
 
   return (
-    <Component className={`text-gray-700 font-roboto ${className} ${sizes[size]}`} {...restProps}>
+    <Component
+      className={`text-gray-700 font-roboto ${sizes[size]} ${className}`} // Classes CSS combinadas
+      {...restProps}
+    >
       {children}
     </Component>
   );

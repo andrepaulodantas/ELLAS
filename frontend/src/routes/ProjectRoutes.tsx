@@ -22,7 +22,7 @@ import PrivateRoute from "../components/PrivateRoute"; // Import the PrivateRout
 
 const ProjectRoutes = () => {
   let element = useRoutes([
-    { path: "/ellas", element: <HomeOne /> },
+    { path: "/", element: <HomeOne /> },
     { path: "/dashboard", element: (
       <PrivateRoute>
         <Home />

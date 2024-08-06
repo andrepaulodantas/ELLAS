@@ -1,10 +1,13 @@
 import React from "react";
 
+// Definição das formas possíveis para o botão
 const shapes = {
   circle: "rounded-[50%]",
   round: "rounded-[19px]",
   square: "rounded-[0px]",
 } as const;
+
+// Definição dos estilos de variantes para o botão
 const variants = {
   fill: {
     red_300_02: "bg-red-300_02 text-white-A700",
@@ -24,6 +27,8 @@ const variants = {
     gray_700: "border-gray-700 border border-solid text-gray-700",
   },
 } as const;
+
+// Definição dos tamanhos disponíveis para o botão
 const sizes = {
   xs: "h-[30px] px-3 text-[11px]",
   xl: "h-[80px] px-2.5 text-sm",
@@ -32,6 +37,7 @@ const sizes = {
   md: "h-[38px] px-2.5",
 } as const;
 
+// Definição das propriedades do componente Button
 type ButtonProps = Omit<
   React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
   "onClick"
@@ -40,31 +46,42 @@ type ButtonProps = Omit<
     className: string;
     leftIcon: React.ReactNode;
     rightIcon: React.ReactNode;
-    onClick: () => void;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
     shape: keyof typeof shapes;
     variant: keyof typeof variants;
     size: keyof typeof sizes;
-    color: string;
+    color: keyof typeof variants["fill"];
   }>;
+
+// Componente Button definido como funcional
 const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
   children,
   className = "",
   leftIcon,
   rightIcon,
-  shape = "",
+  shape = "square",
   variant = "fill",
   size = "md",
   color = "gray_700",
+  onClick,
   ...restProps
 }) => {
+  // Calcula as classes do botão com base nas propriedades passadas
+  const buttonClasses = [
+    className,
+    "flex items-center justify-center text-center cursor-pointer",
+    shapes[shape],
+    sizes[size],
+    variants[variant]?.[color],
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <button
-      className={`${className} flex items-center justify-center text-center cursor-pointer ${(shape && shapes[shape]) || ""} ${(size && sizes[size]) || ""} ${(variant && variants[variant]?.[color as keyof (typeof variants)[typeof variant]]) || ""}`}
-      {...restProps}
-    >
-      {!!leftIcon && leftIcon}
+    <button className={buttonClasses} onClick={onClick} {...restProps}>
+      {leftIcon && <span className="mr-2">{leftIcon}</span>}
       {children}
-      {!!rightIcon && rightIcon}
+      {rightIcon && <span className="ml-2">{rightIcon}</span>}
     </button>
   );
 };

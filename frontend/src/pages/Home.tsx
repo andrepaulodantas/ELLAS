@@ -63,17 +63,7 @@ const HomePage: React.FC = () => {
             <Heading as="h3">Busca Two One</Heading>
             <Text>Descrição da Busca Two One.</Text>
           </Link>
-        </div>
-        <div className="mt-10">
-          <h2 className="text-xl font-bold">Initiatives in Brazil</h2>
-          <ul>
-            {initiatives.map((initiative: any, index: number) => (
-              <li key={index}>
-                {initiative.initiativeName.value} - {initiative.countryName.value}
-              </li>
-            ))}
-          </ul>
-        </div>
+        </div>        
       </main>
       <div className="flex flex-row justify-center w-full">
         <div className="flex flex-col items-center justify-start w-full">

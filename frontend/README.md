@@ -15,7 +15,7 @@
 ## Running in dev environment
 
 1. `cd YOUR_APPLICATION`
-2. `npm install`
+2. `npm install --legacy-peer-deps`
 3. `npm start`
 
 ## .env file

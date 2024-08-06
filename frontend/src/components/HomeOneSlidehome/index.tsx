@@ -24,6 +24,19 @@ export default function HomeOneSlidehome({
   const [sliderState, setSliderState] = React.useState(0);
   const sliderRef = React.useRef<AliceCarousel>(null);
 
+  // Funções de clique
+  const handleIconClick = () => {
+    alert("Icon button clicked!");
+  };
+
+  const handleSaibaMaisClick = () => {
+    alert("Saiba mais button clicked!");
+  };
+
+  const handlePesquisarClick = () => {
+    alert("Pesquisar button clicked!");
+  };
+
   return (
     <div {...props}>
       <Img
@@ -33,11 +46,16 @@ export default function HomeOneSlidehome({
       />
       <div className="flex flex-row justify-start w-[89%] h-full left-0 bottom-0 top-0 p-[37px] m-auto sm:p-5 bg-gradient absolute">
         <div className="flex flex-col items-end justify-start w-[60%] mt-[49px] ml-[3px]">
-          <Heading size="2xl" as="h1" className="w-[73%] mr-[53px] md:mr-5 !leading-10">
+          <Heading size="2xl" as="h1" className="w-[73%] mr-[53px] md:mr-5 !leading-10 text-white">
             {dadosabertos}
           </Heading>
           <div className="flex flex-row justify-between w-[41%] md:w-full mt-3 mr-[402px] md:mr-5">
-            <Button color="white_A700_99" shape="circle" className="w-[38px] mb-3.5">
+            <Button
+              color="white_A700_99"
+              shape="circle"
+              className="w-[38px] mb-3.5"
+              onClick={handleIconClick}
+            >
               <Img src="images/img_botao_icone_38px.svg" />
             </Button>
             <Button
@@ -45,13 +63,14 @@ export default function HomeOneSlidehome({
               shape="round"
               rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
               className="mt-3.5 gap-2.5 font-medium min-w-[138px]"
+              onClick={handleSaibaMaisClick}
             >
               {saibaMais}
             </Button>
           </div>
         </div>
       </div>
-      <div className="w-[85%]">
+      <div className="w-[85%] mt-8 mx-auto">
         <Slider
           autoPlay
           autoPlayInterval={2000}
@@ -72,7 +91,7 @@ export default function HomeOneSlidehome({
           items={[...Array(9)].map(() => (
             <React.Fragment key={Math.random()}>
               <div className="flex flex-row justify-start w-full mx-2.5 md:px-5 max-w-[723px]">
-                <div className="flex flex-row md:flex-col justify-start items-center w-full gap-2.5 p-2 md:gap-5 bg-white-A700 rounded-[29px]">
+                <div className="flex flex-row md:flex-col justify-start items-center w-full gap-2.5 p-2 md:gap-5 bg-white-A700 rounded-[29px] shadow-md">
                   <div className="flex flex-row sm:flex-col justify-start items-center w-[80%] md:w-full gap-2 sm:gap-5">
                     <div className="flex flex-row justify-start items-center w-[45%] sm:w-full gap-5 p-[11px]">
                       <Img src="images/img_iconx18_1.svg" alt="iconxeighteen" className="h-[18px] w-[18px] ml-[3px]" />
@@ -97,6 +116,7 @@ export default function HomeOneSlidehome({
                     shape="round"
                     rightIcon={<Img src="images/img_iconx18_white_a700_18x18.svg" alt="iconx18" />}
                     className="mr-1 gap-2.5 font-medium min-w-[131px]"
+                    onClick={handlePesquisarClick}
                   >
                     {botaoprimario}
                   </Button>

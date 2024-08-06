@@ -1,6 +1,7 @@
 import React from "react";
 import { Img, Text } from "./..";
 
+// Definição das propriedades do componente
 interface Props {
   className?: string;
   p01twentyfive?: string;
@@ -24,19 +25,23 @@ export default function HomeOneMapdados({
     <div {...props}>
       <div className="flex flex-col items-center justify-start w-full mt-[5px] gap-[9px] md:px-5 max-w-[455px]">
         <div className="flex flex-row sm:flex-col justify-between items-start w-[99%] md:w-full sm:gap-10">
-          <Img src="images/img_map_latin_america.svg" alt="maplatin_one" className="h-[461px]" />
+          <Img
+            src="images/img_map_latin_america.svg"
+            alt="Mapa da América Latina"
+            className="h-[461px]"
+          />
           <div className="flex flex-col items-center justify-start w-[4%] sm:w-full mt-1 sm:mt-0">
             <div className="flex flex-col items-center justify-center w-full rounded-tl-[50%] rounded-tr-[50%] border-blue_gray-100_02 border border-solid">
               <Img
                 src="images/img_elementos_blue_gray_100_02.svg"
-                alt="elementos_three"
+                alt="Elemento Um"
                 className="h-[14px] w-[14px] mt-1 mb-[3px]"
               />
             </div>
             <div className="flex flex-col items-center justify-center w-full mt-[-1px] rounded-tl-[50%] rounded-tr-[50%] border-blue_gray-100_02 border border-solid">
               <Img
                 src="images/img_elementos_blue_gray_100_02_14x14.svg"
-                alt="elementos_five"
+                alt="Elemento Dois"
                 className="h-[14px] w-[14px] mt-[3px] mb-1"
               />
             </div>
@@ -76,10 +81,18 @@ export default function HomeOneMapdados({
             </div>
           </div>
           <div className="flex flex-row justify-start items-center w-[21%] gap-1">
-            <Text size="s" as="p" className="w-[81%] !text-blue_gray-300_01 text-right">
+            <Text
+              size="s"
+              as="p"
+              className="w-[81%] !text-blue_gray-300_01 text-right"
+            >
               {fonteportalOne}
             </Text>
-            <Img src="images/img_elementos.svg" alt="elementos_seven" className="h-[14px] w-[14px]" />
+            <Img
+              src="images/img_elementos.svg"
+              alt="Elementos"
+              className="h-[14px] w-[14px]"
+            />
           </div>
         </div>
       </div>

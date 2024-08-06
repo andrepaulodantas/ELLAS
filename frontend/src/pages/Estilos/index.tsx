@@ -3,6 +3,14 @@ import { Helmet } from "react-helmet";
 import { Button, Img, Heading, Text } from "../../components";
 
 export default function EstilosPage() {
+  // Constants for style classes to ensure consistency and reusability
+  const flexRow = "flex flex-row justify-start items-center";
+  const flexCol = "flex flex-col items-start justify-start";
+  const textColorGray = "!text-gray-900";
+  const textColorBlueGray = "!text-blue_gray-300_01";
+  const buttonBaseClasses = "w-full gap-2.5 font-medium";
+  const roundedButton = "rounded-[10px]";
+
   return (
     <>
       <Helmet>
@@ -11,19 +19,22 @@ export default function EstilosPage() {
       </Helmet>
       <div className="flex flex-row justify-start w-full p-[34px] sm:p-5 bg-white-A700">
         <div className="flex flex-col items-start justify-start w-full mb-[25px] mx-auto md:px-5 max-w-[1793px]">
+          {/* Title section */}
           <div className="flex flex-row md:flex-col justify-between w-[57%] md:w-full md:gap-10">
-            <Text size="5xl" as="p" className="mt-px md:mt-0 !text-gray-900">
+            <Text size="5xl" as="p" className={`mt-px md:mt-0 ${textColorGray}`}>
               Fontes
             </Text>
             <div className="flex flex-row sm:flex-col justify-between w-auto gap-[120px] sm:gap-10">
-              <Text size="5xl" as="p" className="!text-gray-900">
+              <Text size="5xl" as="p" className={textColorGray}>
                 Paleta de Cores
               </Text>
-              <Text size="5xl" as="p" className="!text-gray-900">
+              <Text size="5xl" as="p" className={textColorGray}>
                 Elementos Básicos UI
               </Text>
             </div>
           </div>
+
+          {/* Subtitles section */}
           <div className="flex flex-row justify-between w-[50%] md:w-full mt-[15px]">
             <Text as="p" className="mt-1.5 !text-blue_gray-300_01">
               Fonte Principal
@@ -32,14 +43,18 @@ export default function EstilosPage() {
               Botão Elementar
             </Text>
           </div>
+
+          {/* Font Styles Section */}
           <div className="flex flex-row md:flex-col justify-start items-center w-full mt-1 gap-[33px] md:gap-5">
+            {/* Font Details */}
             <div className="flex flex-col items-center justify-start w-[26%] md:w-full gap-[26px]">
+              {/* Font Details: Roboto */}
               <div className="flex flex-col items-start justify-start w-full">
                 <div className="flex flex-row sm:flex-col justify-start items-center w-[85%] md:w-full gap-[11px] sm:gap-5">
-                  <Text size="5xl" as="p" className="!text-gray-900 text-center !font-normal">
+                  <Text size="5xl" as="p" className={`${textColorGray} text-center !font-normal`}>
                     Roboto
                   </Text>
-                  <div className="flex flex-row justify-start items-center w-[78%] sm:w-full gap-3 p-2 bg-gray-50 rounded-[17px]">
+                  <div className={`flex flex-row justify-start items-center w-[78%] sm:w-full gap-3 p-2 bg-gray-50 ${roundedButton}`}>
                     <Img
                       src="images/img_image_1.png"
                       alt="imageone_one"
@@ -59,6 +74,8 @@ export default function EstilosPage() {
                     1234567890 $%&*@#!?
                   </>
                 </Text>
+
+                {/* Font Details: Open Sans */}
                 <Text as="p" className="mt-[26px] !text-blue_gray-300_01">
                   Fonte Secundária
                 </Text>
@@ -66,7 +83,7 @@ export default function EstilosPage() {
                   <Text size="5xl" as="p" className="!text-gray-900 !font-opensans text-center !font-normal">
                     Open Sans
                   </Text>
-                  <div className="flex flex-row justify-start items-center w-[71%] sm:w-full gap-[11px] p-2 bg-gray-50 rounded-[17px]">
+                  <div className={`flex flex-row justify-start items-center w-[71%] sm:w-full gap-[11px] p-2 bg-gray-50 ${roundedButton}`}>
                     <Img
                       src="images/img_image_1.png"
                       alt="imageone_three"
@@ -86,10 +103,12 @@ export default function EstilosPage() {
                     1234567890 $%&*@#!?
                   </>
                 </Text>
+
+                {/* Typography styles */}
                 <Text as="p" className="mt-4 !text-blue_gray-300_01 !font-rubik">
                   Estilos
                 </Text>
-                <div className="flex flex-col items-start justify-center w-full mt-3.5 gap-[13px] p-[17px] bg-gray-50 rounded-[10px]">
+                <div className={`flex flex-col items-start justify-center w-full mt-3.5 gap-[13px] p-[17px] bg-gray-50 ${roundedButton}`}>
                   <Heading size="xl" as="h1" className="ml-1.5 md:ml-0 !text-gray-900 text-center">
                     Título
                   </Heading>
@@ -97,7 +116,7 @@ export default function EstilosPage() {
                     font-size: 24 pt | font-weight: 500 | line-height: 20
                   </Text>
                 </div>
-                <div className="flex flex-col items-start justify-center w-full mt-[26px] gap-[21px] p-[17px] bg-gray-50 rounded-[10px]">
+                <div className={`flex flex-col items-start justify-center w-full mt-[26px] gap-[21px] p-[17px] bg-gray-50 ${roundedButton}`}>
                   <Text size="3xl" as="p" className="ml-1 md:ml-0 !text-gray-900">
                     Subtítulo
                   </Text>
@@ -106,7 +125,9 @@ export default function EstilosPage() {
                   </Text>
                 </div>
               </div>
-              <div className="flex flex-col items-start justify-center w-full gap-[15px] p-5 bg-gray-50 rounded-[10px]">
+
+              {/* Text Section */}
+              <div className={`flex flex-col items-start justify-center w-full gap-[15px] p-5 bg-gray-50 ${roundedButton}`}>
                 <Text as="p" className="ml-0.5 md:ml-0 !text-gray-900">
                   Texto
                 </Text>
@@ -120,55 +141,57 @@ export default function EstilosPage() {
                     <br />
                     <br />
                     Proin ac elit in neque facilisis congue. Nulla tincidunt luctus ex, nec elementum ex consectetur id.
-                    Vivamus in lorem porttitor, tempor nisi dictum, convallis lorem.{" "}
+                    Vivamus in lorem porttitor, tempor nisi dictum, convallis lorem.
                   </>
                 </Text>
               </div>
             </div>
+
+            {/* Color Palette Section */}
             <div className="flex flex-col items-start justify-start w-[15%] md:w-full gap-[34px]">
               <div className="flex flex-col items-center justify-start w-full">
                 <div className="flex flex-col items-center justify-start w-full gap-9">
                   <div className="flex flex-col w-full gap-[23px]">
-                    <div className="flex flex-row justify-center items-center w-full">
+                    <div className={flexRow}>
                       <div className="h-[58px] w-[58px] bg-blue_gray-300" />
                       <Button
                         color="blue_gray_100_02"
                         size="xl"
-                        className="!text-black-900 min-w-[80px] rounded-[10px]"
+                        className={`!text-black-900 min-w-[80px] ${roundedButton}`}
                       >
                         #C5D8E3
                       </Button>
                       <div className="h-[58px] w-[57px] bg-teal-50_01" />
                       <div className="h-[58px] w-[57px] bg-gray-50_01" />
                     </div>
-                    <div className="flex flex-row justify-center items-center w-full">
+                    <div className={flexRow}>
                       <div className="h-[58px] w-[58px] bg-gray-800" />
-                      <Button size="xl" className="min-w-[80px] rounded-[10px]">
+                      <Button size="xl" className={`min-w-[80px] ${roundedButton}`}>
                         #6C567B
                       </Button>
                       <div className="h-[58px] w-[57px] bg-deep_purple-300" />
                       <div className="h-[58px] w-[57px] bg-deep_purple-200" />
                     </div>
-                    <div className="flex flex-row justify-center items-center w-full">
+                    <div className={flexRow}>
                       <div className="h-[58px] w-[58px] bg-pink-800" />
-                      <Button color="red_300_02" size="xl" className="min-w-[80px] rounded-[10px]">
+                      <Button color="red_300_02" size="xl" className={`min-w-[80px] ${roundedButton}`}>
                         #C06C84
                       </Button>
                       <div className="h-[58px] w-[57px] bg-pink-300" />
                       <div className="h-[58px] w-[57px] bg-pink-200" />
                     </div>
                   </div>
-                  <div className="flex flex-row justify-center items-center w-full">
+                  <div className={flexRow}>
                     <div className="h-[57px] w-[58px] bg-red-300_01" />
-                    <Button color="red_300_03" size="xl" className="min-w-[80px] rounded-[10px]">
+                    <Button color="red_300_03" size="xl" className={`min-w-[80px] ${roundedButton}`}>
                       #F67280
                     </Button>
                     <div className="h-[57px] w-[57px] bg-pink-200_01" />
                     <div className="h-[57px] w-[58px] bg-red-100_01" />
                   </div>
-                  <div className="flex flex-row justify-center items-center w-full">
+                  <div className={flexRow}>
                     <div className="h-[58px] w-[58px] bg-red-300" />
-                    <Button color="deep_orange_200" size="xl" className="min-w-[80px] rounded-[10px]">
+                    <Button color="deep_orange_200" size="xl" className={`min-w-[80px] ${roundedButton}`}>
                       #F8B195
                     </Button>
                     <div className="h-[58px] w-[57px] bg-red-100" />
@@ -176,6 +199,8 @@ export default function EstilosPage() {
                   </div>
                 </div>
               </div>
+
+              {/* IBM Design Section */}
               <div className="flex flex-col items-center justify-start w-[63%] md:w-full">
                 <div className="flex flex-col items-start justify-start w-full gap-[9px]">
                   <Text as="p" className="ml-[3px] md:ml-0 !text-blue_gray-300_01">
@@ -208,6 +233,8 @@ export default function EstilosPage() {
                 </div>
               </div>
             </div>
+
+            {/* UI Elements Section */}
             <div className="flex flex-col items-start justify-start w-[57%] md:w-full gap-[15px]">
               <Button
                 size="sm"
@@ -220,39 +247,41 @@ export default function EstilosPage() {
               <div className="flex flex-col items-center justify-start w-full gap-[9px]">
                 <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10">
                   <div className="flex flex-row sm:flex-col justify-between w-[53%] md:w-full sm:gap-10">
-                    <Text as="p" className="!text-blue_gray-300_01">
+                    <Text as="p" className={textColorBlueGray}>
                       Botão Primário
                     </Text>
                     <div className="flex flex-row justify-between w-auto gap-[55px]">
-                      <Text as="p" className="!text-blue_gray-300_01">
+                      <Text as="p" className={textColorBlueGray}>
                         Botão Secundário
                       </Text>
-                      <Text as="p" className="!text-blue_gray-300_01">
+                      <Text as="p" className={textColorBlueGray}>
                         Botão Terciário
                       </Text>
                     </div>
-                    <Text as="p" className="!text-blue_gray-300_01">
+                    <Text as="p" className={textColorBlueGray}>
                       Links
                     </Text>
                   </div>
                   <div className="flex flex-row justify-between items-start w-[37%] md:w-full">
-                    <Text as="p" className="mt-0.5 !text-blue_gray-300_01">
+                    <Text as="p" className={`mt-0.5 ${textColorBlueGray}`}>
                       Botão para Abas
                     </Text>
                     <div className="flex flex-row justify-start gap-[9px]">
-                      <Text size="lg" as="p" className="!text-blue_gray-300_01">
+                      <Text size="lg" as="p" className={textColorBlueGray}>
                         Botão Ícone 38px
                       </Text>
-                      <Text size="lg" as="p" className="!text-blue_gray-300_01">
+                      <Text size="lg" as="p" className={textColorBlueGray}>
                         Botão Ícone 30px
                       </Text>
                     </div>
                   </div>
                 </div>
+
+                {/* Button Styles Section */}
                 <div className="flex flex-row md:flex-col justify-start items-start w-full gap-[21px] md:gap-5">
                   <div className="flex flex-col items-start justify-start w-[48%] md:w-full mt-[3px] md:mt-0">
                     <div className="flex flex-row sm:flex-col w-full gap-[21px]">
-                      <div className="flex flex-col items-center justify-start w-[31%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                      <div className={`flex flex-col items-center justify-start w-[31%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                         <Button
                           size="sm"
                           shape="round"
@@ -289,7 +318,7 @@ export default function EstilosPage() {
                           Botão
                         </Button>
                       </div>
-                      <div className="flex flex-col items-center justify-start w-[31%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                      <div className={`flex flex-col items-center justify-start w-[31%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                         <Button
                           size="sm"
                           variant="outline"
@@ -327,7 +356,7 @@ export default function EstilosPage() {
                           Botão
                         </Button>
                       </div>
-                      <div className="flex flex-col items-center justify-start w-[31%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                      <div className={`flex flex-col items-center justify-start w-[31%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                         <div className="flex flex-row justify-start items-center w-full gap-2.5 p-2.5">
                           <Text as="p" className="ml-2.5 text-center">
                             Botão
@@ -387,9 +416,11 @@ export default function EstilosPage() {
                       className="w-[50%] md:h-auto sm:w-full mt-[7px] ml-px md:ml-0 object-cover"
                     />
                   </div>
+
+                  {/* Link Buttons Section */}
                   <div className="flex flex-col items-start justify-start w-[13%] md:w-full mt-[3px] gap-[11px] md:mt-0">
                     <div className="flex flex-col items-start justify-start w-full gap-7">
-                      <div className="flex flex-col items-center justify-center w-full gap-[21px] p-[18px] border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                      <div className={`flex flex-col items-center justify-center w-full gap-[21px] p-[18px] border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                         <div className="flex flex-row justify-center w-[96%] md:w-full">
                           <Text as="p" className="!text-deep_purple-200 text-center">
                             Botão de Link
@@ -406,11 +437,11 @@ export default function EstilosPage() {
                           </Text>
                         </div>
                       </div>
-                      <Text as="p" className="!text-blue_gray-300_01">
+                      <Text as="p" className={textColorBlueGray}>
                         Botão do Menu
                       </Text>
                     </div>
-                    <div className="flex flex-col items-center justify-start w-[84%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                    <div className={`flex flex-col items-center justify-start w-[84%] md:w-full gap-5 p-5 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                       <div className="flex flex-row justify-start items-center w-full gap-[9px]">
                         <Heading as="h2">Menu</Heading>
                         <Img src="images/img_botao_icone_38px.svg" alt="iconxeighteen" className="h-[18px] w-[19px]" />
@@ -437,13 +468,15 @@ export default function EstilosPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-start w-[18%] md:w-full mt-[3px] gap-5 p-5 md:mt-0 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+
+                  {/* Icon Buttons Section */}
+                  <div className={`flex flex-col items-center justify-start w-[18%] md:w-full mt-[3px] gap-5 p-5 md:mt-0 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                     <Button
                       color="white_A700"
                       size="lg"
                       shape="square"
                       rightIcon={<Img src="images/img_iconx18_10.svg" alt="iconx18" />}
-                      className="w-full gap-2.5 sm:px-5 font-medium border-gray-700 border-b-2 border-solid"
+                      className={`w-full ${buttonBaseClasses} border-gray-700 border-b-2 border-solid`}
                     >
                       Botão
                     </Button>
@@ -452,7 +485,7 @@ export default function EstilosPage() {
                       size="lg"
                       shape="square"
                       rightIcon={<Img src="images/img_iconx18_16.svg" alt="iconx18" />}
-                      className="w-full gap-2.5 sm:px-5 font-medium border-gray-700 border-b-2 border-solid"
+                      className={`w-full ${buttonBaseClasses} border-gray-700 border-b-2 border-solid`}
                     >
                       Botão
                     </Button>
@@ -461,7 +494,7 @@ export default function EstilosPage() {
                       size="lg"
                       shape="square"
                       rightIcon={<Img src="images/img_iconx18_10.svg" alt="iconx18" />}
-                      className="w-full gap-2.5 sm:px-5 font-medium border-deep_orange-200 border-b-2 border-solid"
+                      className={`w-full ${buttonBaseClasses} border-deep_orange-200 border-b-2 border-solid`}
                     >
                       Botão
                     </Button>
@@ -470,13 +503,15 @@ export default function EstilosPage() {
                       size="lg"
                       shape="square"
                       rightIcon={<Img src="images/img_iconx18_17.svg" alt="iconx18" />}
-                      className="w-full gap-2.5 sm:px-5 text-blue_gray-300_01 font-medium border-blue_gray-300_01 border-b-2 border-solid"
+                      className={`w-full text-blue_gray-300_01 ${buttonBaseClasses} border-blue_gray-300_01 border-b-2 border-solid`}
                     >
                       Botão
                     </Button>
                   </div>
+
+                  {/* Circle Buttons Section */}
                   <div className="flex flex-row w-[18%] md:w-full gap-4">
-                    <div className="flex flex-col items-center justify-start w-[46%] gap-5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                    <div className={`flex flex-col items-center justify-start w-[46%] gap-5 p-5 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                       <Button shape="circle" className="w-[38px]">
                         <Img src="images/img_iconx18_16.svg" />
                       </Button>
@@ -490,7 +525,7 @@ export default function EstilosPage() {
                         <Img src="images/img_iconx18_17.svg" />
                       </Button>
                     </div>
-                    <div className="flex flex-col items-center justify-start w-[46%] mb-[18px] gap-3.5 p-5 border-deep_purple-A200_01 border border-dashed rounded-[5px]">
+                    <div className={`flex flex-col items-center justify-start w-[46%] mb-[18px] gap-3.5 p-5 border-deep_purple-A200_01 border border-dashed ${roundedButton}`}>
                       <Button shape="square" className="w-[38px]">
                         <Img src="images/img_property_1_default.svg" />
                       </Button>

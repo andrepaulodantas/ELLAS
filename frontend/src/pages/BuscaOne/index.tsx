@@ -1,18 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import { Text, Img, Heading, Button, GoogleMap, Radio, RadioGroup, SelectBox } from "../../components";
+import { Text, Img, Heading, Button, GoogleMap, RadioGroup, SelectBox } from "../../components";
 import { OptionProps } from "react-select";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
 import { Link } from "react-router-dom"; // Import Link
 
+// Defina um tipo para as opções de dropdown
+type DropDownOption = {
+  label: string;
+  value: string;
+};
 
-const dropDownOptions = [
-  { label: "Option1", value: "option1" },
-  { label: "Option2", value: "option2" },
-  { label: "Option3", value: "option3" },
+// Opções de dropdown
+const dropDownOptions: DropDownOption[] = [
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" },
 ];
 
 export default function BuscaOnePage() {
+  // Estados para armazenar os valores selecionados
+  const [selectedVisualization, setSelectedVisualization] = useState("paises");
+  const [selectedStatus, setSelectedStatus] = useState("ambos");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
+  const handleVisualizationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedVisualization(e.target.value);
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedStatus(e.target.value);
+  };
+
+   const handleCategoryChange = (option: DropDownOption | null) => {
+    if (option) {
+      setSelectedCategory(option.value);
+    } else {
+      setSelectedCategory(null);
+    }
+  };
+
+  const handleQuestionChange = (option: DropDownOption | null) => {
+    if (option) {
+      setSelectedQuestion(option.value);
+    } else {
+      setSelectedQuestion(null);
+    }
+  };
+
+  const handleTimeChange = (option: DropDownOption | null) => {
+    if (option) {
+      setSelectedTime(option.value);
+    } else {
+      setSelectedTime(null);
+    }
+  };
+
+  const handleReset = () => {
+    setSelectedVisualization("paises");
+    setSelectedStatus("ambos");
+    setSelectedCategory(null);
+    setSelectedQuestion(null);
+    setSelectedTime(null);
+  };
+
   return (
     <>
       <Helmet>
@@ -70,40 +123,7 @@ export default function BuscaOnePage() {
               </div>
               <div className="flex flex-row md:flex-col justify-start items-center w-full gap-[35px] md:gap-5 md:px-5 max-w-[1331px]">
                 <div className="h-[1087px] w-[29%] md:w-full pt-7 sm:pt-5 bg-white-A700 shadow-md relative">
-                  <div className="flex flex-col items-start justify-start w-[37%] gap-2.5 bottom-[33%] left-[9%] m-auto absolute">
-                    <Text size="3xl" as="p">
-                      Visualização
-                    </Text>
-                    <div className="flex flex-col items-center justify-start w-full gap-[15px]">
-                      <div className="flex flex-row justify-start items-center w-full gap-1.5">
-                        <Img src="images/img_radio_icon.svg" alt="radioicon_one" className="h-[24px] w-[24px]" />
-                        <Text as="p" className="!text-gray-900">
-                          Países
-                        </Text>
-                      </div>
-                      <div className="flex flex-row justify-start items-center w-full gap-1.5">
-                        <Img
-                          src="images/img_radio_icon_gray_300_01.svg"
-                          alt="radioicon_three"
-                          className="h-[24px] w-[24px]"
-                        />
-                        <Text as="p" className="!text-blue_gray-300_01">
-                          Regiões
-                        </Text>
-                      </div>
-                      <div className="flex flex-row justify-start items-center w-full gap-1.5">
-                        <Img
-                          src="images/img_radio_icon_gray_300_01.svg"
-                          alt="radioicon_five"
-                          className="h-[24px] w-[24px]"
-                        />
-                        <Text as="p" className="!text-blue_gray-300_01">
-                          Global
-                        </Text>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end justify-center w-full h-max left-0 bottom-0 right-0 top-0 m-auto absolute">
+                  <div className="flex flex-col items-center justify-start w-full z-[1]">
                     <div className="flex flex-col items-center justify-start w-full z-[1]">
                       <div className="flex flex-row justify-center w-full">
                         <div className="flex flex-col items-center justify-start w-full">
@@ -131,14 +151,15 @@ export default function BuscaOnePage() {
                         </div>
                       </div>
                       <Button
-                        size="xs"
+                        size="lg"
                         variant="outline"
                         rightIcon={<Img src="images/img_iconx18_5.svg" alt="iconx18" />}
-                        className="mt-[22px] gap-2.5 min-w-[95px] rounded-[15px] sm:min-w-full"
+                        className="mt-[12px] gap-2.5 min-w-[95px] rounded-[55px] sm:min-w-full"
+                        onClick={handleReset} // Add reset functionality here
                       >
                         Reiniciar
                       </Button>
-                      <div className="flex flex-col items-start justify-start w-[78%] md:w-full mt-2.5">
+                      <div className="flex flex-col items-start justify-start w-[78%] md:w-full mt-3.5">
                         <div className="flex flex-col items-start justify-start w-full">
                           <div className="flex flex-col items-start justify-start w-full gap-3">
                             <Text size="3xl" as="p">
@@ -147,7 +168,7 @@ export default function BuscaOnePage() {
                             <SelectBox
                               shape="round"
                               indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                              getOptionLabel={(e: OptionProps) => (
+                              getOptionLabel={(e: DropDownOption) => (
                                 <>
                                   <div className="flex items-center">
                                     <Img src="images/img_iconx18_6.svg" alt="iconx18" />
@@ -158,6 +179,8 @@ export default function BuscaOnePage() {
                               name="iniciativas"
                               placeholder="Iniciativas"
                               options={dropDownOptions}
+                              value={dropDownOptions.find(option => option.value === selectedCategory) || null}
+                              onChange={handleCategoryChange}
                               className="w-full border-gray-300_01 border border-solid"
                             />
                           </div>
@@ -167,7 +190,7 @@ export default function BuscaOnePage() {
                           <SelectBox
                             shape="round"
                             indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                            getOptionLabel={(e: OptionProps) => (
+                            getOptionLabel={(e: DropDownOption) => (
                               <>
                                 <div className="flex items-center">
                                   <Img src="images/img_iconx18_8.svg" alt="iconx18" />
@@ -178,6 +201,8 @@ export default function BuscaOnePage() {
                             name="item"
                             placeholder="Quais e quantas iniciativas..."
                             options={dropDownOptions}
+                            value={dropDownOptions.find(option => option.value === selectedQuestion) || null}
+                            onChange={handleQuestionChange}
                             className="w-full mt-3 border-blue_gray-100 border border-solid"
                           />
                         </div>
@@ -187,7 +212,7 @@ export default function BuscaOnePage() {
                         <SelectBox
                           shape="round"
                           indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                          getOptionLabel={(e: OptionProps) => (
+                          getOptionLabel={(e: DropDownOption) => (
                             <>
                               <div className="flex items-center">
                                 <Img src="images/img_iconx18_9.svg" alt="iconx18" />
@@ -198,33 +223,93 @@ export default function BuscaOnePage() {
                           name="item_one"
                           placeholder="Mais recente disponível"
                           options={dropDownOptions}
+                          value={dropDownOptions.find(option => option.value === selectedTime) || null}
+                          onChange={handleTimeChange}
                           className="w-full mt-3 border-blue_gray-100 border border-solid"
                         />
                         <Text size="3xl" as="p" className="mt-[22px]">
                           Status
                         </Text>
-                        <RadioGroup name="status" className="flex flex-col mt-3.5">
-                          <Radio
-                            value="ambos"
-                            label="Ambos"
-                            className="mr-[62px] pl-1.5 gap-1.5 py-[3px] md:mr-5 text-gray-900"
-                          />
-                          <Radio
-                            value="ativo"
-                            label="Ativo"
-                            className="mt-[15px] mr-[75px] pl-1.5 gap-1.5 py-[3px] md:mr-5 text-blue_gray-300_01"
-                          />
-                          <Radio
-                            value="inativo"
-                            label="Inativo"
-                            className="mt-[15px] mr-16 pl-1.5 gap-1.5 py-[3px] md:mr-5 text-blue_gray-300_01"
-                          />
+                        <RadioGroup name="status" className="w-full mt-3 flex flex-col gap-4">
+                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="status"
+                              value="ambos"
+                              checked={selectedStatus === "ambos"}
+                              onChange={handleStatusChange}
+                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                            />
+                            <span className="text-blue_gray-300_01">Ambos</span>
+                          </label>
+                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="status"
+                              value="ativo"
+                              checked={selectedStatus === "ativo"}
+                              onChange={handleStatusChange}
+                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                            />
+                            <span className="text-blue_gray-300_01">Ativo</span>
+                          </label>
+                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="status"
+                              value="inativo"
+                              checked={selectedStatus === "inativo"}
+                              onChange={handleStatusChange}
+                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                            />
+                            <span className="text-blue_gray-300_01">Inativo</span>
+                          </label>
+                        </RadioGroup>
+                        <Text size="3xl" as="p" className="mt-[22px]">
+                          Visualização
+                        </Text>
+                        <RadioGroup
+                          name="visualizacao"
+                          className="w-full mt-3 flex flex-col gap-4"
+                        >
+                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="visualizacao"
+                              value="paises"
+                              checked={selectedVisualization === "paises"}
+                              onChange={handleVisualizationChange}
+                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                            />
+                            <span className="text-blue_gray-300_01">Países</span>
+                          </label>
+                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="visualizacao"
+                              value="regioes"
+                              checked={selectedVisualization === "regioes"}
+                              onChange={handleVisualizationChange}
+                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                            />
+                            <span className="text-blue_gray-300_01">Regiões</span>
+                          </label>
+                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                            <input
+                              type="radio"
+                              name="visualizacao"
+                              value="global"
+                              checked={selectedVisualization === "global"}
+                              onChange={handleVisualizationChange}
+                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                            />
+                            <span className="text-blue_gray-300_01">Global</span>
+                          </label>
                         </RadioGroup>
                       </div>
-                    </div>
-                    <Img src="images/img_barra_rolagem.svg" alt="barrarolagem" className="h-[1004px] mt-[-495px]" />
-                  </div>
-                </div>
+                      </div>
+                      </div>
+                      </div>
                 <Tabs
                   className="flex flex-col items-center justify-start w-[70%] md:w-full"
                   selectedTabClassName="!text-gray-700 font-medium text-sm border-gray-700 border-b-2 bg-white-A700"
@@ -304,7 +389,7 @@ export default function BuscaOnePage() {
                     </div>
                   </div>
                   <div className="flex flex-row justify-center w-[99%] md:w-full mt-[13px] bg-white-A700">
-                    <div className="flex flex-row md:flex-col justify-center w-full md:gap-5">
+                    <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]"> {/* Add overflow-y and max-height here */}
                       <div className="flex flex-col items-center justify-start w-[99%] md:w-full">
                         <div className="flex flex-row justify-center w-full">
                           <div className="flex flex-row md:flex-col justify-start w-full gap-[74px] p-[9px] md:gap-10 bg-purple-100">
@@ -325,11 +410,7 @@ export default function BuscaOnePage() {
                                 <Text as="p" className="!text-gray-900">
                                   Status
                                 </Text>
-                                <Img
-                                  src="images/img_iconx18_13.svg"
-                                  alt="iconxeighteen"
-                                  className="h-[18px] w-[18px]"
-                                />
+                                <Img src="images/img_iconx18_13.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
                               </div>
                             </div>
                             <div className="flex flex-row justify-between w-[27%] md:w-full">
@@ -337,21 +418,13 @@ export default function BuscaOnePage() {
                                 <Text as="p" className="!text-gray-900">
                                   Start date
                                 </Text>
-                                <Img
-                                  src="images/img_iconx18_13.svg"
-                                  alt="iconxeighteen"
-                                  className="h-[18px] w-[18px]"
-                                />
+                                <Img src="images/img_iconx18_13.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
                               </div>
                               <div className="flex flex-row justify-start items-center gap-2.5">
                                 <Text as="p" className="!text-gray-900">
                                   Finish date
                                 </Text>
-                                <Img
-                                  src="images/img_iconx18_13.svg"
-                                  alt="iconxeighteen"
-                                  className="h-[18px] w-[18px]"
-                                />
+                                <Img src="images/img_iconx18_13.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
                               </div>
                             </div>
                           </div>
@@ -366,10 +439,7 @@ export default function BuscaOnePage() {
                                 <div className="h-[41px] w-full bg-deep_purple-200_26" />
                                 <div className="h-[41px] w-full bg-deep_purple-200_26" />
                               </div>
-                              <Text
-                                as="p"
-                                className="w-[13%] h-full left-[2%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
+                              <Text as="p" className="w-[13%] h-full left-[2%] bottom-0 top-0 m-auto !leading-[41px] absolute">
                                 <>
                                   Peru
                                   <br />
@@ -406,10 +476,7 @@ export default function BuscaOnePage() {
                                   <br />
                                 </>
                               </Text>
-                              <Text
-                                as="p"
-                                className="w-[19%] h-full left-[19%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
+                              <Text as="p" className="w-[19%] h-full left-[19%] bottom-0 top-0 m-auto !leading-[41px] absolute">
                                 <>
                                   AgileGirls-Peru
                                   <br />
@@ -446,10 +513,7 @@ export default function BuscaOnePage() {
                                   <br />
                                 </>
                               </Text>
-                              <Text
-                                as="p"
-                                className="w-[7%] h-full left-[43%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
+                              <Text as="p" className="w-[7%] h-full left-[43%] bottom-0 top-0 m-auto !leading-[41px] absolute">
                                 <>
                                   Active
                                   <br />
@@ -484,10 +548,7 @@ export default function BuscaOnePage() {
                                   Active
                                 </>
                               </Text>
-                              <Text
-                                as="p"
-                                className="w-[7%] h-full right-[35%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
+                              <Text as="p" className="w-[7%] h-full right-[35%] bottom-0 top-0 m-auto !leading-[41px] absolute">
                                 <>
                                   2012
                                   <br />
@@ -522,10 +583,7 @@ export default function BuscaOnePage() {
                                   2020
                                 </>
                               </Text>
-                              <Text
-                                as="p"
-                                className="w-[7%] h-full right-[20%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
+                              <Text as="p" className="w-[7%] h-full right-[20%] bottom-0 top-0 m-auto !leading-[41px] absolute">
                                 <>
                                   <br />
                                   2022
@@ -552,22 +610,10 @@ export default function BuscaOnePage() {
                                 </>
                               </Text>
                             </div>
-                            <div className="h-px w-full bg-deep_purple-200_26" />
                           </div>
                         </div>
                         <div className="h-px w-full mt-[82px] bg-deep_purple-200_26" />
                         <div className="h-px w-full mt-[164px] bg-deep_purple-200_26" />
-                      </div>
-                      <div className="flex flex-col items-center justify-start w-[2%] md:w-full">
-                        <div className="flex flex-col items-center justify-start w-full bg-blue_gray-50">
-                          <Img src="images/img_iconx18_gray_400.svg" alt="iconxeighteen" className="h-[22px]" />
-                          <div className="h-[64px] w-[56%] mt-0.5 bg-gray-400 rounded-[50%]" />
-                          <Img
-                            src="images/img_iconx18_gray_400_22x18.svg"
-                            alt="iconxeighteen"
-                            className="h-[22px] mt-[339px]"
-                          />
-                        </div>
                       </div>
                     </div>
                   </div>

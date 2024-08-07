@@ -1,24 +1,45 @@
-import React, { HTMLAttributes } from "react";
-import { Radio } from "../Radio";
+// src/components/RadioGroup.tsx
 
-type RadioGroupProps = Omit<React.DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement>, "onChange"> &
+import React, { HTMLAttributes } from "react";
+import { Radio } from "../Radio"; // Ensure this path is correct
+
+type RadioGroupProps = Omit<
+  React.DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+  "onChange"
+> &
   Partial<{
     selectedValue: string;
     orientation: string;
     name: string;
     disabled: boolean;
-    onChange: Function;
+    onChange: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void;
   }>;
 
 const RadioGroup = React.forwardRef<HTMLInputElement, RadioGroupProps>(
-  ({ selectedValue, orientation = "horizontal", className, name, children, onChange, disabled, ...restProps }, ref) => {
+  (
+    {
+      selectedValue,
+      orientation = "horizontal",
+      className,
+      name,
+      children,
+      onChange,
+      disabled,
+      ...restProps
+    },
+    ref
+  ) => {
     const [value, setValue] = React.useState(selectedValue);
 
     React.useEffect(() => {
       setValue(selectedValue);
     }, [selectedValue]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, val: string, isDisabled: boolean) => {
+    const handleChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+      val: string,
+      isDisabled: boolean
+    ) => {
       if (isDisabled) return;
       setValue(val);
       onChange && onChange(val, event);
@@ -39,12 +60,8 @@ const RadioGroup = React.forwardRef<HTMLInputElement, RadioGroupProps>(
       return child;
     });
 
-    return (
-      <>
-        <div className={className}>{compChildren}</div>
-      </>
-    );
-  },
+    return <div className={className}>{compChildren}</div>;
+  }
 );
 
 export { RadioGroup };

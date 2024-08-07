@@ -1,30 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Text, Img, Heading, Button, GoogleMap, RadioGroup, SelectBox } from "../../components";
-import { OptionProps } from "react-select";
+import { Text, Img, Heading, Button, RadioGroup, SelectBox } from "../../components";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
+import GoogleMapComponent from "../../components/GoogleMap";
+import { fetchInitiatives, fetchPolicies } from "../../services/apiService"; // Ensure correct path
 
-// Defina um tipo para as opções de dropdown
+// Define the type for dropdown options
 type DropDownOption = {
   label: string;
   value: string;
 };
 
-// Opções de dropdown
-const dropDownOptions: DropDownOption[] = [
-  { label: "Option 1", value: "option1" },
-  { label: "Option 2", value: "option2" },
-  { label: "Option 3", value: "option3" },
-];
+// Define the type for initiative data
+type Initiative = {
+  initiativeName: string;
+  countryName: string;
+  status: string;
+  startDate: string;
+  finishDate: string;
+};
+
+// Define the type for policy data
+type Policy = {
+  policyName: string;
+  countryName: string;
+};
 
 export default function BuscaOnePage() {
-  // Estados para armazenar os valores selecionados
+  // State to store selected values
   const [selectedVisualization, setSelectedVisualization] = useState("paises");
   const [selectedStatus, setSelectedStatus] = useState("ambos");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [initiatives, setInitiatives] = useState<Initiative[]>([]);
+  const [policies, setPolicies] = useState<DropDownOption[]>([]);
+
+  // Fetch initiatives from the backend
+  const loadInitiatives = async () => {
+    try {
+      const data = await fetchInitiatives();
+      const formattedData = data.results.bindings.map((item: any) => ({
+        initiativeName: item.initiativeName.value,
+        countryName: item.countryName.value,
+        status: item.status.value || "Unknown",
+        startDate: item.startDate.value || "Unknown",
+        finishDate: item.finishDate.value || "Unknown",
+      }));
+      setInitiatives(formattedData);
+    } catch (error) {
+      console.error("Error fetching initiatives:", error);
+    }
+  };
+
+  // Fetch policies from the backend
+  const loadPolicies = async () => {
+    try {
+      const data = await fetchPolicies();
+      const formattedData = data.results.bindings.map((item: any) => ({
+        label: item.policyName.value,
+        value: item.policyName.value,
+      }));
+      setPolicies(formattedData);
+    } catch (error) {
+      console.error("Error fetching policies:", error);
+    }
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    loadInitiatives();
+    loadPolicies();
+  }, []);
 
   const handleVisualizationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedVisualization(e.target.value);
@@ -34,28 +82,16 @@ export default function BuscaOnePage() {
     setSelectedStatus(e.target.value);
   };
 
-   const handleCategoryChange = (option: DropDownOption | null) => {
-    if (option) {
-      setSelectedCategory(option.value);
-    } else {
-      setSelectedCategory(null);
-    }
+  const handleCategoryChange = (option: DropDownOption | null) => {
+    setSelectedCategory(option ? option.value : null);
   };
 
   const handleQuestionChange = (option: DropDownOption | null) => {
-    if (option) {
-      setSelectedQuestion(option.value);
-    } else {
-      setSelectedQuestion(null);
-    }
+    setSelectedQuestion(option ? option.value : null);
   };
 
   const handleTimeChange = (option: DropDownOption | null) => {
-    if (option) {
-      setSelectedTime(option.value);
-    } else {
-      setSelectedTime(null);
-    }
+    setSelectedTime(option ? option.value : null);
   };
 
   const handleReset = () => {
@@ -155,7 +191,7 @@ export default function BuscaOnePage() {
                         variant="outline"
                         rightIcon={<Img src="images/img_iconx18_5.svg" alt="iconx18" />}
                         className="mt-[12px] gap-2.5 min-w-[95px] rounded-[55px] sm:min-w-full"
-                        onClick={handleReset} // Add reset functionality here
+                        onClick={handleReset} // Adiciona funcionalidade de reiniciar aqui
                       >
                         Reiniciar
                       </Button>
@@ -178,8 +214,8 @@ export default function BuscaOnePage() {
                               )}
                               name="iniciativas"
                               placeholder="Iniciativas"
-                              options={dropDownOptions}
-                              value={dropDownOptions.find(option => option.value === selectedCategory) || null}
+                              options={policies}  // Atualizado para usar políticas do backend
+                              value={policies.find(option => option.value === selectedCategory) || null}
                               onChange={handleCategoryChange}
                               className="w-full border-gray-300_01 border border-solid"
                             />
@@ -200,8 +236,8 @@ export default function BuscaOnePage() {
                             )}
                             name="item"
                             placeholder="Quais e quantas iniciativas..."
-                            options={dropDownOptions}
-                            value={dropDownOptions.find(option => option.value === selectedQuestion) || null}
+                            options={policies} // Atualizado para usar políticas do backend
+                            value={policies.find(option => option.value === selectedQuestion) || null}
                             onChange={handleQuestionChange}
                             className="w-full mt-3 border-blue_gray-100 border border-solid"
                           />
@@ -222,13 +258,13 @@ export default function BuscaOnePage() {
                           )}
                           name="item_one"
                           placeholder="Mais recente disponível"
-                          options={dropDownOptions}
-                          value={dropDownOptions.find(option => option.value === selectedTime) || null}
+                          options={policies} // Atualizado para usar políticas do backend
+                          value={policies.find(option => option.value === selectedTime) || null}
                           onChange={handleTimeChange}
                           className="w-full mt-3 border-blue_gray-100 border border-solid"
                         />
                         <Text size="3xl" as="p" className="mt-[22px]">
-                          Status
+                          Tipo
                         </Text>
                         <RadioGroup name="status" className="w-full mt-3 flex flex-col gap-4">
                           <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
@@ -307,13 +343,14 @@ export default function BuscaOnePage() {
                           </label>
                         </RadioGroup>
                       </div>
-                      </div>
-                      </div>
-                      </div>
+                    </div>
+                  </div>
+                </div>
                 <Tabs
                   className="flex flex-col items-center justify-start w-[70%] md:w-full"
                   selectedTabClassName="!text-gray-700 font-medium text-sm border-gray-700 border-b-2 bg-white-A700"
                   selectedTabPanelClassName="mt-[-2px] relative tab-panel--selected"
+                  defaultIndex={0} // Usa o parâmetro padrão JavaScript para definir o índice padrão
                 >
                   <div className="flex flex-row md:flex-col justify-between items-start w-full md:gap-10">
                     <TabList className="flex flex-row sm:flex-col justify-start w-[46%] md:w-full gap-2.5 sm:gap-2.5">
@@ -360,21 +397,27 @@ export default function BuscaOnePage() {
                       </Button>
                     </div>
                   </div>
-                  {[...Array(3)].map((_, index) => (
-                    <TabPanel key={`tab-panel${index}`} className="items-center w-full absolute">
-                      <div className="flex flex-col items-center justify-start w-full mt-[-2px]">
-                        <div className="flex flex-col items-center justify-start w-full mb-[22px] gap-[23px]">
-                          <div className="h-[2px] w-full bg-deep_orange-200" />
-                          <div className="flex flex-col items-start justify-start w-[95%] md:w-full gap-[17px]">
-                            <Text size="3xl" as="p" className="text-center">
-                              Quais e quantas iniciativas são realizadas por país?
-                            </Text>
-                            <GoogleMap showMarker={false} className="h-[352px] w-full" />
+                  <TabPanel className="flex flex-col items-center justify-center w-full">
+                    <div className="flex flex-col items-center justify-center w-full mt-[-2px]">
+                      <div className="flex flex-col items-center justify-center w-full mb-[22px] gap-[23px]">
+                        <div className="h-[2px] w-full bg-deep_orange-200" />
+                        <div className="flex flex-col items-center justify-center w-[95%] md:w-full gap-[17px]">
+                          <Text size="3xl" as="p" className="text-center">
+                            Quais e quantas iniciativas são realizadas por país?
+                          </Text>
+                          <div className="relative w-full h-[352px] overflow-hidden rounded-lg">
+                            <GoogleMapComponent initiatives={initiatives} />
                           </div>
                         </div>
                       </div>
-                    </TabPanel>
-                  ))}
+                    </div>
+                  </TabPanel>
+                  <TabPanel className="items-center w-full absolute">
+                    {/* Conteúdo para o gráfico de barras */}
+                  </TabPanel>
+                  <TabPanel className="items-center w-full absolute">
+                    {/* Conteúdo para o gráfico de linhas */}
+                  </TabPanel>
                   <div className="flex flex-row justify-between items-start w-[99%] md:w-full mt-[26px]">
                     <Heading size="xl" as="h2" className="mt-[3px] text-center">
                       Tabela de Dados
@@ -389,7 +432,7 @@ export default function BuscaOnePage() {
                     </div>
                   </div>
                   <div className="flex flex-row justify-center w-[99%] md:w-full mt-[13px] bg-white-A700">
-                    <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]"> {/* Add overflow-y and max-height here */}
+                    <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]">
                       <div className="flex flex-col items-center justify-start w-[99%] md:w-full">
                         <div className="flex flex-row justify-center w-full">
                           <div className="flex flex-row md:flex-col justify-start w-full gap-[74px] p-[9px] md:gap-10 bg-purple-100">
@@ -433,182 +476,26 @@ export default function BuscaOnePage() {
                           <div className="flex flex-col items-center justify-start w-full">
                             <div className="h-[410px] w-full relative">
                               <div className="flex flex-col items-center justify-start w-full gap-[41px] top-0 right-0 left-0 m-auto absolute">
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
+                                {initiatives.map((initiative, index) => (
+                                  <div key={index} className="flex flex-row justify-center w-full bg-deep_purple-200_26">
+                                    <Text as="p" className="w-[13%] h-full left-[2%] bottom-0 top-0 m-auto !leading-[41px] absolute">
+                                      {initiative.countryName}
+                                    </Text>
+                                    <Text as="p" className="w-[19%] h-full left-[19%] bottom-0 top-0 m-auto !leading-[41px] absolute">
+                                      {initiative.initiativeName}
+                                    </Text>
+                                    <Text as="p" className="w-[7%] h-full left-[43%] bottom-0 top-0 m-auto !leading-[41px] absolute">
+                                      {initiative.status}
+                                    </Text>
+                                    <Text as="p" className="w-[7%] h-full right-[35%] bottom-0 top-0 m-auto !leading-[41px] absolute">
+                                      {initiative.startDate}
+                                    </Text>
+                                    <Text as="p" className="w-[7%] h-full right-[20%] bottom-0 top-0 m-auto !leading-[41px] absolute">
+                                      {initiative.finishDate}
+                                    </Text>
+                                  </div>
+                                ))}
                               </div>
-                              <Text as="p" className="w-[13%] h-full left-[2%] bottom-0 top-0 m-auto !leading-[41px] absolute">
-                                <>
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Bolivia
-                                  <br />
-                                  Bolivia
-                                  <br />
-                                  Bolivia
-                                  <br />
-                                  Argentina
-                                  <br />
-                                  Argentina
-                                  <br />
-                                  <br />
-                                </>
-                              </Text>
-                              <Text as="p" className="w-[19%] h-full left-[19%] bottom-0 top-0 m-auto !leading-[41px] absolute">
-                                <>
-                                  AgileGirls-Peru
-                                  <br />
-                                  Alianza
-                                  <br />
-                                  Niñas en Ciencia
-                                  <br />
-                                  Clubes de Ciencia Perú
-                                  <br />
-                                  DigiGirlz
-                                  <br />
-                                  Enseña Perú
-                                  <br />
-                                  Girls In Tech & Science
-                                  <br />
-                                  IEEE Women
-                                  <br />
-                                  Meninas Digitais
-                                  <br />
-                                  Include Meninas
-                                  <br />
-                                  Story Girl
-                                  <br />
-                                  Bolivianas
-                                  <br />
-                                  IC LaPaz
-                                  <br />
-                                  MujerComp
-                                  <br />
-                                  DevComp
-                                  <br />
-                                  BuenasProg
-                                  <br />
-                                  <br />
-                                </>
-                              </Text>
-                              <Text as="p" className="w-[7%] h-full left-[43%] bottom-0 top-0 m-auto !leading-[41px] absolute">
-                                <>
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Inactive
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Inactive
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                </>
-                              </Text>
-                              <Text as="p" className="w-[7%] h-full right-[35%] bottom-0 top-0 m-auto !leading-[41px] absolute">
-                                <>
-                                  2012
-                                  <br />
-                                  2022
-                                  <br />
-                                  2016
-                                  <br />
-                                  2022
-                                  <br />
-                                  2015
-                                  <br />
-                                  2010
-                                  <br />
-                                  2020
-                                  <br />
-                                  2021
-                                  <br />
-                                  2020
-                                  <br />
-                                  2014
-                                  <br />
-                                  2018
-                                  <br />
-                                  2022
-                                  <br />
-                                  2020
-                                  <br />
-                                  2021
-                                  <br />
-                                  2018
-                                  <br />
-                                  2020
-                                </>
-                              </Text>
-                              <Text as="p" className="w-[7%] h-full right-[20%] bottom-0 top-0 m-auto !leading-[41px] absolute">
-                                <>
-                                  <br />
-                                  2022
-                                  <br />
-                                  2020
-                                  <br />
-                                  <br />
-                                  2021
-                                  <br />
-                                  <br />
-                                  <br />
-                                  2023
-                                  <br />
-                                  <br />
-                                  2020
-                                  <br />
-                                  <br />
-                                  <br />
-                                  <br />
-                                  2023
-                                  <br />
-                                  <br />
-                                  2022
-                                </>
-                              </Text>
                             </div>
                           </div>
                         </div>

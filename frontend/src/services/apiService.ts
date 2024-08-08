@@ -22,8 +22,8 @@ const fetchQuery = async (query: string) => {
   }
 };
 
-export const fetchInitiatives = () => {
-  const query = `
+export const fetchInitiatives = (query?: string) => {
+  const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     SELECT ?initiativeName ?countryName WHERE {
@@ -34,11 +34,11 @@ export const fetchInitiatives = () => {
       FILTER(?countryName="Brazil"@en).
     }
   `;
-  return fetchQuery(query);
+  return fetchQuery(query || defaultQuery);
 };
 
-export const fetchPolicies = () => {
-  const query = `
+export const fetchPolicies = (query?: string) => {
+  const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     SELECT ?policyName ?countryName WHERE {
@@ -48,11 +48,11 @@ export const fetchPolicies = () => {
       ?country rdfs:label ?countryName.
     }
   `;
-  return fetchQuery(query);
+  return fetchQuery(query || defaultQuery);
 };
 
-export const fetchPolicyTypes = () => {
-  const query = `
+export const fetchPolicyTypes = (query?: string) => {
+  const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     SELECT DISTINCT ?policyType WHERE {
@@ -60,11 +60,11 @@ export const fetchPolicyTypes = () => {
       ?policy Ellas:policy_type ?policyType.
     }
   `;
-  return fetchQuery(query);
+  return fetchQuery(query || defaultQuery);
 };
 
-export const fetchPolicyResults = () => {
-  const query = `
+export const fetchPolicyResults = (query?: string) => {
+  const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     SELECT ?policyName ?policyResults WHERE {
@@ -73,11 +73,11 @@ export const fetchPolicyResults = () => {
       ?policy Ellas:policy_description ?policyResults.
     }
   `;
-  return fetchQuery(query);
+  return fetchQuery(query || defaultQuery);
 };
 
-export const fetchPoliciesByCountryAndDate = () => {
-  const query = `
+export const fetchPoliciesByCountryAndDate = (query?: string) => {
+  const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -95,5 +95,5 @@ export const fetchPoliciesByCountryAndDate = () => {
       )
     }
   `;
-  return fetchQuery(query);
+  return fetchQuery(query || defaultQuery);
 };

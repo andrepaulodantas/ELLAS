@@ -1,3 +1,5 @@
+// src/components/GoogleMapComponent.tsx
+
 import React, { useEffect, useState, useMemo } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -62,11 +64,11 @@ const GoogleMapComponent: React.FC<GoogleMapProps> = ({
 
     // Filter initiatives based on selected criteria
     const filteredInitiatives = initiatives.filter((initiative) => {
-      // Simplesmente filtrando pelo país
+      // Ensure the properties are defined before using includes method
       return (
-        (selectedCategory ? initiative.countryName.includes(selectedCategory) : true) &&
-        (selectedQuestion ? initiative.initiativeName.includes(selectedQuestion) : true) &&
-        (selectedTime ? initiative.initiativeName.includes(selectedTime) : true)
+        (selectedCategory ? initiative.countryName?.includes(selectedCategory) : true) &&
+        (selectedQuestion ? initiative.initiativeName?.includes(selectedQuestion) : true) &&
+        (selectedTime ? initiative.initiativeName?.includes(selectedTime) : true)
       );
     });
 

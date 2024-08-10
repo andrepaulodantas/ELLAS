@@ -1,5 +1,3 @@
-// src/pages/BuscaOne/index.tsx
-
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { Text, Img, Heading, Button, RadioGroup, SelectBox } from "../../components";
@@ -14,89 +12,16 @@ import {
   fetchPoliciesByCountryAndDate,
 } from "../../services/apiService";
 
-// Define the type for dropdown options
+// Definindo o tipo DropDownOption
 type DropDownOption = {
   label: string;
   value: string;
 };
 
-// Define the type for initiative data
-type Initiative = {
-  initiativeName: string;
-  countryName: string;
-  status: string;
-  startDate: string;
-  finishDate: string;
-};
-
-// Define the type for policy data
-type Policy = {
-  policyName: string;
-  countryName: string;
-};
-
+// Definindo as queries e questões
 const questionQueries: { [key: string]: { question: string; query: string }[] } = {
   policies: [
-    {
-      question: "In which countries the policy was applied?",
-      query: `
-        PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT ?policyName ?countryName WHERE {
-          ?policy a Ellas:Policy.
-          ?policy rdfs:label ?policyName.
-          ?policy Ellas:created_in ?country.
-          ?country rdfs:label ?countryName.
-        }
-      `,
-    },
-    {
-      question: "What types of gender policies/processes/practices exist in Latin America?",
-      query: `
-        PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT ?policyType WHERE {
-          ?policy a Ellas:Policy.
-          ?policy rdfs:label ?policyName.
-          ?policy Ellas:policy_type ?policyType.
-          ?policy Ellas:created_in ?country.
-          ?country rdfs:label ?countryName.
-        }
-      `,
-    },
-    {
-      question: "How policies identified/analyzed are promoting women's participation in STEM fields?",
-      query: `
-        PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT ?policyName ?policyResults WHERE {
-          ?policy a Ellas:Policy.
-          ?policy rdfs:label ?policyName.
-          ?policy Ellas:policy_description ?policyResults.
-        }
-      `,
-    },
-    {
-      question: "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
-      query: `
-        PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        SELECT ?policyName ?start_date ?countryName WHERE {
-          ?policy a Ellas:Policy.
-          ?policy rdfs:label ?policyName.
-          ?policy Ellas:created_in ?country.
-          ?country rdfs:label ?countryName.
-          ?policy Ellas:start_date ?start_date.
-          FILTER(xsd:integer(?start_date) > 2015)
-          FILTER(
-            regex(str(?countryName), "Peru", "i") || 
-            regex(str(?countryName), "Brazil", "i") || 
-            regex(str(?countryName), "Bolivia", "i")
-          )
-        }
-      `,
-    },
+    // Questões e queries aqui
   ],
   initiatives: [
     {
@@ -138,7 +63,6 @@ const BuscaOnePage = () => {
             } else if (selectedCategory === "initiatives") {
               response = await fetchInitiatives(selectedQuery);
             }
-            // Add other categories if needed
             if (response) {
               const formattedData = response.results.bindings.map(
                 (item: any) => ({
@@ -512,72 +436,181 @@ const BuscaOnePage = () => {
                               <div className="relative w-full h-[352px] overflow-hidden rounded-lg">
                                 <GoogleMapComponent
                                   initiatives={data}
-                                  selectedCategory={selectedCategory}
-                                  selectedQuestion={selectedQuestion}
-                                  selectedTime={selectedTime}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </TabPanel>
-                      <TabPanel className="items-center w-full absolute">
-                        {/* Conteúdo para o gráfico de barras */}
-                      </TabPanel>
-                      <TabPanel className="items-center w-full absolute">
-                        {/* Conteúdo para o gráfico de linhas */}
-                      </TabPanel>
-                      <div className="flex flex-row justify-between items-start w-[99%] md:w-full mt-[26px]">
-                        <Heading size="xl" as="h2" className="mt-[3px] text-center">
-                          Tabela de Dados
-                        </Heading>
-                        <div className="flex flex-row justify-start gap-0.5">
-                          <Button shape="square" className="w-[38px]">
-                            <Img src="images/img_botao_icone_30px_1.svg" />
-                          </Button>
-                          <Button shape="square" className="w-[38px]">
-                            <Img src="images/img_botao_icone_30px_4.svg" />
-                          </Button>
-                        </div>
+                                  selectedCountry={data.length > 0 ? data[0].country : null}
+                        />
                       </div>
-                      <div className="flex flex-row justify-center w-[99%] md:w-full mt-[13px] bg-white-A700">
-                        <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]">
-                          <div className="flex flex-col items-center justify-start w-[99%] md:w-full">
-                            <div className="flex flex-row justify-center w-full">
-                              <table className="w-full bg-purple-100">
-                                <thead>
-                                  <tr className="flex flex-row justify-between p-[9px]">
-                                    <th className="w-[10%] text-left !text-gray-900">Country</th>
-                                    <th className="w-[32%] text-left !text-gray-900">Name</th>
-                                    <th className="w-[7%] text-left !text-gray-900">Status</th>
-                                    <th className="w-[7%] text-left !text-gray-900">Start date</th>
-                                    <th className="w-[7%] text-left !text-gray-900">Finish date</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {data.map((item, index) => (
-                                    <tr key={index} className="flex flex-row justify-between p-[9px]">
-                                      <td className="w-[10%]">{item.country}</td>
-                                      <td className="w-[32%]">{item.name}</td>
-                                      <td className="w-[7%]">{item.status || ''}</td>
-                                      <td className="w-[7%]">{item.startDate || ''}</td>
-                                      <td className="w-[7%]">{item.finishDate || ''}</td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Tabs>
+                    </div>
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel className="items-center w-full absolute">
+                {/* Conteúdo para o gráfico de barras */}
+              </TabPanel>
+              <TabPanel className="items-center w-full absolute">
+                {/* Conteúdo para o gráfico de linhas */}
+              </TabPanel>
+              <div className="flex flex-row justify-between items-start w-[99%] md:w-full mt-[26px]">
+                <Heading size="xl" as="h2" className="mt-[3px] text-center">
+                  Tabela de Dados
+                </Heading>
+                <div className="flex flex-row justify-start gap-0.5">
+                  <Button shape="square" className="w-[38px]">
+                    <Img src="images/img_botao_icone_30px_1.svg" />
+                  </Button>
+                  <Button shape="square" className="w-[38px]">
+                    <Img src="images/img_botao_icone_30px_4.svg" />
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-row justify-center w-[99%] md:w-full mt-[13px] bg-white-A700">
+                <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]">
+                  <div className="flex flex-col items-center justify-start w-[99%] md:w-full">
+                    <div className="flex flex-row justify-center w-full">
+                      <table className="w-full bg-white-A700">
+                        <thead>
+                          <tr className="flex flex-row justify-between p-[9px]">
+                            <th className="w-[10%] text-left !text-gray-900">Country</th>
+                            <th className="w-[32%] text-left !text-gray-900">Name</th>
+                            <th className="w-[7%] text-left !text-gray-900">Status</th>
+                            <th className="w-[7%] text-left !text-gray-900">Start date</th>
+                            <th className="w-[7%] text-left !text-gray-900">Finish date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.map((item, index) => (
+                            <tr key={index} className="flex flex-row justify-between p-[9px]">
+                              <td className="w-[10%]">{item.country}</td>
+                              <td className="w-[32%]">{item.name}</td>
+                              <td className="w-[7%]">{item.status || ''}</td>
+                              <td className="w-[7%]">{item.startDate || ''}</td>
+                              <td className="w-[7%]">{item.finishDate || ''}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Tabs>
+          </div>
+        </div>
+        <footer className="flex flex-row justify-center w-full">
+          <div className="flex flex-col items-center justify-start w-full">
+            <Img src="images/img_group_22.svg" alt="image" className="h-[19px] z-[1]" />
+            <div className="flex flex-row justify-center w-full mt-[-18px] px-14 py-[65px] md:p-5 bg-gray-800_02">
+              <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 max-w-[1021px]">
+                <div className="flex flex-col items-start justify-start w-[19%] md:w-full">
+                  <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
+                    Contatos
+                  </Text>
+                  <Text size="xl" as="p" className="w-[87%] mt-2.5 !text-white-A700 !leading-5">
+                    <>
+                      www.ellas.ufmt.br
+                      <br />
+                      @Ellas.network
+                      <br />
+                      ellas.latinamerica@gmail.com
+                    </>
+                  </Text>
+                  <Text as="p" className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium">
+                    Conecte-se ao ELLAS
+                  </Text>
+                  <Img
+                    src="images/img_group_24.svg"
+                    alt="image_one"
+                    className="h-[26px] mt-[15px] ml-1 md:ml-0"
+                  />
+                </div>
+                <div className="flex flex-col items-end justify-start w-[74%] md:w-full mb-1">
+                  <div className="flex flex-row justify-between items-start w-[81%] md:w-full">
+                    <div className="flex flex-col items-center justify-start">
+                      <Heading size="s" as="h3" className="!text-white-A700 text-center">
+                        Patrocínio
+                      </Heading>
+                      <Img
+                        src="images/img_idrc_logo_branca.png"
+                        alt="idrclogo_one"
+                        className="w-full md:h-auto sm:w-full mt-[3px] object-cover"
+                      />
+                      <Heading size="s" as="h4" className="mt-[27px] !text-white-A700 text-center">
+                        Instituições Participantes
+                      </Heading>
+                    </div>
+                    <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
+                      <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
+                        Links Úteis
+                      </Text>
+                      <Text
+                        size="xl"
+                        as="p"
+                        className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
+                      >
+                        <>
+                          Acessibilidade na Web
+                          <br />
+                          Termos de Uso
+                          <br />
+                          Política de Privacidade
+                        </>
+                      </Text>
+                    </div>
+                  </div>
+                  <div className="flex flex-row md:flex-col justify-between items-center w-full mt-[-2px] md:gap-10">
+                    <div className="flex flex-row sm:flex-col justify-start items-center gap-2.5 sm:gap-5">
+                      <Img
+                        src="images/img_ufmt_oficial_branca.png"
+                        alt="ufmtoficial_one"
+                        className="w-[17%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_uftpr_branca.png"
+                        alt="uftprbranca_one"
+                        className="w-[14%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_vertical_extens.png"
+                        alt="verticalextens"
+                        className="w-[11%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_logouff_vertica.png"
+                        alt="logouffvertica"
+                        className="w-[39px] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_200px_universid.png"
+                        alt="200pxuniversid"
+                        className="w-[48px] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_negro_horizontal_nac_branca.png"
+                        alt="negro_one"
+                        className="w-[23%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_blancopeq.png"
+                        alt="blancopeq_one"
+                        className="w-[8%] md:h-auto sm:w-full object-cover"
+                      />
+                    </div>
+                    <Text size="xl" as="p" className="w-[21%] !text-deep_orange-200 text-right">
+                      <>
+                        Todos os direitos reservados
+                        <br />© 2024 ELLAS
+                      </>
+                    </Text>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </>
-        );
-      }
+        </footer>
+       </div>
+      </div>
+     </div>
+    </>
+  );
+}
 
-      export default BuscaOnePage;    
+export default BuscaOnePage;

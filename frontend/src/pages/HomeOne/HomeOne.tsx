@@ -26,14 +26,14 @@ export default function HomeOnePage() {
       <div className="flex flex-col items-center justify-start w-full bg-white-A700">
         <header className="flex justify-center items-center w-full">
           <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
-            <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 md:px-5 max-w-[1023px]">
+            <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-20 md:px-5 max-w-[1023px]">
               <Img
                 src="images/img_logo_ellas_portal_prancheta.png"
                 alt="Logo ELLAS Portal"
-                className="w-[13%] md:w-full md:h-[55px] object-cover"
+                className="w-[30%] md:w-full md:h-[0px] object-cover"
               />
-              <div className="flex flex-row md:flex-col justify-between items-center w-[69%] md:w-full md:gap-10">
-                <ul className="flex flex-row justify-between items-center w-[60%] md:w-full gap-5">
+              <div className="flex flex-row md:flex-col justify-between items-center w-[100%] md:w-full md:gap-0">
+                <ul className="flex flex-row justify-between items-center w-[70%] md:w-full gap-5">
                   <li>
                     <button onClick={handleNavigation('/')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
                       <Heading as="p">Início</Heading>
@@ -42,6 +42,11 @@ export default function HomeOnePage() {
                   <li>
                     <button onClick={handleNavigation('/sobre')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
                       <Heading as="p">Sobre</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/buscaone')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Dados Abertos</Heading>
                     </button>
                   </li>
                   <li>

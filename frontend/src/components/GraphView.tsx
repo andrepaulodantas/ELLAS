@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { DataSet, Network } from "vis-network/standalone/esm/vis-network";
-import { fetchInitiatives, fetchPolicies, fetchPolicyTypes, fetchPolicyResults, fetchPoliciesByCountryAndDate } from "../services/apiService"; // Adjust the path as needed
+import { fetchInitiativesByCountry as fetchInitiatives, fetchPoliciesAppliedInCountries as fetchPolicies } from "../services/apiService";
 import { useLocation, Link } from "react-router-dom";
 import { Text, Img, Heading } from "../components";
 import "./GraphView.css";
@@ -92,10 +92,7 @@ const GraphView = ({ queryType }) => {
 
   useEffect(() => {
     const pathToFunctionMap = {
-      "policiesByCountry": fetchPolicies,
-      "policyTypes": fetchPolicyTypes,
-      "policyResults": fetchPolicyResults,
-      "policiesByCountryAndDate": fetchPoliciesByCountryAndDate,
+      "policies": fetchPolicies,
       "initiatives": fetchInitiatives,
     };
 
@@ -141,7 +138,8 @@ const GraphView = ({ queryType }) => {
       }
     };
 
-    loadGraphData(pathToFunctionMap[queryType] || fetchInitiatives);
+    const fetchFunction = pathToFunctionMap[queryType] || fetchInitiatives;
+    loadGraphData(fetchFunction);
   }, [location.pathname, queryType]);
 
   useEffect(() => {

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Img, Heading, Text } from "../components"; // Ajuste esses imports conforme a estrutura do seu projeto
-import { fetchInitiatives } from '../services/apiService';
+import { fetchInitiativesByCountry } from '../services/apiService';
+
 
 const HomePage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -12,7 +13,7 @@ const HomePage: React.FC = () => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
 
-    fetchInitiatives()
+    fetchInitiativesByCountry('Brazil')
       .then((data) => {
         setInitiatives(data.results.bindings);
         setLoading(false);

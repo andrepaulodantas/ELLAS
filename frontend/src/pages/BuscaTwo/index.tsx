@@ -458,7 +458,7 @@ const BuscaTwoPage = () => {
                       <Img src="images/img_botao_icone_30px_4.svg" />
                     </Button>
                   </div>
-                </div>
+                </div> 
               <div className="flex flex-row justify-center w-[99%] md:w-full mt-[10px] bg-white-A700">
                 <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]">
                   <div className="flex flex-col items-center justify-start w-[99%] md:w-full">

@@ -50,6 +50,15 @@ const questionQueries: { [key: string]: string[] } = {
     "What is the initiative's website (URL)?",
     "How many initiatives are part of communities?",
   ],
+  factors: [
+    "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?",
+    "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?",
+    "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?",
+    "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?",
+    "What are the IMPACTS of CONTEXTUAL FACTOR X?",
+    "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?",
+    "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?",
+  ],
 };
 
 const BuscaOnePage = () => {
@@ -236,62 +245,65 @@ return (
                             Categoria
                           </Text>
                           <SelectBox
-                            shape="round"
-                            indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                            getOptionLabel={(e: DropDownOption) => (
-                              <div className="flex items-center">
-                                <Img src="images/img_iconx18_6.svg" alt="iconx18" />
-                                <span>{e.label}</span>
-                              </div>
-                            )}
-                            name="categoria"
-                            placeholder="Categoria"
-                            options={[
-                              { label: "Initiatives", value: "initiatives" },
-                              { label: "Policies", value: "policies" },
-                            ]}
-                            value={
-                              selectedCategory
-                                ? { label: selectedCategory, value: selectedCategory }
-                                : null
-                            }
-                            onChange={handleCategoryChange}
-                            className="w-full border-gray-300_01 border border-solid"
-                          />
+  shape="round"
+  indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
+  getOptionLabel={(e: DropDownOption) => (
+    <div className="flex items-center">
+      <Img src="images/img_iconx18_6.svg" alt="iconx18" />
+      <span>{e.label}</span>
+    </div>
+  )}
+  name="categoria"
+  placeholder="Categoria"
+  options={[
+    { label: "Initiatives", value: "initiatives" },
+    { label: "Policies", value: "policies" },
+    { label: "Factors", value: "factors" }, // Add Factors here
+  ]}
+  value={
+    selectedCategory
+      ? { label: selectedCategory, value: selectedCategory }
+      : null
+  }
+  onChange={handleCategoryChange}
+  className="w-full border-gray-300_01 border border-solid"
+/>
+
                         </div>
                         <Text size="3xl" as="p" className="mt-[22px]">
                           Pergunta
                         </Text>
                         <SelectBox
-                          shape="round"
-                          indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                          getOptionLabel={(e: DropDownOption) => (
-                            <div className="flex items-center">
-                              <Img src="images/img_iconx18_8.svg" alt="iconx18" />
-                              <span>{e.label}</span>
-                            </div>
-                          )}
-                          name="pergunta"
-                          placeholder="Pergunta"
-                          options={
-                            selectedCategory
-                              ? questionQueries[selectedCategory].map((question) => ({
-                                  label: question,
-                                  value: question,
-                                }))
-                              : []
-                          }
-                          value={
-                            selectedQuestion
-                              ? {
-                                  label: selectedQuestion,
-                                  value: selectedQuestion,
-                                }
-                              : null
-                          }
-                          onChange={handleQuestionChange}
-                          className="w-full mt-3 border-blue_gray-100 border border-solid"
-                        />
+  shape="round"
+  indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
+  getOptionLabel={(e: DropDownOption) => (
+    <div className="flex items-center">
+      <Img src="images/img_iconx18_8.svg" alt="iconx18" />
+      <span>{e.label}</span>
+    </div>
+  )}
+  name="pergunta"
+  placeholder="Pergunta"
+  options={
+    selectedCategory
+      ? questionQueries[selectedCategory].map((question) => ({
+          label: question,
+          value: question,
+        }))
+      : []
+  }
+  value={
+    selectedQuestion
+      ? {
+          label: selectedQuestion,
+          value: selectedQuestion,
+        }
+      : null
+  }
+  onChange={handleQuestionChange}
+  className="w-full mt-3 border-blue_gray-100 border border-solid"
+/>
+
                         <Text size="3xl" as="p" className="mt-5">
                           Tempo
                         </Text>

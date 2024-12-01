@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://44.212.115.153:7200/repositories/EllasV2';
+const BASE_URL = 'http://200.17.60.189:7200/repositories/EllasV2';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -518,6 +518,140 @@ export const fetchCommunityInitiatives = (query?: string) => {
   return fetchQuery(query || defaultQuery);
 };
 
+// Fetch functions for Contextual Factors (Activity 4)
+
+// Positive contextual factors in countries analyzed
+export const fetchPositiveContextualFactors = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?contextualFactorName ?impactType ?countryName WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      ?contextualFactor Ellas:analyzed_in ?country.
+      ?country rdfs:label ?countryName.
+      FILTER(?impactType = "Positive"@en)
+    }
+  `;
+  return await fetchQuery(query);
+};
+
+// Negative contextual factors in institution activities
+export const fetchNegativeContextualFactorsInInstitution = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?contextualFactorName ?impactType ?countryName ?contextType WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      ?contextualFactor Ellas:analyzed_in ?country.
+      ?country rdfs:label ?countryName.
+      ?contextualFactor Ellas:factors_context_type ?contextType.
+      FILTER(?impactType = "Negative"@en)
+      FILTER(regex(str(?contextType), "University"))
+    }
+  `;
+  return await fetchQuery(query);
+};
+
+// Contextual factors related to educational factors
+export const fetchContextualFactorsByEducationType = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?contextualFactorName ?factorName WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?factor rdfs:label ?factorName.
+      FILTER(regex(str(?factorName), "educational") || regex(str(?factorName), "Educational"))
+    }
+  `;
+  return await fetchQuery(query);
+};
+
+// Contextual factors impacting females positively/negatively
+export const fetchContextualFactorsImpactingFemales = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    SELECT ?contextualFactorName ?impactType ?targetAudienceGender WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      ?contextualFactor Ellas:focused_on ?targetAudience.
+      ?targetAudience a Ellas:Target_Audience_Gender.
+      ?targetAudience rdfs:label ?targetAudienceGender.
+      FILTER(?impactType = "Positive"@en)
+      FILTER(?targetAudienceGender = "Female"@en)
+    }
+  `;
+  return await fetchQuery(query);
+};
+
+// Impacts of a specific contextual factor
+export const fetchImpactsOfContextualFactor = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    SELECT ?contextualFactorName ?impact WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?contextualFactor Ellas:factors_impact ?impact.
+    }
+  `;
+  return await fetchQuery(query);
+};
+
+// Impact types of contextual factor in Latin American institutions
+export const fetchImpactTypesOfContextualFactors = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?contextualFactorName ?impactType ?countryName ?contextType WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      ?contextualFactor Ellas:analyzed_in ?country.
+      ?country rdfs:label ?countryName.
+      ?contextualFactor Ellas:factors_context_type ?contextType.
+      FILTER(?contextualFactorName = "Gender stereotypes"@en)
+      FILTER(?impactType = "Negative"@en)
+      FILTER(regex(str(?contextType), "University"))
+    }
+  `;
+  return await fetchQuery(query);
+};
+
+// Contextual factors impacting specific impacts (e.g., leadership) in a country
+export const fetchContextualFactorsImpactingSpecificImpacts = async () => {
+  const query = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?contextualFactorName ?impactType ?impact ?countryName WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      ?contextualFactor Ellas:factors_impact ?impact.
+      ?contextualFactor Ellas:analyzed_in ?country.
+      ?country rdfs:label ?countryName.
+      FILTER(?impactType = "Positive"@en)
+      FILTER(regex(str(?impact), "Leadership") || regex(str(?impact), "leadership"))
+    }
+  `;
+  return await fetchQuery(query);
+};
+
 // Atualize o mapeamento de perguntas para funções de busca
 export const questionFunctions: { [key: string]: any } = {
   "Which/How many initiatives are carried out in Brazil?": fetchInitiativesByCountry,
@@ -551,4 +685,11 @@ export const questionFunctions: { [key: string]: any } = {
   "What types of gender policies/processes/practices exist in Latin America?": fetchPolicyTypesInLatinAmerica,
   "How policies identified/analyzed are promoting women's participation in STEM fields?": fetchPoliciesPromotingWomenInSTEM,
   "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?": fetchPoliciesImplementedInCountriesSince2015,
+   "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?": fetchPositiveContextualFactors,
+  "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?": fetchNegativeContextualFactorsInInstitution,
+  "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?": fetchContextualFactorsByEducationType,
+  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?": fetchContextualFactorsImpactingFemales,
+  "What are the IMPACTS of CONTEXTUAL FACTOR X?": fetchImpactsOfContextualFactor,
+  "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?": fetchImpactTypesOfContextualFactors,
+  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?": fetchContextualFactorsImpactingSpecificImpacts,
 };

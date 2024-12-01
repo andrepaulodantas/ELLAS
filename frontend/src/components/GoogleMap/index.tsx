@@ -34,9 +34,22 @@ const GoogleMapComponent: React.FC<GoogleMapProps> = ({
     const fetchGeoJson = async () => {
       try {
         const countries = [
-          { name: "Brazil", url: "/brasil.geojson" },
-          { name: "Argentina", url: "/argentina.geojson" },
-          { name: "Peru", url: "/peru.geojson" },
+          { name: "Brazil", url: "/BRA.geo.json" },
+          { name: "Argentina", url: "/ARG.geo.json" },
+          { name: "Peru", url: "/PER.geo.json" },
+          { name: "Colombia", url: "/COL.geo.json" },
+          { name: "Chile", url: "/CHL.geo.json" },
+          { name: "Uruguay", url: "/URY.geo.json" },
+          { name: "Paraguay", url: "/PRY.geo.json" },
+          { name: "Bolivia", url: "/BOL.geo.json" },
+          { name: "Venezuela", url: "/VEN.geo.json" },
+          { name: "Ecuador", url: "/ECU.geo.json" },
+          { name: "Guyana", url: "/GUY.geo.json" },
+          { name: "Suriname", url: "/SUR.geo.json" },
+          { name: "French Guiana", url: "/GUF.geo.json" },
+          { name: "United States", url: "/USA.geo.json" },
+          { name: "Canada", url: "/CAN.geo.json" },
+          { name: "Mexico", url: "/MEX.geo.json" },
           // Adicione mais países conforme necessário
         ];
 

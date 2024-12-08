@@ -5,7 +5,7 @@ import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import GoogleMapComponent from "../../components/GoogleMap";
-import { questionFunctions } from "../../services/apiService"; // Certifique-se de que essas funções estão exportadas corretamente no apiService.ts
+import { questionFunctions } from "../../services/apiService";
 
 // Definindo o tipo DropDownOption
 type DropDownOption = {
@@ -61,6 +61,14 @@ const questionQueries: { [key: string]: string[] } = {
   ],
 };
 
+const timeRelatedQuestions = [
+  "What is the initiative's social network(s)?",
+  "What initiatives are being developed at a given school level?",
+  "Have the initiatives already been implemented or are they still in the design phase?",
+  "Which initiatives are already finished?",
+  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+].map((q) => q.trim().toLowerCase());
+
 const BuscaOnePage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
@@ -68,56 +76,136 @@ const BuscaOnePage = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("ambos");
   const [selectedVisualization, setSelectedVisualization] = useState<string>("paises");
   const [data, setData] = useState<any[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [years, setYears] = useState<string[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
-  const [countryCounts, setCountryCounts] = useState<{ [key: string]: number }>({});
+  
+  const isTimeDropdownEnabled = Boolean(
+    selectedQuestion &&
+    timeRelatedQuestions.includes(selectedQuestion.trim().toLowerCase())
+  );
+
   const navigate = useNavigate();
 
+  // Monitorar mudanças na pergunta selecionada
   useEffect(() => {
-    const fetchData = async () => {
-      if (selectedCategory && selectedQuestion) {
-        const fetchFunction = questionFunctions[selectedQuestion];
-        if (fetchFunction) {
-          try {
-            const response = await fetchFunction();
-            if (response?.results?.bindings.length > 0) {
-              const formattedData = response.results.bindings.map((item: any) => ({
-                country: item.countryName?.value as string,
-                name: item.policyName?.value || item.initiativeName?.value,
-                status: item.policyType?.value,
-                startDate: item.start_date?.value,
-                finishDate: item.finish_date?.value,
-              }));
-              setData(formattedData);
+    console.log("Selected Question:", selectedQuestion);
+    console.log(
+      "Is Time Dropdown Enabled:",
+      isTimeDropdownEnabled
+    );
+  }, [selectedQuestion, isTimeDropdownEnabled]);
 
-              // Extraindo os países únicos da resposta e garantindo que sejam strings
-              const countries = formattedData.map((item) => item.country).filter((country) => typeof country === "string");
-              setSelectedCountries(countries); // Armazene a lista de países
-            } else {
-              setData([]);
-              setSelectedCountries([]);
-            }
-          } catch (error) {
-            console.error("Error fetching data:", error);
+  // Atualizar dados com base na categoria e pergunta selecionadas
+useEffect(() => {
+  const fetchData = async () => {
+    if (selectedCategory && selectedQuestion) {
+      const fetchFunction = questionFunctions[selectedQuestion];
+      if (fetchFunction) {
+        try {
+          const response = await fetchFunction();
+          if (response?.results?.bindings.length > 0) {
+            const formattedData = response.results.bindings.map((item: any) => ({
+              country: item.countryName?.value as string,
+              name: item.policyName?.value || item.initiativeName?.value,
+              status: item.policyType?.value,
+              startDate: item.start_date?.value,
+              finishDate: item.finish_date?.value,
+            }));
+            setData(formattedData);
+            setFilteredData(formattedData); // Inicializar dados filtrados
+
+            // Atualizar países destacados
+            const countries = formattedData
+              .map((item) => item.country)
+              .filter((country) => typeof country === "string");
+            setSelectedCountries(countries);
+
+            // Atualizar lista de anos
+            const uniqueYears = Array.from(
+              new Set(
+                formattedData.flatMap((item) => [
+                  item.startDate ? new Date(item.startDate).getFullYear() : null,
+                  item.finishDate ? new Date(item.finishDate).getFullYear() : null,
+                ])
+              )
+            )
+              .filter(Boolean)
+              .sort((a, b) => Number(a) - Number(b))
+              .map(String);
+            setYears(uniqueYears);
+          } else {
+            setData([]);
+            setFilteredData([]);
+            setSelectedCountries([]);
+            setYears([]);
           }
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
       }
-    };
-    fetchData();
-  }, [selectedCategory, selectedQuestion]);
-
-  useEffect(() => {
-    if (data.length > 0) {
-      const countryCountMap: { [key: string]: number } = {};
-      data.forEach(item => {
-        if (item.country) {
-          countryCountMap[item.country] = (countryCountMap[item.country] || 0) + 1;
-        }
-      });
-      setCountryCounts(countryCountMap);
-    } else {
-      setCountryCounts({});
     }
-  }, [data]);
+  };
+  fetchData();
+}, [selectedCategory, selectedQuestion]);
+
+// Atualizar lista de países destacados após alterações no filtro de tempo
+useEffect(() => {
+  if (selectedTime) {
+    let filtered = data;
+
+    if (selectedTime !== "all") {
+      const selectedYear = parseInt(selectedTime, 10);
+      filtered = data.filter((item) => {
+        const startYear = item.startDate
+          ? new Date(item.startDate).getFullYear()
+          : null;
+        const finishYear = item.finishDate
+          ? new Date(item.finishDate).getFullYear()
+          : null;
+
+        return startYear === selectedYear || finishYear === selectedYear;
+      });
+    }
+
+    setFilteredData(filtered);
+
+    // Atualizar países destacados com base no filtro de tempo
+    const countries = filtered
+      .map((item) => item.country)
+      .filter((country) => typeof country === "string");
+    setSelectedCountries(countries);
+  }
+}, [selectedTime, data]);
+
+// Atualizar países destacados ao redefinir filtros
+const handleReset = () => {
+  setSelectedCategory(null);
+  setSelectedQuestion(null);
+  setSelectedTime(null);
+  setSelectedStatus("ambos");
+  setSelectedVisualization("paises");
+  setData([]);
+  setFilteredData([]);
+  setSelectedCountries([]);
+  setYears([]);
+};
+
+
+  const handleCategoryChange = (option: DropDownOption) => {
+    setSelectedCategory(option.value);
+    setSelectedQuestion(null); // Resetar pergunta ao mudar categoria
+    setSelectedTime(null); // Resetar tempo ao mudar categoria
+  };
+
+  const handleQuestionChange = (option: DropDownOption) => {
+    setSelectedQuestion(option.value);
+    setSelectedTime(null); // Resetar tempo ao mudar pergunta
+  };
+
+  const handleTimeChange = (option: DropDownOption) => {
+    setSelectedTime(option.value); // Atualizar o tempo selecionado
+  };
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedStatus(e.target.value);
@@ -127,69 +215,75 @@ const BuscaOnePage = () => {
     setSelectedVisualization(e.target.value);
   };
 
-  const handleReset = () => {
-    setSelectedCategory(null);
-    setSelectedQuestion(null);
-    setSelectedTime(null);
-    setSelectedStatus("ambos");
-    setSelectedVisualization("paises");
-    setData([]);
-    setSelectedCountries([]);
-  };
-
-  const handleCategoryChange = (option: DropDownOption) => {
-    setSelectedCategory(option.value);
-  };
-
-  const handleQuestionChange = (option: DropDownOption) => {
-    setSelectedQuestion(option.value);
-  };
-
   const handleNavigation = (path: string) => () => {
     navigate(path);
   };
 
 return (
   <>
-    <Helmet>
-      <title>ELLAS</title>
-      <meta name="description" content="Web site created using create-react-app" />
-    </Helmet>
-    <div className="flex flex-col items-center justify-start w-full bg-red-50_01">
-      <header className="flex justify-center items-center w-full">
-        <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
-          <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 md:px-5 max-w-[1023px]">
-            <Img
-              src="images/img_logo_ellas_portal_prancheta.png"
-              alt="Logo ELLAS Portal"
-              className="w-[13%] md:w-full md:h-[55px] object-cover"
-            />
-            <div className="flex flex-row md:flex-col justify-between items-center w-[69%] md:w-full md:gap-10">
-              <ul className="flex flex-row justify-between items-center w-[60%] md:w-full gap-5">
-                <li>
-                  <button onClick={handleNavigation('/')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                    <Heading as="p">Início</Heading>
-                  </button>
-                </li>
-                <li>
-                  <button onClick={handleNavigation('/sobre')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                    <Heading as="p">Sobre</Heading>
-                  </button>
-                </li>
-                {/* Outros itens do menu */}
-              </ul>
-              <Button
-                size="sm"
-                shape="round"
-                rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="Ícone de login" />}
-                onClick={handleNavigation('/fazerloginone')}
-              >
-                Fazer Login
-              </Button>
+        <Helmet>
+        <title>ELLAS</title>
+        <meta name="description" content="Web site created using create-react-app" />
+      </Helmet>
+      <div className="flex flex-col items-center justify-start w-full bg-white-A700">
+        <header className="flex justify-center items-center w-full">
+          <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
+            <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-20 md:px-5 max-w-[1023px]">
+              <Img
+                src="images/img_logo_ellas_portal_prancheta.png"
+                alt="Logo ELLAS Portal"
+                className="w-[30%] md:w-full md:h-[0px] object-cover"
+              />
+              <div className="flex flex-row md:flex-col justify-between items-center w-[100%] md:w-full md:gap-0">
+                <ul className="flex flex-row justify-between items-center w-[70%] md:w-full gap-5">
+                  <li>
+                    <button onClick={handleNavigation('/')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Início</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/sobre')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Sobre</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/buscaone')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Dados Abertos</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/apoie-ellas')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Apoie ELLAS</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/contato')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Contato</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/faq')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">FAQ</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleNavigation('/graph-view')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                      <Heading as="p">Graph View</Heading>
+                    </button>
+                  </li>
+                </ul>
+                <Button
+                  size="sm"
+                  shape="round"
+                  rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="Ícone de login" />}
+                  onClick={handleNavigation('/fazerloginone')}
+                >
+                  Fazer Login
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
       <div className="flex flex-col items-center justify-start w-full">
         <div className="flex flex-col items-center justify-start w-full">
           <div className="flex flex-col items-center justify-start w-full">
@@ -307,101 +401,107 @@ return (
                         <Text size="3xl" as="p" className="mt-5">
                           Tempo
                         </Text>
-                        <SelectBox
-                          shape="round"
-                          indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                          getOptionLabel={(e: DropDownOption) => (
-                            <div className="flex items-center">
-                              <Img src="images/img_iconx18_9.svg" alt="iconx18" />
-                              <span>{e.label}</span>
-                            </div>
-                          )}
-                          name="tempo"
-                          placeholder="Mais recente disponível"
-                          options={[]} // No options for Tempo
-                          value={null} // No value for Tempo
-                          onChange={() => {}} // No-op for Tempo
-                          className="w-full mt-3 border-blue_gray-100 border border-solid"
-                        />
+                      <SelectBox
+          shape="round"
+          indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
+          name="tempo"
+          placeholder="Selecione o Tempo"
+          options={[
+            { label: "Todos os anos", value: "all" },
+            ...years.map((year) => ({ label: year, value: year })), // Gerar opções dinamicamente
+          ]}
+          value={selectedTime ? { label: selectedTime, value: selectedTime } : null}
+          onChange={handleTimeChange}
+          className={`w-full mt-3 border-blue_gray-100 border border-solid ${
+            isTimeDropdownEnabled ? "" : "opacity-50 pointer-events-none"
+          }`}
+          disabled={!isTimeDropdownEnabled}
+        />
+
                         <Text size="3xl" as="p" className="mt-[22px]">
                           Tipo
                         </Text>
                         <RadioGroup name="status" className="w-full mt-3 flex flex-col gap-4">
-                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="status"
-                              value="ambos"
-                              checked={selectedStatus === "ambos"}
-                              onChange={handleStatusChange}
-                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <span className="text-blue_gray-300_01">Ambos</span>
-                          </label>
-                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="status"
-                              value="ativo"
-                              checked={selectedStatus === "ativo"}
-                              onChange={handleStatusChange}
-                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <span className="text-blue_gray-300_01">Ativo</span>
-                          </label>
-                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="status"
-                              value="inativo"
-                              checked={selectedStatus === "inativo"}
-                              onChange={handleStatusChange}
-                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <span className="text-blue_gray-300_01">Inativo</span>
-                          </label>
-                        </RadioGroup>
+  <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+    <input
+      type="radio"
+      name="status"
+      value="ambos"
+      checked={selectedStatus === "ambos"}
+      onChange={handleStatusChange}
+      className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      disabled={!selectedCategory || !selectedQuestion} // Condição para desabilitar
+    />
+    <span className="text-blue_gray-300_01">Ambos</span>
+  </label>
+  <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+    <input
+      type="radio"
+      name="status"
+      value="ativo"
+      checked={selectedStatus === "ativo"}
+      onChange={handleStatusChange}
+      className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      disabled={!selectedCategory || !selectedQuestion} // Condição para desabilitar
+    />
+    <span className="text-blue_gray-300_01">Ativo</span>
+  </label>
+  <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+    <input
+      type="radio"
+      name="status"
+      value="inativo"
+      checked={selectedStatus === "inativo"}
+      onChange={handleStatusChange}
+      className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      disabled={!selectedCategory || !selectedQuestion} // Condição para desabilitar
+    />
+    <span className="text-blue_gray-300_01">Inativo</span>
+  </label>
+</RadioGroup>
+
                         <Text size="3xl" as="p" className="mt-[22px]">
                           Visualização
                         </Text>
-                        <RadioGroup
-                          name="visualizacao"
-                          className="w-full mt-3 flex flex-col gap-4"
-                        >
-                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="visualizacao"
-                              value="paises"
-                              checked={selectedVisualization === "paises"}
-                              onChange={handleVisualizationChange}
-                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <span className="text-blue_gray-300_01">Países</span>
-                          </label>
-                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="visualizacao"
-                              value="regioes"
-                              checked={selectedVisualization === "regioes"}
-                              onChange={handleVisualizationChange}
-                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <span className="text-blue_gray-300_01">Regiões</span>
-                          </label>
-                          <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                            <input
-                              type="radio"
-                              name="visualizacao"
-                              value="global"
-                              checked={selectedVisualization === "global"}
-                              onChange={handleVisualizationChange}
-                              className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                            />
-                            <span className="text-blue_gray-300_01">Global</span>
-                          </label>
-                        </RadioGroup>
+                        <RadioGroup name="visualizacao" className="w-full mt-3 flex flex-col gap-4">
+  <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+    <input
+      type="radio"
+      name="visualizacao"
+      value="paises"
+      checked={selectedVisualization === "paises"}
+      onChange={handleVisualizationChange}
+      className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      disabled={!selectedCategory || !selectedQuestion} // Condição para desabilitar
+    />
+    <span className="text-blue_gray-300_01">Países</span>
+  </label>
+  <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+    <input
+      type="radio"
+      name="visualizacao"
+      value="regioes"
+      checked={selectedVisualization === "regioes"}
+      onChange={handleVisualizationChange}
+      className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      disabled={!selectedCategory || !selectedQuestion} // Condição para desabilitar
+    />
+    <span className="text-blue_gray-300_01">Regiões</span>
+  </label>
+  <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+    <input
+      type="radio"
+      name="visualizacao"
+      value="global"
+      checked={selectedVisualization === "global"}
+      onChange={handleVisualizationChange}
+      className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+      disabled={!selectedCategory || !selectedQuestion} // Condição para desabilitar
+    />
+    <span className="text-blue_gray-300_01">Global</span>
+  </label>
+</RadioGroup>
+
                       </div>
                     </div>
                   </div>
@@ -469,10 +569,10 @@ return (
                           Quais e quantas iniciativas são realizadas por país?
                         </Text>
                         <div className="relative w-full h-[352px] overflow-hidden rounded-lg">
-                          <GoogleMapComponent
-                            initiatives={data}
-                            selectedCountries={selectedCountries} // Passa a lista de países aqui
-                          />
+                         <GoogleMapComponent
+  initiatives={filteredData} // Passe os dados filtrados
+  selectedCountries={selectedCountries} // Passe os países selecionados
+/> 
                         </div>
                       </div>
                     </div>
@@ -506,20 +606,21 @@ return (
                               <th className="w-[7%] text-left !text-gray-900">Finish date</th>
                             </tr>
                           </thead>
-                          <tbody>
-                            {data.map((item, index) => (
-                              <tr 
-                                key={index} 
-                                className={`flex flex-row justify-between p-[9px] ${index % 2 === 0 ? 'bg-purple-100' : 'bg-white'}`}
-                              >
-                                <td className="w-[10%]">{item.country}</td>
-                                <td className="w-[32%]">{item.name}</td>
-                                <td className="w-[7%]">{item.status || ""}</td>
-                                <td className="w-[7%]">{item.startDate || ""}</td>
-                                <td className="w-[7%]">{item.finishDate || ""}</td>
-                              </tr>
-                            ))}
-                          </tbody>
+                         <tbody>
+  {filteredData.map((item, index) => (
+    <tr 
+      key={index} 
+      className={`flex flex-row justify-between p-[9px] ${index % 2 === 0 ? 'bg-purple-100' : 'bg-white'}`}
+    >
+      <td className="w-[10%]">{item.country}</td>
+      <td className="w-[32%]">{item.name}</td>
+      <td className="w-[7%]">{item.status || ""}</td>
+      <td className="w-[7%]">{item.startDate || ""}</td>
+      <td className="w-[7%]">{item.finishDate || ""}</td>
+    </tr>
+  ))}
+</tbody>
+
                         </table>
                       </div>
                     </div>

@@ -1,23 +1,23 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://200.17.60.189:7200/repositories/EllasV2';
+const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/sparql-query',
-    'Accept': 'application/sparql-results+json',
-    'Authorization': 'Basic ' + btoa('integracao:Ellas@integration'), // Autenticação básica
+    "Content-Type": "application/sparql-query",
+    Accept: "application/sparql-results+json",
+    Authorization: "Basic " + btoa("integracao:Ellas@integration"), // Autenticação básica
   },
   withCredentials: true, // Incluir credenciais
 });
 
 const fetchQuery = async (query: string) => {
   try {
-    const response = await axiosInstance.post('', query);
+    const response = await axiosInstance.post("", query);
     return response.data;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     throw error;
   }
 };
@@ -27,15 +27,14 @@ const fetchQuery = async (query: string) => {
 // Em quais países a política foi aplicada?
 export const fetchPoliciesAppliedInCountries = async () => {
   const query = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?policyName ?countryName WHERE {
+  PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    select ?policyName ?countryName where {
       ?policy a Ellas:Policy.
       ?policy rdfs:label ?policyName.
       ?policy Ellas:created_in ?country.
-      ?country rdfs:label ?countryName.
-    }
-  `;
+      ?country rdfs:label ?countryName.}
+`;
   return await fetchQuery(query);
 };
 
@@ -44,13 +43,12 @@ export const fetchPolicyTypesInLatinAmerica = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?policyType WHERE {
+      select  ?policyName ?countryName ?policyType where {
       ?policy a Ellas:Policy.
       ?policy rdfs:label ?policyName.
       ?policy Ellas:policy_type ?policyType.
       ?policy Ellas:created_in ?country.
-      ?country rdfs:label ?countryName.
-    }
+      ?country rdfs:label ?countryName.}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -58,36 +56,48 @@ export const fetchPolicyTypesInLatinAmerica = (query?: string) => {
 // Como as políticas identificadas/analisadas estão promovendo a participação das mulheres em STEM?
 export const fetchPoliciesPromotingWomenInSTEM = (query?: string) => {
   const defaultQuery = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?policyName ?policyResults WHERE {
-      ?policy a Ellas:Policy.
-      ?policy rdfs:label ?policyName.
-      ?policy Ellas:policy_description ?policyResults.
-    }
+  PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    select ?policyName ?countryName ?policyResults where {
+    ?policy a Ellas:Policy.
+    ?policy rdfs:label ?policyName.
+    ?policy Ellas:policy_description ?policyResults.
+    ?policy Ellas:created_in ?country.
+    ?country rdfs:label ?countryName.}
   `;
   return fetchQuery(query || defaultQuery);
 };
 
 // Quais tipos de políticas/processos/práticas de gênero foram implementadas na Bolívia, Brasil e Peru desde 2015?
-export const fetchPoliciesImplementedInCountriesSince2015 = (query?: string) => {
+export const fetchPoliciesImplementedInCountriesSince2015 = (
+  query?: string
+) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?policyName ?start_date ?countryName WHERE {
-      ?policy a Ellas:Policy.
-      ?policy rdfs:label ?policyName.
-      ?policy Ellas:created_in ?country.
-      ?country rdfs:label ?countryName.
-      ?policy Ellas:start_date ?start_date.
-      FILTER(xsd:integer(?start_date) > 2015).
-      FILTER(
-        regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
-        regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
-        regex(str(?countryName),"Bolivia") || regex(str(?countryName),"bolivia")
-      ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?policyName ?countryName ?start_date  where {
+
+?policy a Ellas:Policy.
+
+?policy rdfs:label ?policyName.
+
+?policy Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+?policy Ellas:start_date ?start_date
+
+filter(xsd:integer(?start_date) > 2015)
+
+filter(regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
+
+regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
+
+regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -95,17 +105,34 @@ export const fetchPoliciesImplementedInCountriesSince2015 = (query?: string) => 
 // Consultas relacionadas às Iniciativas (Activity 3)
 
 // Quais e quantas iniciativas são realizadas no Brasil?
-export const fetchInitiativesByCountry = (countryName: string) => {
+// export const fetchInitiativesByCountry = (countryName, initiativeName, initiativeStatus, startDate, finishDate) => {
+export const fetchInitiativesByCountry = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?countryName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:created_in ?country.
-      ?country rdfs:label ?countryName.
-      FILTER(?countryName="Brazil"@en).
-    } 
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?policyName ?countryName ?start_date  where {
+
+?policy a Ellas:Policy.
+
+?policy rdfs:label ?policyName.
+
+?policy Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+?policy Ellas:start_date ?start_date
+
+filter(xsd:integer(?start_date) > 2015)
+
+filter(regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
+
+regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
+
+regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))}
   `;
   return fetchQuery(defaultQuery);
 };
@@ -114,12 +141,21 @@ export const fetchInitiativesByCountry = (countryName: string) => {
 export const fetchDataSourcesForInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?datasource WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_data_source ?datasource.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?datasource where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_data_source ?datasource.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+ }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -128,12 +164,20 @@ export const fetchDataSourcesForInitiatives = (query?: string) => {
 export const fetchSocialNetworksForInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?link WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_socialmedia_link ?link.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?link where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_socialmedia_link ?link.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName. }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -142,11 +186,18 @@ export const fetchSocialNetworksForInitiatives = (query?: string) => {
 export const fetchProgramInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName WHERE {
-      ?initiative a Ellas:Program.
-      ?initiative rdfs:label ?initiativeName.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName where {
+
+?initiative a Ellas:Program.
+
+?initiative rdfs:label ?initiativeName. 
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -155,12 +206,20 @@ export const fetchProgramInitiatives = (query?: string) => {
 export const fetchPublicPrivateInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?sector WHERE {
-      ?initiative a Ellas:Program.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_organization_sector ?sector.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?sector where {
+
+?initiative a Ellas:Program.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_organization_sector ?sector.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName. }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -169,13 +228,22 @@ export const fetchPublicPrivateInitiatives = (query?: string) => {
 export const fetchIndividualCoordinatedInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?coordinatorType WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_coordinator_type ?coordinatorType.
-      FILTER(?coordinatorType = "Personal"@en).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?coordinatorType where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_coordinator_type ?coordinatorType.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(?coordinatorType = "Personal"@en) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -184,12 +252,21 @@ export const fetchIndividualCoordinatedInitiatives = (query?: string) => {
 export const fetchCoordinatorGenderForInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?coordinatorGender WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_coordinator_gender ?coordinatorGender.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?coordinatorGender where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_coordinator_gender ?coordinatorGender.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+ }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -198,12 +275,20 @@ export const fetchCoordinatorGenderForInitiatives = (query?: string) => {
 export const fetchInitiativeObjectives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?objective WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_objective ?objective.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?objective where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_objective ?objective.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName. }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -211,13 +296,22 @@ export const fetchInitiativeObjectives = (query?: string) => {
 // Qual modalidade de iniciativa é usada para as ações/atividades?
 export const fetchInitiativeFormats = (query?: string) => {
   const defaultQuery = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?format WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_format ?format.
-    }
+   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?format where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_format ?format.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+ }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -226,18 +320,28 @@ export const fetchInitiativeFormats = (query?: string) => {
 export const fetchInitiativesForGirlsOrAdolescents = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?targetAudienceAge WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_Age.
-      ?targetAudience rdfs:label ?targetAudienceAge.
-      FILTER(
-        regex(str(?targetAudienceAge), "teenagers") || regex(str(?targetAudienceAge), "Teenagers") ||
-        regex(str(?targetAudienceAge), "children") || regex(str(?targetAudienceAge), "Children")
-      ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?targetAudienceAge where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_Age.
+
+?targetAudience rdfs:label ?targetAudienceAge.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+FILTER (regex(str(?targetAudienceAge), "teenagers")||regex(str(?targetAudienceAge), "Teenagers")
+
+|| regex(str(?targetAudienceAge), "children") || regex(str(?targetAudienceAge), "Children")) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -245,15 +349,25 @@ export const fetchInitiativesForGirlsOrAdolescents = (query?: string) => {
 // Qual é o gênero social do público-alvo atendido pela iniciativa?
 export const fetchTargetAudienceGenderForInitiatives = (query?: string) => {
   const defaultQuery = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?targetAudienceGender WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_Gender.
-      ?targetAudience rdfs:label ?targetAudienceGender.
-    }
+   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?targetAudienceGender where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_Gender.
+
+?targetAudience rdfs:label ?targetAudienceGender.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -262,21 +376,34 @@ export const fetchTargetAudienceGenderForInitiatives = (query?: string) => {
 export const fetchInitiativesForBlackWomen = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?targetAudienceRace ?targetAudienceGender WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_Race.
-      ?targetAudience rdfs:label ?targetAudienceRace.
-      ?initiative Ellas:focused_on ?targetAudienceG.
-      ?targetAudienceG a Ellas:Target_Audience_Gender.
-      ?targetAudienceG rdfs:label ?targetAudienceGender.
-      FILTER(
-        regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black")
-      ).
-      FILTER( regex(str(?targetAudienceGender), "Feminine")).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_Race.
+
+?targetAudience rdfs:label ?targetAudienceRace.
+
+?initiative Ellas:focused_on ?targetAudienceG.
+
+?targetAudienceG a Ellas:Target_Audience_Gender.
+
+?targetAudienceG rdfs:label ?targetAudienceGender.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black")   )
+
+filter( regex(str(?targetAudienceGender), "Feminine")) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -285,17 +412,27 @@ export const fetchInitiativesForBlackWomen = (query?: string) => {
 export const fetchInitiativesByEducationalLevel = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?targetAudienceEducationalLevel WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_EducationalLevel.
-      ?targetAudience rdfs:label ?targetAudienceEducationalLevel.
-      FILTER(
-        regex(str(?targetAudienceEducationalLevel), "Undergraduate") || regex(str(?targetAudienceEducationalLevel), "undergraduate")
-      ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?targetAudienceEducationalLevel where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_EducationalLevel.
+
+?targetAudience rdfs:label ?targetAudienceEducationalLevel.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( regex(str(?targetAudienceEducationalLevel), "Undergraduate") || regex(str(?targetAudienceEducationalLevel), "undergraduate"))
+}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -304,32 +441,57 @@ export const fetchInitiativesByEducationalLevel = (query?: string) => {
 export const fetchInitiativesForVulnerableGroups = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?targetAudienceVulnerable WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_VulnerableGroups.
-      ?targetAudience rdfs:label ?targetAudienceVulnerable.
-      FILTER( regex(str(?targetAudienceVulnerable), "disabilities") ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?targetAudienceVulnerable where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_VulnerableGroups.
+
+?targetAudience rdfs:label ?targetAudienceVulnerable.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( regex(str(?targetAudienceVulnerable), "disabilities") )
+}
   `;
   return fetchQuery(query || defaultQuery);
 };
 
 // As iniciativas envolvem a comunidade escolar?
-export const fetchSchoolCommunityInvolvementInInitiatives = (query?: string) => {
+export const fetchSchoolCommunityInvolvementInInitiatives = (
+  query?: string
+) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?targetAudienceStakeholders WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_Stakeholders.
-      ?targetAudience rdfs:label ?targetAudienceStakeholders.
-      FILTER( regex(str(?targetAudienceStakeholders), "School") ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?targetAudienceStakeholders where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_Stakeholders.
+
+?targetAudience rdfs:label ?targetAudienceStakeholders.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( regex(str(?targetAudienceStakeholders), "School") )}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -338,15 +500,26 @@ export const fetchSchoolCommunityInvolvementInInitiatives = (query?: string) => 
 export const fetchInitiativesByCity = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?cityName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:located_in ?city.
-      ?city a Ellas:City.
-      ?city rdfs:label ?cityName.
-      FILTER( ?cityName= "Curitiba"@en ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?cityName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:located_in ?city.
+
+?city a Ellas:City.
+
+?city rdfs:label ?cityName.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( ?cityName= "Curitiba"@en ) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -355,15 +528,26 @@ export const fetchInitiativesByCity = (query?: string) => {
 export const fetchInitiativesByState = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?stateName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:located_in ?state.
-      ?state a Ellas:State.
-      ?state rdfs:label ?stateName.
-      FILTER( ?stateName= "Paraná"@en ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?stateName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:located_in ?state.
+
+?state a Ellas:State.
+
+?state rdfs:label ?stateName.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( ?stateName= "Paraná"@en ) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -372,15 +556,26 @@ export const fetchInitiativesByState = (query?: string) => {
 export const fetchInitiativesByArea = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?areaName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:located_in ?area.
-      ?area a Ellas:Area.
-      ?area rdfs:label ?areaName.
-      FILTER( ?areaName= "Urban"@en ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?areaName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:located_in ?area.
+
+?area a Ellas:Area.
+
+?area rdfs:label ?areaName.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter( ?areaName= "Urban"@en ) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -389,15 +584,26 @@ export const fetchInitiativesByArea = (query?: string) => {
 export const fetchInitiativesByRegion = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?regionName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:located_in ?region.
-      ?region a Ellas:Region.
-      ?region rdfs:label ?regionName.
-      FILTER( regex (str(?regionName),"Coast") ).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?regionName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:located_in ?region.
+
+?region a Ellas:Region.
+
+?region rdfs:label ?regionName.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(regex (str(?regionName),"Coast") ) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -406,13 +612,26 @@ export const fetchInitiativesByRegion = (query?: string) => {
 export const fetchInitiativesByReach = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?reach WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_reach ?reach.
-      FILTER(?reach= "Local"@en).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?regionName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:located_in ?region.
+
+?region a Ellas:Region.
+
+?region rdfs:label ?regionName.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(regex (str(?regionName),"Coast") ) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -421,13 +640,23 @@ export const fetchInitiativesByReach = (query?: string) => {
 export const fetchFundedInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?organizationName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:funded_by ?organization.
-      ?organization rdfs:label ?organizationName.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?organizationName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:funded_by ?organization.
+
+?organization rdfs:label ?organizationName. 
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -435,14 +664,24 @@ export const fetchFundedInitiatives = (query?: string) => {
 // Qual é o setor da(s) organização(ões) que financia(m) a iniciativa?
 export const fetchInitiativeFundingSectors = (query?: string) => {
   const defaultQuery = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?sector WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:funded_by ?organization.
-      ?organization Ellas:organization_sector ?sector.
-    }
+   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?sector where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:funded_by ?organization.
+
+?organization Ellas:organization_sector ?sector.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+ }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -451,13 +690,22 @@ export const fetchInitiativeFundingSectors = (query?: string) => {
 export const fetchActiveInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?status WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_status ?status.
-      FILTER(?status="Active"@en).
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryname ?status where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_status ?status.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(?status="Active"@en) }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -465,13 +713,21 @@ export const fetchActiveInitiatives = (query?: string) => {
 // As iniciativas já foram implementadas ou ainda estão em fase de design?
 export const fetchInitiativesByPhase = (query?: string) => {
   const defaultQuery = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?startDate WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:start_date ?startDate.
-    }
+   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?startDate where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:start_date ?startDate.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -479,13 +735,21 @@ export const fetchInitiativesByPhase = (query?: string) => {
 // Quais iniciativas já foram concluídas?
 export const fetchFinishedInitiatives = (query?: string) => {
   const defaultQuery = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?finishDate WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:finish_date ?finishDate.
-    }
+   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?finishDate where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:finish_date ?finishDate.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName. }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -494,12 +758,21 @@ export const fetchFinishedInitiatives = (query?: string) => {
 export const fetchInitiativeWebsites = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?website WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_website ?website.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?website where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_website ?website.
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -508,12 +781,21 @@ export const fetchInitiativeWebsites = (query?: string) => {
 export const fetchCommunityInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?communityName WHERE {
-      ?initiative a Ellas:Initiative.
-      ?initiative rdfs:label ?initiativeName.
-      ?initiative Ellas:initiative_community_name ?communityName.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?initiativeName ?countryName ?communityName where {
+
+?initiative a Ellas:Initiative.
+
+?initiative rdfs:label ?initiativeName.
+
+?initiative Ellas:initiative_community_name ?communityName. 
+
+?initiative Ellas:created_in ?country.
+
+?country rdfs:label ?countryName.
+}
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -524,16 +806,24 @@ export const fetchCommunityInitiatives = (query?: string) => {
 export const fetchPositiveContextualFactors = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?contextualFactorName ?impactType ?countryName WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?contextualFactor Ellas:factors_impact_type ?impactType.
-      ?contextualFactor Ellas:analyzed_in ?country.
-      ?country rdfs:label ?countryName.
-      FILTER(?impactType = "Positive"@en)
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?contextualFactorName  ?countryName ?impactType where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?contextualFactor Ellas:factors_impact_type ?impactType.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(?impactType ="Positive"@en)}
   `;
   return await fetchQuery(query);
 };
@@ -542,18 +832,28 @@ export const fetchPositiveContextualFactors = async () => {
 export const fetchNegativeContextualFactorsInInstitution = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?contextualFactorName ?impactType ?countryName ?contextType WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?contextualFactor Ellas:factors_impact_type ?impactType.
-      ?contextualFactor Ellas:analyzed_in ?country.
-      ?country rdfs:label ?countryName.
-      ?contextualFactor Ellas:factors_context_type ?contextType.
-      FILTER(?impactType = "Negative"@en)
-      FILTER(regex(str(?contextType), "University"))
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?contextualFactorName ?impactType ?countryName ?contextType where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?contextualFactor Ellas:factors_impact_type ?impactType.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+?contextualFactor Ellas:factors_context_type ?contextType.
+
+filter(?impactType ="Negative"@en)
+
+filter(regex (str(?contextType),"University")) }
   `;
   return await fetchQuery(query);
 };
@@ -562,14 +862,24 @@ export const fetchNegativeContextualFactorsInInstitution = async () => {
 export const fetchContextualFactorsByEducationType = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?contextualFactorName ?factorName WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?factor rdfs:label ?factorName.
-      FILTER(regex(str(?factorName), "educational") || regex(str(?factorName), "Educational"))
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?contextualFactorName ?countryName ?factorName where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?factor rdfs:label ?factorName.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(regex(str(?factorName),"educational")||regex(str(?factorName),"Educational"))}
   `;
   return await fetchQuery(query);
 };
@@ -578,19 +888,34 @@ export const fetchContextualFactorsByEducationType = async () => {
 export const fetchContextualFactorsImpactingFemales = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    SELECT ?contextualFactorName ?impactType ?targetAudienceGender WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?contextualFactor Ellas:factors_impact_type ?impactType.
-      ?contextualFactor Ellas:focused_on ?targetAudience.
-      ?targetAudience a Ellas:Target_Audience_Gender.
-      ?targetAudience rdfs:label ?targetAudienceGender.
-      FILTER(?impactType = "Positive"@en)
-      FILTER(?targetAudienceGender = "Female"@en)
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select ?contextualFactorName ?countryName ?impactType ?targetAudienceGender where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?contextualFactor Ellas:factors_impact_type ?impactType.
+
+?contextualFactor Ellas:focused_on ?targetAudience.
+
+?targetAudience a Ellas:Target_Audience_Gender.
+
+?targetAudience rdfs:label ?targetAudienceGender.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(?impactType ="Positive"@en)
+
+filter(?targetAudienceGender="Female"@en) }
   `;
   return await fetchQuery(query);
 };
@@ -599,14 +924,24 @@ export const fetchContextualFactorsImpactingFemales = async () => {
 export const fetchImpactsOfContextualFactor = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    SELECT ?contextualFactorName ?impact WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?contextualFactor Ellas:factors_impact ?impact.
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select ?contextualFactorName ?countryName ?impact where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+?contextualFactor Ellas:factors_impact ?impact.}
   `;
   return await fetchQuery(query);
 };
@@ -614,20 +949,31 @@ export const fetchImpactsOfContextualFactor = async () => {
 // Impact types of contextual factor in Latin American institutions
 export const fetchImpactTypesOfContextualFactors = async () => {
   const query = `
-    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?contextualFactorName ?impactType ?countryName ?contextType WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?contextualFactor Ellas:factors_impact_type ?impactType.
-      ?contextualFactor Ellas:analyzed_in ?country.
-      ?country rdfs:label ?countryName.
-      ?contextualFactor Ellas:factors_context_type ?contextType.
-      FILTER(?contextualFactorName = "Gender stereotypes"@en)
-      FILTER(?impactType = "Negative"@en)
-      FILTER(regex(str(?contextType), "University"))
-    }
+   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?contextualFactorName ?impactType ?countryName ?contextType where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?contextualFactor Ellas:factors_impact_type ?impactType.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+?contextualFactor Ellas:factors_context_type ?contextType.
+
+filter(?contextualFactorName="Gender stereotypes"@en)
+
+filter(?impactType ="Negative"@en)
+
+filter(regex (str(?contextType),"University"))}
   `;
   return await fetchQuery(query);
 };
@@ -636,60 +982,96 @@ export const fetchImpactTypesOfContextualFactors = async () => {
 export const fetchContextualFactorsImpactingSpecificImpacts = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?contextualFactorName ?impactType ?impact ?countryName WHERE {
-      ?factor a Ellas:Factor.
-      ?contextualFactor rdfs:subClassOf ?factor.
-      ?contextualFactor rdfs:label ?contextualFactorName.
-      ?contextualFactor Ellas:factors_impact_type ?impactType.
-      ?contextualFactor Ellas:factors_impact ?impact.
-      ?contextualFactor Ellas:analyzed_in ?country.
-      ?country rdfs:label ?countryName.
-      FILTER(?impactType = "Positive"@en)
-      FILTER(regex(str(?impact), "Leadership") || regex(str(?impact), "leadership"))
-    }
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?contextualFactorName ?impactType ?impact ?countryName  where {
+
+?factor a Ellas:Factor.
+
+?contextualFactor rdfs:subClassOf ?factor.
+
+?contextualFactor rdfs:label ?contextualFactorName.
+
+?contextualFactor Ellas:factors_impact_type ?impactType.
+
+?contextualFactor Ellas:factors_impact ?impact.
+
+?contextualFactor Ellas:analyzed_in ?country.
+
+?country rdfs:label ?countryName.
+
+filter(?impactType ="Positive"@en)
+
+filter(regex(str(?impact),"Leadership")||regex(str(?impact),"leadership")) }
   `;
   return await fetchQuery(query);
 };
 
 // Atualize o mapeamento de perguntas para funções de busca
 export const questionFunctions: { [key: string]: any } = {
-  "Which/How many initiatives are carried out in Brazil?": fetchInitiativesByCountry,
+  "Which/How many initiatives are carried out in Brazil?":
+    fetchInitiativesByCountry,
   "What data source are used for initiative?": fetchDataSourcesForInitiatives,
-  "What is the initiative's social network(s)?": fetchSocialNetworksForInitiatives,
+  "What is the initiative's social network(s)?":
+    fetchSocialNetworksForInitiatives,
   "How many initiatives are of program?": fetchProgramInitiatives,
   "Are these initiatives public or private?": fetchPublicPrivateInitiatives,
-  "How many initiatives are coordinated by individuals?": fetchIndividualCoordinatedInitiatives,
-  "What is the social gender of the people who are responsible for the initiatives?": fetchCoordinatorGenderForInitiatives,
+  "How many initiatives are coordinated by individuals?":
+    fetchIndividualCoordinatedInitiatives,
+  "What is the social gender of the people who are responsible for the initiatives?":
+    fetchCoordinatorGenderForInitiatives,
   "What is the OBJECTIVE of the initiative?": fetchInitiativeObjectives,
-  "Which initiative modality are used for the actives/actions?": fetchInitiativeFormats,
-  "What initiatives serve girls or adolescents?": fetchInitiativesForGirlsOrAdolescents,
-  "What is the social gender of the target audience served by the initiative?": fetchTargetAudienceGenderForInitiatives,
+  "Which initiative modality are used for the actives/actions?":
+    fetchInitiativeFormats,
+  "What initiatives serve girls or adolescents?":
+    fetchInitiativesForGirlsOrAdolescents,
+  "What is the social gender of the target audience served by the initiative?":
+    fetchTargetAudienceGenderForInitiatives,
   "What initiatives serve black women?": fetchInitiativesForBlackWomen,
-  "What initiatives are being developed <at a given school level>?": fetchInitiativesByEducationalLevel,
-  "What initiatives serve <a certain vulnerable group>?": fetchInitiativesForVulnerableGroups,
-  "Do the initiatives involve the School community?": fetchSchoolCommunityInvolvementInInitiatives,
-  "Which/How many initiatives are carried out <in a given city>?": fetchInitiativesByCity,
-  "What/How many initiatives are carried out <in a given state>?": fetchInitiativesByState,
-  "What/How many initiatives are carried out <in a given area>?": fetchInitiativesByArea,
-  "What/How many initiatives are carried out <in a given region>?": fetchInitiativesByRegion,
+  "What initiatives are being developed <at a given school level>?":
+    fetchInitiativesByEducationalLevel,
+  "What initiatives serve <a certain vulnerable group>?":
+    fetchInitiativesForVulnerableGroups,
+  "Do the initiatives involve the School community?":
+    fetchSchoolCommunityInvolvementInInitiatives,
+  "Which/How many initiatives are carried out <in a given city>?":
+    fetchInitiativesByCity,
+  "What/How many initiatives are carried out <in a given state>?":
+    fetchInitiativesByState,
+  "What/How many initiatives are carried out <in a given area>?":
+    fetchInitiativesByArea,
+  "What/How many initiatives are carried out <in a given region>?":
+    fetchInitiativesByRegion,
   "Which/How many initiatives have <a given reach>?": fetchInitiativesByReach,
   "Are the initiatives funded?": fetchFundedInitiatives,
-  "What is the sector of the organization(s) that finance(s) the initiative?": fetchInitiativeFundingSectors,
+  "What is the sector of the organization(s) that finance(s) the initiative?":
+    fetchInitiativeFundingSectors,
   "What initiatives are active?": fetchActiveInitiatives,
-  "Have the initiatives already been implemented or are they still in the design phase?": fetchInitiativesByPhase,
+  "Have the initiatives already been implemented or are they still in the design phase?":
+    fetchInitiativesByPhase,
   "Which initiatives are already finished?": fetchFinishedInitiatives,
   "What is the initiative's website (URL)?": fetchInitiativeWebsites,
   "How many initiatives are part of communities?": fetchCommunityInitiatives,
   "In which countries the policy was applied?": fetchPoliciesAppliedInCountries,
-  "What types of gender policies/processes/practices exist in Latin America?": fetchPolicyTypesInLatinAmerica,
-  "How policies identified/analyzed are promoting women's participation in STEM fields?": fetchPoliciesPromotingWomenInSTEM,
-  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?": fetchPoliciesImplementedInCountriesSince2015,
-   "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?": fetchPositiveContextualFactors,
-  "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?": fetchNegativeContextualFactorsInInstitution,
-  "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?": fetchContextualFactorsByEducationType,
-  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?": fetchContextualFactorsImpactingFemales,
-  "What are the IMPACTS of CONTEXTUAL FACTOR X?": fetchImpactsOfContextualFactor,
-  "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?": fetchImpactTypesOfContextualFactors,
-  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?": fetchContextualFactorsImpactingSpecificImpacts,
+  "What types of gender policies/processes/practices exist in Latin America?":
+    fetchPolicyTypesInLatinAmerica,
+  "How policies identified/analyzed are promoting women's participation in STEM fields?":
+    fetchPoliciesPromotingWomenInSTEM,
+  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?":
+    fetchPoliciesImplementedInCountriesSince2015,
+  "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?":
+    fetchPositiveContextualFactors,
+  "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?":
+    fetchNegativeContextualFactorsInInstitution,
+  "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?":
+    fetchContextualFactorsByEducationType,
+  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?":
+    fetchContextualFactorsImpactingFemales,
+  "What are the IMPACTS of CONTEXTUAL FACTOR X?":
+    fetchImpactsOfContextualFactor,
+  "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?":
+    fetchImpactTypesOfContextualFactors,
+  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?":
+    fetchContextualFactorsImpactingSpecificImpacts,
 };

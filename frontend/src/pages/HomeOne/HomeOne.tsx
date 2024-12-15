@@ -21,7 +21,10 @@ export default function HomeOnePage() {
     <>
       <Helmet>
         <title>ELLAS</title>
-        <meta name="description" content="Web site created using create-react-app" />
+        <meta
+          name="description"
+          content="Web site created using create-react-app"
+        />
       </Helmet>
       <div className="flex flex-col items-center justify-start w-full bg-white-A700">
         <header className="flex justify-center items-center w-full">
@@ -35,37 +38,58 @@ export default function HomeOnePage() {
               <div className="flex flex-row md:flex-col justify-between items-center w-[100%] md:w-full md:gap-0">
                 <ul className="flex flex-row justify-between items-center w-[70%] md:w-full gap-5">
                   <li>
-                    <button onClick={handleNavigation('/')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Heading as="p">Início</Heading>
+                    <button
+                      onClick={handleNavigation("/")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Home</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleNavigation('/sobre')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Heading as="p">Sobre</Heading>
+                    <button
+                      onClick={handleNavigation("/sobre")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">About</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleNavigation('/buscaone')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Heading as="p">Dados Abertos</Heading>
+                    <button
+                      onClick={handleNavigation("/buscaone")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Open Data</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleNavigation('/apoie-ellas')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Heading as="p">Apoie ELLAS</Heading>
+                    <button
+                      onClick={handleNavigation("/apoie-ellas")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Support ELLAS</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleNavigation('/contato')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                      <Heading as="p">Contato</Heading>
+                    <button
+                      onClick={handleNavigation("/contato")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Contact</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleNavigation('/faq')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                    <button
+                      onClick={handleNavigation("/faq")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
                       <Heading as="p">FAQ</Heading>
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleNavigation('/graph-view')} className="cursor-pointer hover:text-gray-700 hover:font-bold">
+                    <button
+                      onClick={handleNavigation("/graph-view")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
                       <Heading as="p">Graph View</Heading>
                     </button>
                   </li>
@@ -73,10 +97,15 @@ export default function HomeOnePage() {
                 <Button
                   size="sm"
                   shape="round"
-                  rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="Ícone de login" />}
-                  onClick={handleNavigation('/fazerloginone')}
+                  rightIcon={
+                    <Img
+                      src="images/img_iconx18_white_a700.svg"
+                      alt="Ícone de login"
+                    />
+                  }
+                  onClick={handleNavigation("/fazerloginone")}
                 >
-                  Fazer Login
+                  Login
                 </Button>
               </div>
             </div>
@@ -93,17 +122,27 @@ export default function HomeOnePage() {
               />
               <div className="flex flex-row justify-start w-[89%] h-full left-0 bottom-0 top-0 p-[37px] m-auto sm:p-5 bg-gradient absolute">
                 <div className="flex flex-col items-end justify-start w-[60%] mt-[49px] ml-[3px]">
-                  <Heading size="2xl" as="h1" className="w-[73%] mr-[120px] md:mr-5 !leading-10">
-                    Dados abertos para Equidade de Gênero em Ciências e Tecnologia na América Latina
+                  <Heading
+                    size="2xl"
+                    as="h1"
+                    className="w-[73%] mr-[120px] md:mr-5 !leading-10"
+                  >
+                    Open Data for Gender Equity in Science and Technology in
+                    Latin America
                   </Heading>
                   <Button
                     size="sm"
                     shape="round"
-                    rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
+                    rightIcon={
+                      <Img
+                        src="images/img_iconx18_white_a700.svg"
+                        alt="iconx18"
+                      />
+                    }
                     className="mt-3.5 gap-2.5 font-medium min-w-[38px]"
-                    onClick={handleNavigation('/sobre')}
+                    onClick={handleNavigation("/sobre")}
                   >
-                    Saiba mais
+                    Learn more
                   </Button>
                   <div className="flex flex-row justify-start w-full mx-2.5 md:px-5 max-w-[723px]">
                     <div className="flex flex-row md:flex-col justify-start items-center w-full gap-2.5 p-0 md:gap-5 bg-white-A700 rounded-[29px] m-3">
@@ -115,7 +154,7 @@ export default function HomeOnePage() {
                             className="h-[18px] w-[18px] ml-[3px]"
                           />
                           <Text as="p" className="!text-blue_gray-300_01">
-                            Escolha uma Categoria
+                            Choose a Category
                           </Text>
                           <Img
                             src="images/img_iconx18_2.svg"
@@ -123,12 +162,19 @@ export default function HomeOnePage() {
                             className="h-[18px] w-[18px] mr-[3px]"
                           />
                         </div>
-                        <Text size="5xl" as="p" className="!text-blue_gray-300_01 !font-normal">
+                        <Text
+                          size="5xl"
+                          as="p"
+                          className="!text-blue_gray-300_01 !font-normal"
+                        >
                           |
                         </Text>
                         <div className="flex flex-row justify-start items-center w-[52%] sm:w-full gap-[21px] p-[11px]">
-                          <Text as="p" className="ml-[3px] !text-blue_gray-300_01">
-                            O que deseja perguntar aos dados?
+                          <Text
+                            as="p"
+                            className="ml-[3px] !text-blue_gray-300_01"
+                          >
+                            What do you want to ask the data?
                           </Text>
                           <Img
                             src="images/img_iconx18_2.svg"
@@ -141,16 +187,28 @@ export default function HomeOnePage() {
                         color="red_300_03"
                         size="sm"
                         shape="round"
-                        rightIcon={<Img src="images/img_iconx18_white_a700_18x18.svg" alt="iconx18" />}
+                        rightIcon={
+                          <Img
+                            src="images/img_iconx18_white_a700_18x18.svg"
+                            alt="iconx18"
+                          />
+                        }
                         className="mr-1 gap-2.5 font-medium min-w-[131px]"
                       >
-                        Pesquisar
+                        Resechar
                       </Button>
                     </div>
                   </div>
                   <div className="flex flex-row justify-between w-[50%] md:w-full mr-[-800px] md:mr-0">
-                    <Button color="white_A700_99" shape="circle" className="w-[508px] mt-[-100px] md:mt-0">
-                      <Img src="images/img_women_home01_1.png" alt="Mulher Home 01" />
+                    <Button
+                      color="white_A700_99"
+                      shape="circle"
+                      className="w-[508px] mt-[-100px] md:mt-0"
+                    >
+                      <Img
+                        src="images/img_women_home01_1.png"
+                        alt="Mulher Home 01"
+                      />
                     </Button>
                   </div>
                 </div>
@@ -158,13 +216,17 @@ export default function HomeOnePage() {
             </div>
 
             <Heading size="2xl" as="h2" className="mt-[47px] text-center">
-              Explore os dados
+              Explore the data
             </Heading>
             <Text as="p" className="mt-3.5 !text-gray-900">
-              Clique em uma das categorias para encontrar dados relacionados a elas.
+              Click on one of the categories to find data related to them.
             </Text>
             <div className="flex flex-row md:flex-col justify-between items-end w-full mt-[38px] md:gap-10 md:px-5 max-w-[1285px]">
-              <Button color="teal_50" shape="circle" className="w-[38px] mb-[116px]">
+              <Button
+                color="teal_50"
+                shape="circle"
+                className="w-[38px] mb-[116px]"
+              >
                 <Img src="images/img_botao_icone_38px.svg" alt="Botão Ícone" />
               </Button>
               <div className="flex flex-row md:flex-col justify-start w-[80%] md:w-full gap-[46px] md:gap-5">
@@ -177,20 +239,36 @@ export default function HomeOnePage() {
                         className="h-[24px] w-full"
                       />
                     </div>
-                    <Heading size="xl" as="h3" className="mt-2 !text-white-A700 text-center">
-                      Políticas
+                    <Heading
+                      size="xl"
+                      as="h3"
+                      className="mt-2 !text-white-A700 text-center"
+                    >
+                      Policies
                     </Heading>
-                    <Text as="p" className="mt-[27px] !text-white-A700 !leading-5">
-                      Legislações e decretos que promovem a participação de mulheres nas áreas STEM
+                    <Text
+                      as="p"
+                      className="mt-[27px] !text-white-A700 !leading-5"
+                    >
+                      Legislation and decrees that promote the participation of
+                      women in STEM fields
                     </Text>
                   </div>
                   <div className="flex flex-col items-start justify-center w-full h-full gap-[22px] left-0 bottom-0 right-0 top-0 p-[30px] m-auto sm:p-5 bg-red-300_03 absolute rounded-[20px]">
-                    <Img src="images/img_iconx24.svg" alt="Ícone" className="h-[24px] w-[24px] mt-2.5" />
+                    <Img
+                      src="images/img_iconx24.svg"
+                      alt="Ícone"
+                      className="h-[24px] w-[24px] mt-2.5"
+                    />
                     <Heading size="xl" as="h4" className="!text-white-A700">
-                      Políticas
+                      Policies
                     </Heading>
-                    <Text as="p" className="mb-[52px] !text-white-A700 !leading-5">
-                      Legislações e decretos que promovem a participação de mulheres nas áreas STEM
+                    <Text
+                      as="p"
+                      className="mb-[52px] !text-white-A700 !leading-5"
+                    >
+                      Legislation and decrees that promote the participation of
+                      women in STEM fields
                     </Text>
                   </div>
                 </div>
@@ -198,7 +276,11 @@ export default function HomeOnePage() {
                   <Slider
                     autoPlay
                     autoPlayInterval={2000}
-                    responsive={{ "0": { items: 1 }, "550": { items: 2 }, "1050": { items: 3 } }}
+                    responsive={{
+                      "0": { items: 1 },
+                      "550": { items: 2 },
+                      "1050": { items: 3 },
+                    }}
                     renderDotsItem={(props: DotsItem) => {
                       return props?.isActive ? (
                         <div className="h-[10px] w-[10px] mr-3.5 bg-gray-700" />
@@ -220,12 +302,20 @@ export default function HomeOnePage() {
                             alt="Ícone"
                             className="h-[24px] w-[24px] mt-2.5"
                           />
-                          <Heading size="xl" as="h5" className="!text-white-A700">
+                          <Heading
+                            size="xl"
+                            as="h5"
+                            className="!text-white-A700"
+                          >
                             Iniciativas
                           </Heading>
-                          <Text as="p" className="mb-[52px] !text-white-A700 !leading-5">
-                            Eventos, programas, e outras ações para inserção e permanência de mulheres nas carreiras
-                            de tecnologia
+                          <Text
+                            as="p"
+                            className="mb-[52px] !text-white-A700 !leading-5"
+                          >
+                            Events, programs, and other actions for the
+                            insertion and retention of women in technology
+                            careers
                           </Text>
                         </div>
                       </React.Fragment>
@@ -233,7 +323,11 @@ export default function HomeOnePage() {
                   />
                 </div>
               </div>
-              <Button color="teal_50" shape="circle" className="w-[38px] mb-[116px]">
+              <Button
+                color="teal_50"
+                shape="circle"
+                className="w-[38px] mb-[116px]"
+              >
                 <Img src="images/img_botao_icone_38px.svg" alt="Botão Ícone" />
               </Button>
             </div>
@@ -244,10 +338,14 @@ export default function HomeOnePage() {
                   <div className="flex flex-row justify-center w-full px-14 py-[62px] md:p-5 z-[1] bg-gray-50">
                     <div className="flex flex-col items-start justify-start w-[82%] mb-[21px] gap-[22px]">
                       <Heading size="2xl" as="h2" className="text-center">
-                        Não sabe por onde começar?
+                        Don't know where to start?{" "}
                       </Heading>
-                      <Text as="p" className="w-[41%] ml-[3px] md:ml-0 !text-gray-900 !leading-5">
-                        Selecione uma das perguntas mais pesquisadas para começar.
+                      <Text
+                        as="p"
+                        className="w-[41%] ml-[3px] md:ml-0 !text-gray-900 !leading-5"
+                      >
+                        Select one of the most searched questions to get
+                        started.
                       </Text>
                       <div className="w-full gap-12 grid-cols-2 md:grid-cols-1 md:gap-5 grid">
                         <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
@@ -258,11 +356,12 @@ export default function HomeOnePage() {
                               className="h-[18px] w-[18px]"
                             />
                             <Heading as="p" className="!text-red-300_03">
-                              Políticas
+                              Policies
                             </Heading>
                           </div>
                           <Text as="p" className="!text-gray-900 !leading-5">
-                            Que tipos de políticas, processos ou práticas de gênero existem na América Latina?
+                            What types of gender policies, processes or
+                            practices exist in Latin America?
                           </Text>
                         </div>
                         <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
@@ -273,11 +372,12 @@ export default function HomeOnePage() {
                               className="h-[18px] w-[18px]"
                             />
                             <Heading as="p" className="!text-deep_orange-200">
-                              Iniciativas
+                              Initiatives
                             </Heading>
                           </div>
                           <Text as="p" className="!text-gray-900 !leading-5">
-                            Qual o gênero social do público-alvo atendido pelas iniciativas na América Latina?
+                            What is the social gender of the target audience
+                            served by the initiatives in Latin America?
                           </Text>
                         </div>
                         <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
@@ -288,12 +388,12 @@ export default function HomeOnePage() {
                               className="h-[18px] w-[18px]"
                             />
                             <Heading as="p" className="!text-red-300_03">
-                              Políticas
+                              Policies
                             </Heading>
                           </div>
                           <Text as="p" className="!text-gray-900 !leading-5">
-                            Como as políticas identificadas/analisadas estão promovendo a participação das mulheres
-                            nas áreas STEM?
+                            How are the identified/analyzed policies promoting
+                            women's participation in STEM fields?
                           </Text>
                         </div>
                         <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
@@ -304,11 +404,12 @@ export default function HomeOnePage() {
                               className="h-[18px] w-[18px]"
                             />
                             <Heading as="p" className="!text-pink-300">
-                              Fatores
+                              Factors
                             </Heading>
                           </div>
                           <Text as="p" className="!text-gray-900 !leading-5">
-                            Quais são os tipos de impacto dos fatores contextuais nas instituições Latino-Americanas?
+                            What are the types of impact of contextual factors
+                            on Latin American institutions?
                           </Text>
                         </div>
                         <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
@@ -319,11 +420,12 @@ export default function HomeOnePage() {
                               className="h-[18px] w-[18px]"
                             />
                             <Heading as="p" className="!text-deep_orange-200">
-                              Iniciativas
+                              Initiatives
                             </Heading>
                           </div>
                           <Text as="p" className="!text-gray-900 !leading-5">
-                            Quais iniciativas já foram implementadas ou ainda estão em fase de concepção?
+                            What initiatives have already been implemented or
+                            are still in the design phase?
                           </Text>
                         </div>
                         <div className="flex flex-col items-start justify-start w-full sm:w-full gap-2.5 p-5 bg-white-A700 shadow-sm rounded-[20px]">
@@ -334,12 +436,13 @@ export default function HomeOnePage() {
                               className="h-[18px] w-[18px]"
                             />
                             <Heading as="p" className="!text-pink-300">
-                              Fatores
+                              Factors
                             </Heading>
                           </div>
                           <Text as="p" className="!text-gray-900 !leading-5">
-                            Quais são os fatores contextuais negativos nas atividades das instituições nos países
-                            analisados?
+                            What are the negative contextual factors in the
+                            activities of institutions in the countries
+                            analyzed?
                           </Text>
                         </div>
                       </div>
@@ -356,7 +459,7 @@ export default function HomeOnePage() {
                       as="h2"
                       className="w-[61%] bottom-[33%] right-0 left-0 m-auto !leading-[45px] absolute text-center"
                     >
-                      Encontre a informação que precisa no Portal ELLAS
+                      Find the information you need on the ELLAS Portal{" "}
                     </Heading>
                   </div>
                 </div>
@@ -365,72 +468,108 @@ export default function HomeOnePage() {
                     <div className="flex flex-row justify-start w-[70%] sm:w-full gap-2">
                       <div className="flex flex-row justify-start items-start w-[21%] gap-[3px]">
                         <div className="h-[14px] w-[14px] bg-pink-400 rounded-[50%]" />
-                        <Text size="s" as="p" className="mt-0.5 !text-black-900">
-                          Políticas
+                        <Text
+                          size="s"
+                          as="p"
+                          className="mt-0.5 !text-black-900"
+                        >
+                          Policies
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[19%] gap-1">
                         <div className="h-[14px] w-[14px] bg-orange-A700 rounded-[50%]" />
-                        <Text size="s" as="p" className="mt-0.5 !text-black-900">
-                          Fatores
+                        <Text
+                          size="s"
+                          as="p"
+                          className="mt-0.5 !text-black-900"
+                        >
+                          Factors
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[24%] gap-1">
                         <div className="h-[14px] w-[14px] bg-deep_purple-A200 rounded-[50%]" />
-                        <Text size="s" as="p" className="mt-0.5 !text-black-900">
-                          Iniciativas
+                        <Text
+                          size="s"
+                          as="p"
+                          className="mt-0.5 !text-black-900"
+                        >
+                          Initiatives
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[27%] gap-[3px]">
                         <div className="h-[14px] w-[14px] bg-amber-600 rounded-[50%]" />
-                        <Text size="s" as="p" className="mt-0.5 !text-black-900">
-                          Secundários
+                        <Text
+                          size="s"
+                          as="p"
+                          className="mt-0.5 !text-black-900"
+                        >
+                          Secondary
                         </Text>
                       </div>
                     </div>
                     <div className="flex flex-row justify-start items-start w-[29%] sm:w-full gap-1">
-                      <Text size="s" as="p" className="w-[82%] !text-blue_gray-300_01 text-right">
-                        Fonte: Portal ELLAS
+                      <Text
+                        size="s"
+                        as="p"
+                        className="w-[82%] !text-blue_gray-300_01 text-right"
+                      >
+                        Source: ELLAS Portal
                       </Text>
-                      <Img src="images/img_mask_group.png" alt="Elementos" className="h-[16px] w-[16px] mt-0.5" />
+                      <Img
+                        src="images/img_mask_group.png"
+                        alt="Elementos"
+                        className="h-[16px] w-[16px] mt-0.5"
+                      />
                     </div>
                   </div>
                   <Button
                     size="sm"
                     shape="round"
-                    rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
+                    rightIcon={
+                      <Img
+                        src="images/img_iconx18_white_a700.svg"
+                        alt="iconx18"
+                      />
+                    }
                     className="mt-96 gap-2.5 md:mt-0 font-medium min-w-[138px]"
                   >
-                    Saiba mais
+                    Learn more
                   </Button>
                 </div>
               </div>
-              <Text as="p" className="w-[36%] bottom-[16%] right-[13%] m-auto !leading-5 absolute">
+              <Text
+                as="p"
+                className="w-[36%] bottom-[16%] right-[13%] m-auto !leading-5 absolute"
+              >
                 <span className="text-gray-700">
                   <>
-                    A falta de dados recentes e confiáveis ​​é parcialmente responsável pelas diferenças de gênero em
-                    ciência, tecnologia, engenharia e matemática (STEM) na América Latina. 
+                    The lack of recent and reliable data is partly responsible
+                    for gender gaps in science, technology, engineering and
+                    mathematics (STEM) in Latin America. 
                     <br />
-                    <br />O portal ELLAS contribui para a geração de dados abertos ​​entre países sobretudo, mas não
-                    somente:
+                    <br />
+                    The ELLAS portal contributes to the generation of open data
+                    between countries, especially but not limited to:
                     <br />
                     <br />
                   </>
                 </span>
                 <span className="text-gray-700 font-bold">
-                  Avaliar políticas e intervenções de redução da diferença de gênero em STEM
+                  Evaluate policies and interventions to reduce the gender gap
+                  in STEM
                 </span>
                 <span className="text-gray-700">
                   <>
-                    , especialmente aumentando o número de mulheres líderes em universidades, indústrias e
-                    instituições públicas.
+                    , especially by increasing the number of women leaders in
+                    universities, industries and public institutions.
                     <br />
                     <br />
                   </>
                 </span>
                 <span className="text-gray-700 font-bold">
-                  Mapear fatores que influenciam o desenvolvimento da carreira das mulheres em STEM, documentando e
-                  analisando as iniciativas sucedidas ou não para identificar lições aprendidas. 
+                  Map factors that influence the career development of women in
+                  STEM, documenting and analyzing successful and unsuccessful
+                  initiatives to identify lessons learned.
                 </span>
               </Text>
               <Img
@@ -444,11 +583,15 @@ export default function HomeOnePage() {
                   alt="Imagem"
                   className="justify-center h-[722px] left-0 bottom-0 right-0 top-0 m-auto absolute"
                 />
-                <Heading size="lg" as="h6" className="w-[27%] right-[4%] top-[39%] m-auto text-center absolute">
+                <Heading
+                  size="lg"
+                  as="h6"
+                  className="w-[27%] right-[4%] top-[39%] m-auto text-center absolute"
+                >
                   <>
-                    Categorias de
+                    Categories of
                     <br />
-                    Dados no ELLAS
+                    Data in ELLAS
                   </>
                 </Heading>
               </div>
@@ -456,31 +599,42 @@ export default function HomeOnePage() {
             <div className="flex flex-row md:flex-col justify-start items-start w-full mt-[67px] gap-12 md:gap-5 md:px-5 max-w-[1026px]">
               <div className="flex flex-col items-start justify-start w-[48%] md:w-full mt-[22px] md:mt-0">
                 <Heading size="2xl" as="h2" className="text-center">
-                  América Latina em foco!
+                  Latin America in focus!{" "}
                 </Heading>
                 <Text as="p" className="mt-[31px] !leading-5">
-                  O portal ELLAS gera e divulga dados abertos conectados como foco em países da América Latina. Ele
-                  surgiu a partir da união de instituições do Brasil, Bolívia e Peru.
+                  The ELLAS portal generates and disseminates open data
+                  connected with a focus on Latin American countries. It emerged
+                  from the union of institutions from Brazil, Bolivia and Peru.
                 </Text>
                 <Text as="p" className="mt-3.5 !leading-5">
-                  Em uma infraestrutura de dados abertos é possível mapear informações, visualizar dados e melhorar a
-                  colaboração entre os setores de educação, governo e indústria que buscam reduzir a diferença de
-                  gênero STEM na América Latina.
+                  An open data infrastructure makes it possible to map
+                  information, visualize data, and improve collaboration between
+                  education, government, and industry sectors seeking to reduce
+                  the STEM gender gap in Latin America.
                 </Text>
                 <Button
                   size="sm"
                   shape="round"
-                  rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
+                  rightIcon={
+                    <Img
+                      src="images/img_iconx18_white_a700.svg"
+                      alt="iconx18"
+                    />
+                  }
                   className="mt-6 gap-2.5 font-medium min-w-[138px] sm:min-w-full"
-                  onClick={handleNavigation('/sobre')}
+                  onClick={handleNavigation("/sobre")}
                 >
-                  Saiba mais
+                  Learn more
                 </Button>
               </div>
               <div className="flex flex-col items-center justify-start w-[48%] md:w-full p-3.5 bg-white-A700">
                 <div className="flex flex-col items-center justify-start w-[99%] md:w-full mt-[5px] gap-[9px]">
                   <div className="flex flex-row sm:flex-col justify-between items-start w-[99%] md:w-full sm:gap-10">
-                    <Img src="images/img_map_latin_america.svg" alt="Mapa América Latina" className="h-[461px]" />
+                    <Img
+                      src="images/img_map_latin_america.svg"
+                      alt="Mapa América Latina"
+                      className="h-[461px]"
+                    />
                     <div className="flex flex-col items-center justify-start w-[4%] sm:w-full mt-1 sm:mt-0">
                       <div className="flex flex-col items-center justify-center w-full rounded-tl-[50%] rounded-tr-[50%] border-blue_gray-100_02 border border-solid">
                         <Img
@@ -502,40 +656,68 @@ export default function HomeOnePage() {
                     <div className="flex flex-row justify-start w-[52%] gap-2">
                       <div className="flex flex-row justify-start items-start w-[17%] gap-[3px]">
                         <div className="h-[12px] w-[12px] bg-red-50_02 rounded-[50%]" />
-                        <Text size="xs" as="p" className="mt-0.5 !text-gray-900">
+                        <Text
+                          size="xs"
+                          as="p"
+                          className="mt-0.5 !text-gray-900"
+                        >
                           01-25%
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[16%] gap-1">
                         <div className="h-[12px] w-[12px] bg-red-100_01 rounded-[50%]" />
-                        <Text size="xs" as="p" className="mt-0.5 !text-gray-900">
+                        <Text
+                          size="xs"
+                          as="p"
+                          className="mt-0.5 !text-gray-900"
+                        >
                           26-50%
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[16%] gap-[3px]">
                         <div className="h-[12px] w-[12px] bg-red-200 rounded-[50%]" />
-                        <Text size="xs" as="p" className="mt-0.5 !text-gray-900">
+                        <Text
+                          size="xs"
+                          as="p"
+                          className="mt-0.5 !text-gray-900"
+                        >
                           51-75%
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[18%] gap-1">
                         <div className="h-[12px] w-[12px] bg-red-300_03 rounded-[50%]" />
-                        <Text size="xs" as="p" className="mt-0.5 !text-gray-900">
+                        <Text
+                          size="xs"
+                          as="p"
+                          className="mt-0.5 !text-gray-900"
+                        >
                           76-100%
                         </Text>
                       </div>
                       <div className="flex flex-row justify-start items-start w-[21%] gap-1">
                         <div className="h-[12px] w-[12px] bg-gray-400_01 rounded-[50%]" />
-                        <Text size="xs" as="p" className="mt-0.5 !text-gray-900">
-                          Sem dados
+                        <Text
+                          size="xs"
+                          as="p"
+                          className="mt-0.5 !text-gray-900"
+                        >
+                          No data
                         </Text>
                       </div>
                     </div>
                     <div className="flex flex-row justify-start items-center w-[21%] gap-1">
-                      <Text size="s" as="p" className="w-[81%] !text-blue_gray-300_01 text-right">
-                        Fonte: Portal ELLAS
+                      <Text
+                        size="s"
+                        as="p"
+                        className="w-[81%] !text-blue_gray-300_01 text-right"
+                      >
+                        Source: ELLAS Portal
                       </Text>
-                      <Img src="images/img_elementos.svg" alt="Elementos" className="h-[14px] w-[14px]" />
+                      <Img
+                        src="images/img_elementos.svg"
+                        alt="Elementos"
+                        className="h-[14px] w-[14px]"
+                      />
                     </div>
                   </div>
                 </div>
@@ -552,21 +734,32 @@ export default function HomeOnePage() {
                 <div className="flex flex-col items-center justify-center w-full h-full gap-[43px] left-0 bottom-0 right-0 top-0 m-auto absolute">
                   <div className="flex flex-col items-start justify-start w-[33%] md:w-full gap-[23px]">
                     <Heading size="2xl" as="h2" className="text-center">
-                      Dados em destaque
+                      Featured Data{" "}
                     </Heading>
                     <Text as="p" className="!text-gray-900 !leading-5">
-                      Selecione uma das perguntas mais pesquisadas para começar.
+                      Select one of the most searched questions to get started.
                     </Text>
                   </div>
                   <div className="flex flex-row md:flex-col justify-between items-start w-full md:gap-10">
-                    <Button color="red_300_03" shape="circle" className="w-[38px] mt-[184px] md:mt-0">
-                      <Img src="images/img_iconx18_white_a700.svg" alt="Ícone" />
+                    <Button
+                      color="red_300_03"
+                      shape="circle"
+                      className="w-[38px] mt-[184px] md:mt-0"
+                    >
+                      <Img
+                        src="images/img_iconx18_white_a700.svg"
+                        alt="Ícone"
+                      />
                     </Button>
                     <div className="w-[80%]">
                       <Slider
                         autoPlay
                         autoPlayInterval={2000}
-                        responsive={{ "0": { items: 1 }, "550": { items: 1 }, "1050": { items: 3 } }}
+                        responsive={{
+                          "0": { items: 1 },
+                          "550": { items: 1 },
+                          "1050": { items: 3 },
+                        }}
                         renderDotsItem={(props: DotsItem) => {
                           return props?.isActive ? (
                             <div className="h-[10px] w-[10px] mr-3.5 bg-gray-700" />
@@ -590,17 +783,22 @@ export default function HomeOnePage() {
                               />
                               <div className="flex flex-col items-center justify-start w-[84%] md:w-full gap-[17px]">
                                 <Text size="3xl" as="p" className="!leading-5">
-                                  Fatores de impacto nas lideranças femininas
+                                  Impact factors on female leadership{" "}
                                 </Text>
                                 <Text as="p" className="!leading-5">
-                                  Conheça os principais fatores que impactam as lideranças femininas na América
-                                  Latina...
+                                  Discover the main factors that impact female
+                                  leadership in Latin America...
                                 </Text>
                               </div>
                               <Button
                                 size="sm"
                                 shape="round"
-                                rightIcon={<Img src="images/img_iconx18_white_a700.svg" alt="iconx18" />}
+                                rightIcon={
+                                  <Img
+                                    src="images/img_iconx18_white_a700.svg"
+                                    alt="iconx18"
+                                  />
+                                }
                                 className="gap-2.5 sm:px-5 font-medium min-w-[269px] sm:min-w-full"
                               >
                                 Saiba mais
@@ -610,120 +808,154 @@ export default function HomeOnePage() {
                         ))}
                       />
                     </div>
-                    <Button color="red_300_03" shape="circle" className="w-[38px] mt-[184px] md:mt-0">
-                      <Img src="images/img_iconx18_white_a700.svg" alt="Ícone" />
+                    <Button
+                      color="red_300_03"
+                      shape="circle"
+                      className="w-[38px] mt-[184px] md:mt-0"
+                    >
+                      <Img
+                        src="images/img_iconx18_white_a700.svg"
+                        alt="Ícone"
+                      />
                     </Button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-row justify-center w-full">
-              <div className="flex flex-col items-center justify-start w-full">
-                <Img src="images/img_group_22.svg" alt="Imagem" className="h-[19px] z-[1]" />
-                <div className="flex flex-row justify-center w-full mt-[-18px] px-14 py-[65px] md:p-5 bg-gray-800_02">
-                  <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 max-w-[1021px]">
-                    <div className="flex flex-col items-start justify-start w-[19%] md:w-full">
-                      <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
-                        Contatos
-                      </Text>
-                      <Text size="xl" as="p" className="w-[87%] mt-2.5 !text-white-A700 !leading-5">
-                        <>
-                          www.ellas.ufmt.br
-                          <br />
-                          @Ellas.network
-                          <br />
-                          ellas.latinamerica@gmail.com
-                        </>
-                      </Text>
-                      <Text as="p" className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium">
-                        Conecte-se ao ELLAS
-                      </Text>
-                      <Img
-                        src="images/img_group_24.svg"
-                        alt="Imagem"
-                        className="h-[26px] mt-[15px] ml-1 md:ml-0"
-                      />
-                    </div>
-                    <div className="flex flex-col items-end justify-start w-[74%] md:w-full mb-1">
-                      <div className="flex flex-row justify-between items-start w-[81%] md:w-full">
-                        <div className="flex flex-col items-center justify-start">
-                          <Heading size="s" as="p" className="!text-white-A700 text-center">
-                            Patrocínio
-                          </Heading>
-                          <Img
-                            src="images/img_idrc_logo_branca.png"
-                            alt="IDRC Logo"
-                            className="w-full md:h-auto sm:w-full mt-[3px] object-cover"
-                          />
-                          <Heading size="s" as="p" className="mt-[27px] !text-white-A700 text-center">
-                            Instituições Participantes
-                          </Heading>
-                        </div>
-                        <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
-                          <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
-                            Links Úteis
-                          </Text>
-                          <Text
-                            size="xl"
-                            as="p"
-                            className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
-                          >
-                            <>
-                              Acessibilidade na Web
-                              <br />
-                              Termos de Uso
-                              <br />
-                              Política de Privacidade
-                            </>
-                          </Text>
-                        </div>
+            <div className="flex flex-col items-center justify-start w-full">
+              <Img
+                src="images/img_group_22.svg"
+                alt="image"
+                className="h-[19px] z-[1]"
+              />
+              <div className="flex flex-row justify-center w-full mt-[-18px] px-14 py-[65px] md:p-5 bg-gray-800_02">
+                <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 max-w-[1021px]">
+                  <div className="flex flex-col items-start justify-start w-[19%] md:w-full">
+                    <Text
+                      as="p"
+                      className="!text-deep_orange-200 text-right !font-medium"
+                    >
+                      Contacts
+                    </Text>
+                    <Text
+                      size="xl"
+                      as="p"
+                      className="w-[87%] mt-2.5 !text-white-A700 !leading-5"
+                    >
+                      <>
+                        www.ellas.ufmt.br
+                        <br />
+                        @Ellas.network
+                        <br />
+                        ellas.latinamerica@gmail.com
+                      </>
+                    </Text>
+                    <Text
+                      as="p"
+                      className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium"
+                    >
+                      Connect to ELLAS
+                    </Text>
+                    <Img
+                      src="images/img_group_24.svg"
+                      alt="image_one"
+                      className="h-[26px] mt-[15px] ml-1 md:ml-0"
+                    />
+                  </div>
+                  <div className="flex flex-col items-end justify-start w-[74%] md:w-full mb-1">
+                    <div className="flex flex-row justify-between items-start w-[81%] md:w-full">
+                      <div className="flex flex-col items-center justify-start">
+                        <Heading
+                          size="s"
+                          as="h3"
+                          className="!text-white-A700 text-center"
+                        >
+                          Sponsorship
+                        </Heading>
+                        <Img
+                          src="images/img_idrc_logo_branca.png"
+                          alt="idrclogo_one"
+                          className="w-full md:h-auto sm:w-full mt-[3px] object-cover"
+                        />
+                        <Heading
+                          size="s"
+                          as="h4"
+                          className="mt-[27px] !text-white-A700 text-center"
+                        >
+                          Participating Institutions
+                        </Heading>
                       </div>
-                      <div className="flex flex-row md:flex-col justify-between items-center w-full mt-[-2px] md:gap-10">
-                        <div className="flex flex-row sm:flex-col justify-start items-center gap-2.5 sm:gap-5">
-                          <Img
-                            src="images/img_ufmt_oficial_branca.png"
-                            alt="UFMT Oficial"
-                            className="w-[17%] md:h-auto sm:w-full object-cover"
-                          />
-                          <Img
-                            src="images/img_uftpr_branca.png"
-                            alt="UFTPR"
-                            className="w-[14%] md:h-auto sm:w-full object-cover"
-                          />
-                          <Img
-                            src="images/img_vertical_extens.png"
-                            alt="Vertical Extensão"
-                            className="w-[11%] md:h-auto sm:w-full object-cover"
-                          />
-                          <Img
-                            src="images/img_logouff_vertica.png"
-                            alt="Logo UFF"
-                            className="w-[39px] md:h-auto sm:w-full object-cover"
-                          />
-                          <Img
-                            src="images/img_200px_universid.png"
-                            alt="Universidade"
-                            className="w-[48px] md:h-auto sm:w-full object-cover"
-                          />
-                          <Img
-                            src="images/img_negro_horizontal_nac_branca.png"
-                            alt="Negro Horizontal"
-                            className="w-[23%] md:h-auto sm:w-full object-cover"
-                          />
-                          <Img
-                            src="images/img_blancopeq.png"
-                            alt="Blanco Pequeno"
-                            className="w-[8%] md:h-auto sm:w-full object-cover"
-                          />
-                        </div>
-                        <Text size="xl" as="p" className="w-[21%] !text-deep_orange-200 text-right">
+                      <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
+                        <Text
+                          as="p"
+                          className="!text-deep_orange-200 text-right !font-medium"
+                        >
+                          Useful Links
+                        </Text>
+                        <Text
+                          size="xl"
+                          as="p"
+                          className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
+                        >
                           <>
-                            Todos os direitos reservados
-                            <br />© 2024 ELLAS
+                            Web Accessibility
+                            <br />
+                            Terms of Use
+                            <br />
+                            Privacy Policy
                           </>
                         </Text>
                       </div>
+                    </div>
+                    <div className="flex flex-row md:flex-col justify-between items-center w-full mt-[-2px] md:gap-10">
+                      <div className="flex flex-row sm:flex-col justify-start items-center gap-2.5 sm:gap-5">
+                        <Img
+                          src="images/img_ufmt_oficial_branca.png"
+                          alt="ufmtoficial_one"
+                          className="w-[17%] md:h-auto sm:w-full object-cover"
+                        />
+                        <Img
+                          src="images/img_uftpr_branca.png"
+                          alt="uftprbranca_one"
+                          className="w-[14%] md:h-auto sm:w-full object-cover"
+                        />
+                        <Img
+                          src="images/img_vertical_extens.png"
+                          alt="verticalextens"
+                          className="w-[11%] md:h-auto sm:w-full object-cover"
+                        />
+                        <Img
+                          src="images/img_logouff_vertica.png"
+                          alt="logouffvertica"
+                          className="w-[39px] md:h-auto sm:w-full object-cover"
+                        />
+                        <Img
+                          src="images/img_200px_universid.png"
+                          alt="200pxuniversid"
+                          className="w-[48px] md:h-auto sm:w-full object-cover"
+                        />
+                        <Img
+                          src="images/img_negro_horizontal_nac_branca.png"
+                          alt="negro_one"
+                          className="w-[23%] md:h-auto sm:w-full object-cover"
+                        />
+                        <Img
+                          src="images/img_blancopeq.png"
+                          alt="blancopeq_one"
+                          className="w-[8%] md:h-auto sm:w-full object-cover"
+                        />
+                      </div>
+                      <Text
+                        size="xl"
+                        as="p"
+                        className="w-[21%] !text-deep_orange-200 text-right"
+                      >
+                        <>
+                          All rights reserved
+                          <br />© 2024 ELLAS
+                        </>
+                      </Text>
                     </div>
                   </div>
                 </div>

@@ -1010,7 +1010,7 @@ filter(regex(str(?impact),"Leadership")||regex(str(?impact),"leadership")) }
 
 // Atualize o mapeamento de perguntas para funções de busca
 export const questionFunctions: { [key: string]: any } = {
-  "Which/How many initiatives are carried out in Brazil?":
+  "Which/How many initiatives are carried out by countries?":
     fetchInitiativesByCountry,
   "What data source are used for initiative?": fetchDataSourcesForInitiatives,
   "What is the initiative's social network(s)?":

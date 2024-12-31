@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { Helmet } from "react-helmet";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Text,
   Img,
@@ -10,7 +10,9 @@ import {
   RadioGroup,
 } from "../../components";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
-import { questionFunctions } from "../../services/apiService"; // Certifique-se de que essas funções estão exportadas corretamente no apiService.ts
+import { questionFunctions } from "../../services/apiService";
+import { getTabClass } from "../../utils/tabUtils";
+import { saveAs } from "file-saver";
 
 type DropDownOption = {
   label: string;
@@ -26,7 +28,7 @@ const questionQueries: { [key: string]: string[] } = {
     "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
   ],
   initiatives: [
-    "Which/How many initiatives are carried out in Brazil?",
+    "Which/How many initiatives are carried out by countries?",
     "What data source are used for initiative?",
     "What is the initiative's social network(s)?",
     "How many initiatives are of program?",
@@ -80,12 +82,46 @@ const BuscaTwoPage = () => {
   const [countryCounts, setCountryCounts] = useState<{ [key: string]: number }>(
     {}
   );
-  const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>("ambos");
-  const [selectedVisualization, setSelectedVisualization] = useState<string>("paises");
+  const [selectedVisualization, setSelectedVisualization] =
+    useState<string>("paises");
   const isTimeDropdownEnabled = timeRelatedQuestions.includes(selectedQuestion);
-  
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSupportClick = () => {
+    window.location.href = "https://ellas.ufmt.br/support-ellas/"; // Redirecionamento Externo
+  };
+
+  const handleAboutClick = () => {
+    window.location.href = "https://ellas.ufmt.br/about"; // Redirecionamento Externo
+  };
+
+  // Função para converter os dados em CSV
+  const exportTableDataToCSV = (data, fields) => {
+    if (!data || data.length === 0) return;
+
+    // Cabeçalho do CSV
+    const headers = ["Country", "Name", ...fields].join(",");
+
+    // Linhas de dados
+    const rows = data.map((item) =>
+      [
+        item.country || "",
+        item.name || "",
+        ...fields.map((field) => item[field] || ""),
+      ].join(",")
+    );
+
+    // Juntar tudo no formato CSV
+    const csvContent = [headers, ...rows].join("\n");
+
+    // Criar blob e acionar o download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "table_data.csv");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -207,7 +243,7 @@ const BuscaTwoPage = () => {
                   </li>
                   <li>
                     <button
-                      onClick={handleNavigation("/sobre")}
+                      onClick={handleAboutClick}
                       className="cursor-pointer hover:text-gray-700 hover:font-bold"
                     >
                       <Heading as="p">About</Heading>
@@ -223,7 +259,7 @@ const BuscaTwoPage = () => {
                   </li>
                   <li>
                     <button
-                      onClick={handleNavigation("/apoie-ellas")}
+                      onClick={handleSupportClick}
                       className="cursor-pointer hover:text-gray-700 hover:font-bold"
                     >
                       <Heading as="p">Support ELLAS</Heading>
@@ -275,7 +311,7 @@ const BuscaTwoPage = () => {
           <div className="flex flex-col items-center justify-start w-full">
             <div className="flex flex-col items-center justify-start w-full">
               <div className="flex flex-row justify-start w-full p-6 sm:p-5 border-deep_orange-200 border-b-2 border-solid bg-gray-50">
-                <div className="flex flex-row justify-start w-[17%] mb-[3px] ml-[142px] md:ml-5 mt-0">
+                <div className="flex flex-row justify-start w-[17%] mb-[3px] ml-[500px] md:ml-5 mt-0">
                   <Heading size="2xl" as="h1" className="text-center">
                     Data Table
                   </Heading>
@@ -416,119 +452,114 @@ const BuscaTwoPage = () => {
                             onChange={handleQuestionChange}
                             className="w-full mt-3 border-blue_gray-100 border border-solid"
                           />
-                          <Text size="3xl" as="p" className="mt-[22px]">
-                            Type
-                          </Text>
-                          <RadioGroup
-                            name="status"
-                            className="w-full mt-3 flex flex-col gap-4"
-                          >
-                            <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                              <input
-                                type="radio"
-                                name="status"
-                                value="ambos"
-                                checked={selectedStatus === "ambos"}
-                                onChange={handleStatusChange}
-                                className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                disabled={
-                                  !selectedCategory || !selectedQuestion
-                                } // Condição para desabilitar
-                              />
-                              <span className="text-blue_gray-300_01">
-                                Both
-                              </span>
-                            </label>
-                            <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                              <input
-                                type="radio"
-                                name="status"
-                                value="ativo"
-                                checked={selectedStatus === "ativo"}
-                                onChange={handleStatusChange}
-                                className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                disabled={
-                                  !selectedCategory || !selectedQuestion
-                                } // Condição para desabilitar
-                              />
-                              <span className="text-blue_gray-300_01">
-                                Active
-                              </span>
-                            </label>
-                            <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                              <input
-                                type="radio"
-                                name="status"
-                                value="inativo"
-                                checked={selectedStatus === "inativo"}
-                                onChange={handleStatusChange}
-                                className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                disabled={
-                                  !selectedCategory || !selectedQuestion
-                                } // Condição para desabilitar
-                              />
-                              <span className="text-blue_gray-300_01">
-                                Inactive
-                              </span>
-                            </label>
-                          </RadioGroup>
+                          {/* Ocultar o dropdown "Type" */}
 
-                          <Text size="3xl" as="p" className="mt-[22px]">
-                            Visualization
-                          </Text>
-                          <RadioGroup
-                            name="visualizacao"
-                            className="w-full mt-3 flex flex-col gap-4"
-                          >
-                            <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                              <input
-                                type="radio"
+                          {false && (
+                            <>
+                              <Text size="3xl" as="p" className="mt-[22px]">
+                                Type
+                              </Text>
+                              <RadioGroup
+                                name="status"
+                                className="w-full mt-3 flex flex-col gap-4"
+                              >
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value="ambos"
+                                    checked={selectedStatus === "ambos"}
+                                    onChange={handleStatusChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Both
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value="ativo"
+                                    checked={selectedStatus === "ativo"}
+                                    onChange={handleStatusChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Active
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value="inativo"
+                                    checked={selectedStatus === "inativo"}
+                                    onChange={handleStatusChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Inactive
+                                  </span>
+                                </label>
+                              </RadioGroup>
+                            </>
+                          )}
+
+                          {/* Ocultar o dropdown "Visualization" */}
+                          {false && (
+                            <>
+                              <Text size="3xl" as="p" className="mt-[22px]">
+                                Visualization
+                              </Text>
+                              <RadioGroup
                                 name="visualizacao"
-                                value="paises"
-                                checked={selectedVisualization === "paises"}
-                                onChange={handleVisualizationChange}
-                                className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                disabled={
-                                  !selectedCategory || !selectedQuestion
-                                } // Condição para desabilitar
-                              />
-                              <span className="text-blue_gray-300_01">
-                                Countries
-                              </span>
-                            </label>
-                            <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                              <input
-                                type="radio"
-                                name="visualizacao"
-                                value="regioes"
-                                checked={selectedVisualization === "regioes"}
-                                onChange={handleVisualizationChange}
-                                className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                disabled={
-                                  !selectedCategory || !selectedQuestion
-                                } // Condição para desabilitar
-                              />
-                              <span className="text-blue_gray-300_01">
-                                Regions
-                              </span>
-                            </label>
-                            <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
-                              <input
-                                type="radio"
-                                name="visualizacao"
-                                value="global"
-                                checked={selectedVisualization === "global"}
-                                onChange={handleVisualizationChange}
-                                className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
-                                disabled={
-                                  !selectedCategory || !selectedQuestion
-                                } // Condição para desabilitar
-                              />
-                              <span className="text-blue_gray-300_01">
-                                Global
-                              </span>
-                            </label>
-                          </RadioGroup>
+                                className="w-full mt-3 flex flex-col gap-4"
+                              >
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="visualizacao"
+                                    value="paises"
+                                    checked={selectedVisualization === "paises"}
+                                    onChange={handleVisualizationChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Countries
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="visualizacao"
+                                    value="regioes"
+                                    checked={
+                                      selectedVisualization === "regioes"
+                                    }
+                                    onChange={handleVisualizationChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Regions
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="visualizacao"
+                                    value="global"
+                                    checked={selectedVisualization === "global"}
+                                    onChange={handleVisualizationChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Global
+                                  </span>
+                                </label>
+                              </RadioGroup>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -541,43 +572,38 @@ const BuscaTwoPage = () => {
                   defaultIndex={0}
                 >
                   <div className="flex flex-row md:flex-col justify-between items-start w-full md:gap-10">
-                    <TabList className="flex flex-row sm:flex-col justify-start w-[46%] md:w-full gap-2.5 sm:gap-2.5">
-                      <Tab className="flex flex-row justify-center items-center w-[32%] md:w-full md:h-auto gap-2.5 p-[17px] border-gray-700 border-b-2 border-solid bg-white-A700">
-                        <button
-                          onClick={handleNavigation("/buscaone")}
-                          className="cursor-pointer hover:text-gray-700 hover:font-bold"
-                        >
-                          <Text as="p" className="text-center !font-medium">
-                            Map
-                          </Text>
-                        </button>
-                        <Img
-                          src="images/img_iconx18_9.svg"
-                          alt="iconxeighteen"
-                          className="h-[18px] w-[18px]"
-                        />
+                    <TabList className="flex flex-row justify-start w-full gap-2.5">
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscaone"
+                        )}`}
+                        onClick={() => navigate("/buscaone")}
+                      >
+                        <Text as="p">Map</Text>
+                        <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
                       </Tab>
-                      <Tab className="flex flex-row justify-center items-center w-[32%] md:w-full md:h-auto gap-2.5 p-[18px] border-deep_orange-200 border-b-2 border-solid bg-red-100_02">
-                        <button className="cursor-pointer hover:text-gray-700 hover:font-bold">
-                          <Text as="p" className="text-center !font-medium">
-                            Bars
-                          </Text>
-                        </button>
-                        <Img
-                          src="images/img_iconx18_11.svg"
-                          alt="iconxeighteen"
-                          className="h-[18px] w-[18px]"
-                        />
+
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwo"
+                        )}`}
+                        onClick={() => navigate("/buscatwo")}
+                      >
+                        <Text as="p">Bars</Text>
+                        <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
                       </Tab>
-                      <Tab className="flex flex-row justify-center items-center w-[32%] md:w-full md:h-auto gap-2.5 p-[18px] border-deep_orange-200 border-b-2 border-solid bg-red-100_02">
-                        <Text as="p" className="text-center !font-medium">
-                          Lines
-                        </Text>
-                        <Img
-                          src="images/img_iconx18_12.svg"
-                          alt="iconxeighteen"
-                          className="h-[18px] w-[18px]"
-                        />
+
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwoone"
+                        )}`}
+                        onClick={() => navigate("/buscatwoone")}
+                      >
+                        <Text as="p">Lines</Text>
+                        <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
                       </Tab>
                     </TabList>
                     <div className="flex flex-row justify-start gap-0.5">
@@ -610,24 +636,34 @@ const BuscaTwoPage = () => {
                         <div className="h-[2px] w-full bg-deep_orange-200" />
                         <div className="flex flex-col items-center justify-center w-[100%] md:w-full gap-[15px]">
                           <Text size="3xl" as="p" className="text-center">
-                            Bar by country
+                            {selectedQuestion
+                              ? selectedQuestion // Exibe a pergunta selecionada
+                              : "Select a question to see results"}{" "}
+                            {/* Placeholder caso não tenha pergunta */}
                           </Text>
                           <div className="flex flex-col items-center justify-start w-[100%] md:w-full">
                             <table className="w-full">
                               <thead className="border-b-6 border-gray-700">
                                 <tr>
-                                  <th>Country</th>
-                                  <th>Count</th>
+                                  <th className="text-center pl-0">Country</th>{" "}
+                                  {/* Alinhamento à esquerda */}
+                                  <th className="text-center pl-20">
+                                    Count
+                                  </th>{" "}
+                                  {/* Alinhamento à esquerda */}
                                 </tr>
                               </thead>
                               <tbody className="flex-col items-center justify-start w-full">
                                 {Object.entries(countryCounts).map(
                                   ([country, count]) => (
                                     <tr key={country}>
-                                      <td>{country}</td>
-                                      <td>
+                                      <td className="text-left pl-0">
+                                        {country}
+                                      </td>{" "}
+                                      {/* Alinhamento à esquerda */}
+                                      <td className="text-left pl-0">
                                         <div
-                                          className="flex flex-row justify-center items-center w-full"
+                                          className="flex flex-row items-center"
                                           style={{
                                             width: `${
                                               (count /
@@ -640,11 +676,9 @@ const BuscaTwoPage = () => {
                                             }%`, // Proporção baseada no maior valor
                                             backgroundColor: "#cf9bcc",
                                             height: "20px", // Altura da barra
-                                            // largura da barra
                                             maxWidth: "100%",
                                             display: "flex",
                                             alignItems: "center",
-                                            justifyContent: "center",
                                             color: "white",
                                             fontWeight: "bold",
                                           }}
@@ -668,21 +702,27 @@ const BuscaTwoPage = () => {
                       Data Table
                     </Heading>
                     <div className="flex flex-row justify-start gap-0.5">
-                      <Button shape="square" className="w-[38px]">
+                      <Button
+                        shape="square"
+                        className="w-[38px]"
+                        onClick={() =>
+                          exportTableDataToCSV(data, dynamicFields)
+                        }
+                      >
                         <Img src="images/img_botao_icone_30px_1.svg" />
                       </Button>
-                      <Button shape="square" className="w-[38px]">
+                      {/* <Button shape="square" className="w-[38px]">
                         <Img src="images/img_botao_icone_30px_4.svg" />
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                   <div className="flex flex-row justify-center w-[99%] md:w-full mt-[10px] bg-white-A700">
-                    <div className="flex flex-row md:flex-col justify-center w-full md:gap-5 overflow-y-auto max-h-[500px]">
-                      <div className="flex flex-col items-center justify-start w-[99%] md:w-full">
-                        <div className="flex-row justify-center w-full">
-                          <table className="flex-row w-full bg-white-A700">
-                            <thead className="bg-pink-100">
-                              <tr className="flex-row justify-between p-[9px] bg-pink-100">
+                    <div className="flex flex-row md:flex-col justify-center w-full md:gap-5">
+                      <div className="flex flex-col items-center w-full bg-white-A700">
+                        <div className="table-container relative w-full overflow-y-auto max-h-[740px] border border-gray-300">
+                          <table className="table-auto w-full border-collapse bg-white-A700">
+                            <thead className="bg-pink-100 sticky top-0 z-10">
+                              <tr className="p-[9px] bg-pink-100">
                                 <th className="w-[10%] text-left !text-gray-900">
                                   Country
                                 </th>

@@ -1,56 +1,371 @@
-import React from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { Helmet } from "react-helmet";
-import { Text, Img, Heading, Button, Radio, RadioGroup, SelectBox, Input } from "../../components";
-import { OptionProps } from "react-select";
-import { TabList, Tab, Tabs, TabPanel } from "react-tabs";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  Text,
+  Img,
+  Heading,
+  Button,
+  SelectBox,
+  RadioGroup,
+} from "../../components";
+import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
+import { questionFunctions } from "../../services/apiService"; // Certifique-se de que essas funções estão exportadas corretamente no apiService.ts
+import { Bar, Line } from "react-chartjs-2";
+import "chart.js/auto"; // Importação necessária para Chart.js
+import { getTabClass } from "../../utils/tabUtils";
+import { saveAs } from "file-saver";
 
-const dropDownOptions = [
-  { label: "Option1", value: "option1" },
-  { label: "Option2", value: "option2" },
-  { label: "Option3", value: "option3" },
-];
+type DropDownOption = {
+  label: string;
+  value: string;
+};
+
+// Definindo as queries e questões
+const questionQueries: { [key: string]: string[] } = {
+  policies: [
+    "In which countries the policy was applied?",
+    "What types of gender policies/processes/practices exist in Latin America?",
+    "How policies identified/analyzed are promoting women's participation in STEM fields?",
+    "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+  ],
+  initiatives: [
+    "Which/How many initiatives are carried out by countries?",
+    "What data source are used for initiative?",
+    "What is the initiative's social network(s)?",
+    "How many initiatives are of program?",
+    "Are these initiatives public or private?",
+    "How many initiatives are coordinated by individuals?",
+    "What is the social gender of the people who are responsible for the initiatives?",
+    "What is the OBJECTIVE of the initiative?",
+    "Which initiative modality are used for the actives/actions?",
+    "What initiatives serve girls or adolescents?",
+    "What is the social gender of the target audience served by the initiative?",
+    "What initiatives serve black women?",
+    "What initiatives are being developed at a given school level?",
+    "What initiatives serve a certain vulnerable group?",
+    "Do the initiatives involve the School community?",
+    "Which/How many initiatives are carried out in a given city?",
+    "What/How many initiatives are carried out in a given state?",
+    "What/How many initiatives are carried out in a given area?",
+    "What/How many initiatives are carried out in a given region?",
+    "Which/How many initiatives have a given reach?",
+    "Are the initiatives funded?",
+    "What is the sector of the organization(s) that finance(s) the initiative?",
+    "What initiatives are active?",
+    "Have the initiatives already been implemented or are they still in the design phase?",
+    "Which initiatives are already finished?",
+    "What is the initiative's website (URL)?",
+    "How many initiatives are part of communities?",
+  ],
+  factors: [
+    "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?",
+    "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?",
+    "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?",
+    "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?",
+    "What are the IMPACTS of CONTEXTUAL FACTOR X?",
+    "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?",
+    "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?",
+  ],
+};
+const timeRelatedQuestions = [
+  "What is the initiative's social network(s)?",
+  "What initiatives are being developed at a given school level?",
+  "Have the initiatives already been implemented or are they still in the design phase?",
+  "Which initiatives are already finished?",
+  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+].map((q) => q.trim().toLowerCase());
 
 export default function BuscaTwoOnePage() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
+  const [data, setData] = useState<any[]>([]);
+  const [dynamicFields, setDynamicFields] = useState<string[]>([]);
+  const [countryCounts, setCountryCounts] = useState<{
+    [key: string]: number;
+  }>({});
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string>("ambos");
+  const isTimeDropdownEnabled = timeRelatedQuestions.includes(selectedQuestion);
+  const [selectedVisualization, setSelectedVisualization] =
+    useState<string>("linhas");
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSupportClick = () => {
+    window.location.href = "https://ellas.ufmt.br/support-ellas/"; // Redirecionamento Externo
+  };
+
+  const handleAboutClick = () => {
+    window.location.href = "https://ellas.ufmt.br/about"; // Redirecionamento Externo
+  };
+
+  // Função para converter os dados em CSV
+  const exportTableDataToCSV = (data, fields) => {
+    if (!data || data.length === 0) return;
+
+    // Cabeçalho do CSV
+    const headers = ["Country", "Name", ...fields].join(",");
+
+    // Linhas de dados
+    const rows = data.map((item) =>
+      [
+        item.country || "",
+        item.name || "",
+        ...fields.map((field) => item[field] || ""),
+      ].join(",")
+    );
+
+    // Juntar tudo no formato CSV
+    const csvContent = [headers, ...rows].join("\n");
+
+    // Criar blob e acionar o download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "table_data.csv");
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (selectedCategory && selectedQuestion) {
+        const fetchFunction = questionFunctions[selectedQuestion];
+        if (fetchFunction) {
+          try {
+            const response = await fetchFunction();
+            if (response?.results?.bindings.length > 0) {
+              const fields = Object.keys(response.results.bindings[0]).filter(
+                (key) =>
+                  !["countryName", "policyName", "initiativeName"].includes(key)
+              );
+              setDynamicFields(fields);
+
+              const formattedData = response.results.bindings.map(
+                (item: any) => ({
+                  country: item.countryName?.value,
+                  name: item.policyName?.value || item.initiativeName?.value,
+                  ...fields.reduce(
+                    (acc, field) => ({
+                      ...acc,
+                      [field]: item[field]?.value || "",
+                    }),
+                    {}
+                  ),
+                })
+              );
+
+              setData(formattedData);
+
+              // Atualizar contagem por país
+              const countryCountMap: { [key: string]: number } = {};
+              formattedData.forEach((item) => {
+                if (item.country) {
+                  countryCountMap[item.country] =
+                    (countryCountMap[item.country] || 0) + 1;
+                }
+              });
+              setCountryCounts(countryCountMap);
+            } else {
+              setData([]);
+              setDynamicFields([]);
+              setCountryCounts({});
+            }
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        }
+      }
+    };
+
+    fetchData();
+  }, [selectedCategory, selectedQuestion]);
+
+  const handleCategoryChange = (option: DropDownOption | null) => {
+    setSelectedCategory(option ? option.value : null);
+    setSelectedQuestion(null);
+    setData([]);
+    setDynamicFields([]);
+    setCountryCounts({});
+  };
+
+  const handleQuestionChange = (option: DropDownOption | null) => {
+    setSelectedQuestion(option ? option.value : null);
+  };
+
+  const handleReset = () => {
+    setSelectedCategory(null);
+    setSelectedQuestion(null);
+    setData([]);
+    setDynamicFields([]);
+    setCountryCounts({});
+  };
+
+  const handleTimeChange = (option: DropDownOption | null) => {
+    setSelectedTime(option ? option.value : null);
+  };
+
+  const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSelectedStatus(event.target.value);
+  };
+
+  const handleVisualizationChange = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("Visualização selecionada:", event.target.value); // Verifique o valor
+    setSelectedVisualization(event.target.value);
+  };
+
+  const handleNavigation = (path: string) => () => {
+    navigate(path);
+  };
+
+  const renderChart = () => {
+    const countries = Object.keys(countryCounts); // Lista de países
+    const totalSteps = 100; // Eixo X vai de 0 a 100
+
+    // Função auxiliar para gerar valores lineares acumulativos (formato de rampa)
+    const generateLinearRamp = (totalValue: number) => {
+      return Array.from({ length: totalSteps + 1 }, (_, i) => {
+        return (i / totalSteps) * totalValue; // Linearmente de 0 até totalValue
+      });
+    };
+
+    // Criar datasets: cada país terá uma "linha cumulativa" única
+    const datasets = countries.map((country, index) => {
+      const totalValue = countryCounts[country]; // Quantidade total para o país
+
+      return {
+        label: country, // Nome do país
+        data: generateLinearRamp(totalValue), // Valores cumulativos lineares
+        borderColor: `hsl(${index * 60}, 70%, 50%)`, // Cor única para cada país
+        pointBackgroundColor: `hsl(${index * 60}, 70%, 50%)`,
+        borderWidth: 2,
+        tension: 0, // Linhas retas para formato de rampa
+        fill: false, // Sem preenchimento
+      };
+    });
+
+    const chartData = {
+      labels: Array.from({ length: totalSteps + 1 }, (_, i) => i), // Eixo X de 0 a 100
+      datasets,
+    };
+
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          position: "top" as const,
+        },
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Steps",
+          },
+          beginAtZero: true,
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Cumulative Value",
+          },
+          beginAtZero: true,
+          suggestedMax: Math.max(...Object.values(countryCounts)) * 1.1, // Ajusta dinamicamente o máximo
+        },
+      },
+    };
+
+    return <Line data={chartData} options={options} />;
+  };
+
   return (
     <>
       <Helmet>
         <title>ELLAS</title>
-        <meta name="description" content="Web site created using create-react-app" />
+        <meta
+          name="description"
+          content="Web site created using create-react-app"
+        />
       </Helmet>
-      <div className="flex flex-col items-center justify-start w-full bg-red-50_01">
+      <div className="flex flex-col items-center justify-start w-full bg-white-A700">
         <header className="flex justify-center items-center w-full">
           <div className="flex flex-row justify-center w-full p-3 bg-white-A700 shadow-xs">
-            <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 md:px-5 max-w-[1023px]">
+            <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-20 md:px-5 max-w-[1023px]">
               <Img
                 src="images/img_logo_ellas_portal_prancheta.png"
-                alt="logoellas_one"
-                className="w-[13%] md:w-full md:h-[55px] object-cover"
+                alt="Logo ELLAS Portal"
+                className="w-[30%] md:w-full md:h-[0px] object-cover"
               />
-              <div className="flex flex-row md:flex-col justify-between items-center w-[69%] md:w-full md:gap-10">
-                <div className="flex flex-row sm:flex-col justify-between items-center w-auto sm:gap-10">
-                  <a href="#">
-                    <Heading as="p">Início</Heading>
-                  </a>
-                  <a href="#">
-                    <Text />
-                  </a>
-                  <a href="#">
-                    <Text />
-                  </a>
-                  <a href="#">
-                    <Heading as="p">Apoie ELLAS</Heading>
-                  </a>
-                  <a href="#">
-                    <Text />
-                  </a>
-                </div>
+              <div className="flex flex-row md:flex-col justify-between items-center w-[100%] md:w-full md:gap-0">
+                <ul className="flex flex-row justify-between items-center w-[70%] md:w-full gap-5">
+                  <li>
+                    <button
+                      onClick={handleNavigation("/")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Home</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleAboutClick}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">About</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleNavigation("/buscaone")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Open Data</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleSupportClick}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Support ELLAS</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleNavigation("/contato")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Contact</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleNavigation("/faq")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">FAQ</Heading>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleNavigation("/graph-view")}
+                      className="cursor-pointer hover:text-gray-700 hover:font-bold"
+                    >
+                      <Heading as="p">Graph View</Heading>
+                    </button>
+                  </li>
+                </ul>
                 <Button
                   size="sm"
                   shape="round"
-                  rightIcon={<Img src="images/img_iconx18.svg" alt="iconx18" />}
-                  className="gap-2.5 font-medium min-w-[106px]"
+                  rightIcon={
+                    <Img
+                      src="images/img_iconx18_white_a700.svg"
+                      alt="Ícone de login"
+                    />
+                  }
+                  onClick={handleNavigation("/fazerloginone")}
                 >
-                  Entrar
+                  Login
                 </Button>
               </div>
             </div>
@@ -60,236 +375,297 @@ export default function BuscaTwoOnePage() {
           <div className="flex flex-col items-center justify-start w-full">
             <div className="flex flex-col items-center justify-start w-full">
               <div className="flex flex-row justify-start w-full p-6 sm:p-5 border-deep_orange-200 border-b-2 border-solid bg-gray-50">
-                <div className="flex flex-row justify-start w-[17%] mb-[3px] ml-[142px] md:ml-5">
+                <div className="flex flex-row justify-start w-[17%] mb-[3px] ml-[500px] md:ml-5 mt-0">
                   <Heading size="2xl" as="h1" className="text-center">
-                    Dados Abertos
+                    Data Table
                   </Heading>
                 </div>
               </div>
-              <div className="flex flex-row md:flex-col justify-start items-center w-full gap-[35px] md:gap-5 md:px-5 max-w-[1331px]">
-                <div className="h-[1087px] w-[29%] md:w-full pt-7 sm:pt-5 bg-white-A700 shadow-md relative">
-                  <div className="flex flex-col items-start justify-start w-[78%] gap-2.5 bottom-[38%] right-0 left-0 m-auto absolute">
-                    <Text size="3xl" as="p">
-                      Localidades
-                    </Text>
-                    <div className="flex flex-row justify-start sm:w-full">
-                      <Input
-                        shape="round"
-                        name="itemform_one"
-                        placeholder="Países"
-                        prefix={<Img src="images/img_iconx18_14.svg" alt="iconx18" />}
-                        suffix={<Img src="images/img_iconx18_2.svg" alt="iconx18" />}
-                        className="w-full sm:w-full gap-5 border-blue_gray-100"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end justify-center w-full h-full left-0 bottom-0 right-0 top-0 m-auto absolute">
-                    <div className="flex flex-col items-center justify-start w-full">
-                      <div className="flex flex-row sm:flex-col justify-center w-full sm:gap-5">
-                        <Button
-                          color="white_A700"
-                          size="lg"
-                          shape="square"
-                          rightIcon={<Img src="images/img_iconx18_gray_700.svg" alt="iconx18" />}
-                          className="gap-2.5 sm:px-5 font-medium border-gray-700 border-b-2 border-solid min-w-[187px]"
-                        >
-                          Dados
-                        </Button>
-                        <Button
-                          color="white_A700"
-                          size="lg"
-                          shape="square"
-                          rightIcon={<Img src="images/img_iconx18_gray_700_18x18.svg" alt="iconx18" />}
-                          className="gap-2.5 sm:px-5 font-medium border-gray-700 border-b-2 border-solid min-w-[186px]"
-                        >
-                          Detalhes
-                        </Button>
-                      </div>
-                      {[...Array(1)].map((_, index) => (
-                        <TabPanel key={`tab-panel${index}`} className="items-center w-full absolute">
-                          <div className="flex flex-col items-center justify-start w-full">
-                            <div className="flex flex-col items-center justify-start w-full">
-                              <div className="h-[2px] w-full bg-gray-700" />
-                              <Button
-                                size="xs"
-                                variant="outline"
-                                rightIcon={<Img src="images/img_iconx18_5.svg" alt="iconx18" />}
-                                className="mt-[22px] gap-2.5 min-w-[95px] rounded-[15px] sm:min-w-full"
-                              >
-                                Reiniciar
-                              </Button>
-                              <div className="flex flex-col items-start justify-start w-[79%] md:w-full mt-2.5">
-                                <div className="flex flex-col items-start justify-start w-[99%] md:w-full">
-                                  <div className="flex flex-col items-start justify-start w-full gap-3">
-                                    <Text size="3xl" as="p">
-                                      Categoria
-                                    </Text>
-                                    <SelectBox
-                                      shape="round"
-                                      indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                                      getOptionLabel={(e: OptionProps) => (
-                                        <>
-                                          <div className="flex items-center">
-                                            <Img src="images/img_iconx18_6.svg" alt="iconx18" />
-                                            <span>{e.label}</span>
-                                          </div>
-                                        </>
-                                      )}
-                                      name="iniciativas"
-                                      placeholder="Iniciativas"
-                                      options={dropDownOptions}
-                                      className="w-full border-gray-300_01 border border-solid"
-                                    />
-                                  </div>
-                                  <Text size="3xl" as="p" className="mt-[22px]">
-                                    Pergunta
-                                  </Text>
-                                  <SelectBox
-                                    shape="round"
-                                    indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-                                    getOptionLabel={(e: OptionProps) => (
-                                      <>
-                                        <div className="flex items-center">
-                                          <Img src="images/img_iconx18_8.svg" alt="iconx18" />
-                                          <span>{e.label}</span>
-                                        </div>
-                                      </>
-                                    )}
-                                    name="item"
-                                    placeholder="Quais e quantas iniciativas..."
-                                    options={dropDownOptions}
-                                    className="w-full mt-3 border-blue_gray-100 border border-solid"
-                                  />
-                                </div>
-                                <Text size="3xl" as="p" className="mt-5 ml-0.5 md:ml-0">
-                                  Tempo
-                                </Text>
-                                <div className="h-[55px] w-full mt-[7px] relative">
-                                  <div className="h-[10px] w-[97%] bottom-[16%] right-0 left-0 m-auto bg-gray-300 absolute" />
-                                  <div className="flex flex-row justify-between w-full h-full left-0 bottom-0 right-0 top-0 m-auto absolute">
-                                    <div className="flex flex-col items-center justify-start w-[12%] gap-[5px]">
-                                      <div className="flex flex-row justify-center w-full">
-                                        <Text as="p" className="!text-blue_gray-300_01 text-center !leading-[21px]">
-                                          <>
-                                            2012
-                                            <br />
-                                            2013
-                                            <br />
-                                            2014
-                                            <br />
-                                            2015
-                                            <br />
-                                            2016
-                                            <br />
-                                            2017
-                                            <br />
-                                            2018
-                                            <br />
-                                            2019
-                                            <br />
-                                            2020
-                                            <br />
-                                            2021
-                                            <br />
-                                            2022
-                                            <br />
-                                            2023
-                                          </>
-                                        </Text>
-                                      </div>
-                                      <div className="h-[29px] w-[29px] bg-blue_gray-300_01 rounded-[14px]" />
-                                    </div>
-                                    <div className="flex flex-col items-center justify-start w-[12%] gap-[5px]">
-                                      <div className="flex flex-row justify-center w-full">
-                                        <Text as="p" className="!text-blue_gray-300_01 text-center !leading-[21px]">
-                                          <>
-                                            2012
-                                            <br />
-                                            2013
-                                            <br />
-                                            2014
-                                            <br />
-                                            2015
-                                            <br />
-                                            2016
-                                            <br />
-                                            2017
-                                            <br />
-                                            2018
-                                            <br />
-                                            2019
-                                            <br />
-                                            2020
-                                            <br />
-                                            2021
-                                            <br />
-                                            2022
-                                            <br />
-                                            2023
-                                          </>
-                                        </Text>
-                                      </div>
-                                      <div className="h-[29px] w-[29px] bg-blue_gray-300_01 rounded-[14px]" />
-                                    </div>
-                                  </div>
-                                </div>
-                                <Text size="3xl" as="p" className="mt-5 ml-0.5 md:ml-0">
-                                  Status
-                                </Text>
-                                <RadioGroup name="status2" className="flex flex-col mt-3.5">
-                                  <Radio
-                                    value="ambos2"
-                                    label="Ambos"
-                                    className="mr-[62px] pl-1.5 gap-1.5 py-[3px] md:mr-5 text-gray-900"
-                                  />
-                                  <Radio
-                                    value="ativo2"
-                                    label="Ativo"
-                                    className="mt-[15px] mr-[75px] pl-1.5 gap-1.5 py-[3px] md:mr-5 text-blue_gray-300_01"
-                                  />
-                                  <Radio
-                                    value="inativo2"
-                                    label="Inativo"
-                                    className="mt-[15px] mr-16 pl-1.5 gap-1.5 py-[3px] md:mr-5 text-blue_gray-300_01"
-                                  />
-                                </RadioGroup>
-                              </div>
-                            </div>
+              <div className="flex flex-row md:flex-col justify-start items-center w-full gap-[35px] md:gap-5 md:px-5 max-w-[1331px] mt-0">
+                <div className="h-[1050px] w-[29%] md:w-full pt-7 sm:pt-5 bg-white-A700 shadow-md mt-0">
+                  <div className="flex flex-col items-center justify-start w-full z-[1] -mt-5">
+                    <div className="flex flex-col items-center justify-start w-full z-[1] overflow-y-auto max-h-[950px] mt-0">
+                      <div className="flex flex-row justify-center w-full mt-0">
+                        <div className="flex flex-col items-center justify-start w-full mt-0">
+                          <div className="flex flex-row sm:flex-col justify-center w-full sm:gap-5 mt-0">
+                            <Button
+                              color="white_A700"
+                              size="lg"
+                              shape="square"
+                              rightIcon={
+                                <Img
+                                  src="images/img_iconx18_gray_700.svg"
+                                  alt="iconx18"
+                                />
+                              }
+                              className="gap-2.5 sm:px-5 font-medium border-gray-700 border-b-2 border-solid min-w-[187px]"
+                            >
+                              Data
+                            </Button>
+                            <Button
+                              color="white_A700"
+                              size="lg"
+                              shape="square"
+                              rightIcon={
+                                <Img
+                                  src="images/img_iconx18_gray_700_18x18.svg"
+                                  alt="iconx18"
+                                />
+                              }
+                              className="gap-2.5 sm:px-5 font-medium border-gray-700 border-b-2 border-solid min-w-[186px]"
+                            >
+                              Details
+                            </Button>
                           </div>
-                        </TabPanel>
-                      ))}
+                          <div className="h-[2px] w-full bg-gray-700" />
+                        </div>
+                      </div>
+                      <Button
+                        size="xs"
+                        variant="outline"
+                        rightIcon={
+                          <Img src="images/img_iconx18_5.svg" alt="iconx18" />
+                        }
+                        className="mt-[22px] gap-2.5 min-w-[95px] rounded-[35px] sm:min-w-full"
+                        onClick={handleReset}
+                      >
+                        Restart
+                      </Button>
+                      <div className="flex flex-col items-start justify-start w-[78%] md:w-full mt-2.5">
+                        <div className="flex flex-col items-start justify-start w-full">
+                          <div className="flex flex-col items-start justify-start w-full gap-3">
+                            <Text size="3xl" as="p">
+                              Category
+                            </Text>
+                            <SelectBox
+                              shape="round"
+                              indicator={
+                                <Img
+                                  src="images/img_iconx18_7.svg"
+                                  alt="iconx18"
+                                />
+                              }
+                              getOptionLabel={(e: DropDownOption) => (
+                                <div className="flex items-center">
+                                  <Img
+                                    src="images/img_iconx18_6.svg"
+                                    alt="iconx18"
+                                  />
+                                  <span>{e.label}</span>
+                                </div>
+                              )}
+                              name="categoria"
+                              placeholder="Category"
+                              options={[
+                                { label: "Initiatives", value: "initiatives" },
+                                { label: "Policies", value: "policies" },
+                                { label: "Factors", value: "factors" }, // Add Factors here
+                              ]}
+                              value={
+                                selectedCategory
+                                  ? {
+                                      label: selectedCategory,
+                                      value: selectedCategory,
+                                    }
+                                  : null
+                              }
+                              onChange={handleCategoryChange}
+                              className="w-full border-gray-300_01 border border-solid"
+                            />
+                          </div>
+                          <Text size="3xl" as="p" className="mt-[22px]">
+                            Question
+                          </Text>
+                          <SelectBox
+                            shape="round"
+                            indicator={
+                              <Img
+                                src="images/img_iconx18_7.svg"
+                                alt="iconx18"
+                              />
+                            }
+                            getOptionLabel={(e: DropDownOption) => (
+                              <div className="flex items-center">
+                                <Img
+                                  src="images/img_iconx18_8.svg"
+                                  alt="iconx18"
+                                />
+                                <span>{e.label}</span>
+                              </div>
+                            )}
+                            name="pergunta"
+                            placeholder="Question"
+                            options={
+                              selectedCategory
+                                ? questionQueries[selectedCategory].map(
+                                    (question) => ({
+                                      label: question,
+                                      value: question,
+                                    })
+                                  )
+                                : []
+                            }
+                            value={
+                              selectedQuestion
+                                ? {
+                                    label: selectedQuestion,
+                                    value: selectedQuestion,
+                                  }
+                                : null
+                            }
+                            onChange={handleQuestionChange}
+                            className="w-full mt-3 border-blue_gray-100 border border-solid"
+                          />
+                          {/* Ocultar o dropdown "Type" */}
+                          {false && (
+                            <>
+                              <Text size="3xl" as="p" className="mt-[22px]">
+                                Type
+                              </Text>
+                              <RadioGroup
+                                name="status"
+                                className="w-full mt-3 flex flex-col gap-4"
+                              >
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value="ambos"
+                                    checked={selectedStatus === "ambos"}
+                                    onChange={handleStatusChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Both
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value="ativo"
+                                    checked={selectedStatus === "ativo"}
+                                    onChange={handleStatusChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Active
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="status"
+                                    value="inativo"
+                                    checked={selectedStatus === "inativo"}
+                                    onChange={handleStatusChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Inactive
+                                  </span>
+                                </label>
+                              </RadioGroup>
+                            </>
+                          )}
+                          {/* Ocultar o dropdown "Visualization" */}
+                          {false && (
+                            <>
+                              <Text size="3xl" as="p" className="mt-[22px]">
+                                Visualization
+                              </Text>
+                              <RadioGroup
+                                name="visualizacao"
+                                className="w-full mt-3 flex flex-col gap-4"
+                              >
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="visualizacao"
+                                    value="paises"
+                                    checked={selectedVisualization === "paises"}
+                                    onChange={handleVisualizationChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Countries
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="visualizacao"
+                                    value="regioes"
+                                    checked={
+                                      selectedVisualization === "regioes"
+                                    }
+                                    onChange={handleVisualizationChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Regions
+                                  </span>
+                                </label>
+                                <label className="flex items-center gap-2 py-2 px-4 rounded-lg cursor-pointer border border-blue_gray-300_01 hover:bg-blue_gray-50 transition-all duration-200">
+                                  <input
+                                    type="radio"
+                                    name="visualizacao"
+                                    value="global"
+                                    checked={selectedVisualization === "global"}
+                                    onChange={handleVisualizationChange}
+                                    className="appearance-none border border-blue_gray-300_01 rounded-full w-4 h-4 checked:bg-blue-600 checked:border-transparent focus:outline-none"
+                                  />
+                                  <span className="text-blue_gray-300_01">
+                                    Global
+                                  </span>
+                                </label>
+                              </RadioGroup>
+                            </>
+                          )}{" "}
+                        </div>
+                      </div>
                     </div>
-                    <Img
-                      src="images/img_barra_rolagem.svg"
-                      alt="barrarolagem"
-                      className="h-[1004px] mt-[-502px] z-[1]"
-                    />
                   </div>
                 </div>
-                <div className="flex flex-col items-center justify-start w-[70%] md:w-full">
-                  <Tabs
-                    className="flex flex-row md:flex-col justify-between items-start w-full md:gap-10"
-                    selectedTabClassName="!text-gray-700 font-medium text-sm border-gray-700 border-b-2 bg-white-A700"
-                    selectedTabPanelClassName="tab-panel--selected"
-                  >
-                    <TabList className="flex flex-row sm:flex-col justify-start w-[46%] md:w-full gap-2.5 sm:gap-2.5">
-                      <Tab className="flex flex-row justify-center items-center w-[32%] md:w-full md:h-auto gap-2.5 p-[17px] border-deep_orange-200 border-b-2 border-solid bg-red-100_02">
-                        <Text as="p" className="text-center !font-medium">
-                          Mapa
-                        </Text>
-                        <Img src="images/img_iconx18_10.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
+                <Tabs
+                  className="flex flex-col items-center justify-start w-[70%] md:w-full -mt-50 h-[1050px] md:h-auto"
+                  selectedTabClassName="!text-gray-700 font-medium text-sm border-gray-700 border-b-2 bg-white-A700"
+                  selectedTabPanelClassName="mt-[-2px] relative tab-panel--selected"
+                  defaultIndex={0}
+                >
+                  <div className="flex flex-row md:flex-col justify-between items-start w-full md:gap-10">
+                    <TabList className="flex flex-row justify-start w-full gap-2.5">
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscaone"
+                        )}`}
+                        onClick={() => navigate("/buscaone")}
+                      >
+                        <Text as="p">Map</Text>
+                        <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
                       </Tab>
-                      <Tab className="flex flex-row justify-center items-center w-[32%] md:w-full md:h-auto gap-2.5 p-[18px] border-deep_orange-200 border-b-2 border-solid bg-red-100_02">
-                        <Text as="p" className="text-center !font-medium">
-                          Barras
-                        </Text>
-                        <Img src="images/img_iconx18_11.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
+
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwo"
+                        )}`}
+                        onClick={() => navigate("/buscatwo")}
+                      >
+                        <Text as="p">Bars</Text>
+                        <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
                       </Tab>
-                      <Tab className="flex flex-row justify-center items-center w-[32%] md:w-full md:h-auto gap-2.5 p-[18px] border-gray-700 border-b-2 border-solid bg-white-A700">
-                        <Text as="p" className="text-center !font-medium">
-                          Linhas
-                        </Text>
-                        <Img src="images/img_iconx18_12.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
+
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwoone"
+                        )}`}
+                        onClick={() => navigate("/buscatwoone")}
+                      >
+                        <Text as="p">Lines</Text>
+                        <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
                       </Tab>
                     </TabList>
                     <div className="flex flex-row justify-start gap-0.5">
@@ -315,641 +691,232 @@ export default function BuscaTwoOnePage() {
                         <Img src="images/img_botao_icone_30px_3.svg" />
                       </Button>
                     </div>
-                  </Tabs>
-                  <div className="flex flex-col items-center justify-start w-full mt-[-2px] gap-[23px] rounded-bl-[10px] rounded-br-[10px] bg-white-A700">
-                    <div className="h-[2px] w-full bg-deep_orange-200" />
-                    <div className="flex flex-col items-start justify-start w-[95%] md:w-full mb-5 gap-[19px]">
-                      <Text size="3xl" as="p" className="ml-px md:ml-0 text-center">
-                        Quais e quantas iniciativas são realizadas por país?
-                      </Text>
-                      <div className="flex flex-row justify-start w-full pb-1.5">
-                        <div className="flex flex-col items-center justify-start w-full gap-[18px]">
-                          <div className="flex flex-row justify-center w-full">
-                            <div className="flex flex-row md:flex-col justify-start items-center w-full gap-[7px] md:gap-5">
-                              <div className="flex flex-col items-end justify-start w-[2%] md:w-full gap-9">
-                                <Text size="md" as="p" className="h-[12px] text-right">
-                                  25
-                                </Text>
-                                <Text size="md" as="p" className="h-[12px] text-right">
-                                  20
-                                </Text>
-                                <Text size="md" as="p" className="h-[12px] text-right">
-                                  15
-                                </Text>
-                                <Text size="md" as="p" className="h-[12px] text-right">
-                                  10
-                                </Text>
-                                <Text size="md" as="p" className="text-right">
-                                  5
-                                </Text>
-                                <Text size="md" as="p" className="text-right">
-                                  0
-                                </Text>
-                              </div>
-                              <div className="flex flex-col items-center justify-start w-[98%] md:w-full">
-                                <div className="flex flex-row md:flex-col justify-start items-center w-full gap-[15px] md:gap-5">
-                                  <div className="h-[286px] w-px md:w-full md:h-px mb-px bg-blue_gray-100_01" />
-                                  <div className="h-[209px] w-[98%] md:w-full relative">
-                                    <div className="flex flex-col items-center justify-start w-full bottom-0 right-0 left-0 m-auto absolute">
-                                      <div className="flex flex-col items-end justify-start w-full z-[1]">
-                                        <div className="h-[9px] w-[9px] mr-36 md:mr-5 z-[1] bg-blue-A200 rounded" />
-                                        <div className="flex flex-row md:flex-col justify-end items-center w-full mt-[-8px] md:gap-5">
-                                          <div className="h-[9px] w-[9px] z-[1] bg-blue-A200 rounded" />
-                                          <div className="h-[127px] w-full ml-[-2px] md:ml-0 relative">
-                                            <Img
-                                              src="images/img_vector_8.svg"
-                                              alt="vectoreight_one"
-                                              className="justify-center h-[127px] left-0 bottom-0 right-0 top-0 m-auto absolute"
-                                            />
-                                            <div className="flex flex-col items-center justify-start w-[38%] gap-0.5 right-[9%] top-[6%] m-auto absolute">
-                                              <div className="flex flex-row justify-between w-full">
-                                                <div className="h-[9px] w-[9px] mt-[7px] mb-[5px] bg-blue-A200 rounded" />
-                                                <div className="h-[9px] w-[9px] mb-[5px] bg-blue-A200 rounded" />
-                                                <div className="h-[9px] w-[9px] mb-[5px] bg-blue-A200 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                                <div className="h-[9px] w-[9px] mb-3 bg-orange-A700 rounded" />
-                                              </div>
-                                              <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                              <div className="flex flex-row justify-between w-[27%] md:w-full">
-                                                <div className="h-[9px] w-[9px] mt-px bg-orange-A700 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                              </div>
-                                            </div>
-                                            <div className="flex flex-col items-center justify-start w-[2%] left-[45%] top-[33%] m-auto absolute">
-                                              <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                              <div className="h-[9px] w-[9px] mt-[-6px] bg-blue-A200 rounded" />
-                                            </div>
-                                            <div className="flex flex-col items-end justify-start w-[29%] bottom-[7%] left-[8%] m-auto absolute">
-                                              <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                              <div className="h-[9px] w-[9px] mt-[17px] mr-[77px] md:mr-5 z-[1] bg-orange-A700 rounded" />
-                                              <div className="flex flex-col items-start justify-start w-full mt-[-4px]">
-                                                <div className="flex flex-row justify-between w-full">
-                                                  <div className="h-[9px] w-[9px] bg-blue-A200 rounded" />
-                                                  <div className="h-[9px] w-[9px] bg-blue-A200 rounded" />
-                                                  <div className="h-[9px] w-[9px] bg-blue-A200 rounded" />
-                                                  <div className="h-[9px] w-[9px] bg-blue-A200 rounded" />
-                                                </div>
-                                                <div className="h-[9px] w-[9px] mt-2.5 ml-[69px] md:ml-5 bg-orange-A700 rounded" />
-                                                <div className="h-[9px] w-[9px] mt-[5px] bg-orange-A700 rounded" />
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="flex flex-col items-center justify-start w-full mt-[-64px]">
-                                        <div className="h-[112px] w-full z-[1] relative">
-                                          <Img
-                                            src="images/img_vector_5.svg"
-                                            alt="vectorfive_one"
-                                            className="justify-center h-[112px] left-0 bottom-0 right-0 top-0 m-auto absolute"
-                                          />
-                                          <div className="flex flex-row justify-between w-[29%] h-max left-[17%] bottom-0 top-0 m-auto absolute">
-                                            <div className="h-[9px] w-[9px] bg-pink-400 rounded" />
-                                            <div className="h-[9px] w-[9px] bg-pink-400 rounded" />
-                                            <div className="h-[9px] w-[9px] bg-pink-400 rounded" />
-                                            <div className="h-[9px] w-[9px] bg-pink-400 rounded" />
-                                          </div>
-                                          <div className="h-[9px] w-[9px] right-[45%] top-[29%] m-auto bg-pink-400 absolute rounded" />
-                                        </div>
-                                        <div className="flex flex-row md:flex-col justify-center items-center w-full mt-[-52px] md:gap-5">
-                                          <div className="flex flex-col items-center justify-start w-[2%] md:w-full gap-[38px]">
-                                            <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                            <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                          </div>
-                                          <div className="h-[46px] w-full ml-[-4px] md:ml-0 relative">
-                                            <Img
-                                              src="images/img_vector_7.svg"
-                                              alt="vectorseven_one"
-                                              className="justify-center h-[46px] left-0 bottom-0 right-0 top-0 m-auto absolute"
-                                            />
-                                            <div className="flex flex-col items-start justify-start w-[47%] gap-[5px] left-[9%] top-[4%] m-auto absolute">
-                                              <div className="flex flex-row justify-between w-full">
-                                                <div className="h-[9px] w-[9px] mt-[11px] bg-pink-400 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                                <div className="h-[9px] w-[9px] mb-[5px] bg-amber-600 rounded" />
-                                                <div className="h-[9px] w-[9px] mb-3 bg-amber-600 rounded" />
-                                              </div>
-                                              <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="flex flex-col items-end justify-start w-full top-0 right-0 left-0 m-auto absolute">
-                                      <div className="flex flex-col items-end justify-start w-full">
-                                        <div className="flex flex-col items-center justify-start w-[2%] md:w-full gap-4 z-[1]">
-                                          <div className="h-[9px] w-[9px] bg-blue-A200 rounded" />
-                                          <div className="h-[9px] w-[9px] bg-orange-A700 rounded" />
-                                        </div>
-                                        <div className="flex flex-row md:flex-col justify-end items-center w-full mt-[-30px] md:gap-5">
-                                          <div className="h-[106px] w-full relative">
-                                            <Img
-                                              src="images/img_vector_6.svg"
-                                              alt="vectorsix_one"
-                                              className="justify-center h-[106px] left-0 bottom-0 right-0 top-0 m-auto absolute"
-                                            />
-                                            <div className="flex flex-col items-end justify-start w-[20%] h-max gap-[65px] right-[8%] bottom-0 top-0 m-auto absolute">
-                                              <div className="h-[9px] w-[9px] bg-blue-A200 rounded" />
-                                              <div className="flex flex-row justify-between w-full">
-                                                <div className="h-[9px] w-[9px] mt-[7px] bg-pink-400 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-pink-400 rounded" />
-                                                <div className="h-[9px] w-[9px] bg-pink-400 rounded" />
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div className="h-[9px] w-[9px] ml-[-6px] md:ml-0 z-[1] bg-pink-400 rounded" />
-                                        </div>
-                                      </div>
-                                      <div className="h-[9px] w-[9px] mt-[-6px] mr-[295px] md:mr-5 z-[1] bg-pink-400 rounded" />
-                                    </div>
-                                    <div className="flex flex-row justify-between w-[38%] bottom-[20%] right-0 m-auto absolute">
-                                      <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                      <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                      <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                      <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                      <div className="h-[9px] w-[9px] bg-amber-600 rounded" />
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="h-px w-full mt-[-2px] z-[1] rotate-[-180deg] bg-blue_gray-100_01" />
-                                <div className="flex flex-row justify-between w-[99%] md:w-full mt-[9px]">
-                                  <Text size="md" as="p">
-                                    2012
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2013
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2014
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2015
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2016
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2017
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2018
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2019
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2020
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2021
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2022
-                                  </Text>
-                                  <Text size="md" as="p">
-                                    2023
-                                  </Text>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex flex-row sm:flex-col justify-between items-center w-full sm:gap-10">
-                            <div className="flex flex-row justify-between w-[39%] sm:w-full">
-                              <div className="flex flex-row justify-start items-start w-[15%] gap-[5px]">
-                                <div className="h-[19px] w-[19px] bg-pink-400 rounded-[9px]" />
-                                <Text size="s" as="p" className="mt-1 !text-black-900">
-                                  Bolivia
-                                </Text>
-                              </div>
-                              <div className="flex flex-row justify-start items-start w-[13%] gap-1.5">
-                                <div className="h-[19px] w-[19px] bg-orange-A700 rounded-[9px]" />
-                                <Text size="s" as="p" className="mt-1 !text-black-900">
-                                  Peru
-                                </Text>
-                              </div>
-                              <div className="flex flex-row justify-start items-start w-[14%] gap-1.5">
-                                <div className="h-[19px] w-[19px] bg-blue-A200 rounded-[9px]" />
-                                <Text size="s" as="p" className="mt-1 !text-black-900">
-                                  Brasil
-                                </Text>
-                              </div>
-                              <div className="flex flex-row justify-start items-center w-[18%] gap-1.5">
-                                <div className="h-[19px] w-[19px] bg-amber-600 rounded-[9px]" />
-                                <Text size="s" as="p" className="!text-black-900">
-                                  Argentina
-                                </Text>
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-start items-center gap-1">
-                              <Text size="s" as="p" className="!text-blue_gray-300_01 text-right">
-                                Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS
-                              </Text>
-                              <Img src="images/img_iconx18_15.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
-                            </div>
-                          </div>
-                        </div>
+                  </div>
+                  <TabPanel className="flex flex-col items-center justify-center w-full mt-0 p-5">
+                    <div className="flex flex-col items-center justify-center w-full mt-[-2px]">
+                      <div className="flex flex-col items-center justify-center w-full mb-[22px] gap-[23px]">
+                        <Text size="3xl" as="p" className="text-center">
+                          {selectedVisualization === "barras"
+                            ? "Bar Chart by Country"
+                            : "Line Chart by Country"}
+                        </Text>
+                        <div className="w-[80%]">{renderChart()}</div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-row justify-between items-start w-[99%] md:w-full mt-[26px]">
+                  </TabPanel>
+
+                  <div className="flex flex-row justify-between items-start w-[99%] md:w-full mt-[0px]">
                     <Heading size="xl" as="h2" className="mt-[3px] text-center">
-                      Tabela de Dados
+                      Data Table
                     </Heading>
                     <div className="flex flex-row justify-start gap-0.5">
-                      <Button shape="square" className="w-[38px]">
+                      <Button
+                        shape="square"
+                        className="w-[38px]"
+                        onClick={() =>
+                          exportTableDataToCSV(data, dynamicFields)
+                        }
+                      >
                         <Img src="images/img_botao_icone_30px_1.svg" />
                       </Button>
-                      <Button shape="square" className="w-[38px]">
+                      {/* <Button shape="square" className="w-[38px]">
                         <Img src="images/img_botao_icone_30px_4.svg" />
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
-                  <div className="flex flex-row justify-center w-[99%] md:w-full mt-[13px] bg-white-A700">
+                  <div className="flex flex-row justify-center w-[99%] md:w-full mt-[10px] bg-white-A700">
                     <div className="flex flex-row md:flex-col justify-center w-full md:gap-5">
-                      <div className="flex flex-col items-center justify-start w-[99%] md:w-full">
-                        <div className="flex flex-row justify-center w-full">
-                          <div className="flex flex-row md:flex-col justify-start w-full gap-[74px] p-[9px] md:gap-10 bg-purple-100">
-                            <div className="flex flex-row justify-start items-center w-[10%] md:w-full ml-[9px] gap-[13px] md:ml-0">
-                              <Text as="p" className="!text-gray-900">
-                                Country
-                              </Text>
-                              <Img src="images/img_iconx18_13.svg" alt="iconxeighteen" className="h-[18px] w-[18px]" />
-                            </div>
-                            <div className="flex flex-row w-[32%] md:w-full gap-[142px] md:gap-10">
-                              <div className="flex flex-row justify-start items-center w-[24%] gap-[9px]">
-                                <Text as="p" className="!text-gray-900">
+                      <div className="flex flex-col items-center w-full bg-white-A700">
+                        <div className="table-container relative w-full overflow-y-auto max-h-[500px] border border-gray-300">
+                          <table className="table-auto w-full border-collapse bg-white-A700">
+                            <thead className="bg-pink-100 sticky top-0 z-10">
+                              <tr className="p-[9px] bg-pink-100">
+                                <th className="w-[10%] text-left !text-gray-900">
+                                  Country
+                                </th>
+                                <th className="w-[32%] text-left !text-gray-900">
                                   Name
-                                </Text>
-                                <Img src="images/img_iconx18_13.svg" alt="name_two" className="h-[18px] w-[18px]" />
-                              </div>
-                              <div className="flex flex-row justify-start items-center w-[24%] gap-1.5">
-                                <Text as="p" className="!text-gray-900">
-                                  Status
-                                </Text>
-                                <Img
-                                  src="images/img_iconx18_13.svg"
-                                  alt="iconxeighteen"
-                                  className="h-[18px] w-[18px]"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex flex-row justify-between w-[27%] md:w-full">
-                              <div className="flex flex-row justify-start items-center gap-[7px]">
-                                <Text as="p" className="!text-gray-900">
-                                  Start date
-                                </Text>
-                                <Img
-                                  src="images/img_iconx18_13.svg"
-                                  alt="iconxeighteen"
-                                  className="h-[18px] w-[18px]"
-                                />
-                              </div>
-                              <div className="flex flex-row justify-start items-center gap-2.5">
-                                <Text as="p" className="!text-gray-900">
-                                  Finish date
-                                </Text>
-                                <Img
-                                  src="images/img_iconx18_13.svg"
-                                  alt="iconxeighteen"
-                                  className="h-[18px] w-[18px]"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-row justify-center w-full">
-                          <div className="flex flex-col items-center justify-start w-full">
-                            <div className="h-[410px] w-full relative">
-                              <div className="flex flex-col items-center justify-start w-full gap-[41px] top-0 right-0 left-0 m-auto absolute">
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                                <div className="h-[41px] w-full bg-deep_purple-200_26" />
-                              </div>
-                              <Text
-                                as="p"
-                                className="w-[13%] h-full left-[2%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
-                                <>
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Peru
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Brasil
-                                  <br />
-                                  Bolivia
-                                  <br />
-                                  Bolivia
-                                  <br />
-                                  Bolivia
-                                  <br />
-                                  Argentina
-                                  <br />
-                                  Argentina
-                                  <br />
-                                  <br />
-                                </>
-                              </Text>
-                              <Text
-                                as="p"
-                                className="w-[19%] h-full left-[19%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
-                                <>
-                                  AgileGirls-Peru
-                                  <br />
-                                  Alianza
-                                  <br />
-                                  Niñas en Ciencia
-                                  <br />
-                                  Clubes de Ciencia Perú
-                                  <br />
-                                  DigiGirlz
-                                  <br />
-                                  Enseña Perú
-                                  <br />
-                                  Girls In Tech & Science
-                                  <br />
-                                  IEEE Women
-                                  <br />
-                                  Meninas Digitais
-                                  <br />
-                                  Include Meninas
-                                  <br />
-                                  Story Girl
-                                  <br />
-                                  Bolivianas
-                                  <br />
-                                  IC LaPaz
-                                  <br />
-                                  MujerComp
-                                  <br />
-                                  DevComp
-                                  <br />
-                                  BuenasProg
-                                  <br />
-                                  <br />
-                                </>
-                              </Text>
-                              <Text
-                                as="p"
-                                className="w-[7%] h-full left-[43%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
-                                <>
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Inactive
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Inactive
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                  <br />
-                                  Active
-                                </>
-                              </Text>
-                              <Text
-                                as="p"
-                                className="w-[7%] h-full right-[35%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
-                                <>
-                                  2012
-                                  <br />
-                                  2022
-                                  <br />
-                                  2016
-                                  <br />
-                                  2022
-                                  <br />
-                                  2015
-                                  <br />
-                                  2010
-                                  <br />
-                                  2020
-                                  <br />
-                                  2021
-                                  <br />
-                                  2020
-                                  <br />
-                                  2014
-                                  <br />
-                                  2018
-                                  <br />
-                                  2022
-                                  <br />
-                                  2020
-                                  <br />
-                                  2021
-                                  <br />
-                                  2018
-                                  <br />
-                                  2020
-                                </>
-                              </Text>
-                              <Text
-                                as="p"
-                                className="w-[7%] h-full right-[20%] bottom-0 top-0 m-auto !leading-[41px] absolute"
-                              >
-                                <>
-                                  <br />
-                                  2022
-                                  <br />
-                                  2020
-                                  <br />
-                                  <br />
-                                  2021
-                                  <br />
-                                  <br />
-                                  <br />
-                                  2023
-                                  <br />
-                                  <br />
-                                  2020
-                                  <br />
-                                  <br />
-                                  <br />
-                                  <br />
-                                  2023
-                                  <br />
-                                  <br />
-                                  2022
-                                </>
-                              </Text>
-                            </div>
-                            <div className="h-px w-full bg-deep_purple-200_26" />
-                          </div>
-                        </div>
-                        <div className="h-px w-full mt-[82px] bg-deep_purple-200_26" />
-                        <div className="h-px w-full mt-[164px] bg-deep_purple-200_26" />
-                      </div>
-                      <div className="flex flex-col items-center justify-start w-[2%] md:w-full">
-                        <div className="flex flex-col items-center justify-start w-full bg-blue_gray-50">
-                          <Img src="images/img_iconx18_gray_400.svg" alt="iconxeighteen" className="h-[22px]" />
-                          <div className="h-[64px] w-[56%] mt-0.5 bg-gray-400 rounded-[50%]" />
-                          <Img
-                            src="images/img_iconx18_gray_400_22x18.svg"
-                            alt="iconxeighteen"
-                            className="h-[22px] mt-[339px]"
-                          />
+                                </th>
+                                {dynamicFields.map((field) => (
+                                  <th
+                                    key={field}
+                                    className="w-[8%] text-left !text-gray-900"
+                                  >
+                                    {field}
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {data.map((item, index) => (
+                                <tr
+                                  key={index}
+                                  className={`flex-row justify-between p-[9px] ${
+                                    index % 2 === 0
+                                      ? "bg-purple-100"
+                                      : "bg-white"
+                                  }`}
+                                >
+                                  <td className="w-[10%]">{item.country}</td>
+                                  <td className="w-[32%]">{item.name}</td>
+                                  {dynamicFields.map((field) => (
+                                    <td key={field} className="w-[7%]">
+                                      {item[field] || ""}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Tabs>
               </div>
-              <div className="flex flex-row justify-center w-full">
-                <div className="flex flex-col items-center justify-start w-full">
-                  <Img src="images/img_group_22.svg" alt="image" className="h-[19px] z-[1]" />
-                  <div className="flex flex-row justify-center w-full mt-[-18px] px-14 py-[65px] md:p-5 bg-gray-800_02">
-                    <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 max-w-[1021px]">
-                      <div className="flex flex-col items-start justify-start w-[19%] md:w-full">
-                        <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
-                          Contatos
-                        </Text>
-                        <Text size="xl" as="p" className="w-[87%] mt-2.5 !text-white-A700 !leading-5">
-                          <>
-                            www.ellas.ufmt.br
-                            <br />
-                            @Ellas.network
-                            <br />
-                            ellas.latinamerica@gmail.com
-                          </>
-                        </Text>
-                        <Text as="p" className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium">
-                          Conecte-se ao ELLAS
-                        </Text>
-                        <Img
-                          src="images/img_group_24.svg"
-                          alt="image_one"
-                          className="h-[26px] mt-[15px] ml-1 md:ml-0"
-                        />
-                      </div>
-                      <div className="flex flex-col items-end justify-start w-[74%] md:w-full mb-1">
-                        <div className="flex flex-row justify-between items-start w-[81%] md:w-full">
-                          <div className="flex flex-col items-center justify-start">
-                            <Heading size="s" as="h3" className="!text-white-A700 text-center">
-                              Patrocínio
-                            </Heading>
-                            <Img
-                              src="images/img_idrc_logo_branca.png"
-                              alt="idrclogo_one"
-                              className="w-full md:h-auto sm:w-full mt-[3px] object-cover"
-                            />
-                            <Heading size="s" as="h4" className="mt-[27px] !text-white-A700 text-center">
-                              Instituições Participantes
-                            </Heading>
-                          </div>
-                          <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
-                            <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
-                              Links Úteis
-                            </Text>
-                            <Text
-                              size="xl"
-                              as="p"
-                              className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
-                            >
-                              <>
-                                Acessibilidade na Web
-                                <br />
-                                Termos de Uso
-                                <br />
-                                Política de Privacidade
-                              </>
-                            </Text>
-                          </div>
-                        </div>
-                        <div className="flex flex-row md:flex-col justify-between items-center w-full mt-[-2px] md:gap-10">
-                          <div className="flex flex-row sm:flex-col justify-start items-center gap-2.5 sm:gap-5">
-                            <Img
-                              src="images/img_ufmt_oficial_branca.png"
-                              alt="ufmtoficial_one"
-                              className="w-[17%] md:h-auto sm:w-full object-cover"
-                            />
-                            <Img
-                              src="images/img_uftpr_branca.png"
-                              alt="uftprbranca_one"
-                              className="w-[14%] md:h-auto sm:w-full object-cover"
-                            />
-                            <Img
-                              src="images/img_vertical_extens.png"
-                              alt="verticalextens"
-                              className="w-[11%] md:h-auto sm:w-full object-cover"
-                            />
-                            <Img
-                              src="images/img_logouff_vertica.png"
-                              alt="logouffvertica"
-                              className="w-[39px] md:h-auto sm:w-full object-cover"
-                            />
-                            <Img
-                              src="images/img_200px_universid.png"
-                              alt="200pxuniversid"
-                              className="w-[48px] md:h-auto sm:w-full object-cover"
-                            />
-                            <Img
-                              src="images/img_negro_horizontal_nac_branca.png"
-                              alt="negro_one"
-                              className="w-[23%] md:h-auto sm:w-full object-cover"
-                            />
-                            <Img
-                              src="images/img_blancopeq.png"
-                              alt="blancopeq_one"
-                              className="w-[8%] md:h-auto sm:w-full object-cover"
-                            />
-                          </div>
-                          <Text size="xl" as="p" className="w-[21%] !text-deep_orange-200 text-right">
-                            <>
-                              Todos os direitos reservados
-                              <br />© 2024 ELLAS
-                            </>
-                          </Text>
-                        </div>
-                      </div>
+            </div>
+          </div>
+        </div>
+        <footer className="flex flex-row justify-center w-full">
+          <div className="flex flex-col items-center justify-start w-full">
+            <Img
+              src="images/img_group_22.svg"
+              alt="image"
+              className="h-[19px] z-[1]"
+            />
+            <div className="flex flex-row justify-center w-full mt-[-18px] px-14 py-[65px] md:p-5 bg-gray-800_02">
+              <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 max-w-[1021px]">
+                <div className="flex flex-col items-start justify-start w-[19%] md:w-full">
+                  <Text
+                    as="p"
+                    className="!text-deep_orange-200 text-right !font-medium"
+                  >
+                    Contacts
+                  </Text>
+                  <Text
+                    size="xl"
+                    as="p"
+                    className="w-[87%] mt-2.5 !text-white-A700 !leading-5"
+                  >
+                    <>
+                      www.ellas.ufmt.br
+                      <br />
+                      @Ellas.network
+                      <br />
+                      ellas.latinamerica@gmail.com
+                    </>
+                  </Text>
+                  <Text
+                    as="p"
+                    className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium"
+                  >
+                    Connect to ELLAS
+                  </Text>
+                  <Img
+                    src="images/img_group_24.svg"
+                    alt="image_one"
+                    className="h-[26px] mt-[15px] ml-1 md:ml-0"
+                  />
+                </div>
+                <div className="flex flex-col items-end justify-start w-[74%] md:w-full mb-1">
+                  <div className="flex flex-row justify-between items-start w-[81%] md:w-full">
+                    <div className="flex flex-col items-center justify-start">
+                      <Heading
+                        size="s"
+                        as="h3"
+                        className="!text-white-A700 text-center"
+                      >
+                        Sponsorship
+                      </Heading>
+                      <Img
+                        src="images/img_idrc_logo_branca.png"
+                        alt="idrclogo_one"
+                        className="w-full md:h-auto sm:w-full mt-[3px] object-cover"
+                      />
+                      <Heading
+                        size="s"
+                        as="h4"
+                        className="mt-[27px] !text-white-A700 text-center"
+                      >
+                        Participating Institutions
+                      </Heading>
                     </div>
+                    <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
+                      <Text
+                        as="p"
+                        className="!text-deep_orange-200 text-right !font-medium"
+                      >
+                        Useful Links
+                      </Text>
+                      <Text
+                        size="xl"
+                        as="p"
+                        className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
+                      >
+                        <>
+                          Web Accessibility
+                          <br />
+                          Terms of Use
+                          <br />
+                          Privacy Policy
+                        </>
+                      </Text>
+                    </div>
+                  </div>
+                  <div className="flex flex-row md:flex-col justify-between items-center w-full mt-[-2px] md:gap-10">
+                    <div className="flex flex-row sm:flex-col justify-start items-center gap-2.5 sm:gap-5">
+                      <Img
+                        src="images/img_ufmt_oficial_branca.png"
+                        alt="ufmtoficial_one"
+                        className="w-[17%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_uftpr_branca.png"
+                        alt="uftprbranca_one"
+                        className="w-[14%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_vertical_extens.png"
+                        alt="verticalextens"
+                        className="w-[11%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_logouff_vertica.png"
+                        alt="logouffvertica"
+                        className="w-[39px] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_200px_universid.png"
+                        alt="200pxuniversid"
+                        className="w-[48px] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_negro_horizontal_nac_branca.png"
+                        alt="negro_one"
+                        className="w-[23%] md:h-auto sm:w-full object-cover"
+                      />
+                      <Img
+                        src="images/img_blancopeq.png"
+                        alt="blancopeq_one"
+                        className="w-[8%] md:h-auto sm:w-full object-cover"
+                      />
+                    </div>
+                    <Text
+                      size="xl"
+                      as="p"
+                      className="w-[21%] !text-deep_orange-200 text-right"
+                    >
+                      <>
+                        All rights reserved
+                        <br />© 2024 ELLAS
+                      </>
+                    </Text>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </footer>
       </div>
     </>
   );

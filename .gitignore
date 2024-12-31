@@ -25,3 +25,16 @@ yarn-error.log*
 
 *.zip
 
+
+
+# Ignorar arquivos .zip
+*.zip
+
+# Ignorar a pasta node_modules
+node_modules/
+
+# Ignorar arquivos e pastas temporários
+*.log
+*.tmp
+*.bak
+.DS_Store

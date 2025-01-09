@@ -1,0 +1,56 @@
+// src/constants/questions.ts
+
+export const questionQueries: { [key: string]: string[] } = {
+  policies: [
+    "In which countries the policy was applied?",
+    "What types of gender policies/processes/practices exist in Latin America?",
+    "How policies identified/analyzed are promoting women's participation in STEM fields?",
+    "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+  ],
+  initiatives: [
+    "Which/How many initiatives are carried out by countries?",
+    "What data source are used for initiative?",
+    "What is the initiative's social network(s)?",
+    "How many initiatives are of program?",
+    "Are these initiatives public or private?",
+    "How many initiatives are coordinated by individuals?",
+    "What is the social gender of the people who are responsible for the initiatives?",
+    "What is the OBJECTIVE of the initiative?",
+    "Which initiative modality are used for the actives/actions?",
+    "What initiatives serve girls or adolescents?",
+    "What is the social gender of the target audience served by the initiative?",
+    "What initiatives serve black women?",
+    "What initiatives are being developed at a given school level?",
+    "What initiatives serve a certain vulnerable group?",
+    "Do the initiatives involve the School community?",
+    "Which/How many initiatives are carried out in a given city?",
+    "What/How many initiatives are carried out in a given state?",
+    "What/How many initiatives are carried out in a given area?",
+    "What/How many initiatives are carried out in a given region?",
+    "Which/How many initiatives have a given reach?",
+    "Are the initiatives funded?",
+    "What is the sector of the organization(s) that finance(s) the initiative?",
+    "What initiatives are active?",
+    "Have the initiatives already been implemented or are they still in the design phase?",
+    "Which initiatives are already finished?",
+    "What is the initiative's website (URL)?",
+    "How many initiatives are part of communities?",
+  ],
+  factors: [
+    "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?",
+    "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?",
+    "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?",
+    "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?",
+    "What are the IMPACTS of CONTEXTUAL FACTOR X?",
+    "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?",
+    "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?",
+  ],
+};
+
+export const timeRelatedQuestions = [
+  "What is the initiative's social network(s)?",
+  "What initiatives are being developed at a given school level?",
+  "Have the initiatives already been implemented or are they still in the design phase?",
+  "Which initiatives are already finished?",
+  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+].map((q) => q.trim().toLowerCase());

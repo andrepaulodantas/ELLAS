@@ -1,5 +1,7 @@
 import React from "react";
-import AliceCarousel, { Props as AliceCarouselProps } from "react-alice-carousel";
+import AliceCarousel, {
+  Props as AliceCarouselProps,
+} from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 
 // Definição das propriedades do componente Slider
@@ -27,9 +29,10 @@ const Slider = React.forwardRef<AliceCarousel, SliderComponentProps>(
   ) => {
     // Função para determinar se um slide deve ser pequeno
     const isSmall = (index: number) => {
-      const adjustedIndex = activeIndex + magnifiedIndex >= items.length
-        ? activeIndex + magnifiedIndex - items.length
-        : activeIndex + magnifiedIndex;
+      const adjustedIndex =
+        activeIndex + magnifiedIndex >= items.length
+          ? activeIndex + magnifiedIndex - items.length
+          : activeIndex + magnifiedIndex;
 
       return index !== adjustedIndex;
     };
@@ -42,7 +45,9 @@ const Slider = React.forwardRef<AliceCarousel, SliderComponentProps>(
             className: [
               child.props?.className,
               isSmall(index) ? activeSlideCSS : "",
-            ].filter(Boolean).join(" "),
+            ]
+              .filter(Boolean)
+              .join(" "),
           })
         )
       : items;

@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
-    "baseUrl": "./src",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    },
     "useDefineForClassFields": true,
     "esModuleInterop": false,
     "sourceMap": true,

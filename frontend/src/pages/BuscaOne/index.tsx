@@ -6,8 +6,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import GoogleMapComponent from "../../components/GoogleMap";
 import { questionFunctions } from "../../services/apiService";
 import { saveAs } from "file-saver";
-import Header from "components/Header";
-import Footer from "components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";

@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.react-tabs__tab--selected {
+  @apply bg-blue-500 text-white;
+}
+
+@media (max-width: 640px) {
+  .react-tabs__tab-list {
+    @apply flex-wrap justify-start;
+  }
+  
+  .react-tabs__tab {
+    @apply flex-grow text-center;
+  }
+} 

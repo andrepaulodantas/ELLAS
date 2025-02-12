@@ -1,7 +1,7 @@
 const express = require('express');
 const app = require('./src/app');
 const cors = require('cors');
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 app.use(cors({
   origin: 'http://localhost:3000', // Replace with your frontend origin

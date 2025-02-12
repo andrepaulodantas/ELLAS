@@ -15,8 +15,8 @@ import { Bar, Line } from "react-chartjs-2";
 import "chart.js/auto"; // Importação necessária para Chart.js
 import { getTabClass } from "../../utils/tabUtils";
 import { saveAs } from "file-saver";
-import Header from "components/Header";
-import Footer from "components/Footer";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
@@ -26,7 +26,7 @@ type DropDownOption = {
   value: string;
 };
 
-export default function BuscaTwoOnePage() {
+const BuscaTwoOnePage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [data, setData] = useState<any[]>([]);
@@ -173,11 +173,11 @@ export default function BuscaTwoOnePage() {
 
   const renderChart = () => {
     const countries = Object.keys(countryCounts); // Lista de países
-    const totalSteps = 10; // Eixo X vai de 0 a 100
+    const totalSteps = 100; // Eixo X vai de 0 a 100
 
     // Função auxiliar para gerar valores exponenciais acumulativos
     const generateExponentialCurve = (totalValue: number) => {
-      const base = 1.1; // Base da exponencial
+      const base = 1.2; // Base da exponencial
       const maxExponent = totalSteps; // Exponente máximo será igual ao totalSteps
 
       // Gera valores cumulativos exponenciais
@@ -389,4 +389,6 @@ export default function BuscaTwoOnePage() {
       </div>
     </>
   );
-}
+};
+
+export default BuscaTwoOnePage;

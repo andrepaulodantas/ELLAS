@@ -1,30 +1,24 @@
 import React from "react";
-import Header from "components/Header";
-import Footer from "components/Footer";
+import Header from "../Header";
+import Footer from "../Footer";
 import { Helmet } from "react-helmet";
 
 interface PageWrapperProps {
   children: React.ReactNode;
-  title: string;
-  description?: string;
+  title?: string;
 }
 
-const PageWrapper: React.FC<PageWrapperProps> = ({
-  children,
-  title,
-  description,
-}) => {
+const PageWrapper: React.FC<PageWrapperProps> = ({ children, title = "ELLAS" }) => {
   return (
     <>
       <Helmet>
         <title>{title}</title>
-        <meta name="description" content={description || ""} />
       </Helmet>
-      <div className="flex flex-col items-center justify-start w-full bg-white-A700">
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="flex flex-col items-center justify-start w-full">
+        <main className="flex-grow mt-[48px] sm:mt-[56px] md:mt-[64px]">
           {children}
-        </div>
+        </main>
         <Footer />
       </div>
     </>

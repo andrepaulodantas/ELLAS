@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, GeoJSON, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button, Text } from "../../components";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 interface Initiative {
   country: string;
@@ -20,6 +21,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   selectedCountries,
 }) => {
   const navigate = useNavigate();
+  const { translations } = useLanguage();
   const [geoJsonData, setGeoJsonData] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
@@ -82,10 +84,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
     <div className="relative w-full h-full">
       <div className="absolute top-0 left-0 z-10 p-4 bg-white/90 rounded-lg m-4 max-w-md">
         <Text size="md" className="font-semibold mb-2">
-          Initiatives by Country
+          {translations.visualization.map}
         </Text>
         <Text size="md" className="mb-4">
-          Explore initiatives supporting women in STEM across Latin America
+          {translations.visualization.description}
         </Text>
         <Button
           size="sm"
@@ -93,7 +95,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           onClick={handleViewAllData}
           className="text-sm"
         >
-          View All Data
+          {translations.buttons.viewAll}
         </Button>
       </div>
 
@@ -132,8 +134,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
               ).length;
 
               layer.bindPopup(`
-                <strong>${country}</strong><br/>
-                Initiatives: ${initiativesCount}
+                <strong>${
+                  translations.countries[
+                    country.toLowerCase() as keyof typeof translations.countries
+                  ] || country
+                }</strong><br/>
+                ${translations.categories.initiatives}: ${initiativesCount}
               `);
             }}
           />

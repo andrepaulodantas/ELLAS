@@ -16,6 +16,7 @@ import "chart.js/auto"; // Importação necessária para Chart.js
 import { getTabClass } from "../../utils/tabUtils";
 import { saveAs } from "file-saver";
 import Header from "../../components/Header";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
@@ -23,6 +24,7 @@ import DataTable from "components/DataTable";
 type SelectOption = { value: string; label: string };
 
 const BuscaTwoOnePage = () => {
+  const { translations, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [data, setData] = useState<any[]>([]);
@@ -82,24 +84,18 @@ const BuscaTwoOnePage = () => {
           try {
             const response = await fetchFunction();
             if (response?.results?.bindings.length > 0) {
-              const fields = Object.keys(response.results.bindings[0]).filter(
-                (key) =>
-                  !["countryName", "policyName", "initiativeName"].includes(key)
-              );
+              // Get all fields from the response
+              const fields = Object.keys(response.results.bindings[0]);
               setDynamicFields(fields);
 
               const formattedData = response.results.bindings.map(
-                (item: any) => ({
-                  country: item.countryName?.value,
-                  name: item.policyName?.value || item.initiativeName?.value,
-                  ...fields.reduce(
-                    (acc, field) => ({
-                      ...acc,
-                      [field]: item[field]?.value || "",
-                    }),
-                    {}
-                  ),
-                })
+                (item: any) => {
+                  const formattedItem: { [key: string]: any } = {};
+                  fields.forEach((field) => {
+                    formattedItem[field] = item[field]?.value || "";
+                  });
+                  return formattedItem;
+                }
               );
 
               setData(formattedData);
@@ -107,9 +103,9 @@ const BuscaTwoOnePage = () => {
               // Atualizar contagem por país
               const countryCountMap: { [key: string]: number } = {};
               formattedData.forEach((item) => {
-                if (item.country) {
-                  countryCountMap[item.country] =
-                    (countryCountMap[item.country] || 0) + 1;
+                if (item.countryName) {
+                  countryCountMap[item.countryName] =
+                    (countryCountMap[item.countryName] || 0) + 1;
                 }
               });
               setCountryCounts(countryCountMap);
@@ -254,7 +250,7 @@ const BuscaTwoOnePage = () => {
               {/* Header Section */}
               <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
                 <Heading size="2xl" as="h1" className="text-center">
-                  Data Table
+                  {translations.table.title}
                 </Heading>
               </div>
 
@@ -268,18 +264,18 @@ const BuscaTwoOnePage = () => {
                     className="mb-4 gap-2.5 w-full rounded-[35px]"
                     onClick={handleReset}
                   >
-                    Restart
+                    {translations.buttons.reset}
                   </Button>
                   <div className="flex flex-col gap-6">
                     {/* Category Selection */}
                     <div>
                       <Text size="3xl" as="p" className="mb-2">
-                        Category
+                        {translations.labels.category}
                       </Text>
                       <SelectBox
                         shape="round"
                         name="categoria"
-                        placeholder="Select Category"
+                        placeholder={translations.labels.selectCategory}
                         options={[
                           { label: "Initiatives", value: "initiatives" },
                           { label: "Policies", value: "policies" },
@@ -301,12 +297,12 @@ const BuscaTwoOnePage = () => {
                     {/* Question Selection */}
                     <div>
                       <Text size="3xl" as="p" className="mb-2">
-                        Question
+                        {translations.labels.question}
                       </Text>
                       <SelectBox
                         shape="round"
                         name="pergunta"
-                        placeholder="Select Question"
+                        placeholder={translations.labels.selectQuestion}
                         options={
                           selectedCategory
                             ? questionQueries[selectedCategory].map(
@@ -340,29 +336,27 @@ const BuscaTwoOnePage = () => {
                     selectedTabPanelClassName="mt-4"
                   >
                     <TabList className="flex flex-row gap-4 border-b">
-                      <Tab className="p-2 flex items-center gap-2">
-                        <Text as="p">Map</Text>
+                      <Tab
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                        onClick={() => handleNavigation("/buscaone")()}
+                      >
+                        <Text as="p">{translations.visualization.map}</Text>
                         <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
                       </Tab>
                       <Tab
-                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                          location.pathname,
-                          "/buscatwo"
-                        )}`}
-                        onClick={() => navigate("/buscatwo")}
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                        onClick={() => handleNavigation("/buscatwo")()}
                       >
-                        <Text as="p">Bars</Text>
+                        <Text as="p">{translations.visualization.bars}</Text>
                         <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
                       </Tab>
-
                       <Tab
-                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                          location.pathname,
-                          "/buscatwoone"
-                        )}`}
-                        onClick={() => navigate("/buscatwoone")}
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
                       >
-                        <Text as="p">Lines</Text>
+                        <Text as="p">{translations.visualization.lines}</Text>
                         <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
                       </Tab>
                     </TabList>
@@ -384,6 +378,7 @@ const BuscaTwoOnePage = () => {
                     data={filteredData}
                     dynamicFields={dynamicFields}
                     exportTableDataToCSV={exportTableDataToCSV}
+                    key={language}
                   />
                 </div>
               </div>

@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import DataTable from "components/DataTable";
 import { SelectOption } from "../../components/SelectBox";
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 interface DropDownOption extends SelectOption {
   value: string;
@@ -25,6 +26,7 @@ interface BuscaOneProps {
 }
 
 const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
+  const { translations, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] =
     useState<DropDownOption | null>(null);
   const [selectedQuestion, setSelectedQuestion] =
@@ -35,6 +37,8 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   const [years, setYears] = useState<string[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [dynamicFields, setDynamicFields] = useState<string[]>([]);
+  const [selectedVisualization, setSelectedVisualization] =
+    useState<string>("map");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,36 +60,24 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
           try {
             const response = await fetchFunction();
             if (response?.results?.bindings.length > 0) {
-              const fields = Object.keys(response.results.bindings[0]).filter(
-                (key) =>
-                  !["countryName", "policyName", "initiativeName"].includes(key)
-              );
-
+              const fields = Object.keys(response.results.bindings[0]);
               setDynamicFields(fields);
 
               const formattedData = response.results.bindings.map(
-                (item: any) => ({
-                  country: item.countryName?.value || null,
-                  name:
-                    item.policyName?.value ||
-                    item.initiativeName?.value ||
-                    null,
-                  startDate:
-                    item.startDate?.value || item.start_date?.value || null,
-                  finishDate:
-                    item.finishDate?.value || item.finish_date?.value || null,
-                  ...fields.reduce((acc, field) => {
-                    acc[field] = item[field]?.value || "";
-                    return acc;
-                  }, {}),
-                })
+                (item: any) => {
+                  const formattedItem: { [key: string]: any } = {};
+                  fields.forEach((field) => {
+                    formattedItem[field] = item[field]?.value || "";
+                  });
+                  return formattedItem;
+                }
               );
 
               setData(formattedData);
               setFilteredData(formattedData);
 
               const countries = formattedData
-                .map((item) => item.country)
+                .map((item) => item.countryName)
                 .filter(
                   (country) =>
                     typeof country === "string" && country.trim() !== ""
@@ -149,7 +141,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
       setFilteredData(filtered);
       const countries = filtered
-        .map((item) => item.country)
+        .map((item) => item.countryName)
         .filter((country) => typeof country === "string");
       setSelectedCountries(countries);
     }
@@ -200,7 +192,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     const headers = ["Country", "Name", ...fields].join(",");
     const rows = data.map((item) =>
       [
-        item.country || "N/A",
+        item.countryName || "N/A",
         item.name || "N/A",
         ...fields.map((field) => item[field] || "N/A"),
       ].join(",")
@@ -208,6 +200,10 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     const csvContent = [headers, ...rows].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, "data_table.csv");
+  };
+
+  const handleVisualizationChange = (visualization: string) => {
+    setSelectedVisualization(visualization);
   };
 
   return (
@@ -227,7 +223,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
               {/* Header Section */}
               <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
                 <Heading size="2xl" as="h1" className="text-center">
-                  Data Table
+                  {translations.table.title}
                 </Heading>
               </div>
 
@@ -241,13 +237,13 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     className="mb-4 gap-2.5 w-full rounded-[35px]"
                     onClick={handleReset}
                   >
-                    Restart
+                    {translations.buttons.reset}
                   </Button>
                   <div className="flex flex-col gap-6">
                     {/* Category Selection */}
                     <div>
                       <Text size="3xl" as="p" className="mb-2">
-                        Category
+                        {translations.labels.category}
                       </Text>
                       <SelectBox
                         shape="round"
@@ -267,7 +263,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     {/* Question Selection */}
                     <div>
                       <Text size="3xl" as="p" className="mb-2">
-                        Question
+                        {translations.labels.question}
                       </Text>
                       <SelectBox
                         shape="round"
@@ -320,32 +316,30 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                 <div className="flex flex-col w-[70%] md:w-full">
                   <Tabs
                     className="w-full"
-                    selectedTabClassName="!text-gray-700 font-medium border-gray-700 border-b-2 bg-white-A700"
-                    selectedTabPanelClassName="mt-4"
+                    selectedTabClassName="!text-[#4A2B5C] font-medium border-[#4A2B5C] border-b-2 bg-white"
                   >
-                    <TabList className="flex flex-row gap-4 border-b">
-                      <Tab className="p-2 flex items-center gap-2">
-                        <Text as="p">Map</Text>
+                    <TabList className="flex flex-row gap-4 border-b border-gray-200">
+                      <Tab
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                      >
+                        <Text as="p">{translations.visualization.map}</Text>
                         <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
                       </Tab>
                       <Tab
-                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                          location.pathname,
-                          "/buscatwo"
-                        )}`}
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
                         onClick={() => navigate("/buscatwo")}
                       >
-                        <Text as="p">Bars</Text>
+                        <Text as="p">{translations.visualization.bars}</Text>
                         <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
                       </Tab>
                       <Tab
-                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                          location.pathname,
-                          "/buscatwoone"
-                        )}`}
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
                         onClick={() => navigate("/buscatwoone")}
                       >
-                        <Text as="p">Lines</Text>
+                        <Text as="p">{translations.visualization.lines}</Text>
                         <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
                       </Tab>
                     </TabList>
@@ -371,6 +365,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     dynamicFields={dynamicFields}
                     exportTableDataToCSV={exportTableDataToCSV}
                     className="mb-12"
+                    key={language}
                   />
                 </div>
               </div>

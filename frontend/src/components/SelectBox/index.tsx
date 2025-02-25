@@ -1,5 +1,10 @@
 import React, { forwardRef } from "react";
-import Select, { ActionMeta } from "react-select";
+import Select, {
+  ActionMeta,
+  components,
+  DropdownIndicatorProps,
+} from "react-select";
+import { GroupBase } from "react-select";
 
 export interface SelectOption {
   value: string;
@@ -68,22 +73,32 @@ const SelectBox = forwardRef<any, SelectBoxProps>(
       } ${colors[color] || ""}`;
     };
 
+    const CustomDropdownIndicator = (
+      props: DropdownIndicatorProps<SelectOption, boolean>
+    ) => {
+      return indicator ? (
+        <div>{indicator}</div>
+      ) : (
+        <components.DropdownIndicator {...props} />
+      );
+    };
+
     return (
-      <Select
+      <Select<SelectOption, boolean>
         ref={ref}
         options={options}
         className={getClassName()}
         placeholder={placeholder}
         isMulti={isMulti}
         value={value}
-        onChange={(newValue: any, actionMeta: ActionMeta<any>) => {
+        onChange={(newValue: any, actionMeta: ActionMeta<SelectOption>) => {
           if (onChange) {
             onChange(newValue as SelectOption | null, actionMeta);
           }
         }}
         components={{
           IndicatorSeparator: () => null,
-          ...(indicator && { DropdownIndicator: () => indicator }),
+          DropdownIndicator: CustomDropdownIndicator,
         }}
         {...restProps}
       />

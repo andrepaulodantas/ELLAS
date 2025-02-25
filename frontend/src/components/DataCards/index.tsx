@@ -12,6 +12,7 @@ import PolicyIcon from "@mui/icons-material/Policy";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import DataUsageIcon from "@mui/icons-material/DataUsage";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const AnimatedCard = styled(Card)`
   height: 100%;
@@ -56,38 +57,39 @@ const AnimatedCard = styled(Card)`
   }
 `;
 
-const categories = [
-  {
-    title: "Políticas",
-    description: "Políticas públicas e iniciativas para equidade de gênero",
-    icon: <PolicyIcon sx={{ fontSize: 40 }} />,
-    color: "#FF4081",
-    link: "/buscaone?category=policies&question=gender_equity_policies",
-  },
-  {
-    title: "Iniciativas",
-    description: "Projetos e programas em andamento",
-    icon: <LightbulbIcon sx={{ fontSize: 40 }} />,
-    color: "#FFA07A",
-    link: "/buscaone?category=initiatives&question=active_initiatives",
-  },
-  {
-    title: "Fatores",
-    description: "Dados e análises sobre fatores de impacto",
-    icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
-    color: "#FF69B4",
-    link: "/buscaone?category=factors&question=impact_factors",
-  },
-  {
-    title: "Outros Dados",
-    description: "Informações complementares e estatísticas",
-    icon: <DataUsageIcon sx={{ fontSize: 40 }} />,
-    color: "#9370DB",
-  },
-];
-
 const DataCards = () => {
   const navigate = useNavigate();
+  const { translations } = useLanguage();
+
+  const categories = [
+    {
+      title: translations.categories.policies,
+      description: "Políticas públicas e iniciativas para equidade de gênero",
+      icon: <PolicyIcon sx={{ fontSize: 40 }} />,
+      color: "#FF4081",
+      link: "/buscaone?category=policies&question=gender_equity_policies",
+    },
+    {
+      title: translations.categories.initiatives,
+      description: "Projetos e programas em andamento",
+      icon: <LightbulbIcon sx={{ fontSize: 40 }} />,
+      color: "#FFA07A",
+      link: "/buscaone?category=initiatives&question=active_initiatives",
+    },
+    {
+      title: translations.categories.factors,
+      description: "Dados e análises sobre fatores de impacto",
+      icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
+      color: "#FF69B4",
+      link: "/buscaone?category=factors&question=impact_factors",
+    },
+    {
+      title: translations.categories.otherData,
+      description: "Informações complementares e estatísticas",
+      icon: <DataUsageIcon sx={{ fontSize: 40 }} />,
+      color: "#9370DB",
+    },
+  ];
 
   return (
     <Box sx={{ py: 4, px: 2 }}>
@@ -110,7 +112,7 @@ const DataCards = () => {
           },
         }}
       >
-        Explore os dados
+        {translations.explore}
       </Typography>
       <Grid container spacing={3} justifyContent="center">
         {categories.map((category, index) => (

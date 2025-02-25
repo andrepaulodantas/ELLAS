@@ -1,53 +1,19 @@
 import React from "react";
-import { Text, Img, Heading } from "./..";
+import { Text, Img, Heading } from "../../components";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 // Definição das propriedades do componente
 interface Props {
   className?: string;
-  contatos?: string;
-  description?: React.ReactNode | string;
-  conecteseao?: string;
-  patrocnio?: string;
-  instituies?: string;
-  linksteis?: string;
-  description1?: React.ReactNode | string;
-  todosos?: React.ReactNode | string;
 }
 
-export default function HomeOneRodap({
-  contatos = "Contatos",
-  description = (
-    <>
-      www.ellas.ufmt.br
-      <br />
-      @Ellas.network
-      <br />
-      ellas.latinamerica@gmail.com
-    </>
-  ),
-  conecteseao = "Conecte-se ao ELLAS",
-  patrocnio = "Patrocínio",
-  instituies = "Instituições Participantes",
-  linksteis = "Links Úteis",
-  description1 = (
-    <>
-      Acessibilidade na Web
-      <br />
-      Termos de Uso
-      <br />
-      Política de Privacidade
-    </>
-  ),
-  todosos = (
-    <>
-      Todos os direitos reservados
-      <br />© 2024 ELLAS
-    </>
-  ),
-  ...props
-}: Props) {
+export default function HomeOneRodap({ className = "", ...props }: Props) {
+  const { translations } = useLanguage();
+
   return (
-    <div {...props}>
+    <div
+      className={`flex flex-col items-center justify-start w-full ${className}`}
+    >
       <div className="flex flex-col items-center justify-start w-full">
         <Img
           src="images/img_group_22.svg"
@@ -61,20 +27,26 @@ export default function HomeOneRodap({
                 as="p"
                 className="!text-deep_orange-200 text-right !font-medium"
               >
-                {contatos}
+                {translations.footer.contacts}
               </Text>
               <Text
                 size="xl"
                 as="p"
                 className="w-[87%] mt-2.5 !text-white-A700 !leading-5"
               >
-                {description}
+                <>
+                  www.ellas.ufmt.br
+                  <br />
+                  @Ellas.network
+                  <br />
+                  ellas.latinamerica@gmail.com
+                </>
               </Text>
               <Text
                 as="p"
                 className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium"
               >
-                {conecteseao}
+                {translations.footer.connect}
               </Text>
               <Img
                 src="images/img_group_24.svg"
@@ -90,7 +62,7 @@ export default function HomeOneRodap({
                     as="h1"
                     className="!text-white-A700 text-center"
                   >
-                    {patrocnio}
+                    {translations.partners}
                   </Heading>
                   <Img
                     src="images/img_idrc_logo_branca.png"
@@ -102,7 +74,7 @@ export default function HomeOneRodap({
                     as="h2"
                     className="mt-[27px] !text-white-A700 text-center"
                   >
-                    {instituies}
+                    {translations.partners}
                   </Heading>
                 </div>
                 <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
@@ -110,14 +82,20 @@ export default function HomeOneRodap({
                     as="p"
                     className="!text-deep_orange-200 text-right !font-medium"
                   >
-                    {linksteis}
+                    {translations.footer.usefulLinks}
                   </Text>
                   <Text
                     size="xl"
                     as="p"
                     className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
                   >
-                    {description1}
+                    <>
+                      {translations.footer.accessibility}
+                      <br />
+                      {translations.footer.terms}
+                      <br />
+                      {translations.footer.privacy}
+                    </>
                   </Text>
                 </div>
               </div>
@@ -164,7 +142,10 @@ export default function HomeOneRodap({
                   as="p"
                   className="w-[21%] !text-deep_orange-200 text-right"
                 >
-                  {todosos}
+                  <>
+                    {translations.footer.rights}
+                    <br />© 2024 ELLAS
+                  </>
                 </Text>
               </div>
             </div>

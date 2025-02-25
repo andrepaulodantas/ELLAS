@@ -1144,18 +1144,18 @@ export const getLatinAmericaFocusQuestion = () => {
 };
 
 // Function to get shortcut queries
-export const getShortcutQueries = () => {
+export const getShortcutQueries = (translations: any) => {
   return {
     policies: {
-      text: "View all policies",
+      text: translations.categories.policies || "View all policies",
       query: fetchPoliciesAppliedInCountries,
     },
     initiatives: {
-      text: "View all initiatives",
+      text: translations.categories.initiatives || "View all initiatives",
       query: fetchInitiativesByCountry,
     },
     factors: {
-      text: "View all factors",
+      text: translations.categories.factors || "View all factors",
       query: fetchPositiveContextualFactors,
     },
   };

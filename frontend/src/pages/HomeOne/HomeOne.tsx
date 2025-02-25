@@ -14,15 +14,18 @@ import {
 import GoogleMapComponent from "../../components/GoogleMap";
 import Header from "../../components/Header";
 import { questionFunctions } from "../../services/apiService";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const HomeOnePage = () => {
   const [sliderState, setSliderState] = React.useState(0);
   const navigate = useNavigate();
+  const { translations } = useLanguage();
 
   const [mapData, setMapData] = useState<any[]>([]);
   const [highlightedCountries, setHighlightedCountries] = useState<string[]>(
     []
   );
+
   const percentages = [
     { range: "01-25%", color: "bg-red-300" },
     { range: "26-50%", color: "bg-red-400" },
@@ -32,7 +35,7 @@ const HomeOnePage = () => {
   ];
 
   const handleAboutClick = () => {
-    window.location.href = "https://ellas.ufmt.br/about";
+    navigate("/about");
   };
 
   useEffect(() => {
@@ -52,7 +55,6 @@ const HomeOnePage = () => {
             );
 
             setMapData(formattedData);
-
             const countries = formattedData
               .map((item) => item.country)
               .filter(
@@ -70,10 +72,6 @@ const HomeOnePage = () => {
     fetchData();
   }, []);
 
-  const handleNavigation = (path: string) => () => {
-    navigate(path);
-  };
-
   return (
     <>
       <Helmet>
@@ -88,7 +86,57 @@ const HomeOnePage = () => {
         <div className="flex-grow">
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
             <DataChart />
-            <DataCards />
+            <div className="flex flex-col items-center justify-start w-full mt-[60px] gap-[60px]">
+              <DataCards />
+            </div>
+
+            {/* Map and Text Section */}
+            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between w-full px-6 lg:px-12 py-10 gap-10 bg-white">
+              {/* Text Section */}
+              <div className="flex-1 lg:max-w-[40%]">
+                <Heading size="2xl" as="h1" className="text-purple-700">
+                  {translations.home}
+                </Heading>
+                <Text as="p" className="mt-4 text-gray-700 leading-relaxed">
+                  {translations.openData}
+                </Text>
+                <Button
+                  size="sm"
+                  shape="round"
+                  className="mt-6"
+                  onClick={handleAboutClick}
+                >
+                  {translations.learnMore}
+                </Button>
+              </div>
+
+              {/* Map Section */}
+              <div className="flex-1 lg:max-w-[60%]">
+                <div className="relative w-full h-[500px] border rounded-lg">
+                  <GoogleMapComponent
+                    initiatives={mapData}
+                    selectedCountries={highlightedCountries}
+                  />
+                </div>
+
+                {/* Legend Section */}
+                <div className="flex flex-row justify-center items-center gap-4 mt-6">
+                  {percentages.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-row items-center gap-2 text-sm"
+                    >
+                      <div
+                        className={`w-4 h-4 ${item.color} rounded-full border border-gray-400`}
+                      ></div>
+                      <Text as="span" className="text-gray-700">
+                        {item.range}
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
             {/* Featured Questions Carousel */}
             <div className="w-full py-16 bg-red-50">
@@ -163,62 +211,6 @@ const HomeOnePage = () => {
                     </div>
                   ))}
                 </Carousel>
-              </div>
-            </div>
-
-            {/* Map and Text Section */}
-            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between w-full px-6 lg:px-12 py-10 gap-10 bg-white">
-              {/* Text Section */}
-              <div className="flex-1 lg:max-w-[40%]">
-                <Heading size="2xl" as="h1" className="text-purple-700">
-                  Latin America in Focus!
-                </Heading>
-                <Text as="p" className="mt-4 text-gray-700 leading-relaxed">
-                  The ELLAS portal generates and disseminates open data focused
-                  on countries in Latin America. It emerged from the union of
-                  institutions from Brazil, Bolivia, and Peru.
-                </Text>
-                <Text as="p" className="mt-4 text-gray-700 leading-relaxed">
-                  With an open data infrastructure, it is possible to map
-                  information, visualize data, and improve collaboration between
-                  the education, government, and industry sectors, aiming to
-                  reduce the STEM gender gap in Latin America.
-                </Text>
-                <Button
-                  size="sm"
-                  shape="round"
-                  className="mt-6"
-                  onClick={handleAboutClick}
-                >
-                  Learn More
-                </Button>
-              </div>
-
-              {/* Map Section */}
-              <div className="flex-1 lg:max-w-[60%]">
-                <div className="relative w-full h-[500px] border rounded-lg">
-                  <GoogleMapComponent
-                    initiatives={mapData}
-                    selectedCountries={highlightedCountries}
-                  />
-                </div>
-
-                {/* Legend Section */}
-                <div className="flex flex-row justify-center items-center gap-4 mt-6">
-                  {percentages.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-row items-center gap-2 text-sm"
-                    >
-                      <div
-                        className={`w-4 h-4 ${item.color} rounded-full border border-gray-400`}
-                      ></div>
-                      <Text as="span" className="text-gray-700">
-                        {item.range}
-                      </Text>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
 

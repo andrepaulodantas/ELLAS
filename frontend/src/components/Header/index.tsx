@@ -268,6 +268,15 @@ const KnowMoreButton = styled(Button)`
   }
 `;
 
+interface MenuItem {
+  label: string;
+  path?: string;
+  submenu?: Array<{
+    label: string;
+    path: string;
+  }>;
+}
+
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -291,7 +300,9 @@ const Header = () => {
 
   const handleLangChange = (lang: "pt" | "en" | "es") => {
     setLanguage(lang);
-    setLangAnchor(null);
+    const currentPath = window.location.pathname;
+    const newPath = currentPath.replace(/\/(pt|en|es)\//, `/${lang}/`);
+    window.history.pushState({}, "", newPath);
   };
 
   const handleClose = () => {
@@ -316,26 +327,32 @@ const Header = () => {
   };
 
   const handleExternalLink = (url: string) => {
-    window.open(url, "_blank", "noopener,noreferrer");
+    const langPrefix = language === "pt" ? "pt" : language;
+    const urlWithLang = url.replace("/pt/", `/${langPrefix}/`);
+    window.open(urlWithLang, "_blank");
   };
 
-  const navigationItems = [
-    { label: translations.home, path: "/", isExternal: false },
+  const menuItems: MenuItem[] = [
+    { label: translations.home, path: "/" },
     {
       label: translations.about,
-      path: "https://ellas.ufmt.br/about",
-      isExternal: true,
+      submenu: [
+        { label: translations.project, path: "/sobre" },
+        { label: translations.team, path: "/equipe" },
+      ],
     },
-    { label: "Open Data", path: "/buscaone", isExternal: false },
-    {
-      label: "Support ELLAS",
-      path: "https://ellas.ufmt.br/support-ellas/",
-      isExternal: true,
-    },
-    { label: "Contact", path: "/contato", isExternal: false },
-    { label: "FAQ", path: "/faq", isExternal: false },
-    { label: "Graph View", path: "/graph-view", isExternal: false },
+    { label: translations.openData, path: "/buscaone" },
+    { label: translations.support, path: "/apoie-ellas" },
+    { label: translations.contact, path: "/contato" },
   ];
+
+  const handleMenuItemClick = (item: MenuItem) => {
+    if (!item.path) return;
+
+    item.path.startsWith("http")
+      ? handleExternalLink(item.path)
+      : handleNavigation(item.path);
+  };
 
   return (
     <>
@@ -360,14 +377,10 @@ const Header = () => {
               </IconButton>
             ) : (
               <NavContainer>
-                {navigationItems.map((item, index) => (
+                {menuItems.map((item, index) => (
                   <NavButton
                     key={index}
-                    onClick={() =>
-                      item.isExternal
-                        ? handleExternalLink(item.path)
-                        : handleNavigation(item.path)
-                    }
+                    onClick={() => handleMenuItemClick(item)}
                   >
                     {item.label}
                   </NavButton>
@@ -427,14 +440,10 @@ const Header = () => {
           ModalProps={{ keepMounted: true }}
         >
           <List>
-            {navigationItems.map((item, index) => (
+            {menuItems.map((item, index) => (
               <DrawerListItem
                 key={index}
-                onClick={() =>
-                  item.isExternal
-                    ? handleExternalLink(item.path)
-                    : handleNavigation(item.path)
-                }
+                onClick={() => handleMenuItemClick(item)}
               >
                 <ListItemText primary={item.label} />
               </DrawerListItem>

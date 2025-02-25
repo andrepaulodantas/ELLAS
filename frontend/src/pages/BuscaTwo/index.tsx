@@ -7,6 +7,7 @@ import GoogleMapComponent from "../../components/GoogleMap";
 import { questionFunctions } from "../../services/apiService";
 import { saveAs } from "file-saver";
 import Header from "../../components/Header";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
@@ -14,6 +15,7 @@ import DataTable from "components/DataTable";
 type SelectOption = { value: string; label: string };
 
 const BuscaTwoPage = () => {
+  const { translations, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -81,31 +83,19 @@ const BuscaTwoPage = () => {
         if (fetchFunction) {
           try {
             const response = await fetchFunction();
-
             if (response?.results?.bindings.length > 0) {
-              const fields = Object.keys(response.results.bindings[0]).filter(
-                (key) =>
-                  !["countryName", "policyName", "initiativeName"].includes(key)
-              );
-
+              // Get all fields from the response
+              const fields = Object.keys(response.results.bindings[0]);
               setDynamicFields(fields);
 
               const formattedData = response.results.bindings.map(
-                (item: any) => ({
-                  country: item.countryName?.value || null,
-                  name:
-                    item.policyName?.value ||
-                    item.initiativeName?.value ||
-                    null,
-                  startDate:
-                    item.startDate?.value || item.start_date?.value || null,
-                  finishDate:
-                    item.finishDate?.value || item.finish_date?.value || null,
-                  ...fields.reduce((acc, field) => {
-                    acc[field] = item[field]?.value || "";
-                    return acc;
-                  }, {}),
-                })
+                (item: any) => {
+                  const formattedItem: { [key: string]: any } = {};
+                  fields.forEach((field) => {
+                    formattedItem[field] = item[field]?.value || "";
+                  });
+                  return formattedItem;
+                }
               );
 
               setData(formattedData);
@@ -114,9 +104,9 @@ const BuscaTwoPage = () => {
               // Update `countryCounts`
               const countryCountMap: { [key: string]: number } = {};
               formattedData.forEach((item) => {
-                if (item.country) {
-                  countryCountMap[item.country] =
-                    (countryCountMap[item.country] || 0) + 1;
+                if (item.countryName) {
+                  countryCountMap[item.countryName] =
+                    (countryCountMap[item.countryName] || 0) + 1;
                 }
               });
               setCountryCounts(countryCountMap);
@@ -213,7 +203,7 @@ const BuscaTwoPage = () => {
               {/* Header Section */}
               <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
                 <Heading size="2xl" as="h1" className="text-center">
-                  Data Table
+                  {translations.table.title}
                 </Heading>
               </div>
 
@@ -227,18 +217,18 @@ const BuscaTwoPage = () => {
                     className="mb-4 gap-2.5 w-full rounded-[35px]"
                     onClick={handleReset}
                   >
-                    Restart
+                    {translations.buttons.reset}
                   </Button>
                   <div className="flex flex-col gap-6">
                     {/* Category Selection */}
                     <div>
                       <Text size="3xl" as="p" className="mb-2">
-                        Category
+                        {translations.labels.category}
                       </Text>
                       <SelectBox
                         shape="round"
                         name="categoria"
-                        placeholder="Select Category"
+                        placeholder={translations.labels.selectCategory}
                         options={[
                           { label: "Initiatives", value: "initiatives" },
                           { label: "Policies", value: "policies" },
@@ -260,12 +250,12 @@ const BuscaTwoPage = () => {
                     {/* Question Selection */}
                     <div>
                       <Text size="3xl" as="p" className="mb-2">
-                        Question
+                        {translations.labels.question}
                       </Text>
                       <SelectBox
                         shape="round"
                         name="pergunta"
-                        placeholder="Select Question"
+                        placeholder={translations.labels.selectQuestion}
                         options={
                           selectedCategory
                             ? questionQueries[selectedCategory].map(
@@ -300,27 +290,26 @@ const BuscaTwoPage = () => {
                   >
                     <TabList className="flex flex-row gap-4 border-b">
                       <Tab
-                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                          location.pathname,
-                          "/buscaone"
-                        )}`}
-                        onClick={() => navigate("/buscaone")}
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                        onClick={() => handleNavigation("/buscaone")()}
                       >
-                        <Text as="p">Map</Text>
-                        <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
-                      </Tab>
-                      <Tab className="p-2 flex items-center gap-2">
-                        <Text as="p">Bars</Text>
+                        <Text as="p">{translations.visualization.map}</Text>
                         <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
                       </Tab>
                       <Tab
-                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                          location.pathname,
-                          "/buscatwoone"
-                        )}`}
-                        onClick={() => navigate("/buscatwoone")}
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
                       >
-                        <Text as="p">Lines</Text>
+                        <Text as="p">{translations.visualization.bars}</Text>
+                        <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
+                      </Tab>
+                      <Tab
+                        className="p-4 flex items-center gap-2 cursor-pointer outline-none"
+                        selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                        onClick={() => handleNavigation("/buscatwoone")()}
+                      >
+                        <Text as="p">{translations.visualization.lines}</Text>
                         <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
                       </Tab>
                     </TabList>
@@ -405,6 +394,7 @@ const BuscaTwoPage = () => {
                     data={filteredData}
                     dynamicFields={dynamicFields}
                     exportTableDataToCSV={exportTableDataToCSV}
+                    key={language}
                   />
                 </div>
               </div>

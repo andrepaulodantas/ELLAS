@@ -1,7 +1,10 @@
 import React from "react";
 import { Img, Text } from "../../components";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const Footer = () => {
+  const { translations } = useLanguage();
+
   const institutionLogos = [
     "img_ufmt_oficial_branca.png",
     "img_uftpr_branca.png",
@@ -20,20 +23,26 @@ const Footer = () => {
           <div className="space-y-6">
             <div>
               <Text className="text-[#E6A17A] font-medium text-lg mb-2">
-                Contatos
+                {translations.footer.contacts}
               </Text>
               <div className="space-y-1 text-base">
                 <a
-                  href="https://www.ellas.ufmt.br"
+                  href="https://ellas.ufmt.br"
                   className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
                 >
                   www.ellas.ufmt.br
                 </a>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/ellas.network/"
                   className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
                 >
                   @ellas.network
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/ellasnetwork/"
+                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                >
+                  LinkedIn
                 </a>
                 <a
                   href="mailto:ellas.latinamerica@gmail.com"
@@ -46,16 +55,30 @@ const Footer = () => {
 
             <div>
               <Text className="text-[#E6A17A] font-medium text-lg mb-2">
-                Conecte-se ao ELLAS
+                {translations.footer.connect}
               </Text>
               <div className="flex gap-2">
                 <a
-                  href="#"
+                  href="https://www.instagram.com/ellas.network/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
                 >
                   <Img
-                    src="images/img_group_24.svg"
-                    alt="Social Media Icons"
+                    src="images/instagram_icon.svg"
+                    alt="Instagram"
+                    className="h-[26px] w-auto"
+                  />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/ellasnetwork/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                >
+                  <Img
+                    src="images/linkedin_icon.svg"
+                    alt="LinkedIn"
                     className="h-[26px] w-auto"
                   />
                 </a>
@@ -66,7 +89,7 @@ const Footer = () => {
           {/* Center Column */}
           <div className="flex flex-col items-center">
             <Text className="text-[#E6A17A] font-medium text-lg mb-4">
-              Agência Financiadora
+              {translations.partners}
             </Text>
             <Img
               src="images/img_idrc_logo_branca.png"
@@ -74,7 +97,7 @@ const Footer = () => {
               className="h-16 w-auto mb-8"
             />
             <Text className="text-[#E6A17A] font-medium text-lg mb-4">
-              Instituições Participantes
+              {translations.partners}
             </Text>
             <div className="flex flex-wrap justify-center gap-4">
               {institutionLogos.map((src, index) => (
@@ -91,26 +114,26 @@ const Footer = () => {
           {/* Right Column */}
           <div className="text-right">
             <Text className="text-[#E6A17A] font-medium text-lg mb-2">
-              Links Úteis
+              {translations.footer.usefulLinks}
             </Text>
             <div className="space-y-1 text-base">
               <a
                 href="/accessibility"
                 className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
               >
-                Acessibilidade na Web
+                {translations.footer.accessibility}
               </a>
               <a
                 href="/terms"
                 className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
               >
-                Termos de Uso
+                {translations.footer.terms}
               </a>
               <a
                 href="/privacy"
                 className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
               >
-                Política de Privacidade
+                {translations.footer.privacy}
               </a>
             </div>
           </div>
@@ -120,7 +143,7 @@ const Footer = () => {
       {/* Copyright Section */}
       <div className="container mx-auto max-w-7xl mt-8 pt-4 text-center">
         <Text className="text-[#FFFFFF] text-sm">
-          Todos os direitos reservados © 2024 ELLAS
+          © 2024 ELLAS - {translations.footer.rights}
         </Text>
       </div>
     </footer>

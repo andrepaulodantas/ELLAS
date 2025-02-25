@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "../../components";
-import { saveAs } from "file-saver";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import React, { useState } from "react";
+import {
+  Facebook,
+  Twitter,
+  LinkedIn,
+  Share,
+  Download,
+  FileDownload,
+  PictureAsPdf,
+  Image,
+} from "@mui/icons-material";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 // Define o tipo de dado para as linhas da tabela
 interface DataTableProps {
@@ -24,11 +31,10 @@ const DataTable: React.FC<DataTableProps> = ({
   className = "",
 }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
-  const [filters, setFilters] = useState<Record<string, string>>({});
-  const [filteredData, setFilteredData] = useState(data);
-  const tableRef = React.useRef<HTMLDivElement>(null);
+  const [filters, setFilters] = useState<{ [key: string]: string }>({});
+  const { translations, language } = useLanguage();
 
-  // URL validation
+  // Funções auxiliares
   const isValidUrl = (str: string) => {
     try {
       new URL(str);
@@ -38,7 +44,6 @@ const DataTable: React.FC<DataTableProps> = ({
     }
   };
 
-  // Sorting function
   const sortData = (key: string) => {
     let direction: "asc" | "desc" = "asc";
     if (
@@ -51,79 +56,57 @@ const DataTable: React.FC<DataTableProps> = ({
     setSortConfig({ key, direction });
   };
 
-  // Filter function
   const handleFilterChange = (field: string, value: string) => {
     setFilters((prev) => ({
       ...prev,
-      [field]: value.toLowerCase(),
+      [field]: value,
     }));
   };
 
-  // Apply filters and sorting
-  useEffect(() => {
-    let result = [...data];
+  // Aplicar filtros e ordenação
+  let filteredData = [...data];
+  Object.keys(filters).forEach((key) => {
+    const filterValue = filters[key].toLowerCase();
+    if (filterValue) {
+      filteredData = filteredData.filter((item) =>
+        String(item[key]).toLowerCase().includes(filterValue)
+      );
+    }
+  });
 
-    // Apply filters
-    Object.keys(filters).forEach((key) => {
-      if (filters[key]) {
-        result = result.filter((item) =>
-          String(item[key]).toLowerCase().includes(filters[key])
-        );
+  if (sortConfig) {
+    filteredData.sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === "asc" ? -1 : 1;
       }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === "asc" ? 1 : -1;
+      }
+      return 0;
     });
+  }
 
-    // Apply sorting
-    if (sortConfig) {
-      result.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-
-    setFilteredData(result);
-  }, [data, filters, sortConfig]);
-
-  // Export functions
+  // Funções de exportação
   const exportToPDF = async () => {
-    if (tableRef.current) {
-      const canvas = await html2canvas(tableRef.current);
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("l", "mm", "a4");
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("table-data.pdf");
-    }
+    // Implementação da exportação para PDF
+    console.log("Exporting to PDF...");
   };
 
   const exportToJPG = async () => {
-    if (tableRef.current) {
-      const canvas = await html2canvas(tableRef.current);
-      canvas.toBlob((blob) => {
-        if (blob) {
-          saveAs(blob, "table-data.jpg");
-        }
-      });
-    }
+    // Implementação da exportação para JPG
+    console.log("Exporting to JPG...");
   };
 
-  const currentUrl = window.location.href;
-
   const handleShare = (platform: string) => {
-    const shareUrl = currentUrl;
-    const title = "Check out this data from ELLAS";
+    const url = window.location.href;
+    const title = "ELLAS Data";
+    const description = "Check out this data from ELLAS portal";
 
     switch (platform) {
       case "facebook":
         window.open(
           `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-            shareUrl
+            url
           )}`,
           "_blank"
         );
@@ -131,7 +114,7 @@ const DataTable: React.FC<DataTableProps> = ({
       case "twitter":
         window.open(
           `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-            shareUrl
+            url
           )}&text=${encodeURIComponent(title)}`,
           "_blank"
         );
@@ -139,7 +122,9 @@ const DataTable: React.FC<DataTableProps> = ({
       case "linkedin":
         window.open(
           `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-            shareUrl
+            url
+          )}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(
+            description
           )}`,
           "_blank"
         );
@@ -147,170 +132,166 @@ const DataTable: React.FC<DataTableProps> = ({
     }
   };
 
+  const IconWrapper: React.FC<{
+    icon: React.ReactNode;
+    className?: string;
+  }> = ({ icon, className }) => {
+    return <div className={className}>{icon}</div>;
+  };
+
   return (
-    <div className={`w-full px-4 sm:px-6 lg:px-8 ${className}`}>
-      <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
-        <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => exportTableDataToCSV(data, dynamicFields)}
-            variant="outline"
-            className="text-sm sm:text-base w-full sm:w-auto"
-          >
-            Export CSV
-          </Button>
-          <Button
-            onClick={exportToPDF}
-            variant="outline"
-            className="text-sm sm:text-base w-full sm:w-auto"
-          >
-            Export PDF
-          </Button>
-          <Button
-            onClick={exportToJPG}
-            variant="outline"
-            className="text-sm sm:text-base w-full sm:w-auto"
-          >
-            Export JPG
-          </Button>
+    <div className={`w-full ${className}`} key={language}>
+      {/* Botões de ação */}
+      <div className="flex justify-center items-center gap-8 mb-4 py-4 border-t border-gray-200">
+        {/* Download Section */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 text-gray-700">
+            <IconWrapper icon={<Download />} className="text-lg" />
+            <span className="font-medium">{translations.buttons.export}</span>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => exportTableDataToCSV(data, dynamicFields)}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors shadow-md hover:shadow-lg"
+              title={translations.buttons.export}
+            >
+              <IconWrapper icon={<FileDownload />} className="text-lg" />
+            </button>
+            <button
+              onClick={exportToPDF}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors shadow-md hover:shadow-lg"
+              title={translations.buttons.export}
+            >
+              <IconWrapper icon={<PictureAsPdf />} className="text-lg" />
+            </button>
+            <button
+              onClick={exportToJPG}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors shadow-md hover:shadow-lg"
+              title={translations.buttons.export}
+            >
+              <IconWrapper icon={<Image />} className="text-lg" />
+            </button>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            onClick={() => handleShare("facebook")}
-            variant="outline"
-            className="text-sm sm:text-base w-full sm:w-auto"
-          >
-            Share on Facebook
-          </Button>
-          <Button
-            onClick={() => handleShare("twitter")}
-            variant="outline"
-            className="text-sm sm:text-base w-full sm:w-auto"
-          >
-            Share on Twitter
-          </Button>
-          <Button
-            onClick={() => handleShare("linkedin")}
-            variant="outline"
-            className="text-sm sm:text-base w-full sm:w-auto"
-          >
-            Share on LinkedIn
-          </Button>
+
+        <div className="h-8 w-px bg-gray-300"></div>
+
+        {/* Share Section */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 text-gray-700">
+            <IconWrapper icon={<Share />} className="text-lg" />
+            <span className="font-medium">{translations.buttons.share}</span>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => handleShare("facebook")}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1877f2] text-white hover:bg-[#166fe5] transition-colors shadow-md hover:shadow-lg"
+              title={translations.buttons.share}
+            >
+              <IconWrapper icon={<Facebook />} className="text-lg" />
+            </button>
+            <button
+              onClick={() => handleShare("twitter")}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1da1f2] text-white hover:bg-[#1a91da] transition-colors shadow-md hover:shadow-lg"
+              title={translations.buttons.share}
+            >
+              <IconWrapper icon={<Twitter />} className="text-lg" />
+            </button>
+            <button
+              onClick={() => handleShare("linkedin")}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#0a66c2] text-white hover:bg-[#094ea3] transition-colors shadow-md hover:shadow-lg"
+              title={translations.buttons.share}
+            >
+              <IconWrapper icon={<LinkedIn />} className="text-lg" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="w-full" ref={tableRef}>
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
-            <div className="w-full overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className="px-2 sm:px-4 py-2 bg-gray-50 min-w-[120px] sm:min-w-[150px]">
-                      <div className="text-sm sm:text-base">Country</div>
-                      <input
-                        type="text"
-                        placeholder="Filter..."
-                        className="w-full mt-1 p-1 text-xs sm:text-sm border rounded"
-                        onChange={(e) =>
-                          handleFilterChange("country", e.target.value)
-                        }
-                      />
-                    </th>
-                    <th className="px-2 sm:px-4 py-2 bg-gray-50 min-w-[150px] sm:min-w-[200px]">
-                      <div className="text-sm sm:text-base">Name</div>
-                      <input
-                        type="text"
-                        placeholder="Filter..."
-                        className="w-full mt-1 p-1 text-xs sm:text-sm border rounded"
-                        onChange={(e) =>
-                          handleFilterChange("name", e.target.value)
-                        }
-                      />
-                    </th>
+      {/* Tabela */}
+      <div className="border border-gray-200 rounded-lg mb-0">
+        <div
+          className="overflow-y-auto"
+          style={{ height: "calc(100vh - 400px)" }}
+        >
+          <table className="w-full">
+            <thead className="sticky top-0 bg-white z-10 border-b border-gray-200">
+              <tr>
+                {dynamicFields.map((field) => (
+                  <th
+                    key={field}
+                    className="px-4 py-2 bg-[#6B4A7D] text-left text-sm font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-[#7d5b8f] break-words max-w-xs"
+                    onClick={() => sortData(field)}
+                  >
+                    {field}
+                    {sortConfig?.key === field && (
+                      <span className="ml-1">
+                        {sortConfig.direction === "asc" ? "↑" : "↓"}
+                      </span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+              <tr>
+                {dynamicFields.map((field) => (
+                  <th
+                    key={`filter-${field}`}
+                    className="px-4 py-2 bg-[#F5F5F5]"
+                  >
+                    <input
+                      type="text"
+                      placeholder={`${translations.filters.filterBy} ${field}`}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E6A17A] focus:border-transparent"
+                      onChange={(e) =>
+                        handleFilterChange(field, e.target.value)
+                      }
+                      value={filters[field] || ""}
+                    />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredData.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={dynamicFields.length}
+                    className="px-4 py-3 text-sm text-gray-500 text-center"
+                  >
+                    {translations.table.noData}
+                  </td>
+                </tr>
+              ) : (
+                filteredData.map((row, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    className="hover:bg-[#F8F4FA] transition-colors"
+                  >
                     {dynamicFields.map((field) => (
-                      <th
-                        key={field}
-                        className="px-2 sm:px-4 py-2 bg-gray-50 cursor-pointer min-w-[120px] sm:min-w-[150px]"
+                      <td
+                        key={`${rowIndex}-${field}`}
+                        className="px-4 py-3 text-sm text-gray-900 break-words"
+                        style={{ minWidth: "150px", maxWidth: "300px" }}
                       >
-                        <div className="flex items-center text-sm sm:text-base">
-                          <span className="truncate">{field}</span>
-                          {sortConfig?.key === field && (
-                            <span className="ml-1">
-                              {sortConfig.direction === "asc" ? "↑" : "↓"}
-                            </span>
-                          )}
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="Filter..."
-                          className="w-full mt-1 p-1 text-xs sm:text-sm border rounded"
-                          onChange={(e) =>
-                            handleFilterChange(field, e.target.value)
-                          }
-                        />
-                      </th>
+                        {isValidUrl(String(row[field])) ? (
+                          <a
+                            href={row[field]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#4A2B5C] hover:text-[#E6A17A] hover:underline break-words"
+                          >
+                            {row[field]}
+                          </a>
+                        ) : (
+                          String(row[field])
+                        )}
+                      </td>
                     ))}
                   </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <div className="overflow-y-auto" style={{ height: "400px" }}>
-              <table className="w-full">
-                <tbody>
-                  {filteredData.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                    >
-                      <td className="px-2 sm:px-4 py-2 border-b min-w-[120px] sm:min-w-[150px]">
-                        <div
-                          className="truncate text-sm sm:text-base"
-                          title={item.country || "N/A"}
-                        >
-                          {item.country || "N/A"}
-                        </div>
-                      </td>
-                      <td className="px-2 sm:px-4 py-2 border-b min-w-[150px] sm:min-w-[200px]">
-                        <div
-                          className="truncate text-sm sm:text-base"
-                          title={item.name || "N/A"}
-                        >
-                          {item.name || "N/A"}
-                        </div>
-                      </td>
-                      {dynamicFields.map((field) => (
-                        <td
-                          key={field}
-                          className="px-2 sm:px-4 py-2 border-b min-w-[120px] sm:min-w-[150px]"
-                        >
-                          <div
-                            className="truncate text-sm sm:text-base"
-                            title={item[field] || "N/A"}
-                          >
-                            {isValidUrl(item[field]) ? (
-                              <a
-                                href={item[field]}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline"
-                              >
-                                {item[field]}
-                              </a>
-                            ) : (
-                              item[field] || "N/A"
-                            )}
-                          </div>
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

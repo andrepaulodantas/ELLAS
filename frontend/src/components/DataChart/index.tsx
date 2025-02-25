@@ -8,6 +8,7 @@ import {
   Legend,
   Tooltip,
 } from "recharts";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const data = [
   { name: "Políticas", value: 30 },
@@ -68,6 +69,7 @@ const ChartContainer = styled(Box)`
 
 const DataChart = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const { translations } = useLanguage();
 
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
@@ -109,6 +111,13 @@ const DataChart = () => {
     );
   };
 
+  const data = [
+    { name: translations.categories.policies, value: 30 },
+    { name: translations.categories.initiatives, value: 25 },
+    { name: translations.categories.factors, value: 25 },
+    { name: translations.categories.otherData, value: 20 },
+  ];
+
   return (
     <Box sx={{ py: 6, px: 4 }}>
       <Box
@@ -137,7 +146,7 @@ const DataChart = () => {
             },
           }}
         >
-          Encontre a informação que precisa no Portal ELLAS
+          {translations.askData}
         </Typography>
         <Typography
           variant="body1"
@@ -148,8 +157,7 @@ const DataChart = () => {
             lineHeight: 1.6,
           }}
         >
-          O portal ELLAS reúne dados e evidências sobre gênero em ciência e
-          tecnologia na América Latina.
+          {translations.openData}
         </Typography>
 
         <ChartContainer sx={{ height: 400, mt: 6 }}>
@@ -228,7 +236,7 @@ const DataChart = () => {
         </ChartContainer>
 
         <AnimatedButton variant="contained" sx={{ mt: 4 }}>
-          Saiba mais
+          {translations.learnMore}
         </AnimatedButton>
       </Box>
     </Box>

@@ -21,13 +21,20 @@ import GraphView from "../components/GraphView";
 import PrivateRoute from "../components/PrivateRoute"; // Import the PrivateRoute component
 
 const ProjectRoutes = () => {
+  const defaultSearchHandler = () => {
+    console.log("Default search handler");
+  };
+
   let element = useRoutes([
     { path: "/", element: <HomeOne /> },
-    { path: "/dashboard", element: (
+    {
+      path: "/dashboard",
+      element: (
       <PrivateRoute>
         <Home />
       </PrivateRoute>
-    ) },
+      ),
+    },
     { path: "*", element: <NotFound /> },
     { path: "/sobre", element: <Sobre /> },
     { path: "/homeone", element: <HomeOne /> },
@@ -35,7 +42,10 @@ const ProjectRoutes = () => {
     { path: "/fazerlogintwo", element: <FazerLoginTwo /> },
     { path: "/fazerloginthreeone", element: <FazerLoginThreeOne /> },
     { path: "/fazerloginthree", element: <FazerLoginThree /> },
-    { path: "/buscaone", element: <BuscaOne /> },
+    {
+      path: "/buscaone",
+      element: <BuscaOne onSearch={defaultSearchHandler} />,
+    },
     { path: "/buscatwo", element: <BuscaTwo /> },
     { path: "/buscatwoone", element: <BuscaTwoOne /> },
     { path: "/estilos", element: <Estilos /> },
@@ -44,10 +54,19 @@ const ProjectRoutes = () => {
     { path: "/contato", element: <Contato /> },
     { path: "/faq", element: <Faq /> },
     { path: "/graph-view", element: <GraphView queryType="initiatives" /> },
-    { path: "/policies-by-country", element: <GraphView queryType="policiesByCountry" /> },
+    {
+      path: "/policies-by-country",
+      element: <GraphView queryType="policiesByCountry" />,
+    },
     { path: "/policy-types", element: <GraphView queryType="policyTypes" /> },
-    { path: "/policy-results", element: <GraphView queryType="policyResults" /> },
-    { path: "/policies-by-country-and-date", element: <GraphView queryType="policiesByCountryAndDate" /> },
+    {
+      path: "/policy-results",
+      element: <GraphView queryType="policyResults" />,
+    },
+    {
+      path: "/policies-by-country-and-date",
+      element: <GraphView queryType="policiesByCountryAndDate" />,
+    },
   ]);
 
   return element;

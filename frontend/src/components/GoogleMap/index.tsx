@@ -1,102 +1,146 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
+import { MapContainer, TileLayer, GeoJSON, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLngTuple } from "leaflet";
+import { Button, Text } from "../../components";
 
-// Define o tipo para uma iniciativa
-type Initiative = {
-  initiativeName: string;
-  countryName: string;
-};
-
-// Define as propriedades do componente GoogleMapComponent
-interface GoogleMapProps {
-  initiatives: Initiative[];
-  selectedCountries?: string[]; // Aceita uma lista de países selecionados
+interface Initiative {
+  country: string;
+  name: string;
+  [key: string]: any;
 }
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "100%",
-};
+interface MapComponentProps {
+  initiatives: Initiative[];
+  selectedCountries: string[];
+}
 
-// Centro aproximado para visualizar América do Sul
-const center: LatLngTuple = [-15, -60];
-
-const GoogleMapComponent: React.FC<GoogleMapProps> = ({
+const MapComponent: React.FC<MapComponentProps> = ({
   initiatives,
   selectedCountries,
 }) => {
-  const [countriesData, setCountriesData] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [geoJsonData, setGeoJsonData] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
-    // Função para buscar os dados GeoJSON de cada país
-    const fetchGeoJson = async () => {
-      try {
-        const countries = [
-          { name: "Brazil", url: "/BRA.geo.json" },
-          { name: "Argentina", url: "/ARG.geo.json" },
-          { name: "Peru", url: "/PER.geo.json" },
-          { name: "Colombia", url: "/COL.geo.json" },
-          { name: "Chile", url: "/CHL.geo.json" },
-          { name: "Uruguay", url: "/URY.geo.json" },
-          { name: "Paraguay", url: "/PRY.geo.json" },
-          { name: "Bolivia", url: "/BOL.geo.json" },
-          { name: "Venezuela", url: "/VEN.geo.json" },
-          { name: "Ecuador", url: "/ECU.geo.json" },
-          { name: "Guyana", url: "/GUY.geo.json" },
-          { name: "Suriname", url: "/SUR.geo.json" },
-          { name: "French Guiana", url: "/GUF.geo.json" },
-          { name: "United States", url: "/USA.geo.json" },
-          { name: "Canada", url: "/CAN.geo.json" },
-          { name: "Mexico", url: "/MEX.geo.json" },
-          // Adicione mais países conforme necessário
-        ];
+    const loadGeoJsonData = async () => {
+      const loadedData: { [key: string]: any } = {};
 
-        const geoJsonData = await Promise.all(
-          countries.map(async (country) => {
-            const response = await fetch(country.url);
+      for (const country of selectedCountries) {
+        const countryCode = getCountryCode(country);
+        if (countryCode) {
+          try {
+            const response = await fetch(`/${countryCode}.geo.json`);
             const data = await response.json();
-            return { countryName: country.name, data };
-          })
-        );
-
-        setCountriesData(geoJsonData);
-      } catch (error) {
-        console.error("Erro ao buscar dados GeoJSON", error);
+            loadedData[country] = data;
+          } catch (error) {
+            console.error(`Error loading GeoJSON for ${country}:`, error);
+          }
+        }
       }
+
+      setGeoJsonData(loadedData);
     };
 
-    fetchGeoJson();
-  }, []);
+    loadGeoJsonData();
+  }, [selectedCountries]);
 
-  // Função para definir o estilo de cada país
-  const getStyle = (countryName: string) => {
-    if (selectedCountries?.includes(countryName)) {
-      return {
-        color: "#ff0000", // Borda vermelha para os países selecionados
-        weight: 2,
-        fillColor: "#ffcccc", // Preenchimento vermelho claro
-        fillOpacity: 1,
-      };
-    } else {
-      return {
-        color: "#000000", // Borda preta para países não selecionados
-        weight: 1,
-        fillColor: "none", // Sem preenchimento
-        fillOpacity: 0,
-      };
-    }
+  const handleViewAllData = () => {
+    navigate("/buscaone?category=initiatives&question=all_initiatives");
+  };
+
+  const getCountryStyle = (country: string) => {
+    const isSelected = selectedCountries.includes(country);
+    return {
+      fillColor: isSelected ? "#FF4081" : "#cccccc",
+      fillOpacity: isSelected ? 0.6 : 0.3,
+      color: "white",
+      weight: 1,
+    };
+  };
+
+  const handleCountryClick = (country: string) => {
+    navigate(
+      `/buscaone?category=initiatives&question=country_initiatives&country=${country}`
+    );
+  };
+
+  // Função auxiliar para obter o código do país
+  const getCountryCode = (country: string): string => {
+    const countryMap: { [key: string]: string } = {
+      Brazil: "BRA",
+      Argentina: "ARG",
+      Chile: "CHL",
+      Peru: "PER",
+      Bolivia: "BOL",
+      Colombia: "COL",
+    };
+    return countryMap[country] || "";
   };
 
   return (
-    <MapContainer style={mapContainerStyle} center={center} zoom={4} scrollWheelZoom={true}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      {countriesData.map((country, index) => (
-        <GeoJSON key={index} data={country.data} style={() => getStyle(country.countryName)} />
-      ))}
-    </MapContainer>
+    <div className="relative w-full h-full">
+      <div className="absolute top-0 left-0 z-10 p-4 bg-white/90 rounded-lg m-4 max-w-md">
+        <Text size="md" className="font-semibold mb-2">
+          Initiatives by Country
+        </Text>
+        <Text size="md" className="mb-4">
+          Explore initiatives supporting women in STEM across Latin America
+        </Text>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={handleViewAllData}
+          className="text-sm"
+        >
+          View All Data
+        </Button>
+      </div>
+
+      <MapContainer
+        center={[-15.7801, -47.9292]} // Center on Brazil
+        zoom={4}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+
+        {Object.entries(geoJsonData).map(([country, data]) => (
+          <GeoJSON
+            key={country}
+            data={data}
+            style={() => getCountryStyle(country)}
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                click: () => handleCountryClick(country),
+                mouseover: (e) => {
+                  const layer = e.target;
+                  layer.setStyle({
+                    fillOpacity: 0.8,
+                  });
+                },
+                mouseout: (e) => {
+                  const layer = e.target;
+                  layer.setStyle(getCountryStyle(country));
+                },
+              });
+
+              const initiativesCount = initiatives.filter(
+                (i) => i.country === country
+              ).length;
+
+              layer.bindPopup(`
+                <strong>${country}</strong><br/>
+                Initiatives: ${initiativesCount}
+              `);
+            }}
+          />
+        ))}
+      </MapContainer>
+    </div>
   );
 };
 
-export default GoogleMapComponent;
+export default MapComponent;

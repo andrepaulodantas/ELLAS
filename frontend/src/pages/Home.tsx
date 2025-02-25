@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Img, Heading, Text } from "../components"; // Ajuste esses imports conforme a estrutura do seu projeto
-import { fetchInitiativesByCountry } from '../services/apiService';
-
+import { Button, Img, Heading, Text, Slider } from "../components";
+import Header from "../components/Header";
+import { motion } from "framer-motion";
+import { fetchInitiativesByCountry } from "../services/apiService";
+import { Helmet } from "react-helmet";
 
 const HomePage: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,13 +15,13 @@ const HomePage: React.FC = () => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
 
-    fetchInitiativesByCountry('Brazil')
+    fetchInitiativesByCountry("Brazil")
       .then((data) => {
         setInitiatives(data.results.bindings);
         setLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setLoading(false);
       });
   }, []);
@@ -29,155 +31,211 @@ const HomePage: React.FC = () => {
     setIsLoggedIn(false);
   };
 
+  const categories = [
+    {
+      title: "Políticas",
+      description:
+        "Políticas e medidas implementadas nos países da América Latina para inclusão de mulheres na STEM",
+      icon: "images/img_iconx24_white_a700.svg",
+      bgColor: "bg-red-300",
+    },
+    {
+      title: "Iniciativas",
+      description:
+        "Eventos, programas e outras ações para a inserção e retenção de mulheres em carreiras tecnológicas",
+      icon: "images/img_iconx24_white_a700.svg",
+      bgColor: "bg-deep_orange-200",
+    },
+    {
+      title: "Fatores",
+      description:
+        "Descubra os principais fatores que impactam a liderança feminina na América Latina",
+      icon: "images/img_iconx24_white_a700.svg",
+      bgColor: "bg-pink-300",
+    },
+  ];
+
+  const featuredData = [
+    {
+      title: "Fatores de impacto mais recorrentes",
+      description:
+        "Conheça os principais fatores que influenciam na liderança feminina na tecnologia",
+      image: "images/img_mask_group.png",
+    },
+    {
+      title: "Aumento de iniciativas para mulheres no Brasil",
+      description: "Entenda como tem evoluído o apoio às mulheres em STEM",
+      image: "images/img_mask_group.png",
+    },
+    {
+      title: "Dados essenciais sobre equidade de gênero",
+      description:
+        "O portal reúne quantidade de dados por país sobre equidade de gênero",
+      image: "images/img_mask_group.png",
+    },
+  ];
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <header className="w-full p-3 bg-white-A700 shadow-xs fixed top-0 left-0 z-10">
-        <div className="container mx-auto flex justify-between items-center">
-          <Img src="images/img_logo_ellas_portal_prancheta.png" alt="Logo" className="h-12"/>
-          <nav>
-            <ul className="flex items-center space-x-4">
-              <li><Link to="/" className="text-blue-700 hover:text-blue-900"><Heading as="p">Início</Heading></Link></li>
-              {isLoggedIn ? (
-                <li><Button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded">Logout</Button></li>
-              ) : (
-                <li><Link to="/login"><Button className="bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded">Login</Button></Link></li>
-              )}
-            </ul>
-          </nav>
-        </div>
-      </header>
-      <main className="pt-20 p-5 w-full flex flex-col items-center justify-start">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10">
-          <Link to="/buscaone" className="p-6 bg-blue-100 hover:bg-blue-200 transition duration-300 ease-in-out rounded-lg shadow-lg text-center">
-            <Heading as="h3">Busca One</Heading>
-            <Text>Descrição da Busca One.</Text>
-          </Link>
-          <Link to="/buscatwo" className="p-6 bg-green-100 hover:bg-green-200 transition duration-300 ease-in-out rounded-lg shadow-lg text-center">
-            <Heading as="h3">Busca Two</Heading>
-            <Text>Descrição da Busca Two.</Text>
-          </Link>
-          <Link to="/buscatwoone" className="p-6 bg-red-100 hover:bg-red-200 transition duration-300 ease-in-out rounded-lg shadow-lg text-center">
-            <Heading as="h3">Busca Two One</Heading>
-            <Text>Descrição da Busca Two One.</Text>
-          </Link>
-        </div>        
-      </main>
-      <div className="flex flex-row justify-center w-full">
-        <div className="flex flex-col items-center justify-start w-full">
-          <Img src="images/img_group_22.svg" alt="image_one" className="h-[19px] z-[1]" />
-          <div className="flex flex-row justify-center w-full mt-[-18px] px-14 py-[65px] md:p-5 bg-gray-800_02">
-            <div className="flex flex-row md:flex-col justify-between items-center w-full md:gap-10 max-w-[1021px]">
-              <div className="flex flex-col items-start justify-start w-[19%] md:w-full">
-                <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
-                  Contatos
-                </Text>
-                <Text size="xl" as="p" className="w-[87%] mt-2.5 !text-white-A700 !leading-5">
-                  <>
-                    www.ellas.ufmt.br
-                    <br />
-                    @Ellas.network
-                    <br />
-                    ellas.latinamerica@gmail.com
-                  </>
-                </Text>
-                <Text as="p" className="mt-[30px] ml-[3px] md:ml-0 !text-deep_orange-200 !font-medium">
-                  Conecte-se ao ELLAS
-                </Text>
+    <>
+      <Helmet>
+        <title>ELLAS - Home</title>
+        <meta
+          name="description"
+          content="Web site created using create-react-app"
+        />
+      </Helmet>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <div className="flex-grow">
+          {/* Hero Section */}
+          <section className="relative w-full h-[500px] bg-gradient-to-r from-pink-100 to-purple-100">
+            <div className="container mx-auto px-4 h-full flex items-center">
+              <div className="w-1/2 pr-8">
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-4xl font-bold mb-4"
+                >
+                  Dados abertos para Equidade de Gênero em Ciência e Tecnologia
+                  na América Latina
+                </motion.h1>
+                <Button
+                  className="mt-6"
+                  shape="round"
+                  size="lg"
+                  onClick={() => (window.location.href = "#explore")}
+                >
+                  Explorar
+                </Button>
+              </div>
+              <div className="w-1/2">
                 <Img
-                  src="images/img_group_24.svg"
-                  alt="image_two"
-                  className="h-[26px] mt-[15px] ml-1 md:ml-0"
+                  src="images/img_hero_image.png"
+                  alt="Hero"
+                  className="w-full h-auto"
                 />
               </div>
-              <div className="flex flex-col items-end justify-start w-[74%] md:w-full mb-1">
-                <div className="flex flex-row justify-between items-start w-[81%] md:w-full">
-                  <div className="flex flex-col items-center justify-start">
-                    <Heading size="s" as="p" className="!text-white-A700 text-center">
-                      Patrocínio
+            </div>
+          </section>
+
+          {/* Explore Categories Section */}
+          <section id="explore" className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <Heading size="2xl" as="h2" className="text-center mb-12">
+                Explore os dados
+              </Heading>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {categories.map((category, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.05 }}
+                    className={`${category.bgColor} rounded-[20px] p-6 text-white h-[290px] flex flex-col justify-between`}
+                  >
+                    <Img
+                      src={category.icon}
+                      alt={category.title}
+                      className="w-6 h-6"
+                    />
+                    <div>
+                      <Heading
+                        size="xl"
+                        as="h3"
+                        className="!text-white-A700 mb-4"
+                      >
+                        {category.title}
+                      </Heading>
+                      <Text as="p" className="!text-white-A700">
+                        {category.description}
+                      </Text>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Featured Data Section */}
+          <section className="py-16 bg-red-50">
+            <div className="container mx-auto px-4">
+              <Heading size="2xl" as="h2" className="text-center mb-12">
+                Dados em destaque
+              </Heading>
+              <Text as="p" className="text-center mb-8">
+                Selecione uma das perguntas mais pesquisadas para começar.
+              </Text>
+              <Slider
+                autoPlay
+                autoPlayInterval={3000}
+                responsive={{
+                  0: { items: 1 },
+                  768: { items: 2 },
+                  1024: { items: 3 },
+                }}
+                className="w-full"
+              >
+                {featuredData.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-white rounded-[20px] shadow-md p-6 m-2"
+                  >
+                    <Img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-48 object-cover rounded-t-lg mb-4"
+                    />
+                    <Heading size="lg" as="h3" className="mb-2">
+                      {item.title}
                     </Heading>
-                    <Img
-                      src="images/img_idrc_logo_branca.png"
-                      alt="idrclogo_one"
-                      className="w-full md:h-auto sm:w-full mt-[3px] object-cover"
-                    />
-                    <Heading size="s" as="p" className="mt-[27px] !text-white-A700 text-center">
-                      Instituições Participantes
-                    </Heading>
-                  </div>
-                  <div className="flex flex-col items-end justify-start w-[24%] mt-[5px] gap-[3px]">
-                    <Text as="p" className="!text-deep_orange-200 text-right !font-medium">
-                      Links Úteis
+                    <Text as="p" className="text-gray-600">
+                      {item.description}
                     </Text>
-                    <Text
-                      size="xl"
-                      as="p"
-                      className="w-[88%] !text-white-A700 text-right !font-medium !leading-[29px]"
-                    >
-                      <>
-                        Acessibilidade na Web
-                        <br />
-                        Termos de Uso
-                        <br />
-                        Política de Privacidade
-                      </>
-                    </Text>
-                  </div>
-                </div>
-                <div className="flex flex-row md:flex-col justify-between items-center w-full mt-[-2px] md:gap-10">
-                  <div className="flex flex-row sm:flex-col justify-start items-center gap-2.5 sm:gap-5">
-                    <Img
-                      src="images/img_ufmt_oficial_branca.png"
-                      alt="ufmtoficial_one"
-                      className="w-[17%] md:h-auto sm:w-full object-cover"
-                    />
-                    <Img
-                      src="images/img_uftpr_branca.png"
-                      alt="uftprbranca_one"
-                      className="w-[14%] md:h-auto sm:w-full object-cover"
-                    />
-                    <Img
-                      src="images/img_vertical_extens.png"
-                      alt="verticalextens"
-                      className="w-[11%] md:h-auto sm:w-full object-cover"
-                    />
-                    <Img
-                      src="images/img_logouff_vertica.png"
-                      alt="logouffvertica"
-                      className="w-[39px] md:h-auto sm:w-full object-cover"
-                    />
-                    <Img
-                      src="images/img_200px_universid.png"
-                      alt="200pxuniversid"
-                      className="w-[48px] md:h-auto sm:w-full object-cover"
-                    />
-                    <Img
-                      src="images/img_negro_horizontal_nac_branca.png"
-                      alt="negro_one"
-                      className="w-[23%] md:h-auto sm:w-full object-cover"
-                    />
-                    <Img
-                      src="images/img_blancopeq.png"
-                      alt="blancopeq_one"
-                      className="w-[8%] md:h-auto sm:w-full object-cover"
-                    />
-                  </div>
-                  <Text size="xl" as="p" className="w-[21%] !text-deep_orange-200 text-right">
-                    <>
-                      Todos os direitos reservados
-                      <br />© 2024 ELLAS
-                    </>
+                  </motion.div>
+                ))}
+              </Slider>
+            </div>
+          </section>
+
+          {/* Latin America Map Section */}
+          <section className="py-16">
+            <div className="container mx-auto px-4">
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="w-full md:w-1/2">
+                  <Heading size="2xl" as="h2" className="mb-6">
+                    América Latina em foco!
+                  </Heading>
+                  <Text as="p" className="mb-6">
+                    O portal ELLAS para divulgação aberta concentra dados sobre
+                    fatores de gênero na América Latina. De origem a coleta de
+                    dados de iniciativas de até 10 anos de atuação.
                   </Text>
+                  <Text as="p" className="mb-6">
+                    Um país representado no mapa abaixo é possível mapear e
+                    mensurar dados e informações, resultados obtidos e
+                    conclusões a correlação em mais setores de educação STEM na
+                    América do Sul.
+                  </Text>
+                  <Button shape="round" size="lg">
+                    Saiba mais
+                  </Button>
+                </div>
+                <div className="w-full md:w-1/2">
+                  <Img
+                    src="images/map_south_america.svg"
+                    alt="Mapa da América Latina"
+                    className="w-full h-auto"
+                  />
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

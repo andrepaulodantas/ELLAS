@@ -1,15 +1,65 @@
 import React, { useEffect, useRef, useState } from "react";
-import { DataSet, Network } from "vis-network/standalone/esm/vis-network";
-import { fetchInitiativesByCountry as fetchInitiatives, fetchPoliciesAppliedInCountries as fetchPolicies } from "../services/apiService";
+import {
+  DataSet,
+  Network,
+  Edge,
+  Node,
+  Data,
+  Options,
+} from "vis-network/standalone/esm/vis-network";
+import {
+  fetchInitiativesByCountry as fetchInitiatives,
+  fetchPoliciesAppliedInCountries as fetchPolicies,
+} from "../services/apiService";
 import { useLocation, Link } from "react-router-dom";
 import { Text, Img, Heading } from "../components";
 import "./GraphView.css";
-import { PDFDownloadLink, Document, Page, View, Text as PdfText, StyleSheet } from '@react-pdf/renderer';
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  View,
+  Text as PdfText,
+  StyleSheet,
+} from "@react-pdf/renderer";
+
+interface GraphNode extends Node {
+  id: string;
+  label: string;
+}
+
+interface GraphEdge extends Edge {
+  id: string;
+  from: string;
+  to: string;
+}
+
+interface TableRow {
+  label: string;
+  centralNodeId: string;
+}
+
+interface GraphData {
+  nodes: GraphNode[];
+  links: GraphEdge[];
+}
+
+interface Binding {
+  [key: string]: {
+    value: string;
+  };
+}
+
+interface ApiResponse {
+  results: {
+    bindings: Binding[];
+  };
+}
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'column',
-    backgroundColor: '#ffffff',
+    flexDirection: "column",
+    backgroundColor: "#ffffff",
     padding: 10,
   },
   section: {
@@ -20,40 +70,48 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subtitle: {
     fontSize: 18,
     marginBottom: 10,
   },
   table: {
-    display: 'flex',
-    width: 'auto',
-    borderStyle: 'solid',
-    borderColor: '#bfbfbf',
+    display: "flex",
+    width: "auto",
+    borderStyle: "solid",
+    borderColor: "#bfbfbf",
     borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
   },
   tableRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   tableCol: {
     flex: 1,
-    borderStyle: 'solid',
-    borderColor: '#bfbfbf',
+    borderStyle: "solid",
+    borderColor: "#bfbfbf",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   tableCell: {
-    margin: 'auto',
+    margin: "auto",
     marginTop: 5,
     fontSize: 10,
   },
 });
 
-const PDFGenerator = ({ tableData, queryType }) => (
+interface PDFGeneratorProps {
+  tableData: TableRow[];
+  queryType: string;
+}
+
+const PDFGenerator: React.FC<PDFGeneratorProps> = ({
+  tableData,
+  queryType,
+}) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
@@ -84,43 +142,62 @@ const PDFGenerator = ({ tableData, queryType }) => (
   </Document>
 );
 
-const GraphView = ({ queryType }) => {
-  const graphContainer = useRef(null);
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
-  const [tableData, setTableData] = useState([]);
+interface GraphViewProps {
+  queryType: string;
+}
+
+const GraphView: React.FC<GraphViewProps> = ({ queryType }) => {
+  const networkContainer = useRef<HTMLDivElement>(null);
+  const [graphData, setGraphData] = useState<GraphData>({
+    nodes: [],
+    links: [],
+  });
+  const [tableData, setTableData] = useState<TableRow[]>([]);
   const location = useLocation();
 
   useEffect(() => {
     const pathToFunctionMap = {
-      "policies": fetchPolicies,
-      "initiatives": fetchInitiatives,
+      policies: fetchPolicies,
+      initiatives: fetchInitiatives,
     };
 
-    const loadGraphData = async (fetchFunction) => {
+    const loadGraphData = async (fetchFunction: () => Promise<ApiResponse>) => {
       try {
         const data = await fetchFunction();
         console.log(`Data fetched for queryType: ${queryType}`, data);
-        if (data && data.results && data.results.bindings) {
-          const nodes = [];
-          const links = [];
-          const tableRows = [];
-          const centralNodeId = queryType === 'initiatives' ? "" : "";
+        if (data?.results?.bindings) {
+          const nodes: GraphNode[] = [];
+          const links: GraphEdge[] = [];
+          const tableRows: TableRow[] = [];
+          const centralNodeId =
+            queryType === "initiatives" ? "Brazil" : "Policy";
 
           data.results.bindings.forEach((binding, index) => {
-            const labelKey = Object.keys(binding).find(key => key.includes('Name') || key.includes('Type') || key.includes('Results'));
+            const labelKey = Object.keys(binding).find(
+              (key) =>
+                key.includes("Name") ||
+                key.includes("Type") ||
+                key.includes("Results")
+            );
+
+            if (!labelKey) return;
+
             const label = binding[labelKey]?.value || `Node${index}`;
 
-            if (!nodes.find(node => node.id === label)) {
+            if (!nodes.find((node) => node.id === label)) {
               nodes.push({ id: label, label });
             }
 
-            if (!nodes.find(node => node.id === centralNodeId)) {
+            if (!nodes.find((node) => node.id === centralNodeId)) {
               nodes.push({ id: centralNodeId, label: centralNodeId });
             }
 
-            links.push({ from: label, to: centralNodeId });
+            links.push({
+              id: `edge_${index}`,
+              from: label,
+              to: centralNodeId,
+            });
 
-            // Construct table rows
             tableRows.push({ label, centralNodeId });
           });
 
@@ -128,12 +205,12 @@ const GraphView = ({ queryType }) => {
           setTableData(tableRows);
         } else {
           console.error("Invalid data format:", data);
-          setGraphData({ nodes: [], links: [] }); // Reset graph data if no data is fetched
+          setGraphData({ nodes: [], links: [] });
           setTableData([]);
         }
       } catch (error) {
         console.error("Error loading graph data:", error);
-        setGraphData({ nodes: [], links: [] }); // Reset graph data if there's an error
+        setGraphData({ nodes: [], links: [] });
         setTableData([]);
       }
     };
@@ -143,26 +220,42 @@ const GraphView = ({ queryType }) => {
   }, [location.pathname, queryType]);
 
   useEffect(() => {
-    if (graphData.nodes.length === 0 || graphData.links.length === 0 || !graphContainer.current) return;
+    if (!networkContainer.current || graphData.nodes.length === 0) return;
 
-    const nodes = new DataSet(graphData.nodes);
-    const edges = new DataSet(graphData.links);
+    const nodes = new DataSet<GraphNode>(
+      graphData.nodes.map((node) => ({
+        id: node.id,
+        label: node.label,
+      }))
+    );
 
-    const data = { nodes, edges };
-    const options = {
+    const edges = new DataSet<GraphEdge>(
+      graphData.links.map((edge) => ({
+        id: edge.id,
+        from: edge.from,
+        to: edge.to,
+      }))
+    );
+
+    const networkData: Data = {
+      nodes: nodes as any,
+      edges: edges as any,
+    };
+
+    const options: Options = {
       nodes: {
         shape: "dot",
         size: 15,
         color: {
           background: "lightgreen",
-          border: "blue"
+          border: "blue",
         },
         font: {
           size: 12,
           color: "#000000",
           face: "Arial",
           bold: {
-            color: "#000000"
+            color: "#000000",
           },
         },
         borderWidth: 2,
@@ -172,18 +265,18 @@ const GraphView = ({ queryType }) => {
             min: 10,
             max: 14,
             drawThreshold: 5,
-            maxVisible: 20
+            maxVisible: 20,
           },
-        }
+        },
       },
       edges: {
         color: "lightblue",
-        width: 2
+        width: 2,
       },
       interaction: {
         zoomView: true,
         dragView: true,
-        dragNodes: true // Allow nodes to be draggable
+        dragNodes: true,
       },
       physics: {
         enabled: true,
@@ -204,10 +297,10 @@ const GraphView = ({ queryType }) => {
       },
     };
 
-    const network = new Network(graphContainer.current, data, options);
+    const network = new Network(networkContainer.current, networkData, options);
 
-    network.once('stabilized', function () {
-      network.focus(queryType === 'initiatives' ? "Brazil" : "Policy", {
+    network.once("stabilized", function () {
+      network.focus(queryType === "initiatives" ? "Brazil" : "Policy", {
         scale: 1,
         offset: { x: 0, y: 0 },
         animation: true,
@@ -223,51 +316,137 @@ const GraphView = ({ queryType }) => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <header className="w-full p-3 bg-white-A700 shadow-xs fixed top-0 left-0 z-10">
         <div className="container mx-auto flex justify-between items-center">
-          <Img src="images/img_logo_ellas_portal_prancheta.png" alt="Logo" className="h-12"/>
+          <Img
+            src="images/img_logo_ellas_portal_prancheta.png"
+            alt="Logo"
+            className="h-12"
+          />
           <nav>
             <ul className="flex items-center space-x-4">
-              <li><Link to="/" className="text-blue-700 hover:text-blue-900"><Heading as="p">Início</Heading></Link></li>
-              <li><Link to="/graph-view" className="text-blue-700 hover:text-blue-900"><Heading as="p">Initiatives</Heading></Link></li>
-              <li><Link to="/policies-by-country" className="text-blue-700 hover:text-blue-900"><Heading as="p">Policies by Country</Heading></Link></li>
-              <li><Link to="/policy-types" className="text-blue-700 hover:text-blue-900"><Heading as="p">Policy Types</Heading></Link></li>
-              <li><Link to="/policy-results" className="text-blue-700 hover:text-blue-900"><Heading as="p">Policy Results</Heading></Link></li>
-              <li><Link to="/policies-by-country-and-date" className="text-blue-700 hover:text-blue-900"><Heading as="p">Policies by Country and Date</Heading></Link></li>
+              <li>
+                <Link to="/" className="text-blue-700 hover:text-blue-900">
+                  <Heading as="p">Início</Heading>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/graph-view"
+                  className="text-blue-700 hover:text-blue-900"
+                >
+                  <Heading as="p">Initiatives</Heading>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/policies-by-country"
+                  className="text-blue-700 hover:text-blue-900"
+                >
+                  <Heading as="p">Policies by Country</Heading>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/policy-types"
+                  className="text-blue-700 hover:text-blue-900"
+                >
+                  <Heading as="p">Policy Types</Heading>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/policy-results"
+                  className="text-blue-700 hover:text-blue-900"
+                >
+                  <Heading as="p">Policy Results</Heading>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/policies-by-country-and-date"
+                  className="text-blue-700 hover:text-blue-900"
+                >
+                  <Heading as="p">Policies by Country and Date</Heading>
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>
       </header>
-      <div style={{ flex: '1 0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', backgroundColor: '#f0f0f0', paddingTop: '70px' }}>
-        <div style={{ width: '100%', height: 'calc(100vh - 140px)', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 0 10px rgba(0,0,0,0.1)', position: 'relative' }}>
+      <div
+        style={{
+          flex: "1 0 auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          backgroundColor: "#f0f0f0",
+          paddingTop: "70px",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            height: "calc(100vh - 140px)",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+            position: "relative",
+          }}
+        >
           {graphData.nodes.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '20px', border: '1px solid red', color: 'red' }}>
+            <div
+              style={{
+                textAlign: "center",
+                padding: "20px",
+                border: "1px solid red",
+                color: "red",
+              }}
+            >
               No data available for this query.
             </div>
           )}
-          <div ref={graphContainer} style={{ width: '100%', height: '70%' }} />
+          <div ref={networkContainer} className="w-full h-[600px]" />
           <div className="table-container">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Node</th>
-                  <th>Central Node</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((row, index) => (
-                  <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                    <td>{row.label}</td>
-                    <td>{row.centralNodeId}</td>
+            <div className="w-full overflow-x-auto">
+              <table className="min-w-full bg-white">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2">Node</th>
+                    <th className="px-4 py-2">Central Node</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <PDFDownloadLink document={<PDFGenerator tableData={tableData} queryType={queryType} />} fileName="graphview_report.pdf">
-                {({ blob, url, loading, error }) => (
-                  <button style={{ backgroundColor: 'red', color: 'white', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer' }}>
-                    {loading ? 'Carregando documento...' : 'Download PDF'}
-                  </button>
-                )}
+                </thead>
+                <tbody>
+                  {tableData.map((row, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "even-row" : "odd-row"}
+                    >
+                      <td>{row.label}</td>
+                      <td>{row.centralNodeId}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div style={{ textAlign: "center", marginTop: "20px" }}>
+              <PDFDownloadLink
+                document={
+                  <PDFGenerator tableData={tableData} queryType={queryType} />
+                }
+                fileName="graphview_report.pdf"
+              >
+                <button
+                  style={{
+                    backgroundColor: "red",
+                    color: "white",
+                    padding: "10px 20px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    opacity: 1,
+                  }}
+                >
+                  Download PDF
+                </button>
               </PDFDownloadLink>
             </div>
           </div>

@@ -16,15 +16,11 @@ import "chart.js/auto"; // Importação necessária para Chart.js
 import { getTabClass } from "../../utils/tabUtils";
 import { saveAs } from "file-saver";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
 
-type DropDownOption = {
-  label: string;
-  value: string;
-};
+type SelectOption = { value: string; label: string };
 
 const BuscaTwoOnePage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -37,7 +33,9 @@ const BuscaTwoOnePage = () => {
   }>({});
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>("ambos");
-  const isTimeDropdownEnabled = timeRelatedQuestions.includes(selectedQuestion);
+  const isTimeDropdownEnabled = selectedQuestion
+    ? timeRelatedQuestions.includes(selectedQuestion)
+    : false;
   const [selectedVisualization, setSelectedVisualization] =
     useState<string>("linhas");
 
@@ -134,7 +132,7 @@ const BuscaTwoOnePage = () => {
     setFilteredData(data); // Atualiza filteredData com os dados carregados
   }, [data]);
 
-  const handleCategoryChange = (option: DropDownOption | null) => {
+  const handleCategoryChange = (option: SelectOption | null) => {
     setSelectedCategory(option ? option.value : null);
     setSelectedQuestion(null);
     setData([]);
@@ -142,7 +140,7 @@ const BuscaTwoOnePage = () => {
     setCountryCounts({});
   };
 
-  const handleQuestionChange = (option: DropDownOption | null) => {
+  const handleQuestionChange = (option: SelectOption | null) => {
     setSelectedQuestion(option ? option.value : null);
   };
 
@@ -154,7 +152,7 @@ const BuscaTwoOnePage = () => {
     setCountryCounts({});
   };
 
-  const handleTimeChange = (option: DropDownOption | null) => {
+  const handleTimeChange = (option: SelectOption | null) => {
     setSelectedTime(option ? option.value : null);
   };
 
@@ -239,153 +237,159 @@ const BuscaTwoOnePage = () => {
     return <Line data={chartData} options={options} />;
   };
 
-
   return (
     <>
       <Helmet>
-        <title>ELLAS</title>
+        <title>ELLAS - Busca Avançada</title>
         <meta
           name="description"
           content="Web site created using create-react-app"
         />
       </Helmet>
-      <div className="flex flex-col items-center justify-start w-full bg-white-A700">
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="flex flex-col items-center justify-start w-full">
-          <div className="flex flex-col items-center justify-start w-full">
-            {/* Header Section */}
-            <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
-              <Heading size="2xl" as="h1" className="text-center">
-                Data Table
-              </Heading>
-            </div>
-
-            {/* Main Content Section */}
-            <div className="flex flex-row md:flex-col justify-between items-start w-full gap-10 px-6 sm:px-4 max-w-[1331px]">
-              {/* Sidebar Section */}
-              <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
-                <Button
-                  size="xs"
-                  variant="outline"
-                  className="mb-4 gap-2.5 w-full rounded-[35px]"
-                  onClick={handleReset}
-                >
-                  Restart
-                </Button>
-                <div className="flex flex-col gap-6">
-                  {/* Category Selection */}
-                  <div>
-                    <Text size="3xl" as="p" className="mb-2">
-                      Category
-                    </Text>
-                    <SelectBox
-                      shape="round"
-                      name="categoria"
-                      placeholder="Select Category"
-                      options={[
-                        { label: "Initiatives", value: "initiatives" },
-                        { label: "Policies", value: "policies" },
-                        { label: "Factors", value: "factors" },
-                      ]}
-                      value={
-                        selectedCategory
-                          ? { label: selectedCategory, value: selectedCategory }
-                          : null
-                      }
-                      onChange={handleCategoryChange}
-                      className="w-full border-gray-300_01 border rounded-md"
-                    />
-                  </div>
-
-                  {/* Question Selection */}
-                  <div>
-                    <Text size="3xl" as="p" className="mb-2">
-                      Question
-                    </Text>
-                    <SelectBox
-                      shape="round"
-                      name="pergunta"
-                      placeholder="Select Question"
-                      options={
-                        selectedCategory
-                          ? questionQueries[selectedCategory].map(
-                              (question) => ({
-                                label: question,
-                                value: question,
-                              })
-                            )
-                          : []
-                      }
-                      value={
-                        selectedQuestion
-                          ? { label: selectedQuestion, value: selectedQuestion }
-                          : null
-                      }
-                      onChange={handleQuestionChange}
-                      className="w-full border-gray-300_01 border rounded-md"
-                    />
-                  </div>                  
-                </div>
+        <div className="flex-grow">
+          <div className="flex flex-col items-center justify-start w-full bg-white-A700">
+            <div className="flex flex-col items-center justify-start w-full">
+              {/* Header Section */}
+              <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
+                <Heading size="2xl" as="h1" className="text-center">
+                  Data Table
+                </Heading>
               </div>
 
-              {/* Tabs Section */}
-              <div className="flex flex-col w-[70%] md:w-full">
-                <Tabs
-                  className="w-full"
-                  selectedTabClassName="!text-gray-700 font-medium border-gray-700 border-b-2 bg-white-A700"
-                  selectedTabPanelClassName="mt-4"
-                >
-                  <TabList className="flex flex-row gap-4 border-b">
-                    <Tab className="p-2 flex items-center gap-2">
-                      <Text as="p">Map</Text>
-                      <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
-                    </Tab>
-                    <Tab
-                      className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                        location.pathname,
-                        "/buscatwo"
-                      )}`}
-                      onClick={() => navigate("/buscatwo")}
-                    >
-                      <Text as="p">Bars</Text>
-                      <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
-                    </Tab>
+              {/* Main Content Section */}
+              <div className="flex flex-row md:flex-col justify-between items-start w-full gap-10 px-6 sm:px-4 max-w-[1331px]">
+                {/* Sidebar Section */}
+                <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    className="mb-4 gap-2.5 w-full rounded-[35px]"
+                    onClick={handleReset}
+                  >
+                    Restart
+                  </Button>
+                  <div className="flex flex-col gap-6">
+                    {/* Category Selection */}
+                    <div>
+                      <Text size="3xl" as="p" className="mb-2">
+                        Category
+                      </Text>
+                      <SelectBox
+                        shape="round"
+                        name="categoria"
+                        placeholder="Select Category"
+                        options={[
+                          { label: "Initiatives", value: "initiatives" },
+                          { label: "Policies", value: "policies" },
+                          { label: "Factors", value: "factors" },
+                        ]}
+                        value={
+                          selectedCategory
+                            ? {
+                                label: selectedCategory,
+                                value: selectedCategory,
+                              }
+                            : null
+                        }
+                        onChange={handleCategoryChange}
+                        className="w-full border-gray-300_01 border rounded-md"
+                      />
+                    </div>
 
-                    <Tab
-                      className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                        location.pathname,
-                        "/buscatwoone"
-                      )}`}
-                      onClick={() => navigate("/buscatwoone")}
-                    >
-                      <Text as="p">Lines</Text>
-                      <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
-                    </Tab>
-                  </TabList>
-
-                  {/* Main Content */}
-                  {/* Chart Section */}
-                  <div className="mt-8 p-6">
-                    <Text size="xl" as="p" className="mb-4 text-center">
-                      {selectedVisualization === "barras"
-                        ? "Bar Chart by Country"
-                        : "Line Chart by Country"}
-                    </Text>
-                    <div className="w-full">{renderChart()}</div>
+                    {/* Question Selection */}
+                    <div>
+                      <Text size="3xl" as="p" className="mb-2">
+                        Question
+                      </Text>
+                      <SelectBox
+                        shape="round"
+                        name="pergunta"
+                        placeholder="Select Question"
+                        options={
+                          selectedCategory
+                            ? questionQueries[selectedCategory].map(
+                                (question) => ({
+                                  label: question,
+                                  value: question,
+                                })
+                              )
+                            : []
+                        }
+                        value={
+                          selectedQuestion
+                            ? {
+                                label: selectedQuestion,
+                                value: selectedQuestion,
+                              }
+                            : null
+                        }
+                        onChange={handleQuestionChange}
+                        className="w-full border-gray-300_01 border rounded-md"
+                      />
+                    </div>
                   </div>
-                </Tabs>
+                </div>
 
-                {/* Data Table Section */}
-                <DataTable
-                  data={filteredData}
-                  dynamicFields={dynamicFields}
-                  exportTableDataToCSV={exportTableDataToCSV}
-                />
+                {/* Tabs Section */}
+                <div className="flex flex-col w-[70%] md:w-full">
+                  <Tabs
+                    className="w-full"
+                    selectedTabClassName="!text-gray-700 font-medium border-gray-700 border-b-2 bg-white-A700"
+                    selectedTabPanelClassName="mt-4"
+                  >
+                    <TabList className="flex flex-row gap-4 border-b">
+                      <Tab className="p-2 flex items-center gap-2">
+                        <Text as="p">Map</Text>
+                        <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
+                      </Tab>
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwo"
+                        )}`}
+                        onClick={() => navigate("/buscatwo")}
+                      >
+                        <Text as="p">Bars</Text>
+                        <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
+                      </Tab>
+
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwoone"
+                        )}`}
+                        onClick={() => navigate("/buscatwoone")}
+                      >
+                        <Text as="p">Lines</Text>
+                        <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
+                      </Tab>
+                    </TabList>
+
+                    {/* Main Content */}
+                    {/* Chart Section */}
+                    <div className="mt-8 p-6">
+                      <Text size="xl" as="p" className="mb-4 text-center">
+                        {selectedVisualization === "barras"
+                          ? "Bar Chart by Country"
+                          : "Line Chart by Country"}
+                      </Text>
+                      <div className="w-full">{renderChart()}</div>
+                    </div>
+                  </Tabs>
+
+                  {/* Data Table Section */}
+                  <DataTable
+                    data={filteredData}
+                    dynamicFields={dynamicFields}
+                    exportTableDataToCSV={exportTableDataToCSV}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );

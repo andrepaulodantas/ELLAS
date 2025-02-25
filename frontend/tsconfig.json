@@ -6,17 +6,21 @@
       "@/*": ["*"]
     },
     "useDefineForClassFields": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "sourceMap": true,
     "noImplicitAny": false,
     "module": "ESNext",
     "target": "ES2015",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "noEmit": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

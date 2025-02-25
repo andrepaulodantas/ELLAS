@@ -1,114 +1,94 @@
-import React from "react";
-import Select, { Props } from "react-select";
+import React, { forwardRef } from "react";
+import Select, { ActionMeta } from "react-select";
 
-const shapes = {
-  round: "rounded-[10px]",
-} as const;
-const variants = {
-  fill: {
-    white_A700: "bg-white-A700 text-gray-900",
-  },
-} as const;
-const sizes = {
-  xs: "h-[41px] px-[35px] text-sm",
-} as const;
+export interface SelectOption {
+  value: string;
+  label: string;
+}
 
-type selectOptionType = { value: string; label: string };
-type SelectProps = Omit<Props, "getOptionLabel"> &
-  Partial<{
-    className: string;
-    options: selectOptionType[];
-    isSearchable: boolean;
-    isMulti: boolean;
-    onChange: (option: any) => void;
-    value: string;
-    indicator: React.ReactElement;
-    getOptionLabel: (e: any) => string;
-    [x: string]: any;
-    shape: keyof typeof shapes;
-    variant: keyof typeof variants;
-    size: keyof typeof sizes;
-    color: keyof (typeof variants)[keyof typeof variants];
-  }>;
+interface SelectBoxProps {
+  options: SelectOption[];
+  value?: SelectOption | null;
+  onChange?: (
+    option: SelectOption | null,
+    actionMeta?: ActionMeta<SelectOption>
+  ) => void;
+  className?: string;
+  indicator?: React.ReactNode;
+  name?: string;
+  placeholder?: string;
+  shape?: string;
+  size?: string;
+  variant?: string;
+  color?: string;
+  isMulti?: boolean;
+  [key: string]: any;
+}
 
-const SelectBox = React.forwardRef<any, SelectProps>(
+const SelectBox = forwardRef<any, SelectBoxProps>(
   (
     {
-      children,
       className = "",
-      options = [],
-      isSearchable = false,
-      isMulti = false,
       indicator,
+      name = "",
+      options = [],
+      placeholder = "Select",
       shape = "",
-      size = "xs",
-      variant = "fill",
-      color = "white_A700",
+      size = "",
+      variant = "",
+      color = "",
+      onChange,
+      value,
+      isMulti = false,
       ...restProps
     },
-    ref,
+    ref
   ) => {
+    const getClassName = () => {
+      const shapes: { [key: string]: string } = {
+        round: "rounded",
+        square: "square",
+      };
+      const sizes: { [key: string]: string } = {
+        sm: "py-1 px-2 text-sm",
+        md: "py-2 px-4",
+        lg: "py-3 px-6 text-lg",
+      };
+      const variants: { [key: string]: string } = {
+        fill: "bg-white",
+        outline: "border border-gray-300",
+      };
+      const colors: { [key: string]: string } = {
+        white_A700: "bg-white-A700 text-gray-900",
+        gray_900: "bg-gray-900 text-white",
+      };
+
+      return `${className} ${shapes[shape] || ""} ${sizes[size] || ""} ${
+        variants[variant] || ""
+      } ${colors[color] || ""}`;
+    };
+
     return (
-      <>
-        <Select
-          ref={ref}
-          options={options}
-          className={`${className} flex ${(shape && shapes[shape]) || ""} ${(size && sizes[size]) || ""} ${(variant && variants[variant]?.[color as keyof (typeof variants)[typeof variant]]) || ""}`}
-          isSearchable={isSearchable}
-          isMulti={isMulti}
-          components={{
-            IndicatorSeparator: () => null,
-            ...(indicator && { DropdownIndicator: () => indicator }),
-          }}
-          styles={{
-            container: (provided) => ({
-              ...provided,
-              zIndex: 0,
-            }),
-            control: (provided) => ({
-              ...provided,
-              backgroundColor: "transparent",
-              border: "0 !important",
-              boxShadow: "0 !important",
-              minHeight: "auto",
-              width: "100%",
-              "&:hover": {
-                border: "0 !important",
-              },
-            }),
-            input: (provided) => ({
-              ...provided,
-              color: "inherit",
-            }),
-            option: (provided, state) => ({
-              ...provided,
-              backgroundColor: state.isSelected && "#6c567b",
-              color: state.isSelected && "#ffffff",
-              "&:hover": {
-                backgroundColor: "#6c567b",
-                color: "#ffffff",
-              },
-            }),
-            valueContainer: (provided) => ({
-              ...provided,
-              padding: 0,
-            }),
-            placeholder: (provided) => ({
-              ...provided,
-              margin: 0,
-            }),
-            menuPortal: (base) => ({ ...base, zIndex: 999999 }),
-          }}
-          menuPortalTarget={document.body}
-          closeMenuOnScroll={(event: any) => {
-            return event.target.id === "scrollContainer";
-          }}
-          {...restProps}
-        />
-        {children}
-      </>
+      <Select
+        ref={ref}
+        options={options}
+        className={getClassName()}
+        placeholder={placeholder}
+        isMulti={isMulti}
+        value={value}
+        onChange={(newValue: any, actionMeta: ActionMeta<any>) => {
+          if (onChange) {
+            onChange(newValue as SelectOption | null, actionMeta);
+          }
+        }}
+        components={{
+          IndicatorSeparator: () => null,
+          ...(indicator && { DropdownIndicator: () => indicator }),
+        }}
+        {...restProps}
+      />
     );
-  },
+  }
 );
 
-export { SelectBox };
+export default SelectBox;

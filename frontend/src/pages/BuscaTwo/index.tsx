@@ -7,16 +7,11 @@ import GoogleMapComponent from "../../components/GoogleMap";
 import { questionFunctions } from "../../services/apiService";
 import { saveAs } from "file-saver";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
 
-// Definindo o tipo DropDownOption
-type DropDownOption = {
-  label: string;
-  value: string;
-};
+type SelectOption = { value: string; label: string };
 
 const BuscaTwoPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -168,8 +163,8 @@ const BuscaTwoPage = () => {
     fetchData();
   }, [selectedCategory, selectedQuestion]);
 
-  const handleCategoryChange = (option: DropDownOption) => {
-    setSelectedCategory(option.value);
+  const handleCategoryChange = (option: SelectOption | null) => {
+    setSelectedCategory(option ? option.value : null);
     setSelectedQuestion(null); // Resetar pergunta ao mudar categoria
     setSelectedTime(null); // Resetar tempo ao mudar categoria
   };
@@ -182,8 +177,8 @@ const BuscaTwoPage = () => {
     setCountryCounts({});
   };
 
-  const handleQuestionChange = (option: DropDownOption) => {
-    setSelectedQuestion(option.value);
+  const handleQuestionChange = (option: SelectOption | null) => {
+    setSelectedQuestion(option ? option.value : null);
     setSelectedTime(null); // Resetar tempo ao mudar pergunta
   };
 
@@ -204,209 +199,218 @@ const BuscaTwoPage = () => {
   return (
     <>
       <Helmet>
-        <title>ELLAS</title>
+        <title>ELLAS - Busca Avançada</title>
         <meta
           name="description"
           content="Web site created using create-react-app"
         />
       </Helmet>
-      <div className="flex flex-col items-center justify-start w-full bg-white-A700">
+      <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="flex flex-col items-center justify-start w-full">
-          <div className="flex flex-col items-center justify-start w-full">
-            {/* Header Section */}
-            <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
-              <Heading size="2xl" as="h1" className="text-center">
-                Data Table
-              </Heading>
-            </div>
-
-            {/* Main Content Section */}
-            <div className="flex flex-row md:flex-col justify-between items-start w-full gap-10 px-6 sm:px-4 max-w-[1331px]">
-              {/* Sidebar Section */}
-              <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
-                <Button
-                  size="xs"
-                  variant="outline"
-                  className="mb-4 gap-2.5 w-full rounded-[35px]"
-                  onClick={handleReset}
-                >
-                  Restart
-                </Button>
-                <div className="flex flex-col gap-6">
-                  {/* Category Selection */}
-                  <div>
-                    <Text size="3xl" as="p" className="mb-2">
-                      Category
-                    </Text>
-                    <SelectBox
-                      shape="round"
-                      name="categoria"
-                      placeholder="Select Category"
-                      options={[
-                        { label: "Initiatives", value: "initiatives" },
-                        { label: "Policies", value: "policies" },
-                        { label: "Factors", value: "factors" },
-                      ]}
-                      value={
-                        selectedCategory
-                          ? { label: selectedCategory, value: selectedCategory }
-                          : null
-                      }
-                      onChange={handleCategoryChange}
-                      className="w-full border-gray-300_01 border rounded-md"
-                    />
-                  </div>
-
-                  {/* Question Selection */}
-                  <div>
-                    <Text size="3xl" as="p" className="mb-2">
-                      Question
-                    </Text>
-                    <SelectBox
-                      shape="round"
-                      name="pergunta"
-                      placeholder="Select Question"
-                      options={
-                        selectedCategory
-                          ? questionQueries[selectedCategory].map(
-                              (question) => ({
-                                label: question,
-                                value: question,
-                              })
-                            )
-                          : []
-                      }
-                      value={
-                        selectedQuestion
-                          ? { label: selectedQuestion, value: selectedQuestion }
-                          : null
-                      }
-                      onChange={handleQuestionChange}
-                      className="w-full border-gray-300_01 border rounded-md"
-                    />
-                  </div>
-                </div>
+        <div className="flex-grow">
+          <div className="flex flex-col items-center justify-start w-full bg-white-A700">
+            <div className="flex flex-col items-center justify-start w-full">
+              {/* Header Section */}
+              <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
+                <Heading size="2xl" as="h1" className="text-center">
+                  Data Table
+                </Heading>
               </div>
 
-              {/* Tabs Section */}
-              <div className="flex flex-col w-[70%] md:w-full">
-                <Tabs
-                  className="w-full"
-                  selectedTabClassName="!text-gray-700 font-medium border-gray-700 border-b-2 bg-white-A700"
-                  selectedTabPanelClassName="mt-4"
-                >
-                  <TabList className="flex flex-row gap-4 border-b">
-                    <Tab
-                      className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                        location.pathname,
-                        "/buscaone"
-                      )}`}
-                      onClick={() => navigate("/buscaone")}
-                    >
-                      <Text as="p">Map</Text>
-                      <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
-                    </Tab>
-                    <Tab className="p-2 flex items-center gap-2">
-                      <Text as="p">Bars</Text>
-                      <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
-                    </Tab>
-                    <Tab
-                      className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
-                        location.pathname,
-                        "/buscatwoone"
-                      )}`}
-                      onClick={() => navigate("/buscatwoone")}
-                    >
-                      <Text as="p">Lines</Text>
-                      <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
-                    </Tab>
-                  </TabList>
+              {/* Main Content Section */}
+              <div className="flex flex-row md:flex-col justify-between items-start w-full gap-10 px-6 sm:px-4 max-w-[1331px]">
+                {/* Sidebar Section */}
+                <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
+                  <Button
+                    size="xs"
+                    variant="outline"
+                    className="mb-4 gap-2.5 w-full rounded-[35px]"
+                    onClick={handleReset}
+                  >
+                    Restart
+                  </Button>
+                  <div className="flex flex-col gap-6">
+                    {/* Category Selection */}
+                    <div>
+                      <Text size="3xl" as="p" className="mb-2">
+                        Category
+                      </Text>
+                      <SelectBox
+                        shape="round"
+                        name="categoria"
+                        placeholder="Select Category"
+                        options={[
+                          { label: "Initiatives", value: "initiatives" },
+                          { label: "Policies", value: "policies" },
+                          { label: "Factors", value: "factors" },
+                        ]}
+                        value={
+                          selectedCategory
+                            ? {
+                                label: selectedCategory,
+                                value: selectedCategory,
+                              }
+                            : null
+                        }
+                        onChange={handleCategoryChange}
+                        className="w-full border-gray-300_01 border rounded-md"
+                      />
+                    </div>
 
-                  <TabPanel className="flex flex-col items-center justify-center w-full mt-0">
-                    <div className="flex flex-col items-center justify-center w-full mt-[-2px]">
-                      <div className="flex flex-col items-center justify-center w-full mb-[22px] gap-[23px]">
-                        <div className="h-[2px] w-full bg-deep_orange-200" />
-                        <div className="flex flex-col items-center justify-center w-[100%] md:w-full gap-[15px]">
-                          <Text size="3xl" as="p" className="text-center">
-                            {selectedQuestion
-                              ? selectedQuestion
-                              : "Select a question to see results"}
-                          </Text>
-                          <div className="flex flex-col items-center justify-start w-[100%] md:w-full">
-                            <table className="w-full">
-                              <thead className="border-b-6 border-gray-700">
-                                <tr>
-                                  <th className="text-center pl-0">Country</th>
-                                  <th className="text-center pl-20">Count</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {Object.keys(countryCounts).length > 0 ? (
-                                  Object.entries(countryCounts).map(
-                                    ([country, count]) => (
-                                      <tr key={country}>
-                                        <td className="text-left pl-0">
-                                          {country}
-                                        </td>
-                                        <td className="text-left pl-0">
-                                          <div
-                                            className="flex items-center"
-                                            style={{
-                                              width: `${
-                                                (count /
-                                                  Math.max(
-                                                    ...Object.values(
-                                                      countryCounts
-                                                    ),
-                                                    1
-                                                  )) *
-                                                100
-                                              }%`,
-                                              backgroundColor: "#cf9bcc",
-                                              height: "20px",
-                                              maxWidth: "100%",
-                                              color: "white",
-                                              fontWeight: "bold",
-                                            }}
-                                          >
-                                            {count}
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    )
-                                  )
-                                ) : (
+                    {/* Question Selection */}
+                    <div>
+                      <Text size="3xl" as="p" className="mb-2">
+                        Question
+                      </Text>
+                      <SelectBox
+                        shape="round"
+                        name="pergunta"
+                        placeholder="Select Question"
+                        options={
+                          selectedCategory
+                            ? questionQueries[selectedCategory].map(
+                                (question) => ({
+                                  label: question,
+                                  value: question,
+                                })
+                              )
+                            : []
+                        }
+                        value={
+                          selectedQuestion
+                            ? {
+                                label: selectedQuestion,
+                                value: selectedQuestion,
+                              }
+                            : null
+                        }
+                        onChange={handleQuestionChange}
+                        className="w-full border-gray-300_01 border rounded-md"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tabs Section */}
+                <div className="flex flex-col w-[70%] md:w-full">
+                  <Tabs
+                    className="w-full"
+                    selectedTabClassName="!text-gray-700 font-medium border-gray-700 border-b-2 bg-white-A700"
+                    selectedTabPanelClassName="mt-4"
+                  >
+                    <TabList className="flex flex-row gap-4 border-b">
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscaone"
+                        )}`}
+                        onClick={() => navigate("/buscaone")}
+                      >
+                        <Text as="p">Map</Text>
+                        <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />
+                      </Tab>
+                      <Tab className="p-2 flex items-center gap-2">
+                        <Text as="p">Bars</Text>
+                        <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
+                      </Tab>
+                      <Tab
+                        className={`flex justify-center items-center gap-2.5 p-4 border-b-2 ${getTabClass(
+                          location.pathname,
+                          "/buscatwoone"
+                        )}`}
+                        onClick={() => navigate("/buscatwoone")}
+                      >
+                        <Text as="p">Lines</Text>
+                        <Img src="images/img_iconx18_12.svg" alt="Lines Icon" />
+                      </Tab>
+                    </TabList>
+
+                    <TabPanel className="flex flex-col items-center justify-center w-full mt-0">
+                      <div className="flex flex-col items-center justify-center w-full mt-[-2px]">
+                        <div className="flex flex-col items-center justify-center w-full mb-[22px] gap-[23px]">
+                          <div className="h-[2px] w-full bg-deep_orange-200" />
+                          <div className="flex flex-col items-center justify-center w-[100%] md:w-full gap-[15px]">
+                            <Text size="3xl" as="p" className="text-center">
+                              {selectedQuestion
+                                ? selectedQuestion
+                                : "Select a question to see results"}
+                            </Text>
+                            <div className="flex flex-col items-center justify-start w-[100%] md:w-full">
+                              <table className="w-full">
+                                <thead className="border-b-6 border-gray-700">
                                   <tr>
-                                    <td
-                                      colSpan={2}
-                                      className="text-center text-gray-500 py-4"
-                                    >
-                                      No data available. Please select a
-                                      category and question.
-                                    </td>
+                                    <th className="text-center pl-0">
+                                      Country
+                                    </th>
+                                    <th className="text-center pl-20">Count</th>
                                   </tr>
-                                )}
-                              </tbody>
-                            </table>
+                                </thead>
+                                <tbody>
+                                  {Object.keys(countryCounts).length > 0 ? (
+                                    Object.entries(countryCounts).map(
+                                      ([country, count]) => (
+                                        <tr key={country}>
+                                          <td className="text-left pl-0">
+                                            {country}
+                                          </td>
+                                          <td className="text-left pl-0">
+                                            <div
+                                              className="flex items-center"
+                                              style={{
+                                                width: `${
+                                                  (count /
+                                                    Math.max(
+                                                      ...Object.values(
+                                                        countryCounts
+                                                      ),
+                                                      1
+                                                    )) *
+                                                  100
+                                                }%`,
+                                                backgroundColor: "#cf9bcc",
+                                                height: "20px",
+                                                maxWidth: "100%",
+                                                color: "white",
+                                                fontWeight: "bold",
+                                              }}
+                                            >
+                                              {count}
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      )
+                                    )
+                                  ) : (
+                                    <tr>
+                                      <td
+                                        colSpan={2}
+                                        className="text-center text-gray-500 py-4"
+                                      >
+                                        No data available. Please select a
+                                        category and question.
+                                      </td>
+                                    </tr>
+                                  )}
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </TabPanel>
-                </Tabs>
+                    </TabPanel>
+                  </Tabs>
 
-                {/* Data Table Section */}
-                <DataTable
-                  data={filteredData}
-                  dynamicFields={dynamicFields}
-                  exportTableDataToCSV={exportTableDataToCSV}
-                />
+                  {/* Data Table Section */}
+                  <DataTable
+                    data={filteredData}
+                    dynamicFields={dynamicFields}
+                    exportTableDataToCSV={exportTableDataToCSV}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );

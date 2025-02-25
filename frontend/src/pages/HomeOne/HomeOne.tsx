@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
-import { Text, Img, Heading, Button, Slider } from "../../components";
-import AliceCarousel from "react-alice-carousel";
+import {
+  Text,
+  Img,
+  Heading,
+  Button,
+  Slider,
+  DataChart,
+  DataCards,
+  Carousel,
+} from "../../components";
 import GoogleMapComponent from "../../components/GoogleMap";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { questionFunctions } from "../../services/apiService";
 
 const HomeOnePage = () => {
   const [sliderState, setSliderState] = React.useState(0);
-  const sliderRef = React.useRef<AliceCarousel>(null);
   const navigate = useNavigate();
 
   const [mapData, setMapData] = useState<any[]>([]);
@@ -25,9 +31,9 @@ const HomeOnePage = () => {
     { range: "No data", color: "bg-gray-300" },
   ];
 
-    const handleAboutClick = () => {
-      window.location.href = "https://ellas.ufmt.br/about";
-    };
+  const handleAboutClick = () => {
+    window.location.href = "https://ellas.ufmt.br/about";
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,40 +85,84 @@ const HomeOnePage = () => {
       </Helmet>
       <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="flex-grow pt-[48px] sm:pt-[56px] md:pt-[64px]">
+        <div className="flex-grow">
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
-            <div
-              className="relative w-full h-[475px] bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/img_fundo_login_logo_688x1365.png')",
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
-              <div className="relative flex flex-col md:flex-row items-center justify-between px-4 sm:px-6 lg:px-8 py-8 md:py-16 w-full h-full max-w-7xl mx-auto">
-                <div className="text-left md:max-w-[50%] z-10">
-                  <Heading 
-                    size="2xl" 
-                    as="h1" 
-                    className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
-                  >
-                    Open Data for Gender Equity in Science and Technology in Latin America
-                  </Heading>
-                  <Button
-                    size="sm"
-                    shape="round"
-                    className="mt-4 md:mt-6"
-                    onClick={handleAboutClick}
-                  >
-                    Learn more
-                  </Button>
-                </div>
-                <div className="relative md:absolute md:right-[10%] md:bottom-0 mt-6 md:mt-0">
-                  <Img
-                    src="/images/img_women_home01_1.png"
-                    alt="Woman smiling"
-                    className="h-[200px] sm:h-[250px] md:h-[300px] w-auto object-contain"
-                  />
-                </div>
+            <DataChart />
+            <DataCards />
+
+            {/* Featured Questions Carousel */}
+            <div className="w-full py-16 bg-red-50">
+              <div className="container mx-auto px-4">
+                <Heading size="2xl" as="h2" className="text-center mb-8">
+                  Featured Questions
+                </Heading>
+                <Text as="p" className="text-center mb-12">
+                  Select one of these featured questions to explore our data
+                </Text>
+                <Carousel
+                  autoPlay
+                  autoPlayInterval={5000}
+                  responsive={{
+                    0: { items: 1 },
+                    768: { items: 2 },
+                    1024: { items: 3 },
+                  }}
+                  className="w-full"
+                >
+                  {[
+                    {
+                      title: "What are the most common impact factors?",
+                      description:
+                        "Discover the key factors influencing women's leadership in technology",
+                      image: "images/carousel_impact_factors.jpg",
+                      link: "/buscaone?category=factors&question=impact_factors",
+                    },
+                    {
+                      title: "How many initiatives support women in STEM?",
+                      description:
+                        "Explore initiatives supporting women in STEM across Latin America",
+                      image: "images/carousel_initiatives.jpg",
+                      link: "/buscaone?category=initiatives&question=stem_support",
+                    },
+                    {
+                      title: "What policies promote gender equity?",
+                      description:
+                        "Learn about policies promoting gender equity in technology",
+                      image: "images/carousel_policies.jpg",
+                      link: "/buscaone?category=policies&question=gender_equity",
+                    },
+                  ].map((item, index) => (
+                    <div
+                      key={index}
+                      className="bg-white rounded-[20px] shadow-md p-6 m-2 transition-transform hover:scale-105"
+                      onClick={() => navigate(item.link)}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <Img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-48 object-cover rounded-t-lg mb-4"
+                      />
+                      <Heading size="lg" as="h3" className="mb-2">
+                        {item.title}
+                      </Heading>
+                      <Text as="p" className="text-gray-600">
+                        {item.description}
+                      </Text>
+                      <Button
+                        className="mt-4"
+                        variant="outline"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(item.link);
+                        }}
+                      >
+                        Explore Data
+                      </Button>
+                    </div>
+                  ))}
+                </Carousel>
               </div>
             </div>
 
@@ -124,15 +174,15 @@ const HomeOnePage = () => {
                   Latin America in Focus!
                 </Heading>
                 <Text as="p" className="mt-4 text-gray-700 leading-relaxed">
-                  The ELLAS portal generates and disseminates open data focused on
-                  countries in Latin America. It emerged from the union of
+                  The ELLAS portal generates and disseminates open data focused
+                  on countries in Latin America. It emerged from the union of
                   institutions from Brazil, Bolivia, and Peru.
                 </Text>
                 <Text as="p" className="mt-4 text-gray-700 leading-relaxed">
                   With an open data infrastructure, it is possible to map
-                  information, visualize data, and improve collaboration between the
-                  education, government, and industry sectors, aiming to reduce the
-                  STEM gender gap in Latin America.
+                  information, visualize data, and improve collaboration between
+                  the education, government, and industry sectors, aiming to
+                  reduce the STEM gender gap in Latin America.
                 </Text>
                 <Button
                   size="sm"
@@ -172,111 +222,58 @@ const HomeOnePage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center w-full px-5">
-              <Heading size="2xl" as="h2" className="mt-[47px] text-center">
-                Explore the data
-              </Heading>
-              <Text as="p" className="mt-3.5 !text-gray-900 text-center">
-                Click on one of the categories to find data related to them.
-              </Text>
-
-              {/* Cards Section */}
-              <div className="flex flex-row flex-wrap justify-center items-center gap-10 w-full mt-[38px]">
-                <div className="h-[290px] w-[300px] relative bg-red-300_03 rounded-[20px] p-5 flex flex-col justify-between">
-                  <Img
-                    src="images/img_iconx24.svg"
-                    alt="Ícone"
-                    className="h-[24px] w-[24px]"
-                  />
-                  <Heading size="xl" as="h3" className="!text-white-A700">
-                    Policies
+            {/* Slider Section */}
+            <div className="w-full mt-[61px] pt-5 bg-red-50">
+              <div className="relative w-full h-[702px]">
+                <Img
+                  src="images/img_fundo_ink_1.png"
+                  alt="Fundo Ink"
+                  className="absolute w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-[43px]">
+                  <Heading size="2xl" as="h2" className="text-center">
+                    Featured Data
                   </Heading>
-                  <Text as="p" className="!text-white-A700 !leading-5">
-                    Legislation and decrees that promote the participation of women
-                    in STEM fields
+                  <Text
+                    as="p"
+                    className="!text-gray-900 !leading-5 text-center"
+                  >
+                    Select one of the most searched questions to get started.
                   </Text>
-                </div>
-                <div className="h-[290px] w-[300px] relative bg-deep_orange-200 rounded-[20px] p-5 flex flex-col justify-between">
-                  <Img
-                    src="images/img_iconx24_white_a700.svg"
-                    alt="Ícone"
-                    className="h-[24px] w-[24px]"
-                  />
-                  <Heading size="xl" as="h3" className="!text-white-A700">
-                    Initiatives
-                  </Heading>
-                  <Text as="p" className="!text-white-A700 !leading-5">
-                    Events, programs, and other actions for the insertion and
-                    retention of women in technology careers
-                  </Text>
-                </div>
-                <div className="h-[290px] w-[300px] relative bg-pink-300 rounded-[20px] p-5 flex flex-col justify-between">
-                  <Img
-                    src="images/img_iconx24_white_a700.svg"
-                    alt="Ícone"
-                    className="h-[24px] w-[24px]"
-                  />
-                  <Heading size="xl" as="h3" className="!text-white-A700">
-                    Factors
-                  </Heading>
-                  <Text as="p" className="!text-white-A700 !leading-5">
-                    Discover the main factors that impact female leadership in Latin
-                    America
-                  </Text>
-                </div>
-              </div>
-
-              {/* Slider Section */}
-              <div className="w-full mt-[61px] pt-5 bg-red-50">
-                <div className="relative w-full h-[702px]">
-                  <Img
-                    src="images/img_fundo_ink_1.png"
-                    alt="Fundo Ink"
-                    className="absolute w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-[43px]">
-                    <Heading size="2xl" as="h2" className="text-center">
-                      Featured Data
-                    </Heading>
-                    <Text as="p" className="!text-gray-900 !leading-5 text-center">
-                      Select one of the most searched questions to get started.
-                    </Text>
-                    <Slider
-                      autoPlay
-                      autoPlayInterval={1000}
-                      responsive={{
-                        "0": { items: 1 },
-                        "550": { items: 1 },
-                        "1050": { items: 3 },
-                      }}
-                      className="w-[80%]"
-                    >
-                      {[...Array(5)].map(() => (
-                        <div
-                          key={Math.random()}
-                          className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[300px]"
-                        >
-                          <Img
-                            src="images/img_mask_group.png"
-                            alt="Featured Image"
-                            className="h-[150px] w-full object-cover rounded-t-[20px]"
-                          />
-                          <Heading size="lg" as="h3" className="!text-gray-900">
-                            Title Example
-                          </Heading>
-                          <Text as="p" className="!text-gray-700">
-                            Brief description of the featured data or topic.
-                          </Text>
-                        </div>
-                      ))}
-                    </Slider>
-                  </div>
+                  <Slider
+                    autoPlay
+                    autoPlayInterval={1000}
+                    responsive={{
+                      "0": { items: 1 },
+                      "550": { items: 1 },
+                      "1050": { items: 3 },
+                    }}
+                    className="w-[80%]"
+                  >
+                    {[...Array(5)].map(() => (
+                      <div
+                        key={Math.random()}
+                        className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[300px]"
+                      >
+                        <Img
+                          src="images/img_mask_group.png"
+                          alt="Featured Image"
+                          className="h-[150px] w-full object-cover rounded-t-[20px]"
+                        />
+                        <Heading size="lg" as="h3" className="!text-gray-900">
+                          Title Example
+                        </Heading>
+                        <Text as="p" className="!text-gray-700">
+                          Brief description of the featured data or topic.
+                        </Text>
+                      </div>
+                    ))}
+                  </Slider>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );

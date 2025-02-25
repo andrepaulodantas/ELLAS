@@ -1,5 +1,5 @@
 import React from "react";
-import { Img, Text, Heading } from "../../components";
+import { Img, Text } from "../../components";
 
 const Footer = () => {
   const institutionLogos = [
@@ -13,107 +13,114 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-800_02 p-6 overflow-x-auto">
-      {/* 
-        min-w-[900px]: força a largura mínima do conteúdo 
-        grid-cols-4: sempre 4 colunas 
-      */}
-      <div className="container mx-auto min-w-[900px] grid grid-cols-4 gap-6">
-        
-        {/* Coluna 1: Logo e Contacts */}
-        <div>
-          <div className="flex justify-center mb-4">
-            <Img
-              src="images/img_group_22.svg"
-              alt="ELLAS Logo"
-              className="h-[19px]"
-            />
+    <footer className="bg-[#4A2B5C] py-8 px-4">
+      <div className="container mx-auto max-w-7xl">
+        <div className="grid grid-cols-3 gap-8">
+          {/* Left Column */}
+          <div className="space-y-6">
+            <div>
+              <Text className="text-[#E6A17A] font-medium text-lg mb-2">
+                Contatos
+              </Text>
+              <div className="space-y-1 text-base">
+                <a
+                  href="https://www.ellas.ufmt.br"
+                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                >
+                  www.ellas.ufmt.br
+                </a>
+                <a
+                  href="#"
+                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                >
+                  @ellas.network
+                </a>
+                <a
+                  href="mailto:ellas.latinamerica@gmail.com"
+                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                >
+                  ellas.latinamerica@gmail.com
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <Text className="text-[#E6A17A] font-medium text-lg mb-2">
+                Conecte-se ao ELLAS
+              </Text>
+              <div className="flex gap-2">
+                <a
+                  href="#"
+                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                >
+                  <Img
+                    src="images/img_group_24.svg"
+                    alt="Social Media Icons"
+                    className="h-[26px] w-auto"
+                  />
+                </a>
+              </div>
+            </div>
           </div>
-          <Text
-            as="p"
-            className="!text-deep_orange-200 !font-medium text-lg mb-2"
-          >
-            Contacts
-          </Text>
-          <Text className="!text-white-A700 text-base leading-5">
-            www.ellas.ufmt.br
-            <br />
-            @Ellas.network
-            <br />
-            ellas.latinamerica@gmail.com
-          </Text>
-        </div>
 
-        {/* Coluna 2: Useful Links */}
-        <div>
-          <Text
-            as="p"
-            className="!text-deep_orange-200 !font-medium text-lg mb-2"
-          >
-            Useful Links
-          </Text>
-          <Text className="!text-white-A700 text-base leading-5">
-            Web Accessibility
-            <br />
-            Terms of Use
-            <br />
-            Privacy Policy
-          </Text>
-        </div>
-
-        {/* Coluna 3: Connect to ELLAS */}
-        <div>
-          <Text
-            as="p"
-            className="!text-deep_orange-200 !font-medium text-lg mb-2"
-          >
-            Connect to ELLAS
-          </Text>
-          <div>
+          {/* Center Column */}
+          <div className="flex flex-col items-center">
+            <Text className="text-[#E6A17A] font-medium text-lg mb-4">
+              Agência Financiadora
+            </Text>
             <Img
-              src="images/img_group_24.svg"
-              alt="Social Media"
-              className="h-[26px] w-auto"
+              src="images/img_idrc_logo_branca.png"
+              alt="IDRC"
+              className="h-16 w-auto mb-8"
             />
+            <Text className="text-[#E6A17A] font-medium text-lg mb-4">
+              Instituições Participantes
+            </Text>
+            <div className="flex flex-wrap justify-center gap-4">
+              {institutionLogos.map((src, index) => (
+                <Img
+                  key={index}
+                  src={`images/${src}`}
+                  alt={`Institution ${index + 1}`}
+                  className="h-8 w-auto"
+                />
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Coluna 4: Sponsorship + Institutions */}
-        <div className="text-center flex flex-col items-center">
-          <Heading as="h3" size="s" className="!text-white-A700 text-lg">
-            Sponsorship
-          </Heading>
-          <Img
-            src="images/img_idrc_logo_branca.png"
-            alt="IDRC"
-            className="h-[45px] w-auto object-contain mx-auto my-2"
-          />
-          <Heading
-            as="h4"
-            size="s"
-            className="!text-white-A700 text-lg mt-2"
-          >
-            Participating Institutions
-          </Heading>
-          <div className="flex flex-wrap justify-center items-center gap-2 mt-2">
-            {institutionLogos.map((src, index) => (
-              <Img
-                key={index}
-                src={`images/${src}`}
-                alt={`Institution ${index + 1}`}
-                className="h-[35px] w-auto object-contain"
-              />
-            ))}
+          {/* Right Column */}
+          <div className="text-right">
+            <Text className="text-[#E6A17A] font-medium text-lg mb-2">
+              Links Úteis
+            </Text>
+            <div className="space-y-1 text-base">
+              <a
+                href="/accessibility"
+                className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+              >
+                Acessibilidade na Web
+              </a>
+              <a
+                href="/terms"
+                className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+              >
+                Termos de Uso
+              </a>
+              <a
+                href="/privacy"
+                className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+              >
+                Política de Privacidade
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Sessão Separada p/ Copyright */}
-      <div className="container mx-auto min-w-[900px] mt-4">
-        <Text
-          className="!text-deep_orange-200 !font-medium text-base text-center"
-        >
-          © 2024 ELLAS
+      {/* Copyright Section */}
+      <div className="container mx-auto max-w-7xl mt-8 pt-4 text-center">
+        <Text className="text-[#FFFFFF] text-sm">
+          Todos os direitos reservados © 2024 ELLAS
         </Text>
       </div>
     </footer>

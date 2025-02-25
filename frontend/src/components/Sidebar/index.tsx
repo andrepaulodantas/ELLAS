@@ -1,22 +1,23 @@
 import React from "react";
-import { Text, SelectBox, Button } from "..";
+import { Text, Button } from "..";
+import SelectBox, { SelectOption } from "../SelectBox";
 
-type DropDownOption = {
-  label: string;
+interface DropDownOption extends SelectOption {
   value: string;
-};
+}
 
 interface SidebarProps {
-  selectedCategory: string | null;
-  onCategoryChange: (option: DropDownOption) => void;
+  selectedCategory: DropDownOption | null;
+  onCategoryChange: (option: DropDownOption | null) => void;
   questionOptions: DropDownOption[];
-  selectedQuestion: string | null;
-  onQuestionChange: (option: DropDownOption) => void;
+  selectedQuestion: DropDownOption | null;
+  onQuestionChange: (option: DropDownOption | null) => void;
   onReset: () => void;
-  selectedTime?: string | null;
-  onTimeChange?: (option: DropDownOption) => void;
+  selectedTime?: DropDownOption | null;
+  onTimeChange?: (option: DropDownOption | null) => void;
   timeOptions?: DropDownOption[];
   isTimeDropdownEnabled?: boolean;
+  categoryOptions: DropDownOption[];
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -30,6 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onTimeChange,
   timeOptions = [],
   isTimeDropdownEnabled = false,
+  categoryOptions,
 }) => {
   return (
     <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
@@ -53,17 +55,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             shape="round"
             name="categoria"
             placeholder="Select Category"
-            options={[
-              { label: "Initiatives", value: "initiatives" },
-              { label: "Policies", value: "policies" },
-              { label: "Factors", value: "factors" },
-            ]}
-            value={
-              selectedCategory
-                ? { label: selectedCategory, value: selectedCategory }
-                : null
+            options={categoryOptions}
+            value={selectedCategory}
+            onChange={(option) =>
+              onCategoryChange(option as DropDownOption | null)
             }
-            onChange={onCategoryChange}
             className="w-full border-gray-300_01 border rounded-md"
           />
         </div>
@@ -78,12 +74,10 @@ const Sidebar: React.FC<SidebarProps> = ({
             name="pergunta"
             placeholder="Select Question"
             options={questionOptions}
-            value={
-              selectedQuestion
-                ? { label: selectedQuestion, value: selectedQuestion }
-                : null
+            value={selectedQuestion}
+            onChange={(option) =>
+              onQuestionChange(option as DropDownOption | null)
             }
-            onChange={onQuestionChange}
             className="w-full border-gray-300_01 border rounded-md"
           />
         </div>
@@ -99,12 +93,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               name="tempo"
               placeholder="Select Time"
               options={timeOptions}
-              value={
-                selectedTime
-                  ? { label: selectedTime, value: selectedTime }
-                  : null
+              value={selectedTime}
+              onChange={(option) =>
+                onTimeChange?.(option as DropDownOption | null)
               }
-              onChange={onTimeChange}
               className="w-full border-gray-300_01 border rounded-md"
             />
           </div>

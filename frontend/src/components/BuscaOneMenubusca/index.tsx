@@ -2,18 +2,35 @@ import React from "react";
 import { SelectBox, Img, Text } from "./..";
 import { OptionProps } from "react-select";
 
+type Option = {
+  label: string;
+  value: string;
+};
+
 const dropDownOptions = [
   { label: "Option1", value: "option1" },
   { label: "Option2", value: "option2" },
   { label: "Option3", value: "option3" },
 ];
+
 interface Props {
   className?: string;
   categoria?: string;
   pergunta?: string;
 }
 
-export default function BuscaOneMenubusca({ categoria = "Categoria", pergunta = "Pergunta", ...props }: Props) {
+export default function BuscaOneMenubusca({ 
+  categoria = "Categoria", 
+  pergunta = "Pergunta", 
+  ...props 
+}: Props) {
+  const renderOptionContent = (option: Option) => (
+    <div className="flex items-center">
+      <Img src="images/img_iconx18_6.svg" alt="iconx18" />
+      <span>{option.label}</span>
+    </div>
+  );
+
   return (
     <div {...props}>
       <div className="flex flex-col items-start justify-start w-full gap-3">
@@ -23,14 +40,7 @@ export default function BuscaOneMenubusca({ categoria = "Categoria", pergunta = 
         <SelectBox
           shape="round"
           indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-          getOptionLabel={(e: OptionProps) => (
-            <>
-              <div className="flex items-center">
-                <Img src="images/img_iconx18_6.svg" alt="iconx18" />
-                <span>{e.label}</span>
-              </div>
-            </>
-          )}
+          formatOptionLabel={renderOptionContent}
           name="iniciativas"
           placeholder="Iniciativas"
           options={dropDownOptions}
@@ -43,14 +53,7 @@ export default function BuscaOneMenubusca({ categoria = "Categoria", pergunta = 
       <SelectBox
         shape="round"
         indicator={<Img src="images/img_iconx18_7.svg" alt="iconx18" />}
-        getOptionLabel={(e: OptionProps) => (
-          <>
-            <div className="flex items-center">
-              <Img src="images/img_iconx18_8.svg" alt="iconx18" />
-              <span>{e.label}</span>
-            </div>
-          </>
-        )}
+        formatOptionLabel={renderOptionContent}
         name="item"
         placeholder="Quais e quantas iniciativas..."
         options={dropDownOptions}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import {
   AppBar,
@@ -184,30 +184,35 @@ const BackgroundSlider = styled(Box)`
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
   width: 100%;
-  opacity: 0.9;
-  transition: transform 0.5s ease;
+  height: 100%;
 `;
 
 const BackgroundImage = styled("div")<{ image: string }>`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-image: url(${(props) => props.image});
-  background-size: contain;
-  background-position: right center;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  transition: opacity 0.5s ease;
-  filter: saturate(1.1) brightness(1.05);
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  &.active {
+    opacity: 1;
+  }
 `;
 
 const NavigationButton = styled(IconButton)`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 2;
+  z-index: 3;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 12px;
+  color: #4a2b4e;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.9);
@@ -219,6 +224,10 @@ const NavigationButton = styled(IconButton)`
 
   &.next {
     right: 20px;
+  }
+
+  svg {
+    font-size: 2rem;
   }
 `;
 
@@ -293,6 +302,18 @@ const Header = () => {
   ];
 
   const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    if (isHomePage) {
+      const timer = setInterval(() => {
+        setCurrentImageIndex((prev) =>
+          prev === images.length - 1 ? 0 : prev + 1
+        );
+      }, 5000);
+
+      return () => clearInterval(timer);
+    }
+  }, [isHomePage, images.length]);
 
   const handleLangClick = (event: React.MouseEvent<HTMLElement>) => {
     setLangAnchor(event.currentTarget);
@@ -482,7 +503,13 @@ const Header = () => {
       {isHomePage && (
         <SearchContainer>
           <BackgroundSlider>
-            <BackgroundImage image={images[currentImageIndex]} />
+            {images.map((image, index) => (
+              <BackgroundImage
+                key={index}
+                image={image}
+                className={currentImageIndex === index ? "active" : ""}
+              />
+            ))}
           </BackgroundSlider>
 
           <NavigationButton

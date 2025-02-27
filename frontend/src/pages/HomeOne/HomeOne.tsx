@@ -15,9 +15,11 @@ import GoogleMapComponent from "../../components/GoogleMap";
 import Header from "../../components/Header";
 import { questionFunctions } from "../../services/apiService";
 import { useLanguage } from "../../contexts/LanguageContext";
+import ExploreCards from "../../components/ExploreCards";
+import NavigateBefore from "@mui/icons-material/NavigateBefore";
+import NavigateNext from "@mui/icons-material/NavigateNext";
 
 const HomeOnePage = () => {
-  const [sliderState, setSliderState] = React.useState(0);
   const navigate = useNavigate();
   const { translations } = useLanguage();
 
@@ -34,8 +36,46 @@ const HomeOnePage = () => {
     { range: "No data", color: "bg-gray-300" },
   ];
 
+  // Define the questions array
+  const questions = [
+    {
+      category: "Políticas",
+      question:
+        "Que tipos de políticas de gênero foram implementadas nos países em determinado ano?",
+      icon: "images/policy-icon.svg",
+    },
+    {
+      category: "Políticas",
+      question:
+        "Como as políticas identificadas/analisadas estão promovendo a participação das mulheres nas áreas STEM?",
+      icon: "images/policy-icon.svg",
+    },
+    {
+      category: "Iniciativas",
+      question: "Que iniciativas são desenvolvidas por nível de escolar?",
+      icon: "images/initiatives-icon.svg",
+    },
+    {
+      category: "Iniciativas",
+      question: "Que iniciativas atendem às mulheres negras?",
+      icon: "images/initiatives-icon.svg",
+    },
+    {
+      category: "Fatores",
+      question:
+        "Quais são os fatores contextuais que impactam positiva ou negativamente o gênero feminino?",
+      icon: "images/factors-icon.svg",
+    },
+    {
+      category: "Fatores",
+      question:
+        "Quais são os fatores contextuais que impactam positiva ou negativamente na liderança, motivação, etc. em cada país?",
+      icon: "images/factors-icon.svg",
+    },
+  ];
+
   const handleAboutClick = () => {
-    navigate("/about");
+    navigate("/sobre");
   };
 
   useEffect(() => {
@@ -83,12 +123,26 @@ const HomeOnePage = () => {
       </Helmet>
       <div className="flex flex-col min-h-screen">
         <Header />
+
+        {/* Seção de Explorar */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Heading size="xl" as="h2" className="mb-4">
+                Explorar
+              </Heading>
+              <Text as="p" className="text-gray-600 max-w-2xl mx-auto">
+                Descubra dados e informações sobre iniciativas e políticas para
+                equidade de gênero na América Latina
+              </Text>
+            </div>
+            <ExploreCards />
+          </div>
+        </section>
         <div className="flex-grow">
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
             <DataChart />
-            <div className="flex flex-col items-center justify-start w-full mt-[60px] gap-[60px]">
-              <DataCards />
-            </div>
+            <div className="flex flex-col items-center justify-start w-full mt-[60px] gap-[60px]"></div>
 
             {/* Map and Text Section */}
             <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between w-full px-6 lg:px-12 py-10 gap-10 bg-white">
@@ -138,79 +192,56 @@ const HomeOnePage = () => {
               </div>
             </div>
 
-            {/* Featured Questions Carousel */}
-            <div className="w-full py-16 bg-red-50">
+            {/* Featured Questions Section */}
+            <div className="w-full py-16 bg-gray-50">
               <div className="container mx-auto px-4">
-                <Heading size="2xl" as="h2" className="text-center mb-8">
-                  Featured Questions
+                <Heading
+                  size="2xl"
+                  as="h2"
+                  className="text-purple-800 text-center mb-4"
+                >
+                  Não sabe por onde começar?
                 </Heading>
                 <Text as="p" className="text-center mb-12">
-                  Select one of these featured questions to explore our data
+                  Selecione uma das perguntas mais pesquisadas para começar.
                 </Text>
-                <Carousel
-                  autoPlay
-                  autoPlayInterval={5000}
-                  responsive={{
-                    0: { items: 1 },
-                    768: { items: 2 },
-                    1024: { items: 3 },
-                  }}
-                  className="w-full"
-                >
-                  {[
-                    {
-                      title: "What are the most common impact factors?",
-                      description:
-                        "Discover the key factors influencing women's leadership in technology",
-                      image: "images/carousel_impact_factors.jpg",
-                      link: "/buscaone?category=factors&question=impact_factors",
-                    },
-                    {
-                      title: "How many initiatives support women in STEM?",
-                      description:
-                        "Explore initiatives supporting women in STEM across Latin America",
-                      image: "images/carousel_initiatives.jpg",
-                      link: "/buscaone?category=initiatives&question=stem_support",
-                    },
-                    {
-                      title: "What policies promote gender equity?",
-                      description:
-                        "Learn about policies promoting gender equity in technology",
-                      image: "images/carousel_policies.jpg",
-                      link: "/buscaone?category=policies&question=gender_equity",
-                    },
-                  ].map((item, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                  {questions.map((item, index) => (
                     <div
                       key={index}
-                      className="bg-white rounded-[20px] shadow-md p-6 m-2 transition-transform hover:scale-105"
-                      onClick={() => navigate(item.link)}
-                      role="button"
-                      tabIndex={0}
+                      className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() =>
+                        navigate(
+                          `/buscaone?category=${item.category.toLowerCase()}&question=${encodeURIComponent(
+                            item.question
+                          )}`
+                        )
+                      }
                     >
-                      <Img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-48 object-cover rounded-t-lg mb-4"
-                      />
-                      <Heading size="lg" as="h3" className="mb-2">
-                        {item.title}
-                      </Heading>
-                      <Text as="p" className="text-gray-600">
-                        {item.description}
-                      </Text>
-                      <Button
-                        className="mt-4"
-                        variant="outline"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(item.link);
-                        }}
-                      >
-                        Explore Data
-                      </Button>
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                          <img
+                            src={item.icon}
+                            alt={item.category}
+                            className="w-5 h-5"
+                          />
+                        </div>
+                        <div>
+                          <Text
+                            size="lg"
+                            as="h3"
+                            className="font-medium text-purple-800 mb-2"
+                          >
+                            {item.category}
+                          </Text>
+                          <Text as="p" className="text-gray-700">
+                            {item.question}
+                          </Text>
+                        </div>
+                      </div>
                     </div>
                   ))}
-                </Carousel>
+                </div>
               </div>
             </div>
 

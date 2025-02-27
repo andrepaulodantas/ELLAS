@@ -24,7 +24,7 @@ const FazerLoginOnePage: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/usuarios/login",
+        "http://localhost:8080/api/usuarios/login",
         { email, senha: password }
       );
       const { token } = response.data;

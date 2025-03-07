@@ -1,0 +1,121 @@
+{
+  "home": "Home",
+  "explore": "Explore",
+  "exploreDescription": "The ELLAS portal generates and disseminates connected open data focusing on Latin American countries. It emerged from the union of institutions from Brazil, Bolivia, and Peru.",
+  "about": "About",
+  "openData": "Open Data",
+  "support": "Support ELLAS",
+  "login": "Login",
+  "search": "Search",
+  "chooseCategory": "Choose a Category",
+  "askData": "What would you like to ask the data?",
+  "learnMore": "Learn More",
+  "project": "The Project",
+  "team": "The Team",
+  "partners": "Partners",
+  "institutions": "Institutions",
+  "visualizations": "Visualizations",
+  "download": "Download",
+  "api": "API",
+  "visualization": {
+    "table": "Table View",
+    "map": "Initiatives by Country",
+    "chart": "Chart View",
+    "bars": "Bars",
+    "lines": "Lines",
+    "description": "Explore initiatives supporting women in STEM across Latin America"
+  },
+  "contact": "Contact",
+  "categories": {
+    "policies": "Policies",
+    "initiatives": "Initiatives",
+    "factors": "Factors",
+    "otherData": "Other Data",
+    "descriptions": {
+      "policies": "Description of policies",
+      "initiatives": "Description of initiatives",
+      "factors": "Description of factors",
+      "otherData": "Description of other data"
+    }
+  },
+  "filters": {
+    "filterBy": "Filter by",
+    "all": "All",
+    "country": "Country",
+    "year": "Year",
+    "type": "Type",
+    "noData": "No data available"
+  },
+  "buttons": {
+    "reset": "Reset",
+    "apply": "Apply",
+    "share": "Share",
+    "export": "Export",
+    "viewAll": "View All Data"
+  },
+  "footer": {
+    "contacts": "Contacts",
+    "connect": "Connect with ELLAS",
+    "usefulLinks": "Useful Links",
+    "accessibility": "Web Accessibility",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "rights": "All rights reserved",
+    "institutions": "Institutions"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "description": "Here are some frequently asked questions to help you better understand our services and initiatives.",
+    "participation": "Q: How can I participate? A: You can participate through donations, volunteering, or attending events."
+  },
+  "featuredQuestions": {
+    "title": "Not sure where to start?",
+    "subtitle": "Select one of the most searched questions to begin."
+  },
+  "countries": {
+    "brasil": "Brazil",
+    "peru": "Peru",
+    "bolivia": "Bolivia",
+    "argentina": "Argentina"
+  },
+  "latinAmerica": {
+    "title": "Latin America in focus!",
+    "description": "The ELLAS portal generates and disseminates connected open data focusing on Latin American countries. It emerged from the union of institutions from Brazil, Bolivia, and Peru.",
+    "interaction": "In an open data infrastructure, it is possible to map information, visualize data, and improve collaboration between education, government, and industry sectors seeking to reduce the STEM gender gap in Latin America.",
+    "learnMore": "Learn more"
+  },
+  "source": {
+    "inep": "Source: INEP, UNESCO and Secondary Data from ELLAS platform"
+  },
+  "dataChart": {
+    "centerText1": "Data Categories",
+    "centerText2": "in ELLAS",
+    "title": "Find the information you need in the ELLAS Portal",
+    "description1": "The lack of recent and reliable data is partially responsible for gender gaps in science, technology, engineering, and mathematics (STEM) in Latin America.",
+    "description2": "The ELLAS Portal gathers data from various sources to help researchers, policy makers, and educators better understand the challenges and opportunities for women in STEM.",
+    "listItem1": "Evaluate policies and interventions to reduce the gender gap in STEM, especially by increasing the number of women leaders in universities, industries, and public institutions.",
+    "listItem2": "Map factors that influence the career development of women in STEM, documenting and analyzing successful and unsuccessful initiatives to identify lessons learned.",
+    "categories": {
+      "policies": "Policies",
+      "factors": "Factors",
+      "initiatives": "Initiatives",
+      "secondary": "Secondary"
+    }
+  },
+  "table": {
+    "title": "Data Table",
+    "noData": "No data available",
+    "loading": "Loading data...",
+    "search": "Search",
+    "rowsPerPage": "Rows per page",
+    "of": "of",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "labels": {
+    "category": "Category",
+    "question": "Question",
+    "selectCategory": "Select a Category",
+    "selectQuestion": "Select a Question"
+  }
+}

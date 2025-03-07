@@ -219,7 +219,14 @@ const HomePage: React.FC = () => {
                     conclusões a correlação em mais setores de educação STEM na
                     América do Sul.
                   </Text>
-                  <Button shape="round" size="lg">
+                  <Button
+                    shape="round"
+                    size="lg"
+                    onClick={() =>
+                      (window.location.href =
+                        "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
+                    }
+                  >
                     Saiba mais
                   </Button>
                 </div>

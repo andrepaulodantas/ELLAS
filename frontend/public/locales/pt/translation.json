@@ -1,0 +1,97 @@
+{
+  "home": "Home",
+  "explore": "Explorar",
+  "about": "Sobre",
+  "openData": "Dados Abertos",
+  "support": "Apoie ELLAS",
+  "login": "Entrar",
+  "search": "Pesquisar",
+  "chooseCategory": "Escolha uma Categoria",
+  "askData": "O que deseja perguntar aos dados?",
+  "learnMore": "Saiba mais",
+  "project": "O Projeto",
+  "team": "A Equipe",
+  "partners": "Parceiros",
+  "visualizations": "Visualizações",
+  "download": "Download",
+  "api": "API",
+  "visualization": {
+    "table": "Visualização em Tabela",
+    "map": "Iniciativas por País",
+    "chart": "Visualização em Gráfico",
+    "bars": "Barras",
+    "lines": "Linhas",
+    "description": "Explore iniciativas que apoiam mulheres em STEM na América Latina"
+  },
+  "contact": "Contato",
+  "categories": {
+    "policies": "Políticas",
+    "initiatives": "Iniciativas",
+    "factors": "Fatores",
+    "otherData": "Outros Dados"
+  },
+  "filters": {
+    "filterBy": "Filtrar por",
+    "all": "Todos",
+    "country": "País",
+    "year": "Ano",
+    "type": "Tipo",
+    "noData": "Nenhum dado disponível"
+  },
+  "buttons": {
+    "reset": "Reiniciar",
+    "apply": "Aplicar",
+    "share": "Compartilhar",
+    "export": "Exportar",
+    "viewAll": "Ver Todos os Dados"
+  },
+  "footer": {
+    "contacts": "Contatos",
+    "connect": "Conecte-se ao ELLAS",
+    "usefulLinks": "Links Úteis",
+    "accessibility": "Acessibilidade na Web",
+    "terms": "Termos de Uso",
+    "privacy": "Política de Privacidade",
+    "rights": "Todos os direitos reservados"
+  },
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "description": "Aqui estão algumas perguntas frequentes para ajudar você a entender melhor nossos serviços e iniciativas.",
+    "participation": "Q: Como posso participar? A: Você pode participar através de doações, voluntariado, ou participando de eventos."
+  },
+  "featuredQuestions": {
+    "title": "Não sabe por onde começar?",
+    "subtitle": "Selecione uma das perguntas mais pesquisadas para começar."
+  },
+  "countries": {
+    "brasil": "Brasil",
+    "peru": "Peru",
+    "bolivia": "Bolívia",
+    "argentina": "Argentina"
+  },
+  "latinAmerica": {
+    "title": "América Latina em foco!",
+    "description": "O portal ELLAS gera e divulga dados abertos conectados como foco em países da América Latina. Ele surgiu a partir da união de instituições do Brasil, Bolívia e Peru.",
+    "interaction": "Em uma infraestrutura de dados abertos é possível mapear informações, visualizar dados e melhorar a colaboração entre os setores de educação, governo e indústria que buscam reduzir a diferença de gênero STEM na América Latina.",
+    "learnMore": "Saiba mais"
+  },
+  "source": {
+    "inep": "Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS"
+  },
+  "table": {
+    "title": "Tabela de Dados",
+    "noData": "Nenhum dado disponível",
+    "loading": "Carregando dados...",
+    "search": "Buscar",
+    "rowsPerPage": "Linhas por página",
+    "of": "de",
+    "next": "Próximo",
+    "previous": "Anterior"
+  },
+  "labels": {
+    "category": "Categoria",
+    "question": "Pergunta",
+    "selectCategory": "Selecione uma Categoria",
+    "selectQuestion": "Selecione uma Pergunta"
+  }
+}

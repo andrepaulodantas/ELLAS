@@ -1,0 +1,135 @@
+/* Estilos para os botões de compartilhamento */
+.share-buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 0;
+}
+
+.share-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.share-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.share-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.share-button svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.csv-button {
+  background-color: #22c55e;
+}
+
+.csv-button:hover {
+  background-color: #16a34a;
+}
+
+.facebook-button {
+  background-color: #1877f2;
+}
+
+.facebook-button:hover {
+  background-color: #166fe5;
+}
+
+.twitter-button {
+  background-color: #1da1f2;
+}
+
+.twitter-button:hover {
+  background-color: #1a91da;
+}
+
+.linkedin-button {
+  background-color: #0a66c2;
+}
+
+.linkedin-button:hover {
+  background-color: #094ea3;
+}
+
+.divider {
+  height: 32px;
+  width: 1px;
+  background-color: #e5e7eb;
+  margin: 0 10px;
+  display: block;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+  .share-buttons-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .share-section {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .share-label {
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .share-buttons {
+    justify-content: center;
+  }
+
+  .divider {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .share-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .share-section {
+    flex-direction: column;
+    align-items: center;
+  }
+}

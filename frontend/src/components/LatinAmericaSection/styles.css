@@ -1,0 +1,160 @@
+.latin-america-section {
+  padding: 4rem 2rem;
+  background-color: #fff;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+}
+
+.text-content {
+  max-width: 800px;
+}
+
+.text-content h2 {
+  font-size: 2.5rem;
+  color: #614c6e;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.text-content p {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.map-interaction-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.interaction-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.interaction-content p {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.learn-more-btn {
+  background-color: #614c6e;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-start;
+  font-weight: 500;
+}
+
+.learn-more-btn:hover {
+  background-color: #503d5b;
+}
+
+@media (max-width: 1024px) {
+  .latin-america-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .text-content h2 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 968px) {
+  .map-interaction-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .map-container {
+    min-height: 350px;
+    order: 2;
+  }
+
+  .interaction-content {
+    text-align: center;
+    order: 1;
+  }
+
+  .learn-more-btn {
+    align-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .latin-america-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .text-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .text-content p {
+    font-size: 1rem;
+  }
+
+  .interaction-content p {
+    font-size: 1rem;
+  }
+
+  .map-container {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .latin-america-section {
+    padding: 2rem 1rem;
+  }
+
+  .content-container {
+    gap: 2rem;
+  }
+
+  .text-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .map-container {
+    min-height: 250px;
+  }
+
+  .learn-more-btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}

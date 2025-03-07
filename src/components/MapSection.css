@@ -1,0 +1,280 @@
+.map-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 4rem 6rem;
+  background-color: #ffffff;
+  gap: 4rem;
+}
+
+.map-content {
+  flex: 1;
+  max-width: 45%;
+}
+
+.map-content h1 {
+  color: #553c9a;
+  font-size: 2.75rem;
+  margin-bottom: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.map-content .description,
+.map-content .sub-description {
+  color: #4a5568;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.saiba-mais {
+  background-color: #553c9a;
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.saiba-mais::after {
+  content: "›";
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-left: 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+.saiba-mais:hover {
+  background-color: #4a3480;
+  transform: translateY(-1px);
+}
+
+.saiba-mais:hover::after {
+  transform: translateX(2px);
+}
+
+.map-container {
+  flex: 1;
+  max-width: 55%;
+}
+
+.map {
+  width: 100%;
+  height: 500px;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff !important;
+}
+
+/* Custom map controls */
+.leaflet-control-zoom {
+  border: none !important;
+  margin-right: 1rem !important;
+  margin-top: 1rem !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background-color: white !important;
+  color: #553c9a !important;
+  border: 1px solid #e2e8f0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 16px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color: #f7fafc !important;
+  color: #4a3480 !important;
+}
+
+/* Remove default Leaflet styles */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Map patterns */
+.pattern-grid {
+  background-color: #ffe6e6 !important;
+  background-image: linear-gradient(#ffcccc 1px, transparent 1px),
+    linear-gradient(90deg, #ffcccc 1px, transparent 1px) !important;
+  background-size: 8px 8px !important;
+}
+
+.pattern-lines {
+  background-color: #ffcccc !important;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    #ff9999 4px,
+    #ff9999 8px
+  ) !important;
+}
+
+.pattern-dots {
+  background-color: #ff9999 !important;
+  background-image: radial-gradient(
+    #ff6666 1.5px,
+    transparent 1.5px
+  ) !important;
+  background-size: 8px 8px !important;
+}
+
+.pattern-4 {
+  background-color: #ff6666 !important;
+}
+
+.no-data {
+  background-color: #e2e8f0 !important;
+}
+
+/* Legend styles */
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.legend-color {
+  width: 2rem;
+  height: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Apply patterns to legend */
+.legend-color.pattern-grid {
+  background-color: #ffe6e6;
+  background-image: linear-gradient(#ffcccc 1px, transparent 1px),
+    linear-gradient(90deg, #ffcccc 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.legend-color.pattern-lines {
+  background-color: #ffcccc;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    #ff9999 2px,
+    #ff9999 4px
+  );
+}
+
+.legend-color.pattern-dots {
+  background-color: #ff9999;
+  background-image: radial-gradient(#ff6666 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.legend-color.pattern-4 {
+  background-color: #ff6666;
+}
+
+.legend-color.no-data {
+  background-color: #e2e8f0;
+}
+
+.legend-source {
+  width: 100%;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Tooltip styling */
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  font-size: 0.875rem !important;
+  color: #4a5568 !important;
+  font-family: inherit !important;
+}
+
+.leaflet-popup-tip-container {
+  display: none !important;
+}
+
+/* Responsive styles */
+@media (max-width: 1280px) {
+  .map-section {
+    padding: 3rem 4rem;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .map-section {
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+  }
+
+  .map-content,
+  .map-container {
+    max-width: 100%;
+  }
+
+  .map-content h1 {
+    font-size: 2.25rem;
+  }
+
+  .map {
+    height: 400px;
+  }
+}
+
+@media (max-width: 640px) {
+  .map-section {
+    padding: 1.5rem;
+  }
+
+  .map-content h1 {
+    font-size: 2rem;
+  }
+
+  .map {
+    height: 300px;
+  }
+
+  .map-legend {
+    justify-content: center;
+  }
+}

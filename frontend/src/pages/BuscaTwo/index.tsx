@@ -44,11 +44,11 @@ const BuscaTwoPage = () => {
   const location = useLocation();
 
   const handleSupportClick = () => {
-    window.location.href = "https://ellas.ufmt.br/support-ellas/"; // Redirecionamento Externo
+    window.location.href = "https://ellas.ufmt.br/pt/parceiros/"; // Redirecionamento Externo
   };
 
   const handleAboutClick = () => {
-    window.location.href = "https://ellas.ufmt.br/about"; // Redirecionamento Externo
+    window.location.href = "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/"; // Redirecionamento Externo
   };
 
   // Função para converter os dados em CSV

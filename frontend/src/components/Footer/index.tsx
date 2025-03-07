@@ -1,152 +1,148 @@
 import React from "react";
-import { Img, Text } from "../../components";
 import { useLanguage } from "../../contexts/LanguageContext";
+import "./styles.css";
 
 const Footer = () => {
   const { translations } = useLanguage();
 
   const institutionLogos = [
-    "img_ufmt_oficial_branca.png",
-    "img_uftpr_branca.png",
-    "img_vertical_extens.png",
-    "img_logouff_vertica.png",
-    "img_200px_universid.png",
-    "img_negro_horizontal_nac_branca.png",
-    "img_blancopeq.png",
+    { src: "img_ufmt_oficial_branca.png", alt: "UFMT" },
+    { src: "img_uftpr_branca.png", alt: "UTFPR" },
+    { src: "img_logouff_vertica.png", alt: "UFF" },
+    { src: "img_vertical_extens.png", alt: "Universidad Mayor de San Andrés" },
+    {
+      src: "img_200px_universid.png",
+      alt: "Universidad Nacional de San Agustín",
+    },
+    { src: "img_blancopeq.png", alt: "Universidad Católica Boliviana" },
   ];
 
   return (
-    <footer className="bg-[#4A2B5C] py-8 px-4">
-      <div className="container mx-auto max-w-7xl">
-        <div className="grid grid-cols-3 gap-8">
-          {/* Left Column */}
-          <div className="space-y-6">
+    <>
+      {/* Barra colorida acima do footer */}
+      <div className="color-bar">
+        <div className="color-bar-segment"></div>
+        <div className="color-bar-segment"></div>
+        <div className="color-bar-segment"></div>
+        <div className="color-bar-segment"></div>
+        <div className="color-bar-segment"></div>
+      </div>
+
+      <footer className="footer">
+        <div className="footer-container">
+          <div className="footer-grid">
+            {/* Left Column */}
             <div>
-              <Text className="text-[#E6A17A] font-medium text-lg mb-2">
-                {translations.footer.contacts}
-              </Text>
-              <div className="space-y-1 text-base">
-                <a
-                  href="https://ellas.ufmt.br"
-                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
-                >
+              <h3 className="footer-title">{translations.footer.contacts}</h3>
+              <div>
+                <a href="https://ellas.ufmt.br" className="footer-link">
                   www.ellas.ufmt.br
                 </a>
                 <a
                   href="https://www.instagram.com/ellas.network/"
-                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                  className="footer-link"
                 >
                   @ellas.network
                 </a>
                 <a
-                  href="https://www.linkedin.com/company/ellasnetwork/"
-                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
-                >
-                  LinkedIn
-                </a>
-                <a
                   href="mailto:ellas.latinamerica@gmail.com"
-                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
+                  className="footer-link"
                 >
                   ellas.latinamerica@gmail.com
                 </a>
               </div>
-            </div>
 
-            <div>
-              <Text className="text-[#E6A17A] font-medium text-lg mb-2">
+              <h3 className="footer-title mt-6">
                 {translations.footer.connect}
-              </Text>
-              <div className="flex gap-2">
+              </h3>
+              <div className="social-icons">
                 <a
                   href="https://www.instagram.com/ellas.network/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
                 >
-                  <Img
-                    src="images/instagram_icon.svg"
+                  <img
+                    src="/images/img_instagram.svg"
                     alt="Instagram"
-                    className="h-[26px] w-auto"
+                    className="social-icon"
                   />
                 </a>
                 <a
                   href="https://www.linkedin.com/company/ellasnetwork/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
                 >
-                  <Img
-                    src="images/linkedin_icon.svg"
+                  <img
+                    src="/images/img_linkedin.svg"
                     alt="LinkedIn"
-                    className="h-[26px] w-auto"
+                    className="social-icon"
+                  />
+                </a>
+                <a
+                  href="https://www.facebook.com/ellas.network"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/images/img_facebook.svg"
+                    alt="Facebook"
+                    className="social-icon"
                   />
                 </a>
               </div>
             </div>
-          </div>
 
-          {/* Center Column */}
-          <div className="flex flex-col items-center">
-            <Text className="text-[#E6A17A] font-medium text-lg mb-4">
-              {translations.partners}
-            </Text>
-            <Img
-              src="images/img_idrc_logo_branca.png"
-              alt="IDRC"
-              className="h-16 w-auto mb-8"
-            />
-            <Text className="text-[#E6A17A] font-medium text-lg mb-4">
-              {translations.partners}
-            </Text>
-            <div className="flex flex-wrap justify-center gap-4">
-              {institutionLogos.map((src, index) => (
-                <Img
-                  key={index}
-                  src={`images/${src}`}
-                  alt={`Institution ${index + 1}`}
-                  className="h-8 w-auto"
+            {/* Center Column */}
+            <div className="text-center">
+              <h3 className="footer-title">{translations.partners}</h3>
+              <div className="mb-8">
+                <img
+                  src="/images/img_idrc_logo_branca.png"
+                  alt="IDRC"
+                  className="h-16 w-auto mx-auto"
                 />
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* Right Column */}
-          <div className="text-right">
-            <Text className="text-[#E6A17A] font-medium text-lg mb-2">
-              {translations.footer.usefulLinks}
-            </Text>
-            <div className="space-y-1 text-base">
-              <a
-                href="/accessibility"
-                className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
-              >
-                {translations.footer.accessibility}
-              </a>
-              <a
-                href="/terms"
-                className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
-              >
-                {translations.footer.terms}
-              </a>
-              <a
-                href="/privacy"
-                className="block text-[#FFFFFF] hover:opacity-80 transition-opacity"
-              >
-                {translations.footer.privacy}
-              </a>
+              <h3 className="footer-title">{translations.institutions}</h3>
+              <div className="partner-logos-grid">
+                {institutionLogos.map((logo, index) => (
+                  <div key={index} className="partner-logo-container">
+                    <img
+                      src={`/images/${logo.src}`}
+                      alt={logo.alt}
+                      className="partner-logo"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="text-right md:text-right">
+              <h3 className="footer-title">
+                {translations.footer.usefulLinks}
+              </h3>
+              <div>
+                <a href="/accessibility" className="footer-link">
+                  {translations.footer.accessibility}
+                </a>
+                <a href="/terms" className="footer-link">
+                  {translations.footer.terms}
+                </a>
+                <a href="/privacy" className="footer-link">
+                  {translations.footer.privacy}
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Copyright Section */}
-      <div className="container mx-auto max-w-7xl mt-8 pt-4 text-center">
-        <Text className="text-[#FFFFFF] text-sm">
+        {/* Copyright Section */}
+        <div className="copyright">
           © 2024 ELLAS - {translations.footer.rights}
-        </Text>
-      </div>
-    </footer>
+        </div>
+      </footer>
+    </>
   );
 };
 

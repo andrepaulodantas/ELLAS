@@ -1,0 +1,130 @@
+.language-switcher {
+  position: relative;
+  display: inline-block;
+}
+
+.language-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.language-button:hover {
+  background-color: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+.language-flag {
+  font-size: 16px;
+}
+
+.language-code {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  margin-left: 4px;
+  color: #4a5568;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  width: 160px;
+  z-index: 50;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #2d3748;
+}
+
+.language-option:hover {
+  background-color: #f7fafc;
+}
+
+.language-option.active {
+  background-color: #edf2f7;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.language-option:disabled {
+  cursor: default;
+}
+
+.language-name {
+  font-size: 14px;
+  color: #2d3748;
+}
+
+@media (max-width: 768px) {
+  .language-button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .language-flag {
+    font-size: 15px;
+  }
+
+  .language-dropdown {
+    width: 150px;
+  }
+
+  .language-option {
+    padding: 8px 12px;
+  }
+
+  .language-name {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .language-button {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .language-flag {
+    font-size: 14px;
+  }
+
+  .language-code {
+    font-size: 12px;
+  }
+
+  .language-dropdown {
+    width: 140px;
+    right: -10px;
+  }
+}

@@ -5,6 +5,7 @@ import ProjectRoutes from "./routes/ProjectRoutes";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import Footer from "./components/Footer";
+import "./i18n";
 
 function App() {
   return (

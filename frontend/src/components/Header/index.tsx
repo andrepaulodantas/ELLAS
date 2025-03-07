@@ -30,6 +30,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useAuth } from "../../contexts/AuthContext";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 const StyledAppBar = styled(AppBar)`
   background-color: white;
@@ -315,17 +316,6 @@ const Header = () => {
     }
   }, [isHomePage, images.length]);
 
-  const handleLangClick = (event: React.MouseEvent<HTMLElement>) => {
-    setLangAnchor(event.currentTarget);
-  };
-
-  const handleLangChange = (lang: "pt" | "en" | "es") => {
-    setLanguage(lang);
-    const currentPath = window.location.pathname;
-    const newPath = currentPath.replace(/\/(pt|en|es)\//, `/${lang}/`);
-    window.history.pushState({}, "", newPath);
-  };
-
   const handleClose = () => {
     setLangAnchor(null);
   };
@@ -357,22 +347,24 @@ const Header = () => {
     { label: translations.home, path: "/" },
     {
       label: translations.about,
-      submenu: [
-        { label: translations.project, path: "/sobre" },
-        { label: translations.team, path: "/equipe" },
-      ],
+      path: "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/",
     },
     { label: translations.openData, path: "/buscaone" },
-    { label: translations.support, path: "/apoie-ellas" },
-    { label: translations.contact, path: "/contato" },
+    {
+      label: translations.support,
+      path: "https://ellas.ufmt.br/pt/parceiros/",
+    },
+    { label: translations.contact, path: "https://ellas.ufmt.br/" },
   ];
 
   const handleMenuItemClick = (item: MenuItem) => {
     if (!item.path) return;
 
-    item.path.startsWith("http")
-      ? handleExternalLink(item.path)
-      : handleNavigation(item.path);
+    if (item.path.startsWith("http")) {
+      window.location.href = item.path;
+    } else {
+      handleNavigation(item.path);
+    }
   };
 
   return (
@@ -408,27 +400,7 @@ const Header = () => {
                 ))}
 
                 <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
-                  <NavButton
-                    endIcon={<KeyboardArrowDownIcon />}
-                    onClick={handleLangClick}
-                  >
-                    {language.toUpperCase()}
-                  </NavButton>
-                  <StyledMenu
-                    anchorEl={langAnchor}
-                    open={Boolean(langAnchor)}
-                    onClose={() => setLangAnchor(null)}
-                  >
-                    <MenuItem onClick={() => handleLangChange("pt")}>
-                      Português
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLangChange("en")}>
-                      English
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLangChange("es")}>
-                      Español
-                    </MenuItem>
-                  </StyledMenu>
+                  <LanguageSwitcher />
 
                   {isAuthenticated ? (
                     <LoginButton
@@ -470,10 +442,7 @@ const Header = () => {
               </DrawerListItem>
             ))}
             <DrawerListItem>
-              <ListItemText
-                primary={language.toUpperCase()}
-                onClick={handleLangClick}
-              />
+              <LanguageSwitcher />
             </DrawerListItem>
             <DrawerListItem>
               {isAuthenticated ? (

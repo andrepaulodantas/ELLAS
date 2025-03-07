@@ -10,18 +10,18 @@ import {
   DataChart,
   DataCards,
   Carousel,
+  LatinAmericaSection,
 } from "../../components";
 import GoogleMapComponent from "../../components/GoogleMap";
 import Header from "../../components/Header";
 import { questionFunctions } from "../../services/apiService";
 import { useLanguage } from "../../contexts/LanguageContext";
 import ExploreCards from "../../components/ExploreCards";
-import NavigateBefore from "@mui/icons-material/NavigateBefore";
-import NavigateNext from "@mui/icons-material/NavigateNext";
+import "./HomeOne.css";
 
 const HomeOnePage = () => {
   const navigate = useNavigate();
-  const { translations } = useLanguage();
+  const { translations, language } = useLanguage();
 
   const [mapData, setMapData] = useState<any[]>([]);
   const [highlightedCountries, setHighlightedCountries] = useState<string[]>(
@@ -33,49 +33,126 @@ const HomeOnePage = () => {
     { range: "26-50%", color: "bg-red-400" },
     { range: "51-75%", color: "bg-red-500" },
     { range: "76-100%", color: "bg-red-600" },
-    { range: "No data", color: "bg-gray-300" },
+    { range: translations.filters.noData || "No data", color: "bg-gray-300" },
   ];
 
-  // Define the questions array
-  const questions = [
-    {
-      category: "Políticas",
-      question:
-        "Que tipos de políticas de gênero foram implementadas nos países em determinado ano?",
-      icon: "images/policy-icon.svg",
-    },
-    {
-      category: "Políticas",
-      question:
-        "Como as políticas identificadas/analisadas estão promovendo a participação das mulheres nas áreas STEM?",
-      icon: "images/policy-icon.svg",
-    },
-    {
-      category: "Iniciativas",
-      question: "Que iniciativas são desenvolvidas por nível de escolar?",
-      icon: "images/initiatives-icon.svg",
-    },
-    {
-      category: "Iniciativas",
-      question: "Que iniciativas atendem às mulheres negras?",
-      icon: "images/initiatives-icon.svg",
-    },
-    {
-      category: "Fatores",
-      question:
-        "Quais são os fatores contextuais que impactam positiva ou negativamente o gênero feminino?",
-      icon: "images/factors-icon.svg",
-    },
-    {
-      category: "Fatores",
-      question:
-        "Quais são os fatores contextuais que impactam positiva ou negativamente na liderança, motivação, etc. em cada país?",
-      icon: "images/factors-icon.svg",
-    },
-  ];
+  // Define the questions array based on current language
+  const questionsData = {
+    pt: [
+      {
+        category: "Políticas",
+        question:
+          "Que tipos de políticas de gênero foram implementadas nos países em determinado ano?",
+        icon: "images/policy-icon.svg",
+      },
+      {
+        category: "Políticas",
+        question:
+          "Como as políticas identificadas/analisadas estão promovendo a participação das mulheres nas áreas STEM?",
+        icon: "images/policy-icon.svg",
+      },
+      {
+        category: "Iniciativas",
+        question: "Que iniciativas são desenvolvidas por nível de escolar?",
+        icon: "images/initiatives-icon.svg",
+      },
+      {
+        category: "Iniciativas",
+        question: "Que iniciativas atendem às mulheres negras?",
+        icon: "images/initiatives-icon.svg",
+      },
+      {
+        category: "Fatores",
+        question:
+          "Quais são os fatores contextuais que impactam positiva ou negativamente o gênero feminino?",
+        icon: "images/factors-icon.svg",
+      },
+      {
+        category: "Fatores",
+        question:
+          "Quais são os fatores contextuais que impactam positiva ou negativamente na liderança, motivação, etc. em cada país?",
+        icon: "images/factors-icon.svg",
+      },
+    ],
+    en: [
+      {
+        category: "Policies",
+        question:
+          "What types of gender policies were implemented in countries in a given year?",
+        icon: "images/policy-icon.svg",
+      },
+      {
+        category: "Policies",
+        question:
+          "How are the identified/analyzed policies promoting women's participation in STEM fields?",
+        icon: "images/policy-icon.svg",
+      },
+      {
+        category: "Initiatives",
+        question: "What initiatives are developed by school level?",
+        icon: "images/initiatives-icon.svg",
+      },
+      {
+        category: "Initiatives",
+        question: "What initiatives serve Black women?",
+        icon: "images/initiatives-icon.svg",
+      },
+      {
+        category: "Factors",
+        question:
+          "What are the contextual factors that positively or negatively impact the female gender?",
+        icon: "images/factors-icon.svg",
+      },
+      {
+        category: "Factors",
+        question:
+          "What are the contextual factors that positively or negatively impact leadership, motivation, etc. in each country?",
+        icon: "images/factors-icon.svg",
+      },
+    ],
+    es: [
+      {
+        category: "Políticas",
+        question:
+          "¿Qué tipos de políticas de género se implementaron en los países en un año determinado?",
+        icon: "images/policy-icon.svg",
+      },
+      {
+        category: "Políticas",
+        question:
+          "¿Cómo están promoviendo las políticas identificadas/analizadas la participación de las mujeres en las áreas STEM?",
+        icon: "images/policy-icon.svg",
+      },
+      {
+        category: "Iniciativas",
+        question: "¿Qué iniciativas se desarrollan por nivel escolar?",
+        icon: "images/initiatives-icon.svg",
+      },
+      {
+        category: "Iniciativas",
+        question: "¿Qué iniciativas atienden a las mujeres negras?",
+        icon: "images/initiatives-icon.svg",
+      },
+      {
+        category: "Factores",
+        question:
+          "¿Cuáles son los factores contextuales que impactan positiva o negativamente al género femenino?",
+        icon: "images/factors-icon.svg",
+      },
+      {
+        category: "Factores",
+        question:
+          "¿Cuáles son los factores contextuales que impactan positiva o negativamente en el liderazgo, la motivación, etc. en cada país?",
+        icon: "images/factors-icon.svg",
+      },
+    ],
+  };
+
+  // Use questions based on current language
+  const questions = questionsData[language] || questionsData.pt;
 
   const handleAboutClick = () => {
-    navigate("/sobre");
+    window.location.href = "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/";
   };
 
   useEffect(() => {
@@ -125,91 +202,35 @@ const HomeOnePage = () => {
         <Header />
 
         {/* Seção de Explorar */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <Heading size="xl" as="h2" className="mb-4">
-                Explorar
+        <section className="py-16 md:py-20 bg-gray-50">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-8 md:mb-12">
+              <Heading size="xl" as="h2" className="mb-3 md:mb-4">
+                {translations.explore}
               </Heading>
-              <Text as="p" className="text-gray-600 max-w-2xl mx-auto">
-                Descubra dados e informações sobre iniciativas e políticas para
-                equidade de gênero na América Latina
+              <Text as="p" className="text-gray-600 max-w-2xl mx-auto px-2">
+                {translations.exploreDescription}
               </Text>
             </div>
             <ExploreCards />
           </div>
         </section>
+
         <div className="flex-grow">
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
-            <DataChart />
-            <div className="flex flex-col items-center justify-start w-full mt-[60px] gap-[60px]"></div>
-
-            {/* Map and Text Section */}
-            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between w-full px-6 lg:px-12 py-10 gap-10 bg-white">
-              {/* Text Section */}
-              <div className="flex-1 lg:max-w-[40%]">
-                <Heading size="2xl" as="h1" className="text-purple-700">
-                  {translations.home}
-                </Heading>
-                <Text as="p" className="mt-4 text-gray-700 leading-relaxed">
-                  {translations.openData}
-                </Text>
-                <Button
-                  size="sm"
-                  shape="round"
-                  className="mt-6"
-                  onClick={handleAboutClick}
-                >
-                  {translations.learnMore}
-                </Button>
-              </div>
-
-              {/* Map Section */}
-              <div className="flex-1 lg:max-w-[60%]">
-                <div className="relative w-full h-[500px] border rounded-lg">
-                  <GoogleMapComponent
-                    initiatives={mapData}
-                    selectedCountries={highlightedCountries}
-                  />
-                </div>
-
-                {/* Legend Section */}
-                <div className="flex flex-row justify-center items-center gap-4 mt-6">
-                  {percentages.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-row items-center gap-2 text-sm"
-                    >
-                      <div
-                        className={`w-4 h-4 ${item.color} rounded-full border border-gray-400`}
-                      ></div>
-                      <Text as="span" className="text-gray-700">
-                        {item.range}
-                      </Text>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
             {/* Featured Questions Section */}
-            <div className="w-full py-16 bg-gray-50">
-              <div className="container mx-auto px-4">
-                <Heading
-                  size="2xl"
-                  as="h2"
-                  className="text-purple-800 text-center mb-4"
-                >
-                  Não sabe por onde começar?
-                </Heading>
-                <Text as="p" className="text-center mb-12">
-                  Selecione uma das perguntas mais pesquisadas para começar.
-                </Text>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <section className="start-section py-16 md:py-20">
+              <div className="container">
+                <h2>{translations.featuredQuestions.title}</h2>
+                <p className="subtitle">
+                  {translations.featuredQuestions.subtitle}
+                </p>
+
+                <div className="cards-grid">
                   {questions.map((item, index) => (
                     <div
                       key={index}
-                      className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      className="card"
                       onClick={() =>
                         navigate(
                           `/buscaone?category=${item.category.toLowerCase()}&question=${encodeURIComponent(
@@ -218,79 +239,172 @@ const HomeOnePage = () => {
                         )
                       }
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                          <img
-                            src={item.icon}
-                            alt={item.category}
-                            className="w-5 h-5"
-                          />
-                        </div>
-                        <div>
-                          <Text
-                            size="lg"
-                            as="h3"
-                            className="font-medium text-purple-800 mb-2"
-                          >
-                            {item.category}
-                          </Text>
-                          <Text as="p" className="text-gray-700">
-                            {item.question}
-                          </Text>
-                        </div>
+                      <div className="card-icon">
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          {item.category === "Políticas" && (
+                            <path
+                              d="M12 3L20 7V17L12 21L4 17V7L12 3Z"
+                              stroke="#6B46C1"
+                              strokeWidth="2"
+                            />
+                          )}
+                          {item.category === "Iniciativas" && (
+                            <path
+                              d="M3 12H21M3 6H21M3 18H21"
+                              stroke="#6B46C1"
+                              strokeWidth="2"
+                            />
+                          )}
+                          {item.category === "Fatores" && (
+                            <path
+                              d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                              stroke="#6B46C1"
+                              strokeWidth="2"
+                            />
+                          )}
+                        </svg>
                       </div>
+                      <h3>{item.category}</h3>
+                      <p>{item.question}</p>
                     </div>
                   ))}
                 </div>
               </div>
+            </section>
+
+            <DataChart />
+
+            {/* Latin America Section */}
+            <div className="py-16 md:py-20">
+              <LatinAmericaSection />
             </div>
 
             {/* Slider Section */}
-            <div className="w-full mt-[61px] pt-5 bg-red-50">
-              <div className="relative w-full h-[702px]">
+            <div className="w-full py-16 md:py-20 bg-pink-50">
+              <div className="relative w-full h-[500px] md:h-[600px] lg:h-[702px]">
                 <Img
                   src="images/img_fundo_ink_1.png"
                   alt="Fundo Ink"
                   className="absolute w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-[43px]">
-                  <Heading size="2xl" as="h2" className="text-center">
-                    Featured Data
+                  <Heading
+                    size="2xl"
+                    as="h2"
+                    className="text-center text-purple-800"
+                  >
+                    Dados em destaque
                   </Heading>
                   <Text
                     as="p"
                     className="!text-gray-900 !leading-5 text-center"
                   >
-                    Select one of the most searched questions to get started.
+                    Selecione uma das perguntas mais pesquisadas para começar.
                   </Text>
                   <Slider
                     autoPlay
-                    autoPlayInterval={1000}
+                    autoPlayInterval={3000}
                     responsive={{
                       "0": { items: 1 },
-                      "550": { items: 1 },
+                      "550": { items: 2 },
                       "1050": { items: 3 },
                     }}
                     className="w-[80%]"
                   >
-                    {[...Array(5)].map(() => (
-                      <div
-                        key={Math.random()}
-                        className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[300px]"
+                    <div className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4">
+                      <Img
+                        src="images/img_mask_group.png"
+                        alt="Fatores de impacto"
+                        className="h-[200px] w-full object-cover rounded-t-[20px]"
+                      />
+                      <Heading
+                        size="lg"
+                        as="h3"
+                        className="!text-purple-800 mt-4"
                       >
-                        <Img
-                          src="images/img_mask_group.png"
-                          alt="Featured Image"
-                          className="h-[150px] w-full object-cover rounded-t-[20px]"
-                        />
-                        <Heading size="lg" as="h3" className="!text-gray-900">
-                          Title Example
-                        </Heading>
-                        <Text as="p" className="!text-gray-700">
-                          Brief description of the featured data or topic.
-                        </Text>
-                      </div>
-                    ))}
+                        Fatores de impacto nas lideranças femininas
+                      </Heading>
+                      <Text as="p" className="!text-gray-700 mt-2">
+                        Conheça os principais fatores que impactam as lideranças
+                        femininas na América Latina...
+                      </Text>
+                      <Button
+                        size="sm"
+                        shape="round"
+                        className="mt-4 self-start"
+                        onClick={() =>
+                          (window.location.href =
+                            "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
+                        }
+                      >
+                        Saiba mais
+                      </Button>
+                    </div>
+
+                    <div className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4">
+                      <Img
+                        src="images/img_mask_group2.png"
+                        alt="Iniciativas para mulheres negras"
+                        className="h-[200px] w-full object-cover rounded-t-[20px]"
+                      />
+                      <Heading
+                        size="lg"
+                        as="h3"
+                        className="!text-purple-800 mt-4"
+                      >
+                        Aumento de iniciativas para mulheres negras no Brasil
+                      </Heading>
+                      <Text as="p" className="!text-gray-700 mt-2">
+                        Iniciativas para mulheres negras dobraram no Brasil a
+                        partir de 2018...
+                      </Text>
+                      <Button
+                        size="sm"
+                        shape="round"
+                        className="mt-4 self-start"
+                        onClick={() =>
+                          (window.location.href =
+                            "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
+                        }
+                      >
+                        Saiba mais
+                      </Button>
+                    </div>
+
+                    <div className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4">
+                      <Img
+                        src="images/img_mask_group3.png"
+                        alt="Dados essenciais"
+                        className="h-[200px] w-full object-cover rounded-t-[20px]"
+                      />
+                      <Heading
+                        size="lg"
+                        as="h3"
+                        className="!text-purple-800 mt-4"
+                      >
+                        Dados essenciais sobre igualdade de gênero
+                      </Heading>
+                      <Text as="p" className="!text-gray-700 mt-2">
+                        Gráficos sobre igualdade de gênero na América Latina que
+                        todos deveriam conhecer...
+                      </Text>
+                      <Button
+                        size="sm"
+                        shape="round"
+                        className="mt-4 self-start"
+                        onClick={() =>
+                          (window.location.href =
+                            "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
+                        }
+                      >
+                        Saiba mais
+                      </Button>
+                    </div>
                   </Slider>
                 </div>
               </div>

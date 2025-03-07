@@ -1,203 +1,227 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { styled } from "@mui/material";
 import { useLanguage } from "../../contexts/LanguageContext";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-const CarouselContainer = styled("div")`
-  width: 300%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 100px;
-  margin-left: -300px;
-`;
-
-const CarouselWrapper = styled("div")`
+const CarouselContainer = styled(motion.div)`
   width: 100%;
-  overflow: hidden;
-  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 30px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    padding: 0 16px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 16px;
+  }
 `;
 
-const CarouselTrack = styled("div")<{ $currentIndex: number }>`
-  display: flex;
-  gap: 32px;
-  transition: transform 0.5s ease-in-out;
-  transform: translateX(calc(-${(props) => props.$currentIndex} * (100% / 3)));
-`;
-
-const Card = styled("div")`
-  flex: 0 0 280px;
+const Card = styled(motion.div)`
+  flex: 1;
+  min-width: 240px;
   height: 320px;
   padding: 32px 24px;
   border-radius: 16px;
+  background-color: ${(props) => props.color || "#4A2B5C"};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  text-align: left;
-  gap: 16px;
-  color: white;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-  &:hover {
-    transform: translateY(-5px);
+  @media (max-width: 768px) {
+    height: 300px;
+    padding: 24px 20px;
+  }
+
+  @media (max-width: 480px) {
+    height: auto;
+    min-height: 280px;
   }
 `;
 
-const CardIcon = styled("div")`
+const CardIcon = styled(motion.div)`
   width: 48px;
   height: 48px;
-  margin-bottom: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-
-  img {
-    width: 100%;
-    height: 100%;
-  }
+  margin-bottom: 24px;
 `;
 
-const CardTitle = styled("h3")`
+const CardTitle = styled(motion.h3)`
+  color: white;
   font-size: 24px;
   font-weight: 600;
-  margin: 0;
-  color: white;
+  margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
 `;
 
-const CardDescription = styled("p")`
+const CardDescription = styled(motion.p)`
+  color: rgba(255, 255, 255, 0.9);
   font-size: 16px;
   line-height: 1.5;
-  color: white;
-  opacity: 0.9;
-  margin: 0;
-`;
 
-const NavigationButton = styled("button")`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
-  height: 40px;
-  border-radius: 50%;
-  background: white;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 2;
-
-  &:hover {
-    background: #f8f8f8;
-  }
-
-  &.prev {
-    left: -20px;
-  }
-
-  &.next {
-    right: -20px;
-  }
-
-  svg {
-    color: #4a2b4e;
-    font-size: 24px;
+  @media (max-width: 768px) {
+    font-size: 15px;
   }
 `;
 
 const ExploreCards = () => {
   const { translations } = useLanguage();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
   const cards = [
     {
-      icon: "/images/policy-icon.svg",
-      title: "Políticas",
+      title: translations.categories?.policies || "Políticas",
       description:
+        translations.categories?.descriptions?.policies ||
         "Legislações e decretos que promovem a participação de mulheres nas áreas STEM",
-      background: "#FF4081",
+      icon: "/images/policy-icon.svg",
+      color: "#FF6B8B",
+      path: "/buscaone?category=policies",
     },
     {
-      icon: "/images/initiatives-icon.svg",
-      title: "Iniciativas",
+      title: translations.categories?.initiatives || "Iniciativas",
       description:
+        translations.categories?.descriptions?.initiatives ||
         "Eventos, programas e outras ações para inserção e permanência de mulheres nas carreiras de tecnologia",
-      background: "#FFA07A",
+      icon: "/images/initiatives-icon.svg",
+      color: "#FFA07A",
+      path: "/buscaone?category=initiatives",
     },
     {
-      icon: "/images/factors-icon.svg",
-      title: "Fatores",
+      title: translations.categories?.factors || "Fatores",
       description:
+        translations.categories?.descriptions?.factors ||
         "Dados coletados pela equipe ELLAS para identificar fatores que afetam a presença de mulheres em STEM na América do Sul",
-      background: "#FF69B4",
+      icon: "/images/factors-icon.svg",
+      color: "#E57FB3",
+      path: "/buscaone?category=factors",
     },
     {
-      icon: "/images/other-data-icon.svg",
-      title: "Outros Dados",
+      title: translations.categories?.otherData || "Outros Dados",
       description:
+        translations.categories?.descriptions?.otherData ||
         "Dados secundários de outras bases de dados associadas ao projeto ELLAS",
-      background: "#9370DB",
+      icon: "/images/other-data-icon.svg",
+      color: "#B19CD9",
+      path: "/buscaone?category=otherData",
     },
   ];
 
-  // Rolar automaticamente a cada 3 segundos
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev < cards.length - 1 ? prev + 1 : 0));
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [cards.length]);
-
-  const handlePrevClick = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
   };
 
-  const handleNextClick = () => {
-    setCurrentIndex((prev) => Math.min(cards.length - 1, prev + 1));
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+    hover: {
+      scale: 1.05,
+      y: -5,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+      },
+    },
+  };
+
+  const iconVariants = {
+    hover: {
+      rotate: 360,
+      scale: 1.2,
+      transition: {
+        duration: 0.8,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const handleCardClick = (path) => {
+    navigate(path);
   };
 
   return (
-    <CarouselContainer>
-      <NavigationButton
-        className="prev"
-        onClick={handlePrevClick}
-        style={{ visibility: currentIndex <= 0 ? "hidden" : "visible" }}
-      >
-        <NavigateBeforeIcon />
-      </NavigationButton>
-
-      <CarouselWrapper>
-        <CarouselTrack $currentIndex={currentIndex}>
-          {cards.map((card, index) => (
-            <Card key={index} style={{ backgroundColor: card.background }}>
-              <CardIcon>
-                <img src={card.icon} alt={card.title} />
-              </CardIcon>
-              <CardTitle>{card.title}</CardTitle>
-              <CardDescription>{card.description}</CardDescription>
-            </Card>
-          ))}
-        </CarouselTrack>
-      </CarouselWrapper>
-
-      <NavigationButton
-        className="next"
-        onClick={handleNextClick}
-        style={{
-          visibility: currentIndex >= cards.length - 1 ? "hidden" : "visible",
-        }}
-      >
-        <NavigateNextIcon />
-      </NavigationButton>
+    <CarouselContainer
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {cards.map((card, index) => (
+        <Card
+          key={index}
+          color={card.color}
+          variants={cardVariants}
+          whileHover="hover"
+          onClick={() => handleCardClick(card.path)}
+        >
+          <CardIcon variants={iconVariants}>
+            <motion.img
+              src={card.icon}
+              alt={card.title}
+              width="24"
+              height="24"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.2 + 0.5 }}
+            />
+          </CardIcon>
+          <CardTitle>{card.title}</CardTitle>
+          <CardDescription
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: index * 0.2 + 0.7 }}
+          >
+            {card.description}
+          </CardDescription>
+        </Card>
+      ))}
     </CarouselContainer>
   );
 };

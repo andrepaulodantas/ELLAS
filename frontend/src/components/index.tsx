@@ -12,6 +12,7 @@ import { Radio } from "./Radio";
 import Carousel from "./Carousel";
 import DataChart from "./DataChart";
 import DataCards from "./DataCards";
+import LatinAmericaSection from "./LatinAmericaSection";
 
 export {
   Img,
@@ -22,9 +23,10 @@ export {
   SelectBox,
   Input,
   RadioGroup,
-  GoogleMapComponent as GoogleMap, // Corrija aqui
+  GoogleMapComponent,
   Radio,
   Carousel,
   DataChart,
   DataCards,
+  LatinAmericaSection,
 };

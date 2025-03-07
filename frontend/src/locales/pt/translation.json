@@ -1,0 +1,121 @@
+{
+  "home": "Home",
+  "explore": "Explorar",
+  "exploreDescription": "O portal ELLAS gera e divulga dados abertos conectados como foco em países da América Latina. Ele surgiu a partir da união de instituições do Brasil, Bolívia e Peru.",
+  "about": "Sobre",
+  "openData": "Dados Abertos",
+  "support": "Apoie ELLAS",
+  "login": "Entrar",
+  "search": "Pesquisar",
+  "chooseCategory": "Escolha uma Categoria",
+  "askData": "O que deseja perguntar aos dados?",
+  "learnMore": "Saiba mais",
+  "project": "O Projeto",
+  "team": "A Equipe",
+  "partners": "Parceiros",
+  "institutions": "Instituições",
+  "visualizations": "Visualizações",
+  "download": "Download",
+  "api": "API",
+  "visualization": {
+    "table": "Visualização em Tabela",
+    "map": "Iniciativas por País",
+    "chart": "Visualização em Gráfico",
+    "bars": "Barras",
+    "lines": "Linhas",
+    "description": "Explore iniciativas que apoiam mulheres em STEM na América Latina"
+  },
+  "contact": "Contato",
+  "categories": {
+    "policies": "Políticas",
+    "initiatives": "Iniciativas",
+    "factors": "Fatores",
+    "otherData": "Outros Dados",
+    "descriptions": {
+      "policies": "Descrição de políticas",
+      "initiatives": "Descrição de iniciativas",
+      "factors": "Descrição de fatores",
+      "otherData": "Descrição de outros dados"
+    }
+  },
+  "filters": {
+    "filterBy": "Filtrar por",
+    "all": "Todos",
+    "country": "País",
+    "year": "Ano",
+    "type": "Tipo",
+    "noData": "Nenhum dado disponível"
+  },
+  "buttons": {
+    "reset": "Reiniciar",
+    "apply": "Aplicar",
+    "share": "Compartilhar",
+    "export": "Exportar",
+    "viewAll": "Ver Todos os Dados"
+  },
+  "footer": {
+    "contacts": "Contatos",
+    "connect": "Conecte-se ao ELLAS",
+    "usefulLinks": "Links Úteis",
+    "accessibility": "Acessibilidade na Web",
+    "terms": "Termos de Uso",
+    "privacy": "Política de Privacidade",
+    "rights": "Todos os direitos reservados",
+    "institutions": "Instituições"
+  },
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "description": "Aqui estão algumas perguntas frequentes para ajudar você a entender melhor nossos serviços e iniciativas.",
+    "participation": "Q: Como posso participar? A: Você pode participar através de doações, voluntariado, ou participando de eventos."
+  },
+  "featuredQuestions": {
+    "title": "Não sabe por onde começar?",
+    "subtitle": "Selecione uma das perguntas mais pesquisadas para começar."
+  },
+  "countries": {
+    "brasil": "Brasil",
+    "peru": "Peru",
+    "bolivia": "Bolívia",
+    "argentina": "Argentina"
+  },
+  "latinAmerica": {
+    "title": "América Latina em foco!",
+    "description": "O portal ELLAS gera e divulga dados abertos conectados como foco em países da América Latina. Ele surgiu a partir da união de instituições do Brasil, Bolívia e Peru.",
+    "interaction": "Em uma infraestrutura de dados abertos é possível mapear informações, visualizar dados e melhorar a colaboração entre os setores de educação, governo e indústria que buscam reduzir a diferença de gênero STEM na América Latina.",
+    "learnMore": "Saiba mais"
+  },
+  "source": {
+    "inep": "Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS"
+  },
+  "dataChart": {
+    "centerText1": "Categorias de",
+    "centerText2": "Dados no ELLAS",
+    "title": "Encontre a informação que precisa no Portal ELLAS",
+    "description1": "A falta de dados recentes e confiáveis é parcialmente responsável pelas diferenças de gênero em ciência, tecnologia, engenharia e matemática (STEM) na América Latina.",
+    "description2": "O Portal ELLAS reúne dados de diversas fontes para ajudar pesquisadores, formuladores de políticas e educadores a entender melhor os desafios e oportunidades para mulheres em STEM.",
+    "listItem1": "Avaliar políticas e intervenções de redução da diferença de gênero em STEM, especialmente aumentando o número de mulheres líderes em universidades, indústrias e instituições públicas.",
+    "listItem2": "Mapear fatores que influenciam o desenvolvimento da carreira das mulheres em STEM, documentando e analisando as iniciativas sucedidas ou não para identificar lições aprendidas.",
+    "categories": {
+      "policies": "Políticas",
+      "factors": "Fatores",
+      "initiatives": "Iniciativas",
+      "secondary": "Secundários"
+    }
+  },
+  "table": {
+    "title": "Tabela de Dados",
+    "noData": "Nenhum dado disponível",
+    "loading": "Carregando dados...",
+    "search": "Buscar",
+    "rowsPerPage": "Linhas por página",
+    "of": "de",
+    "next": "Próximo",
+    "previous": "Anterior"
+  },
+  "labels": {
+    "category": "Categoria",
+    "question": "Pergunta",
+    "selectCategory": "Selecione uma Categoria",
+    "selectQuestion": "Selecione uma Pergunta"
+  }
+}

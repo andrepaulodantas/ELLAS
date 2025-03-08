@@ -6,15 +6,13 @@ const Footer = () => {
   const { translations } = useLanguage();
 
   const institutionLogos = [
-    { src: "img_ufmt_oficial_branca.png", alt: "UFMT" },
-    { src: "img_uftpr_branca.png", alt: "UTFPR" },
-    { src: "img_logouff_vertica.png", alt: "UFF" },
-    { src: "img_vertical_extens.png", alt: "Universidad Mayor de San Andrés" },
-    {
-      src: "img_200px_universid.png",
-      alt: "Universidad Nacional de San Agustín",
-    },
-    { src: "img_blancopeq.png", alt: "Universidad Católica Boliviana" },
+    { src: "UNIVERSIDADES/UFMT.png", alt: "UFMT" },
+    { src: "UNIVERSIDADES/UFPR.png", alt: "UTFPR" },
+    { src: "UNIVERSIDADES/UFSC.png", alt: "UFSC" },
+    { src: "UNIVERSIDADES/UFF.png", alt: "UFF" },
+    { src: "UNIVERSIDADES/UL.png", alt: "Universidad de Lima" },
+    { src: "UNIVERSIDADES/UMPDA.png", alt: "Universidad Mayor de San Andrés" },
+    { src: "UNIVERSIDADES/UCB.png", alt: "Universidad Católica Boliviana" },
   ];
 
   return (

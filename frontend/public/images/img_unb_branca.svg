@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140" viewBox="0 0 240 140">
+  <style>
+    .text { 
+      font-family: Arial, sans-serif; 
+      font-weight: bold; 
+      fill: white; 
+      text-anchor: middle;
+    }
+    .large { font-size: 36px; }
+    .small { font-size: 24px; }
+  </style>
+  <rect width="240" height="140" fill="none"/>
+  <text x="120" y="60" class="text large">UnB</text>
+  <text x="120" y="95" class="text small">Universidade de Brasília</text>
+</svg> 

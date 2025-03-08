@@ -99,33 +99,37 @@
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;
-  filter: brightness(1.1);
+  filter: brightness(1.2) contrast(0.9);
+  opacity: 0.95;
+  mix-blend-mode: lighten;
 }
 
-.partner-logo-container{
-  height: 4rem;
+.partner-logo-container {
+  height: 5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
-  padding: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 0.5rem;
+  width: 80%;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .partner-logo-container:hover {
-  transform: translateY(-3px);
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .partner-logos-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
   justify-items: center;
   max-width: 100%;
+  margin-top: 1rem;
 }
 
 .copyright {
@@ -174,7 +178,14 @@
 
   .partner-logos-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 1.25rem;
+  }
+
+  /* Special case for the 7th logo on mobile */
+  .partner-logos-grid > div:last-child {
+    grid-column: span 2;
+    width: 60%;
+    margin: 0 auto;
   }
 
   .footer-title {
@@ -206,11 +217,12 @@
 
   .partner-logos-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    gap: 1.25rem;
   }
 
   .partner-logo-container {
-    height: 3rem;
+    height: 4.5rem;
+    width: 85%;
   }
 
   .footer {
@@ -235,12 +247,13 @@
 
   .partner-logos-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: 1.5rem;
     margin: 0 auto;
   }
 
   .partner-logo-container {
-    height: 4.5rem;
+    width: 85%;
+    height: 5.5rem;
   }
 
   .md\:text-right {

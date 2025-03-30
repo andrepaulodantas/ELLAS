@@ -28,6 +28,83 @@ const HomeOnePage = () => {
     []
   );
 
+  // Definindo textos dos cards destacados baseados no idioma
+  const featuredCardsData = {
+    pt: [
+      {
+        title: "Fatores de impacto nas lideranças femininas",
+        description:
+          "Conheça os principais fatores que impactam as lideranças femininas na América Latina...",
+        image: "images/img_mask_group.png",
+        alt: "Fatores de impacto",
+      },
+      {
+        title: "Aumento de iniciativas para mulheres negras no Brasil",
+        description:
+          "Iniciativas para mulheres negras dobraram no Brasil a partir de 2018...",
+        image: "images/img_mask_group2.png",
+        alt: "Iniciativas para mulheres negras",
+      },
+      {
+        title: "Dados essenciais sobre igualdade de gênero",
+        description:
+          "Gráficos sobre igualdade de gênero na América Latina que todos deveriam conhecer...",
+        image: "images/img_mask_group3.png",
+        alt: "Dados essenciais",
+      },
+    ],
+    en: [
+      {
+        title: "Impact factors on female leadership",
+        description:
+          "Learn about the main factors impacting female leadership in Latin America...",
+        image: "images/img_mask_group.png",
+        alt: "Impact factors",
+      },
+      {
+        title: "Increase in initiatives for Black women in Brazil",
+        description:
+          "Initiatives for Black women doubled in Brazil since 2018...",
+        image: "images/img_mask_group2.png",
+        alt: "Initiatives for Black women",
+      },
+      {
+        title: "Essential data on gender equality",
+        description:
+          "Charts on gender equality in Latin America that everyone should know...",
+        image: "images/img_mask_group3.png",
+        alt: "Essential data",
+      },
+    ],
+    es: [
+      {
+        title: "Factores de impacto en liderazgos femeninos",
+        description:
+          "Conozca los principales factores que impactan los liderazgos femeninos en América Latina...",
+        image: "images/img_mask_group.png",
+        alt: "Factores de impacto",
+      },
+      {
+        title: "Aumento de iniciativas para mujeres negras en Brasil",
+        description:
+          "Las iniciativas para mujeres negras se duplicaron en Brasil desde 2018...",
+        image: "images/img_mask_group2.png",
+        alt: "Iniciativas para mujeres negras",
+      },
+      {
+        title: "Datos esenciales sobre igualdad de género",
+        description:
+          "Gráficos sobre igualdad de género en América Latina que todos deberían conocer...",
+        image: "images/img_mask_group3.png",
+        alt: "Datos esenciales",
+      },
+    ],
+  };
+
+  // Usar cards destacados baseados no idioma atual
+  const currentFeaturedCards =
+    featuredCardsData[language] || featuredCardsData.pt;
+
   const percentages = [
     { range: "01-25%", color: "bg-red-300" },
     { range: "26-50%", color: "bg-red-400" },
@@ -298,13 +375,13 @@ const HomeOnePage = () => {
                     as="h2"
                     className="text-center text-purple-800"
                   >
-                    Dados em destaque
+                    {translations.featuredData}
                   </Heading>
                   <Text
                     as="p"
                     className="!text-gray-900 !leading-5 text-center"
                   >
-                    Selecione uma das perguntas mais pesquisadas para começar.
+                    {translations.featuredQuestions.subtitle}
                   </Text>
                   <Slider
                     autoPlay
@@ -316,95 +393,36 @@ const HomeOnePage = () => {
                     }}
                     className="w-[80%]"
                   >
-                    <div className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4">
-                      <Img
-                        src="images/img_mask_group.png"
-                        alt="Fatores de impacto"
-                        className="h-[200px] w-full object-cover rounded-t-[20px]"
-                      />
-                      <Heading
-                        size="lg"
-                        as="h3"
-                        className="!text-purple-800 mt-4"
+                    {currentFeaturedCards.map((card, index) => (
+                      <div
+                        key={index}
+                        className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4"
                       >
-                        Fatores de impacto nas lideranças femininas
-                      </Heading>
-                      <Text as="p" className="!text-gray-700 mt-2">
-                        Conheça os principais fatores que impactam as lideranças
-                        femininas na América Latina...
-                      </Text>
-                      <Button
-                        size="sm"
-                        shape="round"
-                        className="mt-4 self-start"
-                        onClick={() =>
-                          (window.location.href =
-                            "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
-                        }
-                      >
-                        Saiba mais
-                      </Button>
-                    </div>
-
-                    <div className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4">
-                      <Img
-                        src="images/img_mask_group2.png"
-                        alt="Iniciativas para mulheres negras"
-                        className="h-[200px] w-full object-cover rounded-t-[20px]"
-                      />
-                      <Heading
-                        size="lg"
-                        as="h3"
-                        className="!text-purple-800 mt-4"
-                      >
-                        Aumento de iniciativas para mulheres negras no Brasil
-                      </Heading>
-                      <Text as="p" className="!text-gray-700 mt-2">
-                        Iniciativas para mulheres negras dobraram no Brasil a
-                        partir de 2018...
-                      </Text>
-                      <Button
-                        size="sm"
-                        shape="round"
-                        className="mt-4 self-start"
-                        onClick={() =>
-                          (window.location.href =
-                            "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
-                        }
-                      >
-                        Saiba mais
-                      </Button>
-                    </div>
-
-                    <div className="bg-white-A700 rounded-[20px] shadow-md p-5 flex flex-col justify-between h-[400px] mx-4">
-                      <Img
-                        src="images/img_mask_group3.png"
-                        alt="Dados essenciais"
-                        className="h-[200px] w-full object-cover rounded-t-[20px]"
-                      />
-                      <Heading
-                        size="lg"
-                        as="h3"
-                        className="!text-purple-800 mt-4"
-                      >
-                        Dados essenciais sobre igualdade de gênero
-                      </Heading>
-                      <Text as="p" className="!text-gray-700 mt-2">
-                        Gráficos sobre igualdade de gênero na América Latina que
-                        todos deveriam conhecer...
-                      </Text>
-                      <Button
-                        size="sm"
-                        shape="round"
-                        className="mt-4 self-start"
-                        onClick={() =>
-                          (window.location.href =
-                            "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
-                        }
-                      >
-                        Saiba mais
-                      </Button>
-                    </div>
+                        <Img
+                          src={card.image}
+                          alt={card.alt}
+                          className="h-[200px] w-full object-cover rounded-t-[20px]"
+                        />
+                        <Heading
+                          size="lg"
+                          as="h3"
+                          className="!text-purple-800 mt-4"
+                        >
+                          {card.title}
+                        </Heading>
+                        <Text as="p" className="!text-gray-700 mt-2">
+                          {card.description}
+                        </Text>
+                        <Button
+                          size="sm"
+                          shape="round"
+                          className="mt-4 self-start"
+                          onClick={() => navigate("/sobre")}
+                        >
+                          {translations.learnMore}
+                        </Button>
+                      </div>
+                    ))}
                   </Slider>
                 </div>
               </div>

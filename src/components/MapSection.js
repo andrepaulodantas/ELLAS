@@ -3,8 +3,10 @@ import { MapContainer, TileLayer, GeoJSON, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./MapSection.css";
 import { southAmericaData } from "../data/southAmerica";
+import { useLanguage } from "../../frontend/src/contexts/LanguageContext";
 
 const MapSection = () => {
+  const { translations } = useLanguage();
   const center = [-15.7801, -47.9292]; // Coordinates for Brazil
   const zoom = 4;
 
@@ -33,11 +35,12 @@ const MapSection = () => {
   const onEachFeature = (feature, layer) => {
     if (feature.properties) {
       const { name, percentage } = feature.properties;
-      layer.bindPopup(
-        `<strong>${name}</strong>: ${
-          percentage ? `${percentage}%` : "Sem dados"
-        }`
-      );
+      const countryName = translations.countries[name.toLowerCase()] || name;
+      const percentageText = percentage
+        ? `${percentage}%`
+        : translations.filters.noData;
+
+      layer.bindPopup(`<strong>${countryName}</strong>: ${percentageText}`);
 
       layer.on({
         mouseover: (e) => {
@@ -62,19 +65,14 @@ const MapSection = () => {
   return (
     <section className="map-section">
       <div className="map-content">
-        <h1>América Latina em foco!</h1>
-        <p className="description">
-          O portal ELLAS gera e divulga dados abertos conectados como foco em
-          países da América Latina. Ele surgiu a partir da união de instituições
-          do Brasil, Bolívia e Peru.
-        </p>
+        <h1>{translations.latinAmerica.title}</h1>
+        <p className="description">{translations.latinAmerica.description}</p>
         <p className="sub-description">
-          Em uma infraestrutura de dados abertos é possível mapear informações,
-          visualizar dados e melhorar a colaboração entre os setores de
-          educação, governo e indústria que buscam reduzir a diferença de gênero
-          STEM na América Latina.
+          {translations.latinAmerica.interaction}
         </p>
-        <button className="saiba-mais">Saiba mais</button>
+        <button className="saiba-mais">
+          {translations.latinAmerica.learnMore}
+        </button>
       </div>
       <div className="map-container">
         <div className="map">
@@ -116,9 +114,9 @@ const MapSection = () => {
           </div>
           <div className="legend-item">
             <div className="legend-color no-data"></div>
-            <span>Sem dados</span>
+            <span>{translations.filters.noData}</span>
           </div>
-          <div className="legend-source">Fonte: Portal ELLAS</div>
+          <div className="legend-source">{translations.source.inep}</div>
         </div>
       </div>
     </section>

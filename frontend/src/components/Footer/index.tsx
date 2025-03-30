@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import "./styles.css";
 
@@ -121,15 +122,15 @@ const Footer = () => {
                 {translations.footer.usefulLinks}
               </h3>
               <div>
-                <a href="/accessibility" className="footer-link">
+                <Link to="/accessibility" className="footer-link">
                   {translations.footer.accessibility}
-                </a>
-                <a href="/terms" className="footer-link">
+                </Link>
+                <Link to="/terms" className="footer-link">
                   {translations.footer.terms}
-                </a>
-                <a href="/privacy" className="footer-link">
+                </Link>
+                <Link to="/privacy" className="footer-link">
                   {translations.footer.privacy}
-                </a>
+                </Link>
               </div>
             </div>
           </div>

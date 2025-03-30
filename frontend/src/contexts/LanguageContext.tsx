@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 
 type Language = "pt" | "en" | "es";
@@ -23,6 +22,7 @@ interface Translations {
   visualizations: string;
   download: string;
   api: string;
+  featuredData: string;
   table: {
     title: string;
     noData: string;
@@ -261,6 +261,7 @@ const translations: Record<Language, Translations> = {
         secondary: "Secundários",
       },
     },
+    featuredData: "Dados Destacados",
   },
   en: {
     home: "Home",
@@ -391,6 +392,7 @@ const translations: Record<Language, Translations> = {
         secondary: "Secondary",
       },
     },
+    featuredData: "Featured Data",
   },
   es: {
     home: "Home",
@@ -521,6 +523,7 @@ const translations: Record<Language, Translations> = {
         secondary: "Secundarios",
       },
     },
+    featuredData: "Datos Destacados",
   },
 };
 
@@ -555,7 +558,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   // Set the document language on initial load
   useEffect(() => {
     document.documentElement.lang = language;
-  }, []);
+  }, [language]);
 
   return (
     <LanguageContext.Provider

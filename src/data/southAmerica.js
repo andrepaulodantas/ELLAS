@@ -4,7 +4,7 @@ export const southAmericaData = {
     {
       type: "Feature",
       properties: {
-        name: "Brazil",
+        name: "brasil",
         percentage: 85,
       },
       geometry: {
@@ -79,7 +79,7 @@ export const southAmericaData = {
     {
       type: "Feature",
       properties: {
-        name: "Bolivia",
+        name: "bolivia",
         percentage: 45,
       },
       geometry: {
@@ -119,7 +119,7 @@ export const southAmericaData = {
     {
       type: "Feature",
       properties: {
-        name: "Peru",
+        name: "peru",
         percentage: 15,
       },
       geometry: {

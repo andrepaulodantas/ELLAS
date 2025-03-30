@@ -361,7 +361,7 @@ const Header = () => {
     if (!item.path) return;
 
     if (item.path.startsWith("http")) {
-      window.location.href = item.path;
+      handleExternalLink(item.path);
     } else {
       handleNavigation(item.path);
     }

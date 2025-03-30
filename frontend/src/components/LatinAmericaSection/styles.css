@@ -1,160 +1,299 @@
 .latin-america-section {
-  padding: 4rem 2rem;
-  background-color: #fff;
-  min-height: auto;
-  display: flex;
-  align-items: center;
+  padding: 4rem 6rem;
+  background-color: #ffffff;
+  width: 100%;
 }
 
 .content-container {
   max-width: 1200px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  width: 100%;
-}
-
-.text-content {
-  max-width: 800px;
 }
 
 .text-content h2 {
-  font-size: 2.5rem;
-  color: #614c6e;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
+  color: #553c9a;
+  font-size: 2.75rem;
+  margin-bottom: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .text-content p {
-  color: #666;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
+  color: #4a5568;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 90%;
 }
 
 .map-interaction-container {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 3rem;
-  align-items: center;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
 .map-container {
   width: 100%;
-  height: 100%;
-  min-height: 400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
+  background-color: rgba(247, 250, 252, 0.6);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.map {
+  width: 100%;
+  height: 500px;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff !important;
+}
+
+/* Custom map controls */
+.leaflet-control-zoom {
+  border: none !important;
+  margin-right: 1rem !important;
+  margin-top: 1rem !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+  background-color: white !important;
+  color: #553c9a !important;
+  border: 1px solid #e2e8f0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 16px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+.leaflet-control-zoom-in:hover,
+.leaflet-control-zoom-out:hover {
+  background-color: #f7fafc !important;
+  color: #4a3480 !important;
+}
+
+/* Remove default Leaflet styles */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Map patterns */
+.pattern-grid {
+  background-color: #ffe6e6 !important;
+  background-image: linear-gradient(#ffcccc 1px, transparent 1px),
+    linear-gradient(90deg, #ffcccc 1px, transparent 1px) !important;
+  background-size: 8px 8px !important;
+}
+
+.pattern-lines {
+  background-color: #ffcccc !important;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    #ff9999 4px,
+    #ff9999 8px
+  ) !important;
+}
+
+.pattern-dots {
+  background-color: #ff9999 !important;
+  background-image: radial-gradient(
+    #ff6666 1.5px,
+    transparent 1.5px
+  ) !important;
+  background-size: 8px 8px !important;
+}
+
+.pattern-4 {
+  background-color: #ff6666 !important;
+}
+
+.no-data {
+  background-color: #e2e8f0 !important;
+}
+
+/* Legend styles */
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.legend-color {
+  width: 2rem;
+  height: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Apply patterns to legend */
+.legend-color.pattern-grid {
+  background-color: #ffe6e6;
+  background-image: linear-gradient(#ffcccc 1px, transparent 1px),
+    linear-gradient(90deg, #ffcccc 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.legend-color.pattern-lines {
+  background-color: #ffcccc;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    #ff9999 2px,
+    #ff9999 4px
+  );
+}
+
+.legend-color.pattern-dots {
+  background-color: #ff9999;
+  background-image: radial-gradient(#ff6666 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.legend-color.pattern-4 {
+  background-color: #ff6666;
+}
+
+.legend-color.no-data {
+  background-color: #e2e8f0;
+}
+
+.legend-source {
+  width: 100%;
+  text-align: right;
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Tooltip styling */
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  font-size: 0.875rem !important;
+  color: #4a5568 !important;
+  font-family: inherit !important;
+}
+
+.leaflet-popup-tip-container {
+  display: none !important;
 }
 
 .interaction-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  justify-content: center;
+  padding: 1.5rem;
 }
 
 .interaction-content p {
-  color: #666;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin: 0;
+  color: #4a5568;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
 }
 
 .learn-more-btn {
-  background-color: #614c6e;
+  background-color: #553c9a;
   color: white;
   border: none;
-  padding: 0.8rem 2rem;
-  border-radius: 25px;
+  padding: 0.875rem 2rem;
+  border-radius: 2rem;
   font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  align-self: flex-start;
   font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+}
+
+.learn-more-btn::after {
+  content: "›";
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-left: 0.25rem;
+  transition: transform 0.2s ease;
 }
 
 .learn-more-btn:hover {
-  background-color: #503d5b;
+  background-color: #4a3480;
+  transform: translateY(-1px);
+}
+
+.learn-more-btn:hover::after {
+  transform: translateX(2px);
+}
+
+/* Responsive styles */
+@media (max-width: 1280px) {
+  .latin-america-section {
+    padding: 3rem 4rem;
+  }
 }
 
 @media (max-width: 1024px) {
   .latin-america-section {
-    padding: 3rem 1.5rem;
+    padding: 2rem;
   }
 
-  .text-content h2 {
-    font-size: 2.2rem;
-  }
-}
-
-@media (max-width: 968px) {
   .map-interaction-container {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
 
-  .map-container {
-    min-height: 350px;
-    order: 2;
+  .text-content h2 {
+    font-size: 2.25rem;
   }
 
-  .interaction-content {
-    text-align: center;
-    order: 1;
-  }
-
-  .learn-more-btn {
-    align-self: center;
+  .map {
+    height: 400px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .latin-america-section {
-    padding: 2.5rem 1rem;
+    padding: 1.5rem;
   }
 
   .text-content h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
   }
 
-  .text-content p {
-    font-size: 1rem;
+  .map {
+    height: 300px;
   }
 
-  .interaction-content p {
-    font-size: 1rem;
-  }
-
-  .map-container {
-    min-height: 300px;
-  }
-}
-
-@media (max-width: 480px) {
-  .latin-america-section {
-    padding: 2rem 1rem;
-  }
-
-  .content-container {
-    gap: 2rem;
-  }
-
-  .text-content h2 {
-    font-size: 1.5rem;
-  }
-
-  .map-container {
-    min-height: 250px;
-  }
-
-  .learn-more-btn {
-    padding: 0.7rem 1.5rem;
-    font-size: 0.9rem;
+  .map-legend {
+    justify-content: center;
   }
 }

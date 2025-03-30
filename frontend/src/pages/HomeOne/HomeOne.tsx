@@ -10,8 +10,8 @@ import {
   DataChart,
   DataCards,
   Carousel,
-  LatinAmericaSection,
 } from "../../components";
+import LatinAmericaSection from "../../components/LatinAmericaSection";
 import GoogleMapComponent from "../../components/GoogleMap";
 import Header from "../../components/Header";
 import { questionFunctions } from "../../services/apiService";

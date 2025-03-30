@@ -1,8 +1,8 @@
 /* Barra colorida acima do footer */
 .color-bar {
   display: flex;
+  height: 6px;
   width: 100%;
-  height: 8px;
 }
 
 .color-bar-segment {
@@ -29,240 +29,267 @@
   background-color: #f2d096;
 }
 
+/* Estilos do Footer */
 .footer {
   background-color: #4a2b5c;
-  padding: 2rem 1rem;
   color: white;
+  padding: 2.5rem 4rem 2rem;
   position: relative;
-  width: 100%;
 }
 
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2rem;
-  align-items: flex-start;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  gap: 3rem;
 }
 
+/* Estilos das colunas */
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.left-column {
+  justify-content: flex-start;
+}
+
+.center-column {
+  text-align: center;
+  align-items: center;
+}
+
+.right-column {
+  text-align: right;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+/* Títulos */
 .footer-title {
   color: #e6a17a;
   font-weight: 500;
   font-size: 1.125rem;
+  margin-bottom: 0.75rem;
+}
+
+.connect-title {
+  margin-top: 1.5rem;
+  font-weight: 600;
+}
+
+.institutions-title {
+  margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+/* Links */
+.footer-links {
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-link {
   color: white;
-  display: block;
-  margin-bottom: 0.75rem;
-  transition: all 0.2s ease;
   text-decoration: none;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .footer-link:hover {
-  opacity: 0.8;
   text-decoration: underline;
-  transform: translateX(3px);
 }
 
+/* Ícones sociais */
 .social-icons {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
 }
 
-.social-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 6px;
-  transition: all 0.3s ease;
+.social-circle {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: white;
+  border-radius: 50%;
+  color: #4a2b5c;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 }
 
-.social-icon:hover {
-  transform: translateY(-3px);
-  background-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.social-circle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.partner-logo {
-  max-height: 100%;
+.social-icon-img {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%);
+}
+
+/* Logo do IDRC */
+.partner-logo-main {
+  margin-bottom: 1.5rem;
+}
+
+.idrc-logo {
+  max-height: 4rem;
+  filter: brightness(0) invert(1);
+  transition: transform 0.2s;
+}
+
+.partner-logo-main a:hover .idrc-logo {
+  transform: translateY(-2px);
+}
+
+/* Grid de logos dos parceiros */
+.institutions-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0 auto;
+  max-width: 750px;
+}
+
+.institution-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  height: 2.5rem;
+  width: auto;
+  margin: 0 0.25rem;
+  background-color: transparent;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.institution-link:hover {
+  transform: translateY(-2px);
+}
+
+.institution-logo {
+  height: 2.5rem;
+  width: auto;
   max-width: 100%;
   object-fit: contain;
-  filter: brightness(1.2) contrast(0.9);
-  opacity: 0.95;
-  mix-blend-mode: lighten;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 
-.partner-logo-container {
-  height: 5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
-  padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.institution-link:hover .institution-logo {
+  opacity: 1;
 }
 
-.partner-logo-container:hover {
-  transform: translateY(-2px);
-  background-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* Copyright */
+.copyright-container {
+  margin-top: auto;
+  text-align: right;
 }
 
-.partner-logos-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  justify-items: center;
-  max-width: 100%;
-  margin-top: 1rem;
-}
-
-.copyright {
-  margin-top: 2.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
-  font-size: 0.875rem;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.h-16 {
-  height: 4rem;
-}
-
-.w-auto {
-  width: auto;
-}
-
-.text-left {
-  text-align: left;
+.copyright-text {
+  font-size: 0.8rem;
+  color: white;
+  margin: 0.15rem 0;
+  white-space: nowrap;
 }
 
 /* Media queries */
+@media (max-width: 1200px) {
+  .footer {
+    padding: 2.5rem 2rem 2rem;
+  }
+
+  .footer-grid {
+    gap: 2rem;
+  }
+
+  .institutions-row {
+    max-width: 600px;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .footer {
+    padding: 2.5rem 2rem 2rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1.5fr;
+    row-gap: 3rem;
+  }
+
+  .center-column {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .institutions-row {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1.5rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 
-  .partner-logos-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-
-  /* Special case for the 7th logo on mobile */
-  .partner-logos-grid > div:last-child {
-    grid-column: span 2;
-    width: 60%;
-    margin: 0 auto;
-  }
-
-  .footer-title {
+  .left-column,
+  .right-column {
     text-align: center;
-  }
-
-  .footer-link {
-    text-align: center;
+    align-items: center;
   }
 
   .social-icons {
     justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
-  .text-left.md\:text-right {
+  .social-circle {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .social-icon-img {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .copyright-container {
     text-align: center;
+    margin-top: 2rem;
   }
 
-  .footer {
-    padding: 2rem 1rem 1.5rem;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1023px) {
-  .footer-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .institutions-row {
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.5rem;
+    margin-top: 0.5rem;
   }
 
-  .partner-logos-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-  }
-
-  .partner-logo-container {
-    height: 4.5rem;
-    width: 85%;
-  }
-
-  .footer {
-    padding: 2.5rem 1.5rem 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .footer {
-    padding: 3rem 2rem 2rem;
-  }
-
-  .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1.5fr 1fr;
-    gap: 2rem;
-  }
-
-  .partner-logos-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin: 0 auto;
-  }
-
-  .partner-logo-container {
-    width: 85%;
-    height: 5.5rem;
-  }
-
-  .md\:text-right {
-    text-align: right;
-  }
-
-  .md\:text-right .footer-link {
-    text-align: right;
-    display: block;
-    width: 100%;
+  .institution-logo {
+    height: 2.25rem;
   }
 }

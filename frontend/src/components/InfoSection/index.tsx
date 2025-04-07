@@ -1,9 +1,16 @@
 import React from "react";
 import { styled } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 const InfoSection = () => {
   const { translations } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleSaibaMaisClick = (e) => {
+    e.preventDefault();
+    navigate("/buscaone");
+  };
 
   return (
     <section className="info-section">
@@ -91,9 +98,8 @@ const InfoSection = () => {
           </div>
 
           <a
-            href="https://ellas.ufmt.br/pt/sobre-nos/o-projeto/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
+            onClick={handleSaibaMaisClick}
             className="saiba-mais-button"
           >
             {translations.latinAmerica.learnMore}

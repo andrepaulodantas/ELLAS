@@ -30,7 +30,7 @@ export default function HomeOneSlidehome({
   };
 
   const handleSaibaMaisClick = () => {
-    window.location.href = "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/";
+    window.location.href = "/buscaone";
   };
 
   const handlePesquisarClick = () => {

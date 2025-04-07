@@ -52,7 +52,7 @@ const LatinAmericaSection: React.FC = () => {
   }, []);
 
   const handleLearnMoreClick = () => {
-    navigate("/sobre");
+    navigate("/buscaone");
   };
 
   const getCountryStyle = (feature: any) => {

@@ -248,11 +248,20 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                       <SelectBox
                         shape="round"
                         name="categoria"
-                        placeholder="Select Category"
+                        placeholder={translations.labels.selectCategory}
                         options={[
-                          { label: "Initiatives", value: "initiatives" },
-                          { label: "Policies", value: "policies" },
-                          { label: "Factors", value: "factors" },
+                          {
+                            label: translations.categories.initiatives,
+                            value: "initiatives",
+                          },
+                          {
+                            label: translations.categories.policies,
+                            value: "policies",
+                          },
+                          {
+                            label: translations.categories.factors,
+                            value: "factors",
+                          },
                         ]}
                         value={selectedCategory}
                         onChange={handleCategoryChange}
@@ -271,12 +280,12 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                         placeholder="Select Question"
                         options={
                           selectedCategory
-                            ? questionQueries[selectedCategory.value].map(
-                                (question) => ({
-                                  label: question,
-                                  value: question,
-                                })
-                              )
+                            ? questionQueries[selectedCategory.value][
+                                language
+                              ]?.map((question) => ({
+                                label: question,
+                                value: question,
+                              })) || []
                             : []
                         }
                         value={selectedQuestion}
@@ -348,7 +357,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     <TabPanel className="mt-6">
                       <Text size="3xl" as="p" className="text-center mb-4">
                         {selectedQuestion?.value ||
-                          "Select a question to see results"}
+                          translations.labels.selectQuestion}
                       </Text>
                       <div className="relative w-full h-[352px] overflow-hidden rounded-lg">
                         <GoogleMapComponent

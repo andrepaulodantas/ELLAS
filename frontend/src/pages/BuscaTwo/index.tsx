@@ -230,14 +230,25 @@ const BuscaTwoPage = () => {
                         name="categoria"
                         placeholder={translations.labels.selectCategory}
                         options={[
-                          { label: "Initiatives", value: "initiatives" },
-                          { label: "Policies", value: "policies" },
-                          { label: "Factors", value: "factors" },
+                          {
+                            label: translations.categories.initiatives,
+                            value: "initiatives",
+                          },
+                          {
+                            label: translations.categories.policies,
+                            value: "policies",
+                          },
+                          {
+                            label: translations.categories.factors,
+                            value: "factors",
+                          },
                         ]}
                         value={
                           selectedCategory
                             ? {
-                                label: selectedCategory,
+                                label:
+                                  translations.categories[selectedCategory] ||
+                                  selectedCategory,
                                 value: selectedCategory,
                               }
                             : null
@@ -258,12 +269,12 @@ const BuscaTwoPage = () => {
                         placeholder={translations.labels.selectQuestion}
                         options={
                           selectedCategory
-                            ? questionQueries[selectedCategory].map(
+                            ? questionQueries[selectedCategory][language]?.map(
                                 (question) => ({
                                   label: question,
                                   value: question,
                                 })
-                              )
+                              ) || []
                             : []
                         }
                         value={
@@ -322,16 +333,18 @@ const BuscaTwoPage = () => {
                             <Text size="3xl" as="p" className="text-center">
                               {selectedQuestion
                                 ? selectedQuestion
-                                : "Select a question to see results"}
+                                : translations.labels.selectQuestion}
                             </Text>
                             <div className="flex flex-col items-center justify-start w-[100%] md:w-full">
                               <table className="w-full">
                                 <thead className="border-b-6 border-gray-700">
                                   <tr>
                                     <th className="text-center pl-0">
-                                      Country
+                                      {translations.filters.country}
                                     </th>
-                                    <th className="text-center pl-20">Count</th>
+                                    <th className="text-center pl-20">
+                                      {translations.categories.initiatives}
+                                    </th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -340,7 +353,9 @@ const BuscaTwoPage = () => {
                                       ([country, count]) => (
                                         <tr key={country}>
                                           <td className="text-left pl-0">
-                                            {country}
+                                            {translations.countries[
+                                              country.toLowerCase() as keyof typeof translations.countries
+                                            ] || country}
                                           </td>
                                           <td className="text-left pl-0">
                                             <div
@@ -375,8 +390,7 @@ const BuscaTwoPage = () => {
                                         colSpan={2}
                                         className="text-center text-gray-500 py-4"
                                       >
-                                        No data available. Please select a
-                                        category and question.
+                                        {translations.filters.noData}
                                       </td>
                                     </tr>
                                   )}

@@ -277,14 +277,25 @@ const BuscaTwoOnePage = () => {
                         name="categoria"
                         placeholder={translations.labels.selectCategory}
                         options={[
-                          { label: "Initiatives", value: "initiatives" },
-                          { label: "Policies", value: "policies" },
-                          { label: "Factors", value: "factors" },
+                          {
+                            label: translations.categories.initiatives,
+                            value: "initiatives",
+                          },
+                          {
+                            label: translations.categories.policies,
+                            value: "policies",
+                          },
+                          {
+                            label: translations.categories.factors,
+                            value: "factors",
+                          },
                         ]}
                         value={
                           selectedCategory
                             ? {
-                                label: selectedCategory,
+                                label:
+                                  translations.categories[selectedCategory] ||
+                                  selectedCategory,
                                 value: selectedCategory,
                               }
                             : null
@@ -305,12 +316,12 @@ const BuscaTwoOnePage = () => {
                         placeholder={translations.labels.selectQuestion}
                         options={
                           selectedCategory
-                            ? questionQueries[selectedCategory].map(
+                            ? questionQueries[selectedCategory][language]?.map(
                                 (question) => ({
                                   label: question,
                                   value: question,
                                 })
-                              )
+                              ) || []
                             : []
                         }
                         value={
@@ -365,9 +376,7 @@ const BuscaTwoOnePage = () => {
                     {/* Chart Section */}
                     <div className="mt-8 p-6">
                       <Text size="xl" as="p" className="mb-4 text-center">
-                        {selectedVisualization === "barras"
-                          ? "Bar Chart by Country"
-                          : "Line Chart by Country"}
+                        {selectedQuestion || translations.labels.selectQuestion}
                       </Text>
                       <div className="w-full">{renderChart()}</div>
                     </div>

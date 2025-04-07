@@ -17,6 +17,7 @@ import Header from "../../components/Header";
 import { questionFunctions } from "../../services/apiService";
 import { useLanguage } from "../../contexts/LanguageContext";
 import ExploreCards from "../../components/ExploreCards";
+import StartSection from "../../components/StartSection";
 import "./HomeOne.css";
 
 const HomeOnePage = () => {
@@ -113,121 +114,6 @@ const HomeOnePage = () => {
     { range: translations.filters.noData || "No data", color: "bg-gray-300" },
   ];
 
-  // Define the questions array based on current language
-  const questionsData = {
-    pt: [
-      {
-        category: "Políticas",
-        question:
-          "Que tipos de políticas de gênero foram implementadas nos países em determinado ano?",
-        icon: "images/policy-icon.svg",
-      },
-      {
-        category: "Políticas",
-        question:
-          "Como as políticas identificadas/analisadas estão promovendo a participação das mulheres nas áreas STEM?",
-        icon: "images/policy-icon.svg",
-      },
-      {
-        category: "Iniciativas",
-        question: "Que iniciativas são desenvolvidas por nível de escolar?",
-        icon: "images/initiatives-icon.svg",
-      },
-      {
-        category: "Iniciativas",
-        question: "Que iniciativas atendem às mulheres negras?",
-        icon: "images/initiatives-icon.svg",
-      },
-      {
-        category: "Fatores",
-        question:
-          "Quais são os fatores contextuais que impactam positiva ou negativamente o gênero feminino?",
-        icon: "images/factors-icon.svg",
-      },
-      {
-        category: "Fatores",
-        question:
-          "Quais são os fatores contextuais que impactam positiva ou negativamente na liderança, motivação, etc. em cada país?",
-        icon: "images/factors-icon.svg",
-      },
-    ],
-    en: [
-      {
-        category: "Policies",
-        question:
-          "What types of gender policies were implemented in countries in a given year?",
-        icon: "images/policy-icon.svg",
-      },
-      {
-        category: "Policies",
-        question:
-          "How are the identified/analyzed policies promoting women's participation in STEM fields?",
-        icon: "images/policy-icon.svg",
-      },
-      {
-        category: "Initiatives",
-        question: "What initiatives are developed by school level?",
-        icon: "images/initiatives-icon.svg",
-      },
-      {
-        category: "Initiatives",
-        question: "What initiatives serve Black women?",
-        icon: "images/initiatives-icon.svg",
-      },
-      {
-        category: "Factors",
-        question:
-          "What are the contextual factors that positively or negatively impact the female gender?",
-        icon: "images/factors-icon.svg",
-      },
-      {
-        category: "Factors",
-        question:
-          "What are the contextual factors that positively or negatively impact leadership, motivation, etc. in each country?",
-        icon: "images/factors-icon.svg",
-      },
-    ],
-    es: [
-      {
-        category: "Políticas",
-        question:
-          "¿Qué tipos de políticas de género se implementaron en los países en un año determinado?",
-        icon: "images/policy-icon.svg",
-      },
-      {
-        category: "Políticas",
-        question:
-          "¿Cómo están promoviendo las políticas identificadas/analizadas la participación de las mujeres en las áreas STEM?",
-        icon: "images/policy-icon.svg",
-      },
-      {
-        category: "Iniciativas",
-        question: "¿Qué iniciativas se desarrollan por nivel escolar?",
-        icon: "images/initiatives-icon.svg",
-      },
-      {
-        category: "Iniciativas",
-        question: "¿Qué iniciativas atienden a las mujeres negras?",
-        icon: "images/initiatives-icon.svg",
-      },
-      {
-        category: "Factores",
-        question:
-          "¿Cuáles son los factores contextuales que impactan positiva o negativamente al género femenino?",
-        icon: "images/factors-icon.svg",
-      },
-      {
-        category: "Factores",
-        question:
-          "¿Cuáles son los factores contextuales que impactan positiva o negativamente en el liderazgo, la motivación, etc. en cada país?",
-        icon: "images/factors-icon.svg",
-      },
-    ],
-  };
-
-  // Use questions based on current language
-  const questions = questionsData[language] || questionsData.pt;
-
   const handleAboutClick = () => {
     window.location.href = "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/";
   };
@@ -296,63 +182,7 @@ const HomeOnePage = () => {
         <div className="flex-grow">
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
             {/* Featured Questions Section */}
-            <section className="start-section py-16 md:py-20">
-              <div className="container">
-                <h2>{translations.featuredQuestions.title}</h2>
-                <p className="subtitle">
-                  {translations.featuredQuestions.subtitle}
-                </p>
-
-                <div className="cards-grid">
-                  {questions.map((item, index) => (
-                    <div
-                      key={index}
-                      className="card"
-                      onClick={() =>
-                        navigate(
-                          `/buscaone?category=${item.category.toLowerCase()}&question=${encodeURIComponent(
-                            item.question
-                          )}`
-                        )
-                      }
-                    >
-                      <div className="card-icon">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          {item.category === "Políticas" && (
-                            <path
-                              d="M12 3L20 7V17L12 21L4 17V7L12 3Z"
-                              stroke="#6B46C1"
-                              strokeWidth="2"
-                            />
-                          )}
-                          {item.category === "Iniciativas" && (
-                            <path
-                              d="M3 12H21M3 6H21M3 18H21"
-                              stroke="#6B46C1"
-                              strokeWidth="2"
-                            />
-                          )}
-                          {item.category === "Fatores" && (
-                            <path
-                              d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                              stroke="#6B46C1"
-                              strokeWidth="2"
-                            />
-                          )}
-                        </svg>
-                      </div>
-                      <h3>{item.category}</h3>
-                      <p>{item.question}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
+            <StartSection />
 
             <DataChart />
 
@@ -417,7 +247,7 @@ const HomeOnePage = () => {
                           size="sm"
                           shape="round"
                           className="mt-4 self-start"
-                          onClick={() => navigate("/sobre")}
+                          onClick={() => navigate("/buscaone")}
                         >
                           {translations.learnMore}
                         </Button>

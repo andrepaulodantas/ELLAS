@@ -21,7 +21,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   selectedCountries,
 }) => {
   const navigate = useNavigate();
-  const { translations } = useLanguage();
+  const { translations, language } = useLanguage();
   const [geoJsonData, setGeoJsonData] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     };
 
     loadGeoJsonData();
-  }, [selectedCountries]);
+  }, [selectedCountries, language]);
 
   const handleViewAllData = () => {
     navigate("/buscaone?category=initiatives&question=all_initiatives");
@@ -103,6 +103,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         center={[-15.7801, -47.9292]} // Center on Brazil
         zoom={4}
         style={{ height: "100%", width: "100%" }}
+        key={language}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -111,7 +112,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
         {Object.entries(geoJsonData).map(([country, data]) => (
           <GeoJSON
-            key={country}
+            key={`${country}-${language}`}
             data={data}
             style={() => getCountryStyle(country)}
             onEachFeature={(feature, layer) => {

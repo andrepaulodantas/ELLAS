@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, GeoJSON, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Button, Text } from "../../components";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -24,11 +24,45 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const { translations, language } = useLanguage();
   const [geoJsonData, setGeoJsonData] = useState<{ [key: string]: any }>({});
 
+  // Load all country GeoJSON data when the component mounts to prevent flickering
   useEffect(() => {
     const loadGeoJsonData = async () => {
       const loadedData: { [key: string]: any } = {};
+      // Array of all possible countries we might need to render
+      const allPossibleCountries = [
+        "Brazil",
+        "Argentina",
+        "Chile",
+        "Peru",
+        "Bolivia",
+        "Colombia",
+        "Mexico",
+        "United States",
+        "Canada",
+        "Ecuador",
+        "Venezuela",
+        "Paraguay",
+        "Uruguay",
+        "Guyana",
+        "Suriname",
+        "French Guiana",
+        "Panama",
+        "Costa Rica",
+        "Nicaragua",
+        "Honduras",
+        "El Salvador",
+        "Guatemala",
+        "Belize",
+        "Cuba",
+        "Jamaica",
+        "Haiti",
+        "Dominican Republic",
+        "Puerto Rico",
+        "Bahamas",
+        "Trinidad and Tobago",
+      ];
 
-      for (const country of selectedCountries) {
+      for (const country of allPossibleCountries) {
         const countryCode = getCountryCode(country);
         if (countryCode) {
           try {
@@ -45,7 +79,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     };
 
     loadGeoJsonData();
-  }, [selectedCountries, language]);
+  }, []);
 
   const handleViewAllData = () => {
     navigate("/buscaone?category=initiatives&question=all_initiatives");
@@ -69,6 +103,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   // Função auxiliar para obter o código do país
   const getCountryCode = (country: string): string => {
+    // Normalize country names for both USA and United States
+    let normalizedCountry = country;
+    if (country === "USA" || country === "United States") {
+      normalizedCountry = "United States";
+    }
+
     const countryMap: { [key: string]: string } = {
       Brazil: "BRA",
       Argentina: "ARG",
@@ -76,8 +116,58 @@ const MapComponent: React.FC<MapComponentProps> = ({
       Peru: "PER",
       Bolivia: "BOL",
       Colombia: "COL",
+      Mexico: "MEX",
+      "United States": "USA",
+      USA: "USA",
+      Canada: "CAN",
+      Ecuador: "ECU",
+      Venezuela: "VEN",
+      Paraguay: "PRY",
+      Uruguay: "URY",
+      Guyana: "GUY",
+      Suriname: "SUR",
+      "French Guiana": "GUF",
+      Panama: "PAN",
+      "Costa Rica": "CRI",
+      Nicaragua: "NIC",
+      Honduras: "HND",
+      "El Salvador": "SLV",
+      Guatemala: "GTM",
+      Belize: "BLZ",
+      Cuba: "CUB",
+      Jamaica: "JAM",
+      Haiti: "HTI",
+      "Dominican Republic": "DOM",
+      "Puerto Rico": "PRI",
+      Bahamas: "BHS",
+      "Trinidad and Tobago": "TTO",
     };
-    return countryMap[country] || "";
+    return countryMap[normalizedCountry] || "";
+  };
+
+  // Get translated country name
+  const getTranslatedCountryName = (country: string): string => {
+    // Handle USA/United States special case
+    if (country === "USA" || country === "United States") {
+      return translations.countries.unitedStates || "United States";
+    }
+
+    // Try to get from translations based on country key
+    const countryKey = Object.keys(translations.countries).find(
+      (key) =>
+        translations.countries[
+          key as keyof typeof translations.countries
+        ]?.toLowerCase() === country.toLowerCase()
+    );
+
+    if (countryKey) {
+      return translations.countries[
+        countryKey as keyof typeof translations.countries
+      ];
+    }
+
+    // Fallback to the original name
+    return country;
   };
 
   return (
@@ -110,41 +200,46 @@ const MapComponent: React.FC<MapComponentProps> = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
 
-        {Object.entries(geoJsonData).map(([country, data]) => (
-          <GeoJSON
-            key={`${country}-${language}`}
-            data={data}
-            style={() => getCountryStyle(country)}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                click: () => handleCountryClick(country),
-                mouseover: (e) => {
-                  const layer = e.target;
-                  layer.setStyle({
-                    fillOpacity: 0.8,
-                  });
-                },
-                mouseout: (e) => {
-                  const layer = e.target;
-                  layer.setStyle(getCountryStyle(country));
-                },
-              });
+        {Object.entries(geoJsonData).map(([country, data]) => {
+          // Only render selected countries
+          const isSelected = selectedCountries.includes(country);
+          if (!isSelected) return null;
 
-              const initiativesCount = initiatives.filter(
-                (i) => i.country === country
-              ).length;
+          return (
+            <GeoJSON
+              key={country} // Using a stable key to prevent re-rendering
+              data={data}
+              style={() => getCountryStyle(country)}
+              onEachFeature={(feature, layer) => {
+                layer.on({
+                  click: () => handleCountryClick(country),
+                });
 
-              layer.bindPopup(`
-                <strong>${
-                  translations.countries[
-                    country.toLowerCase() as keyof typeof translations.countries
-                  ] || country
-                }</strong><br/>
-                ${translations.categories.initiatives}: ${initiativesCount}
-              `);
-            }}
-          />
-        ))}
+                const initiativesCount = initiatives.filter((i) => {
+                  // Check if the initiative is for this country
+                  if (i.country === country) return true;
+
+                  // Handle multiple countries in a single field
+                  if (i.countryName && typeof i.countryName === "string") {
+                    const countries = i.countryName.split(
+                      /\s+and\s+|\s*[,&]\s*|\s+y\s+/
+                    );
+                    return countries.some(
+                      (c) => c.trim().toLowerCase() === country.toLowerCase()
+                    );
+                  }
+
+                  return false;
+                }).length;
+
+                layer.bindPopup(`
+                  <strong>${getTranslatedCountryName(country)}</strong><br/>
+                  ${translations.categories.initiatives}: ${initiativesCount}
+                `);
+              }}
+            />
+          );
+        })}
       </MapContainer>
     </div>
   );

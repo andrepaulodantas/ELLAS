@@ -46,6 +46,20 @@ interface Translations {
     question: string;
     selectCategory: string;
     selectQuestion: string;
+    selectCountry: string;
+    selectYear: string;
+    selectPolicyType: string;
+    selectGender: string;
+    selectAge: string;
+    selectLocationType: string;
+    enterLocationName: string;
+    selectEducationalLevel: string;
+    selectStatus: string;
+    selectImpactType: string;
+    selectContextType: string;
+    selectFactor: string;
+    filters: string;
+    currentQuery: string;
   };
   contact: string;
   categories: {
@@ -67,6 +81,109 @@ interface Translations {
     year: string;
     type: string;
     noData: string;
+    policyType: string;
+    startYear: string;
+    audienceGender: string;
+    audienceAge: string;
+    locationType: string;
+    locationName: string;
+    educationalLevel: string;
+    status: string;
+    impactType: string;
+    contextType: string;
+    factor: string;
+    policyTypes: {
+      educational: string;
+      legislation: string;
+      program: string;
+    };
+    genders: {
+      female: string;
+      male: string;
+      all: string;
+    };
+    ages: {
+      children: string;
+      teenagers: string;
+      adults: string;
+    };
+    locationTypes: {
+      city: string;
+      state: string;
+      region: string;
+      area: string;
+    };
+    educationLevels: {
+      elementary: string;
+      highSchool: string;
+      undergraduate: string;
+      graduate: string;
+    };
+    statuses: {
+      active: string;
+      finished: string;
+      design: string;
+    };
+    impactTypes: {
+      positive: string;
+      negative: string;
+    };
+    contextTypes: {
+      university: string;
+      society: string;
+      workplace: string;
+    };
+    factors: {
+      educational: string;
+      social: string;
+      genderStereotypes: string;
+    };
+  };
+  queries: {
+    policies: {
+      countriesApplied: string;
+      genderPolicyTypes: string;
+      womenParticipation: string;
+      since2015: string;
+    };
+    initiatives: {
+      byCountries: string;
+      dataSource: string;
+      socialNetworks: string;
+      programInitiatives: string;
+      publicPrivate: string;
+      coordinatedIndividuals: string;
+      responsibleGender: string;
+      objective: string;
+      modality: string;
+      girlsAdolescents: string;
+      targetGender: string;
+      blackWomen: string;
+      schoolLevel: string;
+      vulnerableGroup: string;
+      schoolCommunity: string;
+      cityInitiatives: string;
+      stateInitiatives: string;
+      areaInitiatives: string;
+      regionInitiatives: string;
+      initiativeReach: string;
+      initiativeFunded: string;
+      fundingSector: string;
+      activeInitiatives: string;
+      designPhase: string;
+      finishedInitiatives: string;
+      initiativeWebsite: string;
+      communityInitiatives: string;
+    };
+    factors: {
+      positiveContextual: string;
+      negativeContextual: string;
+      educationalFactors: string;
+      genderImpact: string;
+      factorImpacts: string;
+      impactTypes: string;
+      impactFactors: string;
+    };
   };
   buttons: {
     reset: string;
@@ -98,6 +215,32 @@ interface Translations {
     peru: string;
     bolivia: string;
     argentina: string;
+    colombia: string;
+    chile: string;
+    mexico: string;
+    unitedStates: string;
+    canada: string;
+    ecuador: string;
+    venezuela: string;
+    paraguay: string;
+    uruguay: string;
+    guyana: string;
+    suriname: string;
+    frenchGuiana: string;
+    panama: string;
+    costaRica: string;
+    nicaragua: string;
+    honduras: string;
+    elSalvador: string;
+    guatemala: string;
+    belize: string;
+    cuba: string;
+    jamaica: string;
+    haiti: string;
+    dominicanRepublic: string;
+    puertoRico: string;
+    bahamas: string;
+    trinidadAndTobago: string;
   };
   latinAmerica: {
     title: string;
@@ -131,7 +274,7 @@ interface LanguageContextType {
   translations: Translations;
 }
 
-const translations: Record<Language, Translations> = {
+export const translations: Record<Language, Translations> = {
   pt: {
     home: "Home",
     explore: "Explorar",
@@ -181,6 +324,63 @@ const translations: Record<Language, Translations> = {
       year: "Ano",
       type: "Tipo",
       noData: "Nenhum dado disponível",
+      policyType: "Tipo de Política",
+      startYear: "Ano de Início",
+      audienceGender: "Gênero do Público",
+      audienceAge: "Idade do Público",
+      locationType: "Tipo de Localização",
+      locationName: "Nome da Localização",
+      educationalLevel: "Nível Educacional",
+      status: "Status",
+      impactType: "Tipo de Impacto",
+      contextType: "Tipo de Contexto",
+      factor: "Fator",
+      policyTypes: {
+        educational: "Educacional",
+        legislation: "Legislação",
+        program: "Programa",
+      },
+      genders: {
+        female: "Feminino",
+        male: "Masculino",
+        all: "Todos",
+      },
+      ages: {
+        children: "Crianças",
+        teenagers: "Adolescentes",
+        adults: "Adultos",
+      },
+      locationTypes: {
+        city: "Cidade",
+        state: "Estado",
+        region: "Região",
+        area: "Área",
+      },
+      educationLevels: {
+        elementary: "Ensino Fundamental",
+        highSchool: "Ensino Médio",
+        undergraduate: "Graduação",
+        graduate: "Pós-Graduação",
+      },
+      statuses: {
+        active: "Ativo",
+        finished: "Finalizado",
+        design: "Em planejamento",
+      },
+      impactTypes: {
+        positive: "Positivo",
+        negative: "Negativo",
+      },
+      contextTypes: {
+        university: "Universidade",
+        society: "Sociedade",
+        workplace: "Ambiente de Trabalho",
+      },
+      factors: {
+        educational: "Educacional",
+        social: "Social",
+        genderStereotypes: "Estereótipos de Gênero",
+      },
     },
     buttons: {
       reset: "Reiniciar",
@@ -214,6 +414,32 @@ const translations: Record<Language, Translations> = {
       peru: "Peru",
       bolivia: "Bolívia",
       argentina: "Argentina",
+      colombia: "Colômbia",
+      chile: "Chile",
+      mexico: "México",
+      unitedStates: "Estados Unidos",
+      canada: "Canadá",
+      ecuador: "Equador",
+      venezuela: "Venezuela",
+      paraguay: "Paraguai",
+      uruguay: "Uruguai",
+      guyana: "Guiana",
+      suriname: "Suriname",
+      frenchGuiana: "Guiana Francesa",
+      panama: "Panamá",
+      costaRica: "Costa Rica",
+      nicaragua: "Nicarágua",
+      honduras: "Honduras",
+      elSalvador: "El Salvador",
+      guatemala: "Guatemala",
+      belize: "Belize",
+      cuba: "Cuba",
+      jamaica: "Jamaica",
+      haiti: "Haiti",
+      dominicanRepublic: "República Dominicana",
+      puertoRico: "Porto Rico",
+      bahamas: "Bahamas",
+      trinidadAndTobago: "Trinidad e Tobago",
     },
     latinAmerica: {
       title: "América Latina em foco!",
@@ -241,6 +467,20 @@ const translations: Record<Language, Translations> = {
       question: "Pergunta",
       selectCategory: "Selecione uma Categoria",
       selectQuestion: "Selecione uma Pergunta",
+      selectCountry: "Selecione um País",
+      selectYear: "Selecione um Ano",
+      selectPolicyType: "Selecione Tipo de Política",
+      selectGender: "Selecione um Gênero",
+      selectAge: "Selecione Idade",
+      selectLocationType: "Selecione Tipo de Localização",
+      enterLocationName: "Digite Nome da Localização",
+      selectEducationalLevel: "Selecione Nível Educacional",
+      selectStatus: "Selecione Status",
+      selectImpactType: "Selecione Tipo de Impacto",
+      selectContextType: "Selecione Tipo de Contexto",
+      selectFactor: "Selecione Fator",
+      filters: "Filtros",
+      currentQuery: "Consulta atual",
     },
     dataChart: {
       centerText1: "Categorias de",
@@ -262,6 +502,63 @@ const translations: Record<Language, Translations> = {
       },
     },
     featuredData: "Dados Destacados",
+    queries: {
+      policies: {
+        countriesApplied:
+          "Em quais países da América Latina políticas de incentivo para mulheres na ciência são aplicadas?",
+        genderPolicyTypes:
+          "Quais são os tipos de políticas de gênero aplicadas na América Latina?",
+        womenParticipation:
+          "Quais políticas promovem a participação de mulheres em STEM?",
+        since2015:
+          "Quais políticas foram implementadas nos países da América Latina desde 2015?",
+      },
+      initiatives: {
+        byCountries: "Quais são as iniciativas de incentivo por país?",
+        dataSource: "Quais são as fontes de dados para as iniciativas?",
+        socialNetworks: "Quais são as redes sociais das iniciativas?",
+        programInitiatives: "Quantas iniciativas são do tipo programa?",
+        publicPrivate:
+          "Quantas iniciativas são públicas e quantas são privadas?",
+        coordinatedIndividuals:
+          "Quantas iniciativas são coordenadas por indivíduos?",
+        responsibleGender: "Qual o gênero do responsável pela iniciativa?",
+        objective: "Qual o objetivo da iniciativa?",
+        modality: "Qual a modalidade da iniciativa?",
+        girlsAdolescents:
+          "A iniciativa é voltada para meninas ou adolescentes?",
+        targetGender: "Qual o gênero do público-alvo da iniciativa?",
+        blackWomen: "A iniciativa é voltada para mulheres negras?",
+        schoolLevel: "Qual o nível escolar da iniciativa?",
+        vulnerableGroup: "A iniciativa é voltada para grupos vulneráveis?",
+        schoolCommunity: "A iniciativa envolve a comunidade escolar?",
+        cityInitiatives: "Quantas iniciativas existem por cidade?",
+        stateInitiatives: "Quantas iniciativas existem por estado?",
+        areaInitiatives: "Quantas iniciativas existem por área?",
+        regionInitiatives: "Quantas iniciativas existem por região?",
+        initiativeReach: "Qual o alcance da iniciativa?",
+        initiativeFunded: "A iniciativa é financiada?",
+        fundingSector: "Qual o setor de financiamento da iniciativa?",
+        activeInitiatives: "Quantas iniciativas estão ativas?",
+        designPhase: "Quantas iniciativas estão em fase de concepção?",
+        finishedInitiatives: "Quantas iniciativas foram concluídas?",
+        initiativeWebsite: "Qual o website da iniciativa?",
+        communityInitiatives: "Quantas iniciativas existem na comunidade?",
+      },
+      factors: {
+        positiveContextual: "Quais são os fatores contextuais positivos?",
+        negativeContextual:
+          "Quais são os fatores contextuais negativos na instituição?",
+        educationalFactors:
+          "Quais são os fatores contextuais por tipo de educação?",
+        genderImpact:
+          "Quais fatores contextuais impactam as pessoas do gênero feminino?",
+        factorImpacts: "Quais são os impactos do fator contextual?",
+        impactTypes: "Quais são os tipos de impacto dos fatores contextuais?",
+        impactFactors:
+          "Quais fatores contextuais impactam impactos específicos?",
+      },
+    },
   },
   en: {
     home: "Home",
@@ -312,6 +609,63 @@ const translations: Record<Language, Translations> = {
       year: "Year",
       type: "Type",
       noData: "No data available",
+      policyType: "Policy Type",
+      startYear: "Start Year",
+      audienceGender: "Audience Gender",
+      audienceAge: "Audience Age",
+      locationType: "Location Type",
+      locationName: "Location Name",
+      educationalLevel: "Educational Level",
+      status: "Status",
+      impactType: "Impact Type",
+      contextType: "Context Type",
+      factor: "Factor",
+      policyTypes: {
+        educational: "Educational",
+        legislation: "Legislation",
+        program: "Program",
+      },
+      genders: {
+        female: "Female",
+        male: "Male",
+        all: "All",
+      },
+      ages: {
+        children: "Children",
+        teenagers: "Teenagers",
+        adults: "Adults",
+      },
+      locationTypes: {
+        city: "City",
+        state: "State",
+        region: "Region",
+        area: "Area",
+      },
+      educationLevels: {
+        elementary: "Elementary",
+        highSchool: "High School",
+        undergraduate: "Undergraduate",
+        graduate: "Graduate",
+      },
+      statuses: {
+        active: "Active",
+        finished: "Finished",
+        design: "Design Phase",
+      },
+      impactTypes: {
+        positive: "Positive",
+        negative: "Negative",
+      },
+      contextTypes: {
+        university: "University",
+        society: "Society",
+        workplace: "Workplace",
+      },
+      factors: {
+        educational: "Educational",
+        social: "Social",
+        genderStereotypes: "Gender Stereotypes",
+      },
     },
     buttons: {
       reset: "Reset",
@@ -345,6 +699,32 @@ const translations: Record<Language, Translations> = {
       peru: "Peru",
       bolivia: "Bolivia",
       argentina: "Argentina",
+      colombia: "Colombia",
+      chile: "Chile",
+      mexico: "Mexico",
+      unitedStates: "United States",
+      canada: "Canada",
+      ecuador: "Ecuador",
+      venezuela: "Venezuela",
+      paraguay: "Paraguay",
+      uruguay: "Uruguay",
+      guyana: "Guyana",
+      suriname: "Suriname",
+      frenchGuiana: "French Guiana",
+      panama: "Panama",
+      costaRica: "Costa Rica",
+      nicaragua: "Nicaragua",
+      honduras: "Honduras",
+      elSalvador: "El Salvador",
+      guatemala: "Guatemala",
+      belize: "Belize",
+      cuba: "Cuba",
+      jamaica: "Jamaica",
+      haiti: "Haiti",
+      dominicanRepublic: "Dominican Republic",
+      puertoRico: "Puerto Rico",
+      bahamas: "Bahamas",
+      trinidadAndTobago: "Trinidad and Tobago",
     },
     latinAmerica: {
       title: "Latin America in focus!",
@@ -372,6 +752,20 @@ const translations: Record<Language, Translations> = {
       question: "Question",
       selectCategory: "Select Category",
       selectQuestion: "Select Question",
+      selectCountry: "Select Country",
+      selectYear: "Select Year",
+      selectPolicyType: "Select Policy Type",
+      selectGender: "Select Gender",
+      selectAge: "Select Age",
+      selectLocationType: "Select Location Type",
+      enterLocationName: "Enter Location Name",
+      selectEducationalLevel: "Select Educational Level",
+      selectStatus: "Select Status",
+      selectImpactType: "Select Impact Type",
+      selectContextType: "Select Context Type",
+      selectFactor: "Select Factor",
+      filters: "Filters",
+      currentQuery: "Current Query",
     },
     dataChart: {
       centerText1: "Data Categories",
@@ -393,6 +787,63 @@ const translations: Record<Language, Translations> = {
       },
     },
     featuredData: "Featured Data",
+    queries: {
+      policies: {
+        countriesApplied:
+          "In which Latin American countries are policies to encourage women in science applied?",
+        genderPolicyTypes:
+          "What types of gender policies are applied in Latin America?",
+        womenParticipation:
+          "Which policies promote women's participation in STEM?",
+        since2015:
+          "Which policies have been implemented in Latin American countries since 2015?",
+      },
+      initiatives: {
+        byCountries: "What are the incentive initiatives by country?",
+        dataSource: "What are the data sources for the initiatives?",
+        socialNetworks: "What are the social networks of the initiatives?",
+        programInitiatives: "How many initiatives are of the program type?",
+        publicPrivate:
+          "How many initiatives are public and how many are private?",
+        coordinatedIndividuals:
+          "How many initiatives are coordinated by individuals?",
+        responsibleGender:
+          "What is the gender of the person responsible for the initiative?",
+        objective: "What is the objective of the initiative?",
+        modality: "What is the modality of the initiative?",
+        girlsAdolescents: "Is the initiative aimed at girls or adolescents?",
+        targetGender:
+          "What is the gender of the target audience of the initiative?",
+        blackWomen: "Is the initiative aimed at black women?",
+        schoolLevel: "What is the educational level of the initiative?",
+        vulnerableGroup: "Is the initiative aimed at vulnerable groups?",
+        schoolCommunity: "Does the initiative involve the school community?",
+        cityInitiatives: "How many initiatives exist per city?",
+        stateInitiatives: "How many initiatives exist per state?",
+        areaInitiatives: "How many initiatives exist per area?",
+        regionInitiatives: "How many initiatives exist per region?",
+        initiativeReach: "What is the reach of the initiative?",
+        initiativeFunded: "Is the initiative funded?",
+        fundingSector: "What is the funding sector of the initiative?",
+        activeInitiatives: "How many initiatives are active?",
+        designPhase: "How many initiatives are in the design phase?",
+        finishedInitiatives: "How many initiatives have been completed?",
+        initiativeWebsite: "What is the website of the initiative?",
+        communityInitiatives: "How many initiatives exist in the community?",
+      },
+      factors: {
+        positiveContextual: "What are the positive contextual factors?",
+        negativeContextual:
+          "What are the negative contextual factors in the institution?",
+        educationalFactors:
+          "What are the contextual factors by type of education?",
+        genderImpact:
+          "Which contextual factors impact people of the female gender?",
+        factorImpacts: "What are the impacts of the contextual factor?",
+        impactTypes: "What are the types of impact of contextual factors?",
+        impactFactors: "Which contextual factors impact specific impacts?",
+      },
+    },
   },
   es: {
     home: "Home",
@@ -443,6 +894,63 @@ const translations: Record<Language, Translations> = {
       year: "Año",
       type: "Tipo",
       noData: "No hay datos disponibles",
+      policyType: "Tipo de Política",
+      startYear: "Año de Inicio",
+      audienceGender: "Género del Público",
+      audienceAge: "Edad del Público",
+      locationType: "Tipo de Ubicación",
+      locationName: "Nombre de Ubicación",
+      educationalLevel: "Nivel Educativo",
+      status: "Estado",
+      impactType: "Tipo de Impacto",
+      contextType: "Tipo de Contexto",
+      factor: "Factor",
+      policyTypes: {
+        educational: "Educativo",
+        legislation: "Legislación",
+        program: "Programa",
+      },
+      genders: {
+        female: "Femenino",
+        male: "Masculino",
+        all: "Todos",
+      },
+      ages: {
+        children: "Niños",
+        teenagers: "Adolescentes",
+        adults: "Adultos",
+      },
+      locationTypes: {
+        city: "Ciudad",
+        state: "Estado",
+        region: "Región",
+        area: "Área",
+      },
+      educationLevels: {
+        elementary: "Primaria",
+        highSchool: "Secundaria",
+        undergraduate: "Pregrado",
+        graduate: "Posgrado",
+      },
+      statuses: {
+        active: "Activo",
+        finished: "Finalizado",
+        design: "En diseño",
+      },
+      impactTypes: {
+        positive: "Positivo",
+        negative: "Negativo",
+      },
+      contextTypes: {
+        university: "Universidad",
+        society: "Sociedad",
+        workplace: "Lugar de trabajo",
+      },
+      factors: {
+        educational: "Educativo",
+        social: "Social",
+        genderStereotypes: "Estereotipos de Género",
+      },
     },
     buttons: {
       reset: "Reiniciar",
@@ -476,6 +984,32 @@ const translations: Record<Language, Translations> = {
       peru: "Perú",
       bolivia: "Bolivia",
       argentina: "Argentina",
+      colombia: "Colombia",
+      chile: "Chile",
+      mexico: "México",
+      unitedStates: "Estados Unidos",
+      canada: "Canadá",
+      ecuador: "Equador",
+      venezuela: "Venezuela",
+      paraguay: "Paraguai",
+      uruguay: "Uruguai",
+      guyana: "Guayana",
+      suriname: "Surinam",
+      frenchGuiana: "Guayana Francesa",
+      panama: "Panamá",
+      costaRica: "Costa Rica",
+      nicaragua: "Nicaragua",
+      honduras: "Honduras",
+      elSalvador: "El Salvador",
+      guatemala: "Guatemala",
+      belize: "Belice",
+      cuba: "Cuba",
+      jamaica: "Jamaica",
+      haiti: "Haití",
+      dominicanRepublic: "República Dominicana",
+      puertoRico: "Puerto Rico",
+      bahamas: "Bahamas",
+      trinidadAndTobago: "Trinidad y Tobago",
     },
     latinAmerica: {
       title: "¡América Latina en foco!",
@@ -501,8 +1035,22 @@ const translations: Record<Language, Translations> = {
     labels: {
       category: "Categoría",
       question: "Pregunta",
-      selectCategory: "Seleccione una Categoría",
-      selectQuestion: "Seleccione una Pregunta",
+      selectCategory: "Seleccionar Categoría",
+      selectQuestion: "Seleccionar Pregunta",
+      selectCountry: "Seleccionar País",
+      selectYear: "Seleccionar Año",
+      selectPolicyType: "Seleccionar Tipo de Política",
+      selectGender: "Seleccionar Género",
+      selectAge: "Seleccionar Edad",
+      selectLocationType: "Seleccionar Tipo de Ubicación",
+      enterLocationName: "Ingresar Nombre de Ubicación",
+      selectEducationalLevel: "Seleccionar Nivel Educativo",
+      selectStatus: "Seleccionar Estado",
+      selectImpactType: "Seleccionar Tipo de Impacto",
+      selectContextType: "Seleccionar Tipo de Contexto",
+      selectFactor: "Seleccionar Factor",
+      filters: "Filtros",
+      currentQuery: "Consulta actual",
     },
     dataChart: {
       centerText1: "Categorías de",
@@ -524,6 +1072,66 @@ const translations: Record<Language, Translations> = {
       },
     },
     featuredData: "Datos Destacados",
+    queries: {
+      policies: {
+        countriesApplied:
+          "¿En qué países de América Latina se aplican políticas para incentivar a las mujeres en la ciencia?",
+        genderPolicyTypes:
+          "¿Qué tipos de políticas de género se aplican en América Latina?",
+        womenParticipation:
+          "¿Qué políticas promueven la participación de las mujeres en STEM?",
+        since2015:
+          "¿Qué políticas se han implementado en los países de América Latina desde 2015?",
+      },
+      initiatives: {
+        byCountries: "¿Cuáles son las iniciativas de incentivo por país?",
+        dataSource: "¿Cuáles son las fuentes de datos para las iniciativas?",
+        socialNetworks: "¿Cuáles son las redes sociales de las iniciativas?",
+        programInitiatives: "¿Cuántas iniciativas son del tipo programa?",
+        publicPrivate:
+          "¿Cuántas iniciativas son públicas y cuántas son privadas?",
+        coordinatedIndividuals:
+          "¿Cuántas iniciativas son coordinadas por individuos?",
+        responsibleGender:
+          "¿Cuál es el género del responsable de la iniciativa?",
+        objective: "¿Cuál es el objetivo de la iniciativa?",
+        modality: "¿Cuál es la modalidad de la iniciativa?",
+        girlsAdolescents:
+          "¿La iniciativa está dirigida a niñas o adolescentes?",
+        targetGender:
+          "¿Cuál es el género del público objetivo de la iniciativa?",
+        blackWomen: "¿La iniciativa está dirigida a mujeres negras?",
+        schoolLevel: "¿Cuál es el nivel educativo de la iniciativa?",
+        vulnerableGroup: "¿La iniciativa está dirigida a grupos vulnerables?",
+        schoolCommunity: "¿La iniciativa involucra a la comunidad escolar?",
+        cityInitiatives: "¿Cuántas iniciativas existen por ciudad?",
+        stateInitiatives: "¿Cuántas iniciativas existen por estado?",
+        areaInitiatives: "¿Cuántas iniciativas existen por área?",
+        regionInitiatives: "¿Cuántas iniciativas existen por región?",
+        initiativeReach: "¿Cuál es el alcance de la iniciativa?",
+        initiativeFunded: "¿La iniciativa está financiada?",
+        fundingSector: "¿Cuál es el sector de financiamiento de la iniciativa?",
+        activeInitiatives: "¿Cuántas iniciativas están activas?",
+        designPhase: "¿Cuántas iniciativas están en fase de diseño?",
+        finishedInitiatives: "¿Cuántas iniciativas se han completado?",
+        initiativeWebsite: "¿Cuál es el sitio web de la iniciativa?",
+        communityInitiatives: "¿Cuántas iniciativas existen en la comunidad?",
+      },
+      factors: {
+        positiveContextual: "¿Cuáles son los factores contextuales positivos?",
+        negativeContextual:
+          "¿Cuáles son los factores contextuales negativos en la institución?",
+        educationalFactors:
+          "¿Cuáles son los factores contextuales por tipo de educación?",
+        genderImpact:
+          "¿Qué factores contextuales impactan a las personas del género femenino?",
+        factorImpacts: "¿Cuáles son los impactos del factor contextual?",
+        impactTypes:
+          "¿Cuáles son los tipos de impacto de los factores contextuales?",
+        impactFactors:
+          "¿Qué factores contextuales impactan impactos específicos?",
+      },
+    },
   },
 };
 

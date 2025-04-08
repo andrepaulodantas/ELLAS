@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useMemo } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -44,8 +44,174 @@ const BuscaTwoOnePage = () => {
   const [selectedVisualization, setSelectedVisualization] =
     useState<string>("linhas");
 
+  // Add new filter states similar to BuscaOne
+  const [selectedCountry, setSelectedCountry] = useState<SelectOption | null>(
+    null
+  );
+  const [selectedYear, setSelectedYear] = useState<SelectOption | null>(null);
+  const [selectedStatusFilter, setSelectedStatusFilter] =
+    useState<SelectOption | null>(null);
+
+  // Wrap options in useMemo to prevent dependency changes on every render
+  const countryOptions = useMemo(
+    () => [
+      { label: translations.filters?.all || "All", value: "all" },
+      { label: translations.countries?.brasil || "Brazil", value: "Brazil" },
+      { label: translations.countries?.peru || "Peru", value: "Peru" },
+      { label: translations.countries?.bolivia || "Bolivia", value: "Bolivia" },
+      {
+        label: translations.countries?.argentina || "Argentina",
+        value: "Argentina",
+      },
+      {
+        label: translations.countries?.colombia || "Colombia",
+        value: "Colombia",
+      },
+      { label: translations.countries?.chile || "Chile", value: "Chile" },
+      // Add other countries as needed
+    ],
+    [translations]
+  );
+
+  // Year options
+  const yearOptions = useMemo(
+    () => [
+      { label: translations.filters?.all || "All", value: "all" },
+      { label: "2015", value: "2015" },
+      { label: "2016", value: "2016" },
+      { label: "2017", value: "2017" },
+      { label: "2018", value: "2018" },
+      { label: "2019", value: "2019" },
+      { label: "2020", value: "2020" },
+      { label: "2021", value: "2021" },
+      { label: "2022", value: "2022" },
+      { label: "2023", value: "2023" },
+    ],
+    [translations]
+  );
+
+  // Status options
+  const statusOptions = useMemo(
+    () => [
+      { label: translations.filters?.all || "All", value: "all" },
+      {
+        label: translations.filters?.statuses?.active || "Active",
+        value: "Active",
+      },
+      {
+        label: translations.filters?.statuses?.finished || "Finished",
+        value: "Finished",
+      },
+      {
+        label: translations.filters?.statuses?.design || "Design",
+        value: "Design",
+      },
+    ],
+    [translations]
+  );
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Read URL parameters when component mounts
+  useEffect(() => {
+    // Read URL parameters
+    const params = new URLSearchParams(location.search);
+    const categoryParam = params.get("category");
+    const queryTypeParam = params.get("queryType");
+    const countryParam = params.get("country");
+    const yearParam = params.get("year");
+    const statusParam = params.get("status");
+
+    // Set initial category if provided in URL
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+
+      // Load questions based on category and set query type if provided
+      if (queryTypeParam) {
+        try {
+          // Decode the URL parameter
+          const decodedQueryType = decodeURIComponent(queryTypeParam);
+
+          // For BuscaTwoOne, we need to match the queryType parameter directly with the question text
+          // Get all available questions for this category
+          const questions = questionQueries[categoryParam]?.[language] || [];
+
+          // First try to find an exact match with the question text
+          let foundQuestion = questions.find((q) => q === decodedQueryType);
+
+          // If no exact match, try to find a question that contains the queryType
+          if (!foundQuestion) {
+            foundQuestion = questions.find((q) =>
+              q.toLowerCase().includes(decodedQueryType.toLowerCase())
+            );
+
+            // If still no match, try to find a question that the queryType contains
+            if (!foundQuestion) {
+              foundQuestion = questions.find((q) =>
+                decodedQueryType.toLowerCase().includes(q.toLowerCase())
+              );
+            }
+          }
+
+          // If we found a matching question, set it
+          if (foundQuestion) {
+            setSelectedQuestion(foundQuestion);
+          } else if (questions.length > 0) {
+            // If no match found but we have questions, use the first one
+            console.log(
+              "No matching question found, using first available question."
+            );
+            setSelectedQuestion(questions[0]);
+          }
+        } catch (error) {
+          console.error("Error decoding queryType parameter:", error);
+          // In case of error, try to use the first available question
+          const questions = questionQueries[categoryParam]?.[language] || [];
+          if (questions.length > 0) {
+            setSelectedQuestion(questions[0]);
+          }
+        }
+      }
+    }
+
+    // Set country filter if provided
+    if (countryParam) {
+      const countryOption = countryOptions.find(
+        (option) => option.value === countryParam
+      );
+      if (countryOption) {
+        setSelectedCountry(countryOption);
+      }
+    }
+
+    // Set year filter if provided
+    if (yearParam) {
+      const yearOption = yearOptions.find(
+        (option) => option.value === yearParam
+      );
+      if (yearOption) {
+        setSelectedYear(yearOption);
+      }
+    }
+
+    // Set status filter if provided
+    if (statusParam) {
+      const statusOption = statusOptions.find(
+        (option) => option.value === statusParam
+      );
+      if (statusOption) {
+        setSelectedStatusFilter(statusOption);
+      }
+    }
+  }, [
+    location.search,
+    language,
+    countryOptions,
+    yearOptions,
+    statusOptions,
+    questionQueries,
+  ]);
 
   const handleSupportClick = () => {
     window.location.href = "https://ellas.ufmt.br/pt/parceiros/"; // Redirecionamento Externo
@@ -138,10 +304,10 @@ const BuscaTwoOnePage = () => {
 
   const handleCategoryChange = (option: SelectOption | null) => {
     setSelectedCategory(option ? option.value : null);
-    setSelectedQuestion(null);
-    setData([]);
-    setDynamicFields([]);
-    setCountryCounts({});
+    setSelectedQuestion(null); // Reset question when category changes
+
+    // Don't reset filters when changing category
+    // This allows filters to persist across category changes
   };
 
   const handleQuestionChange = (option: SelectOption | null) => {
@@ -151,9 +317,16 @@ const BuscaTwoOnePage = () => {
   const handleReset = () => {
     setSelectedCategory(null);
     setSelectedQuestion(null);
+    setSelectedCountry(null);
+    setSelectedYear(null);
+    setSelectedStatusFilter(null);
     setData([]);
+    setFilteredData([]);
     setDynamicFields([]);
     setCountryCounts({});
+
+    // Clear URL params on reset
+    navigate("/buscatwoone", { replace: true });
   };
 
   const handleTimeChange = (option: SelectOption | null) => {
@@ -170,7 +343,29 @@ const BuscaTwoOnePage = () => {
   };
 
   const handleNavigation = (path: string) => () => {
-    navigate(path);
+    // Preserve search parameters when navigating
+    const params = new URLSearchParams();
+    if (selectedCategory) params.append("category", selectedCategory);
+
+    // For query type, use the full selected question text
+    if (selectedQuestion) {
+      try {
+        // Encode the full question text to handle special characters
+        params.append("queryType", encodeURIComponent(selectedQuestion));
+      } catch (error) {
+        console.error("Error encoding queryType:", error);
+      }
+    }
+
+    // Add filter parameters
+    if (selectedCountry && selectedCountry.value !== "all")
+      params.append("country", selectedCountry.value);
+    if (selectedYear && selectedYear.value !== "all")
+      params.append("year", selectedYear.value);
+    if (selectedStatusFilter && selectedStatusFilter.value !== "all")
+      params.append("status", selectedStatusFilter.value);
+
+    navigate(`${path}?${params.toString()}`);
   };
 
   const renderChart = () => {
@@ -240,6 +435,125 @@ const BuscaTwoOnePage = () => {
 
     return <Line data={chartData} options={options} />;
   };
+
+  // Apply filters to data whenever filter values change
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+
+    let filtered = [...data];
+
+    // Apply country filter
+    if (
+      selectedCountry &&
+      selectedCountry.value &&
+      selectedCountry.value !== "all"
+    ) {
+      filtered = filtered.filter((item) => {
+        // Check country field with various formats
+        const itemCountry = item.countryName || item.country || "";
+        // Handle special case for USA/United States
+        if (
+          (itemCountry === "USA" || itemCountry === "United States") &&
+          (selectedCountry.value === "USA" ||
+            selectedCountry.value === "United States")
+        ) {
+          return true;
+        }
+        return itemCountry.includes(selectedCountry.value);
+      });
+    }
+
+    // Apply year filter
+    if (selectedYear && selectedYear.value && selectedYear.value !== "all") {
+      const year = selectedYear.value;
+      filtered = filtered.filter((item) => {
+        // Check if startDate exists and matches the year
+        if (item.startDate) {
+          try {
+            const startDateYear = new Date(item.startDate)
+              .getFullYear()
+              .toString();
+            if (startDateYear === year) return true;
+          } catch (e) {
+            // Handle invalid date format
+            if (item.startDate.includes(year)) return true;
+          }
+        }
+
+        // Check if finishDate exists and matches the year
+        if (item.finishDate) {
+          try {
+            const finishDateYear = new Date(item.finishDate)
+              .getFullYear()
+              .toString();
+            if (finishDateYear === year) return true;
+          } catch (e) {
+            // Handle invalid date format
+            if (item.finishDate.includes(year)) return true;
+          }
+        }
+
+        // Check if start_date exists and matches the year (alternative field name)
+        if (item.start_date) {
+          try {
+            const startDateYear = new Date(item.start_date)
+              .getFullYear()
+              .toString();
+            if (startDateYear === year) return true;
+          } catch (e) {
+            // Try direct matching for formats like "2015"
+            if (item.start_date.includes(year)) return true;
+          }
+        }
+
+        return false;
+      });
+    }
+
+    // Apply status filter
+    if (
+      selectedStatusFilter &&
+      selectedStatusFilter.value &&
+      selectedStatusFilter.value !== "all"
+    ) {
+      filtered = filtered.filter((item) => {
+        if (!item.status) return false;
+
+        // Case-insensitive match for status
+        const itemStatus = item.status.toLowerCase();
+        const selectedStatusValue = selectedStatusFilter.value.toLowerCase();
+
+        // Direct match
+        if (itemStatus === selectedStatusValue) return true;
+
+        // Check for partial matches
+        if (itemStatus.includes(selectedStatusValue)) return true;
+
+        // Check for initiative_status field as well (alternative field name)
+        if (
+          item.initiative_status &&
+          item.initiative_status.toLowerCase().includes(selectedStatusValue)
+        ) {
+          return true;
+        }
+
+        return false;
+      });
+    }
+
+    // Update filtered data for display
+    setFilteredData(filtered);
+
+    // Update countryCounts based on filtered data
+    const countryCountMap: { [key: string]: number } = {};
+    filtered.forEach((item) => {
+      if (item.countryName) {
+        countryCountMap[item.countryName] =
+          (countryCountMap[item.countryName] || 0) + 1;
+      }
+    });
+    setCountryCounts(countryCountMap);
+  }, [data, selectedCountry, selectedYear, selectedStatusFilter]);
 
   return (
     <>
@@ -314,36 +628,95 @@ const BuscaTwoOnePage = () => {
                     </div>
 
                     {/* Question Selection */}
-                    <div>
-                      <Text size="3xl" as="p" className="mb-2">
-                        {translations.labels.question}
-                      </Text>
-                      <SelectBox
-                        shape="round"
-                        name="pergunta"
-                        placeholder={translations.labels.selectQuestion}
-                        options={
-                          selectedCategory
-                            ? questionQueries[selectedCategory][language]?.map(
-                                (question) => ({
-                                  label: question,
-                                  value: question,
-                                })
-                              ) || []
-                            : []
-                        }
-                        value={
-                          selectedQuestion
-                            ? {
-                                label: selectedQuestion,
-                                value: selectedQuestion,
-                              }
-                            : null
-                        }
-                        onChange={handleQuestionChange}
-                        className="w-full border-gray-300_01 border rounded-md"
-                      />
-                    </div>
+                    {selectedCategory && (
+                      <div>
+                        <Text size="3xl" as="p" className="mb-2">
+                          {translations.labels.question}
+                        </Text>
+                        <SelectBox
+                          shape="round"
+                          name="pergunta"
+                          placeholder={translations.labels.selectQuestion}
+                          options={
+                            questionQueries[selectedCategory]?.[language]?.map(
+                              (q) => ({
+                                label: q,
+                                value: q,
+                              })
+                            ) || []
+                          }
+                          value={
+                            selectedQuestion
+                              ? {
+                                  label: selectedQuestion,
+                                  value: selectedQuestion,
+                                }
+                              : null
+                          }
+                          onChange={handleQuestionChange}
+                          className="w-full border-gray-300_01 border rounded-md"
+                        />
+                      </div>
+                    )}
+
+                    {/* Added Filters Section */}
+                    {selectedCategory && (
+                      <div className="flex flex-col gap-4">
+                        <Text size="2xl" as="p" className="font-medium">
+                          {translations.labels.filters}
+                        </Text>
+
+                        {/* Country Filter */}
+                        <div>
+                          <Text size="md" as="p" className="mb-1">
+                            {translations.filters.country}
+                          </Text>
+                          <SelectBox
+                            shape="round"
+                            name="country"
+                            placeholder={translations.labels.selectCountry}
+                            options={countryOptions}
+                            value={selectedCountry}
+                            onChange={(option) => setSelectedCountry(option)}
+                            className="w-full border-gray-300_01 border rounded-md"
+                          />
+                        </div>
+
+                        {/* Year Filter */}
+                        <div>
+                          <Text size="md" as="p" className="mb-1">
+                            {translations.filters.startYear}
+                          </Text>
+                          <SelectBox
+                            shape="round"
+                            name="year"
+                            placeholder={translations.labels.selectYear}
+                            options={yearOptions}
+                            value={selectedYear}
+                            onChange={(option) => setSelectedYear(option)}
+                            className="w-full border-gray-300_01 border rounded-md"
+                          />
+                        </div>
+
+                        {/* Status Filter */}
+                        <div>
+                          <Text size="md" as="p" className="mb-1">
+                            {translations.filters.status}
+                          </Text>
+                          <SelectBox
+                            shape="round"
+                            name="status"
+                            placeholder={translations.labels.selectStatus}
+                            options={statusOptions}
+                            value={selectedStatusFilter}
+                            onChange={(option) =>
+                              setSelectedStatusFilter(option)
+                            }
+                            className="w-full border-gray-300_01 border rounded-md"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -358,7 +731,7 @@ const BuscaTwoOnePage = () => {
                       <Tab
                         className="p-4 flex items-center gap-2 cursor-pointer outline-none"
                         selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
-                        onClick={() => handleNavigation("/buscaone")()}
+                        onClick={handleNavigation("/buscaone")}
                       >
                         <Text as="p">{translations.visualization.map}</Text>
                         <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
@@ -366,7 +739,7 @@ const BuscaTwoOnePage = () => {
                       <Tab
                         className="p-4 flex items-center gap-2 cursor-pointer outline-none"
                         selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
-                        onClick={() => handleNavigation("/buscatwo")()}
+                        onClick={handleNavigation("/buscatwo")}
                       >
                         <Text as="p">{translations.visualization.bars}</Text>
                         <Img src="images/img_iconx18_11.svg" alt="Bars Icon" />

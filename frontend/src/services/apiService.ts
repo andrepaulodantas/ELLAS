@@ -1,5 +1,7 @@
 import axios from "axios";
 import { questionQueries } from "../utils/questions";
+import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../contexts/LanguageContext";
 
 const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
 
@@ -1080,38 +1082,39 @@ export const questionFunctions: { [key: string]: any } = {
 
 // Create a map of translated questions to English questions
 export const getEnglishQuestionKey = (
-  question: string,
-  language: string
+  questionText: string,
+  currentLanguage: string
 ): string => {
-  // If it's already English, return as is
-  if (language === "en") return question;
+  // Default to the input text if no match is found
+  let englishQuestion = questionText;
 
-  // Search in all categories
-  for (const category of ["policies", "initiatives", "factors"]) {
-    // Get the languages available for this category
-    const languages = Object.keys(questionQueries[category]);
+  // Only process if we have a valid question text
+  if (questionText) {
+    // Normalize the current language to match the expected format in questionQueries
+    const lang = currentLanguage.substring(0, 2).toLowerCase();
 
-    for (const lang of languages) {
-      if (lang === language) {
-        // Find the index of the question in the current language
+    // Go through each category
+    Object.keys(questionQueries).forEach((category) => {
+      // Check if this category has translations for the current language
+      if (questionQueries[category][lang]) {
+        // Get the index of the question in the current language
         const index = questionQueries[category][lang].findIndex(
-          (q) => q === question
+          (q) => q.toLowerCase().trim() === questionText.toLowerCase().trim()
         );
 
-        // If found, return the corresponding English question
+        // If found, get the corresponding English question
         if (
           index !== -1 &&
           questionQueries[category]["en"] &&
-          index < questionQueries[category]["en"].length
+          questionQueries[category]["en"][index]
         ) {
-          return questionQueries[category]["en"][index];
+          englishQuestion = questionQueries[category]["en"][index];
         }
       }
-    }
+    });
   }
 
-  // If not found, return original question (might be a custom query)
-  return question;
+  return englishQuestion;
 };
 
 // New functions to support additional features
@@ -1754,4 +1757,40 @@ export const getVisualizationInfo = (type: keyof typeof visualizationTypes) => {
     },
   };
   return info[type];
+};
+
+export const getQueriesByCategory = (
+  category: string | undefined,
+  lang: string = "pt"
+): Record<string, string> => {
+  // Return empty object if no category is provided
+  if (!category) return {};
+
+  // Determine the language for translations
+  const normalizedLang = lang.toLowerCase().startsWith("pt")
+    ? "pt"
+    : lang.toLowerCase().startsWith("en")
+    ? "en"
+    : "es";
+
+  // Get the translations for the specified language
+  const translationObj = translations[normalizedLang as "pt" | "en" | "es"];
+
+  // Categories to check in different languages
+  const policyCategories = ["políticas", "policies", "políticas"];
+  const initiativeCategories = ["iniciativas", "initiatives", "iniciativas"];
+  const factorCategories = ["fatores", "factors", "factores"];
+
+  const categoryLower = category.toLowerCase();
+
+  // Check which category the input falls into
+  if (policyCategories.includes(categoryLower)) {
+    return translationObj.queries.policies;
+  } else if (initiativeCategories.includes(categoryLower)) {
+    return translationObj.queries.initiatives;
+  } else if (factorCategories.includes(categoryLower)) {
+    return translationObj.queries.factors;
+  }
+
+  return {};
 };

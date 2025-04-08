@@ -4,7 +4,10 @@ import { Text, Img, Heading, Button, SelectBox } from "../../components";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
 import { useNavigate, useLocation } from "react-router-dom";
 import GoogleMapComponent from "../../components/GoogleMap";
-import { questionFunctions } from "../../services/apiService";
+import {
+  questionFunctions,
+  getEnglishQuestionKey,
+} from "../../services/apiService";
 import { saveAs } from "file-saver";
 import Header from "../../components/Header";
 import DataTable from "components/DataTable";
@@ -55,7 +58,11 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   useEffect(() => {
     const fetchData = async () => {
       if (selectedCategory && selectedQuestion) {
-        const fetchFunction = questionFunctions[selectedQuestion.value];
+        const englishQuestion = getEnglishQuestionKey(
+          selectedQuestion.value,
+          language
+        );
+        const fetchFunction = questionFunctions[englishQuestion];
         if (fetchFunction) {
           try {
             const response = await fetchFunction();
@@ -118,7 +125,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     };
 
     fetchData();
-  }, [selectedCategory, selectedQuestion]);
+  }, [selectedCategory, selectedQuestion, language]);
 
   useEffect(() => {
     if (selectedTime) {

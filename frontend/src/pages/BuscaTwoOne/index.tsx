@@ -10,7 +10,10 @@ import {
   RadioGroup,
 } from "../../components";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
-import { questionFunctions } from "../../services/apiService"; // Certifique-se de que essas funções estão exportadas corretamente no apiService.ts
+import {
+  questionFunctions,
+  getEnglishQuestionKey,
+} from "../../services/apiService"; // Certifique-se de que essas funções estão exportadas corretamente no apiService.ts
 import { Bar, Line } from "react-chartjs-2";
 import "chart.js/auto"; // Importação necessária para Chart.js
 import { getTabClass } from "../../utils/tabUtils";
@@ -79,7 +82,12 @@ const BuscaTwoOnePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (selectedCategory && selectedQuestion) {
-        const fetchFunction = questionFunctions[selectedQuestion];
+        // Convert the question to its English equivalent for lookup
+        const englishQuestion = getEnglishQuestionKey(
+          selectedQuestion,
+          language
+        );
+        const fetchFunction = questionFunctions[englishQuestion];
         if (fetchFunction) {
           try {
             const response = await fetchFunction();
@@ -122,7 +130,7 @@ const BuscaTwoOnePage = () => {
     };
 
     fetchData();
-  }, [selectedCategory, selectedQuestion]);
+  }, [selectedCategory, selectedQuestion, language]);
 
   useEffect(() => {
     setFilteredData(data); // Atualiza filteredData com os dados carregados

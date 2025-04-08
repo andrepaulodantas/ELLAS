@@ -1,4 +1,5 @@
 import axios from "axios";
+import { questionQueries } from "../utils/questions";
 
 const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
 
@@ -1075,6 +1076,42 @@ export const questionFunctions: { [key: string]: any } = {
     fetchImpactTypesOfContextualFactors,
   "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?":
     fetchContextualFactorsImpactingSpecificImpacts,
+};
+
+// Create a map of translated questions to English questions
+export const getEnglishQuestionKey = (
+  question: string,
+  language: string
+): string => {
+  // If it's already English, return as is
+  if (language === "en") return question;
+
+  // Search in all categories
+  for (const category of ["policies", "initiatives", "factors"]) {
+    // Get the languages available for this category
+    const languages = Object.keys(questionQueries[category]);
+
+    for (const lang of languages) {
+      if (lang === language) {
+        // Find the index of the question in the current language
+        const index = questionQueries[category][lang].findIndex(
+          (q) => q === question
+        );
+
+        // If found, return the corresponding English question
+        if (
+          index !== -1 &&
+          questionQueries[category]["en"] &&
+          index < questionQueries[category]["en"].length
+        ) {
+          return questionQueries[category]["en"][index];
+        }
+      }
+    }
+  }
+
+  // If not found, return original question (might be a custom query)
+  return question;
 };
 
 // New functions to support additional features

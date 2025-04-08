@@ -4,7 +4,10 @@ import { Text, Img, Heading, Button, SelectBox } from "../../components";
 import { TabPanel, TabList, Tab, Tabs } from "react-tabs";
 import { useNavigate, useLocation } from "react-router-dom";
 import GoogleMapComponent from "../../components/GoogleMap";
-import { questionFunctions } from "../../services/apiService";
+import {
+  questionFunctions,
+  getEnglishQuestionKey,
+} from "../../services/apiService";
 import { saveAs } from "file-saver";
 import Header from "../../components/Header";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -79,7 +82,12 @@ const BuscaTwoPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (selectedCategory && selectedQuestion) {
-        const fetchFunction = questionFunctions[selectedQuestion];
+        // Convert the question to its English equivalent for lookup
+        const englishQuestion = getEnglishQuestionKey(
+          selectedQuestion,
+          language
+        );
+        const fetchFunction = questionFunctions[englishQuestion];
         if (fetchFunction) {
           try {
             const response = await fetchFunction();
@@ -151,7 +159,7 @@ const BuscaTwoPage = () => {
     };
 
     fetchData();
-  }, [selectedCategory, selectedQuestion]);
+  }, [selectedCategory, selectedQuestion, language]);
 
   const handleCategoryChange = (option: SelectOption | null) => {
     setSelectedCategory(option ? option.value : null);

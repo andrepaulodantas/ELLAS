@@ -19,7 +19,7 @@
   "api": "API",
   "visualization": {
     "table": "Table View",
-    "map": "Initiatives by Country",
+    "map": "Maps",
     "chart": "Chart View",
     "bars": "Bars",
     "lines": "Lines",
@@ -103,7 +103,7 @@
     }
   },
   "table": {
-    "title": "Data Table",
+    "title": "Maps Maps",
     "noData": "No data available",
     "loading": "Loading data...",
     "search": "Search",

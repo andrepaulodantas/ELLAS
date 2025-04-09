@@ -19,7 +19,7 @@
   "api": "API",
   "visualization": {
     "table": "Visualização em Tabela",
-    "map": "Iniciativas por País",
+    "map": "Mapas",
     "chart": "Visualização em Gráfico",
     "bars": "Barras",
     "lines": "Linhas",
@@ -103,7 +103,7 @@
     }
   },
   "table": {
-    "title": "Tabela de Dados",
+    "title": "Mapa de Mapas",
     "noData": "Nenhum dado disponível",
     "loading": "Carregando dados...",
     "search": "Buscar",

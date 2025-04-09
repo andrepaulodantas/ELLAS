@@ -401,24 +401,6 @@ const Header = () => {
 
                 <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
                   <LanguageSwitcher />
-
-                  {isAuthenticated ? (
-                    <LoginButton
-                      variant="contained"
-                      startIcon={<PersonOutlineIcon />}
-                      onClick={logout}
-                    >
-                      {user?.name || translations.login}
-                    </LoginButton>
-                  ) : (
-                    <LoginButton
-                      variant="contained"
-                      startIcon={<PersonOutlineIcon />}
-                      onClick={() => handleNavigation("/fazerloginone")}
-                    >
-                      {translations.login}
-                    </LoginButton>
-                  )}
                 </Box>
               </NavContainer>
             )}
@@ -443,27 +425,6 @@ const Header = () => {
             ))}
             <DrawerListItem>
               <LanguageSwitcher />
-            </DrawerListItem>
-            <DrawerListItem>
-              {isAuthenticated ? (
-                <LoginButton
-                  variant="contained"
-                  startIcon={<PersonOutlineIcon />}
-                  onClick={logout}
-                  fullWidth
-                >
-                  {user?.name || translations.login}
-                </LoginButton>
-              ) : (
-                <LoginButton
-                  variant="contained"
-                  startIcon={<PersonOutlineIcon />}
-                  onClick={() => handleNavigation("/fazerloginone")}
-                  fullWidth
-                >
-                  {translations.login}
-                </LoginButton>
-              )}
             </DrawerListItem>
           </List>
         </StyledDrawer>

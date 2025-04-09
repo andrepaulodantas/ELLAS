@@ -23,6 +23,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
+import Sidebar from "../../components/Sidebar";
 
 type SelectOption = { value: string; label: string };
 
@@ -73,21 +74,21 @@ const BuscaTwoOnePage = () => {
     [translations]
   );
 
-  // Year options
+  // Update yearOptions to be string array
   const yearOptions = useMemo(
     () => [
-      { label: translations.filters?.all || "All", value: "all" },
-      { label: "2015", value: "2015" },
-      { label: "2016", value: "2016" },
-      { label: "2017", value: "2017" },
-      { label: "2018", value: "2018" },
-      { label: "2019", value: "2019" },
-      { label: "2020", value: "2020" },
-      { label: "2021", value: "2021" },
-      { label: "2022", value: "2022" },
-      { label: "2023", value: "2023" },
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
     ],
-    [translations]
+    []
   );
 
   // Status options
@@ -187,11 +188,9 @@ const BuscaTwoOnePage = () => {
 
     // Set year filter if provided
     if (yearParam) {
-      const yearOption = yearOptions.find(
-        (option) => option.value === yearParam
-      );
+      const yearOption = yearOptions.find((option) => option === yearParam);
       if (yearOption) {
-        setSelectedYear(yearOption);
+        setSelectedYear({ label: yearOption, value: yearOption });
       }
     }
 
@@ -333,8 +332,9 @@ const BuscaTwoOnePage = () => {
     setSelectedTime(option ? option.value : null);
   };
 
-  const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedStatus(event.target.value);
+  const handleStatusChange = (status: string) => {
+    const option = statusOptions.find((opt) => opt.value === status);
+    setSelectedStatusFilter(option || null);
   };
 
   const handleVisualizationChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -436,7 +436,7 @@ const BuscaTwoOnePage = () => {
     return <Line data={chartData} options={options} />;
   };
 
-  // Apply filters to data whenever filter values change
+  // Update the filtering logic in the useEffect
   useEffect(() => {
     if (!data || data.length === 0) return;
 
@@ -449,17 +449,10 @@ const BuscaTwoOnePage = () => {
       selectedCountry.value !== "all"
     ) {
       filtered = filtered.filter((item) => {
-        // Check country field with various formats
         const itemCountry = item.countryName || item.country || "";
-        // Handle special case for USA/United States
-        if (
-          (itemCountry === "USA" || itemCountry === "United States") &&
-          (selectedCountry.value === "USA" ||
-            selectedCountry.value === "United States")
-        ) {
-          return true;
-        }
-        return itemCountry.includes(selectedCountry.value);
+        return itemCountry
+          .toLowerCase()
+          .includes(selectedCountry.value.toLowerCase());
       });
     }
 
@@ -467,7 +460,7 @@ const BuscaTwoOnePage = () => {
     if (selectedYear && selectedYear.value && selectedYear.value !== "all") {
       const year = selectedYear.value;
       filtered = filtered.filter((item) => {
-        // Check if startDate exists and matches the year
+        // Check startDate
         if (item.startDate) {
           try {
             const startDateYear = new Date(item.startDate)
@@ -475,12 +468,11 @@ const BuscaTwoOnePage = () => {
               .toString();
             if (startDateYear === year) return true;
           } catch (e) {
-            // Handle invalid date format
             if (item.startDate.includes(year)) return true;
           }
         }
 
-        // Check if finishDate exists and matches the year
+        // Check finishDate
         if (item.finishDate) {
           try {
             const finishDateYear = new Date(item.finishDate)
@@ -488,12 +480,11 @@ const BuscaTwoOnePage = () => {
               .toString();
             if (finishDateYear === year) return true;
           } catch (e) {
-            // Handle invalid date format
             if (item.finishDate.includes(year)) return true;
           }
         }
 
-        // Check if start_date exists and matches the year (alternative field name)
+        // Check start_date (alternative field name)
         if (item.start_date) {
           try {
             const startDateYear = new Date(item.start_date)
@@ -501,7 +492,6 @@ const BuscaTwoOnePage = () => {
               .toString();
             if (startDateYear === year) return true;
           } catch (e) {
-            // Try direct matching for formats like "2015"
             if (item.start_date.includes(year)) return true;
           }
         }
@@ -518,42 +508,36 @@ const BuscaTwoOnePage = () => {
     ) {
       filtered = filtered.filter((item) => {
         if (!item.status) return false;
-
-        // Case-insensitive match for status
         const itemStatus = item.status.toLowerCase();
         const selectedStatusValue = selectedStatusFilter.value.toLowerCase();
-
-        // Direct match
-        if (itemStatus === selectedStatusValue) return true;
-
-        // Check for partial matches
-        if (itemStatus.includes(selectedStatusValue)) return true;
-
-        // Check for initiative_status field as well (alternative field name)
-        if (
-          item.initiative_status &&
-          item.initiative_status.toLowerCase().includes(selectedStatusValue)
-        ) {
-          return true;
-        }
-
-        return false;
+        return itemStatus.includes(selectedStatusValue);
       });
     }
 
-    // Update filtered data for display
+    // Update filtered data
     setFilteredData(filtered);
 
-    // Update countryCounts based on filtered data
+    // Update country counts
     const countryCountMap: { [key: string]: number } = {};
     filtered.forEach((item) => {
-      if (item.countryName) {
-        countryCountMap[item.countryName] =
-          (countryCountMap[item.countryName] || 0) + 1;
+      const country = item.countryName || item.country || "";
+      if (country) {
+        countryCountMap[country] = (countryCountMap[country] || 0) + 1;
       }
     });
     setCountryCounts(countryCountMap);
   }, [data, selectedCountry, selectedYear, selectedStatusFilter]);
+
+  // Update the handlers to properly set the state
+  const handleCountryChange = (country: string) => {
+    const option = countryOptions.find((opt) => opt.value === country);
+    setSelectedCountry(option || null);
+  };
+
+  const handleYearChange = (year: string) => {
+    const option = { label: year, value: year };
+    setSelectedYear(option);
+  };
 
   return (
     <>
@@ -570,8 +554,12 @@ const BuscaTwoOnePage = () => {
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
             <div className="flex flex-col items-center justify-start w-full">
               {/* Header Section */}
-              <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
-                <Heading size="2xl" as="h1" className="text-center">
+              <div className="flex flex-row justify-center items-center w-full p-8 sm:p-6 border-b-2 border-deep_orange-200 bg-gray-50">
+                <Heading
+                  size="2xl"
+                  as="h1"
+                  className="text-center text-gray-800 font-semibold"
+                >
                   {translations.table.title}
                 </Heading>
               </div>
@@ -579,146 +567,26 @@ const BuscaTwoOnePage = () => {
               {/* Main Content Section */}
               <div className="flex flex-row md:flex-col justify-between items-start w-full gap-10 px-6 sm:px-4 max-w-[1331px]">
                 {/* Sidebar Section */}
-                <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
-                  <Button
-                    size="xs"
-                    variant="outline"
-                    className="mb-4 gap-2.5 w-full rounded-[35px]"
-                    onClick={handleReset}
-                  >
-                    {translations.buttons.reset}
-                  </Button>
-                  <div className="flex flex-col gap-6">
-                    {/* Category Selection */}
-                    <div>
-                      <Text size="3xl" as="p" className="mb-2">
-                        {translations.labels.category}
-                      </Text>
-                      <SelectBox
-                        shape="round"
-                        name="categoria"
-                        placeholder={translations.labels.selectCategory}
-                        options={[
-                          {
-                            label: translations.categories.initiatives,
-                            value: "initiatives",
-                          },
-                          {
-                            label: translations.categories.policies,
-                            value: "policies",
-                          },
-                          {
-                            label: translations.categories.factors,
-                            value: "factors",
-                          },
-                        ]}
-                        value={
-                          selectedCategory
-                            ? {
-                                label:
-                                  translations.categories[selectedCategory] ||
-                                  selectedCategory,
-                                value: selectedCategory,
-                              }
-                            : null
-                        }
-                        onChange={handleCategoryChange}
-                        className="w-full border-gray-300_01 border rounded-md"
-                      />
-                    </div>
-
-                    {/* Question Selection */}
-                    {selectedCategory && (
-                      <div>
-                        <Text size="3xl" as="p" className="mb-2">
-                          {translations.labels.question}
-                        </Text>
-                        <SelectBox
-                          shape="round"
-                          name="pergunta"
-                          placeholder={translations.labels.selectQuestion}
-                          options={
-                            questionQueries[selectedCategory]?.[language]?.map(
-                              (q) => ({
-                                label: q,
-                                value: q,
-                              })
-                            ) || []
-                          }
-                          value={
-                            selectedQuestion
-                              ? {
-                                  label: selectedQuestion,
-                                  value: selectedQuestion,
-                                }
-                              : null
-                          }
-                          onChange={handleQuestionChange}
-                          className="w-full border-gray-300_01 border rounded-md"
-                        />
-                      </div>
-                    )}
-
-                    {/* Added Filters Section */}
-                    {selectedCategory && (
-                      <div className="flex flex-col gap-4">
-                        <Text size="2xl" as="p" className="font-medium">
-                          {translations.labels.filters}
-                        </Text>
-
-                        {/* Country Filter */}
-                        <div>
-                          <Text size="md" as="p" className="mb-1">
-                            {translations.filters.country}
-                          </Text>
-                          <SelectBox
-                            shape="round"
-                            name="country"
-                            placeholder={translations.labels.selectCountry}
-                            options={countryOptions}
-                            value={selectedCountry}
-                            onChange={(option) => setSelectedCountry(option)}
-                            className="w-full border-gray-300_01 border rounded-md"
-                          />
-                        </div>
-
-                        {/* Year Filter */}
-                        <div>
-                          <Text size="md" as="p" className="mb-1">
-                            {translations.filters.startYear}
-                          </Text>
-                          <SelectBox
-                            shape="round"
-                            name="year"
-                            placeholder={translations.labels.selectYear}
-                            options={yearOptions}
-                            value={selectedYear}
-                            onChange={(option) => setSelectedYear(option)}
-                            className="w-full border-gray-300_01 border rounded-md"
-                          />
-                        </div>
-
-                        {/* Status Filter */}
-                        <div>
-                          <Text size="md" as="p" className="mb-1">
-                            {translations.filters.status}
-                          </Text>
-                          <SelectBox
-                            shape="round"
-                            name="status"
-                            placeholder={translations.labels.selectStatus}
-                            options={statusOptions}
-                            value={selectedStatusFilter}
-                            onChange={(option) =>
-                              setSelectedStatusFilter(option)
-                            }
-                            className="w-full border-gray-300_01 border rounded-md"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <Sidebar
+                  selectedCategory={selectedCategory}
+                  selectedQuestion={selectedQuestion}
+                  selectedCountries={
+                    selectedCountry ? [selectedCountry.value] : []
+                  }
+                  selectedYears={selectedYear ? [selectedYear.value] : []}
+                  selectedStatuses={
+                    selectedStatusFilter ? [selectedStatusFilter.value] : []
+                  }
+                  countryOptions={countryOptions}
+                  yearOptions={yearOptions}
+                  statusOptions={statusOptions}
+                  onCategoryChange={handleCategoryChange}
+                  onQuestionChange={handleQuestionChange}
+                  onCountryChange={handleCountryChange}
+                  onYearChange={handleYearChange}
+                  onStatusChange={handleStatusChange}
+                  onReset={handleReset}
+                />
 
                 {/* Tabs Section */}
                 <div className="flex flex-col w-[70%] md:w-full">
@@ -756,7 +624,11 @@ const BuscaTwoOnePage = () => {
                     {/* Main Content */}
                     {/* Chart Section */}
                     <div className="mt-8 p-6">
-                      <Text size="xl" as="p" className="mb-4 text-center">
+                      <Text
+                        size="xl"
+                        as="p"
+                        className="mb-4 text-center text-gray-700 font-medium"
+                      >
                         {selectedQuestion || translations.labels.selectQuestion}
                       </Text>
                       <div className="w-full">{renderChart()}</div>

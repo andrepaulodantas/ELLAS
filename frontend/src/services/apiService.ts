@@ -1012,10 +1012,34 @@ filter(regex(str(?impact),"Leadership")||regex(str(?impact),"leadership")) }
   return await fetchQuery(query);
 };
 
-// Atualize o mapeamento de perguntas para funções de busca
-export const questionFunctions: { [key: string]: any } = {
+// Map of English questions to their corresponding fetch functions
+export const questionFunctions: { [key: string]: () => Promise<any> } = {
+  // Policy-related questions
+  "In which countries the policy was applied?": fetchPoliciesAppliedInCountries,
+  "What types of gender policies/processes/practices exist in Latin America?":
+    fetchPolicyTypesInLatinAmerica,
+  "How policies identified/analyzed are promoting women's participation in STEM fields?":
+    fetchPoliciesPromotingWomenInSTEM,
+  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?":
+    fetchPoliciesImplementedInCountriesSince2015,
+  "In which Latin American countries are policies to encourage women in science applied?":
+    fetchPoliciesPromotingWomenInSTEM,
+  "Which policies have been implemented in Latin American countries since 2015?":
+    fetchPoliciesImplementedInCountriesSince2015,
+  "What are the policies for women in science in Latin America?":
+    fetchPoliciesPromotingWomenInSTEM,
+  "Which countries have implemented gender policies?":
+    fetchPoliciesAppliedInCountries,
+  "What policies exist in Latin America?": fetchPolicyTypesInLatinAmerica,
+  "What are the policies for women in STEM?": fetchPoliciesPromotingWomenInSTEM,
+  "What policies were implemented since 2015?":
+    fetchPoliciesImplementedInCountriesSince2015,
+
+  // Initiative-related questions
   "Which/How many initiatives are carried out by countries?":
     fetchInitiativesByCountry,
+  "What are the incentive Maps?": fetchInitiativesByCountry,
+  "How many initiatives exist in the community?": fetchCommunityInitiatives,
   "What data source are used for initiative?": fetchDataSourcesForInitiatives,
   "What is the initiative's social network(s)?":
     fetchSocialNetworksForInitiatives,
@@ -1033,21 +1057,21 @@ export const questionFunctions: { [key: string]: any } = {
   "What is the social gender of the target audience served by the initiative?":
     fetchTargetAudienceGenderForInitiatives,
   "What initiatives serve black women?": fetchInitiativesForBlackWomen,
-  "What initiatives are being developed <at a given school level>?":
+  "What initiatives are being developed at a given school level?":
     fetchInitiativesByEducationalLevel,
-  "What initiatives serve <a certain vulnerable group>?":
+  "What initiatives serve a certain vulnerable group?":
     fetchInitiativesForVulnerableGroups,
   "Do the initiatives involve the School community?":
     fetchSchoolCommunityInvolvementInInitiatives,
-  "Which/How many initiatives are carried out <in a given city>?":
+  "Which/How many initiatives are carried out in a given city?":
     fetchInitiativesByCity,
-  "What/How many initiatives are carried out <in a given state>?":
+  "What/How many initiatives are carried out in a given state?":
     fetchInitiativesByState,
-  "What/How many initiatives are carried out <in a given area>?":
+  "What/How many initiatives are carried out in a given area?":
     fetchInitiativesByArea,
-  "What/How many initiatives are carried out <in a given region>?":
+  "What/How many initiatives are carried out in a given region?":
     fetchInitiativesByRegion,
-  "Which/How many initiatives have <a given reach>?": fetchInitiativesByReach,
+  "Which/How many initiatives have a given reach?": fetchInitiativesByReach,
   "Are the initiatives funded?": fetchFundedInitiatives,
   "What is the sector of the organization(s) that finance(s) the initiative?":
     fetchInitiativeFundingSectors,
@@ -1057,15 +1081,25 @@ export const questionFunctions: { [key: string]: any } = {
   "Which initiatives are already finished?": fetchFinishedInitiatives,
   "What is the initiative's website (URL)?": fetchInitiativeWebsites,
   "How many initiatives are part of communities?": fetchCommunityInitiatives,
-  "In which countries the policy was applied?": fetchPoliciesAppliedInCountries,
-  "What types of gender policies/processes/practices exist in Latin America?":
-    fetchPolicyTypesInLatinAmerica,
-  "How policies identified/analyzed are promoting women's participation in STEM fields?":
-    fetchPoliciesPromotingWomenInSTEM,
-  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?":
-    fetchPoliciesImplementedInCountriesSince2015,
+  "What are the active initiatives?": fetchActiveInitiatives,
+  "Which initiatives are currently running?": fetchActiveInitiatives,
+  "What initiatives are still in development?": fetchInitiativesByPhase,
+  "What initiatives have been completed?": fetchFinishedInitiatives,
+  "What are the initiatives in the community?": fetchCommunityInitiatives,
+  "What initiatives are funded?": fetchFundedInitiatives,
+  "What initiatives are public?": fetchPublicPrivateInitiatives,
+  "What initiatives are private?": fetchPublicPrivateInitiatives,
+  "What initiatives are for girls?": fetchInitiativesForGirlsOrAdolescents,
+  "What initiatives are for black women?": fetchInitiativesForBlackWomen,
+  "What initiatives are in schools?": fetchInitiativesByEducationalLevel,
+  "What initiatives are in cities?": fetchInitiativesByCity,
+  "What initiatives are in states?": fetchInitiativesByState,
+  "What initiatives are in regions?": fetchInitiativesByRegion,
+
+  // Factor-related questions
   "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?":
     fetchPositiveContextualFactors,
+  "What are the positive contextual factors?": fetchPositiveContextualFactors,
   "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?":
     fetchNegativeContextualFactorsInInstitution,
   "Which CONTEXTUAL FACTORS are related to the TYPE of Educational FACTOR?":
@@ -1078,6 +1112,24 @@ export const questionFunctions: { [key: string]: any } = {
     fetchImpactTypesOfContextualFactors,
   "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?":
     fetchContextualFactorsImpactingSpecificImpacts,
+  "Which contextual factors impact specific impacts?":
+    fetchContextualFactorsImpactingSpecificImpacts,
+  "What are the negative contextual factors?":
+    fetchNegativeContextualFactorsInInstitution,
+  "What are the educational contextual factors?":
+    fetchContextualFactorsByEducationType,
+  "What are the impacts of contextual factors?": fetchImpactsOfContextualFactor,
+  "What are the impact types of contextual factors?":
+    fetchImpactTypesOfContextualFactors,
+  "How do contextual factors impact leadership?":
+    fetchContextualFactorsImpactingSpecificImpacts,
+  "What are the contextual factors?": fetchPositiveContextualFactors,
+  "What are the negative factors?": fetchNegativeContextualFactorsInInstitution,
+  "What are the educational factors?": fetchContextualFactorsByEducationType,
+  "What are the impacts?": fetchImpactsOfContextualFactor,
+  "What are the impact types?": fetchImpactTypesOfContextualFactors,
+  "What factors impact leadership?":
+    fetchContextualFactorsImpactingSpecificImpacts,
 };
 
 // Create a map of translated questions to English questions
@@ -1089,31 +1141,82 @@ export const getEnglishQuestionKey = (
   let englishQuestion = questionText;
 
   // Only process if we have a valid question text
-  if (questionText) {
+  if (questionText && questionText.trim()) {
     // Normalize the current language to match the expected format in questionQueries
     const lang = currentLanguage.substring(0, 2).toLowerCase();
 
-    // Go through each category
+    // Debug logging
+    console.log("Looking for question:", questionText);
+    console.log("Current language:", lang);
+
+    // First try to find an exact match in the questionQueries
+    let foundExactMatch = false;
     Object.keys(questionQueries).forEach((category) => {
-      // Check if this category has translations for the current language
       if (questionQueries[category][lang]) {
-        // Get the index of the question in the current language
         const index = questionQueries[category][lang].findIndex(
           (q) => q.toLowerCase().trim() === questionText.toLowerCase().trim()
         );
 
-        // If found, get the corresponding English question
         if (
           index !== -1 &&
           questionQueries[category]["en"] &&
           questionQueries[category]["en"][index]
         ) {
           englishQuestion = questionQueries[category]["en"][index];
+          foundExactMatch = true;
+          console.log("Found exact match in categories:", englishQuestion);
+          return;
         }
       }
     });
+
+    // If no exact match was found, try to find a direct match in questionFunctions
+    if (!foundExactMatch) {
+      const matchingKey = Object.keys(questionFunctions).find(
+        (key) => key.toLowerCase().trim() === questionText.toLowerCase().trim()
+      );
+
+      if (matchingKey) {
+        englishQuestion = matchingKey;
+        console.log(
+          "Found direct match in questionFunctions:",
+          englishQuestion
+        );
+      } else {
+        // If still no match, try a more flexible match but only if we're not in English
+        if (lang !== "en") {
+          Object.keys(questionQueries).forEach((category) => {
+            if (questionQueries[category][lang]) {
+              const index = questionQueries[category][lang].findIndex((q) => {
+                const normalizedInput = questionText.toLowerCase().trim();
+                const normalizedQuestion = q.toLowerCase().trim();
+                return (
+                  normalizedInput === normalizedQuestion ||
+                  normalizedQuestion.includes(normalizedInput) ||
+                  normalizedInput.includes(normalizedQuestion)
+                );
+              });
+
+              if (
+                index !== -1 &&
+                questionQueries[category]["en"] &&
+                questionQueries[category]["en"][index]
+              ) {
+                englishQuestion = questionQueries[category]["en"][index];
+                console.log(
+                  "Found flexible match in categories:",
+                  englishQuestion
+                );
+              }
+            }
+          });
+        }
+      }
+    }
   }
 
+  // Debug logging
+  console.log("Final English question:", englishQuestion);
   return englishQuestion;
 };
 

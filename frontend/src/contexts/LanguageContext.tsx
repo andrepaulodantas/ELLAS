@@ -297,7 +297,7 @@ export const translations: Record<Language, Translations> = {
     api: "API",
     visualization: {
       table: "Visualização em Tabela",
-      map: "Iniciativas por País",
+      map: "Mapas",
       chart: "Visualização em Gráfico",
       bars: "Barras",
       lines: "Linhas",
@@ -582,7 +582,7 @@ export const translations: Record<Language, Translations> = {
     api: "API",
     visualization: {
       table: "Table View",
-      map: "Initiatives by Country",
+      map: "Maps",
       chart: "Chart View",
       bars: "Bars",
       lines: "Lines",
@@ -799,7 +799,7 @@ export const translations: Record<Language, Translations> = {
           "Which policies have been implemented in Latin American countries since 2015?",
       },
       initiatives: {
-        byCountries: "What are the incentive initiatives by country?",
+        byCountries: "What are the incentive Maps?",
         dataSource: "What are the data sources for the initiatives?",
         socialNetworks: "What are the social networks of the initiatives?",
         programInitiatives: "How many initiatives are of the program type?",
@@ -867,7 +867,7 @@ export const translations: Record<Language, Translations> = {
     api: "API",
     visualization: {
       table: "Vista de Tabla",
-      map: "Iniciativas por País",
+      map: "Mapas",
       chart: "Vista de Gráfico",
       bars: "Barras",
       lines: "Líneas",

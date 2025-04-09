@@ -14,6 +14,7 @@ import DataTable from "components/DataTable";
 import { SelectOption } from "../../components/SelectBox";
 import { timeRelatedQuestions } from "../../utils/questions";
 import { useLanguage } from "../../contexts/LanguageContext";
+import Sidebar from "../../components/Sidebar";
 
 interface DropDownOption extends SelectOption {
   value: string;
@@ -74,6 +75,10 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   // State for selected query
   const [selectedQueryType, setSelectedQueryType] =
     useState<DropDownOption | null>(null);
+
+  // Add state declarations for multi-select filters
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
   const navigate = useNavigate();
 
@@ -182,18 +187,18 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   // Year options
   const yearOptions = useMemo(
     () => [
-      { label: translations.filters?.all || "All", value: "all" },
-      { label: "2015", value: "2015" },
-      { label: "2016", value: "2016" },
-      { label: "2017", value: "2017" },
-      { label: "2018", value: "2018" },
-      { label: "2019", value: "2019" },
-      { label: "2020", value: "2020" },
-      { label: "2021", value: "2021" },
-      { label: "2022", value: "2022" },
-      { label: "2023", value: "2023" },
+      "2015",
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
     ],
-    [translations]
+    []
   );
 
   // Audience gender options
@@ -917,9 +922,9 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     return filtered;
   };
 
-  // Update the useEffect for fetching data to use the dynamically constructed query
+  // Update the useEffect for fetching data
   useEffect(() => {
-    if (!selectedCategory || !selectedQueryType) return;
+    if (!selectedCategory) return;
 
     const fetchData = async () => {
       try {
@@ -927,57 +932,56 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
         // Get the query string from buildDynamicQuery
         const dynamicQuestion = buildDynamicQuery();
-        console.log("Executing query:", dynamicQuestion);
 
         // Convert the question to its English equivalent for lookup in API
-        const englishQuestion = getEnglishQuestionKey(
-          dynamicQuestion,
-          language
-        );
-        const fetchFunction = questionFunctions[englishQuestion];
+        const englishQuestion =
+          getEnglishQuestionKey(dynamicQuestion, language) || "";
 
-        if (fetchFunction) {
-          const response = await fetchFunction();
+        const fetchFunction = englishQuestion
+          ? questionFunctions[englishQuestion]
+          : undefined;
 
-          if (response?.results?.bindings.length > 0) {
+        if (fetchFunction && typeof fetchFunction === "function") {
+            const response = await fetchFunction();
+
+          if (response?.results?.bindings) {
             // Get all fields from the response
-            const fields = Object.keys(response.results.bindings[0]);
-            setDynamicFields(fields);
+            const fields = Object.keys(response.results.bindings[0] || {});
+              setDynamicFields(fields);
 
             // Format the data
             const formattedData = response.results.bindings.map((item: any) => {
-              const formattedItem: { [key: string]: any } = {};
-              fields.forEach((field) => {
-                formattedItem[field] = item[field]?.value || "";
-              });
-              return formattedItem;
+                  const formattedItem: { [key: string]: any } = {};
+                  fields.forEach((field) => {
+                    formattedItem[field] = item[field]?.value || "";
+                  });
+                  return formattedItem;
             });
 
             // Set raw data
-            setData(formattedData);
-            setFilteredData(formattedData);
+              setData(formattedData);
+              setFilteredData(formattedData);
 
             // Update selected countries for the map
-            const countries: string[] = [];
-            formattedData.forEach((item) => {
-              if (item.countryName && !countries.includes(item.countryName)) {
-                countries.push(item.countryName);
+            const countries = formattedData.reduce((acc: string[], item) => {
+              const country = item.countryName || item.country || "";
+              if (country && !acc.includes(country)) {
+                acc.push(country);
               }
-            });
-            setSelectedCountries(countries);
-          } else {
-            setData([]);
-            setFilteredData([]);
-            setSelectedCountries([]);
+              return acc;
+            }, []);
+              setSelectedCountries(countries);
+            } else {
+              setData([]);
+              setFilteredData([]);
+              setSelectedCountries([]);
           }
         } else {
-          console.error("No fetch function found for query:", englishQuestion);
           setData([]);
           setFilteredData([]);
           setSelectedCountries([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+            }
+          } catch (error) {
         setData([]);
         setFilteredData([]);
         setSelectedCountries([]);
@@ -987,85 +991,106 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     };
 
     fetchData();
-  }, [
-    selectedCategory,
-    selectedQueryType,
-    language,
-    buildDynamicQuery,
-    questionFunctions,
-    getEnglishQuestionKey,
-  ]);
+  }, [selectedCategory, selectedQueryType, language, buildDynamicQuery]);
 
-  // Effect for applying filters independent of fetching data
+  // Update the useEffect for data filtering
   useEffect(() => {
-    if (data && data.length > 0) {
-      let filtered = [...data];
+    if (!data || data.length === 0) return;
 
-      // Apply country filter
-      const countryValue = getCountryValue(selectedCountry);
-      if (countryValue !== "all") {
-        filtered = filtered.filter((item) => {
-          // Handle special case for USA/United States
-          if (
-            (countryValue === "USA" || countryValue === "United States") &&
-            (item.countryName === "USA" || item.countryName === "United States")
-          ) {
-            return true;
+    let filtered = [...data];
+
+    // Apply country filter
+    if (
+      selectedCountry &&
+      selectedCountry.value &&
+      selectedCountry.value !== "all"
+    ) {
+      filtered = filtered.filter((item) => {
+        const itemCountry = item.countryName || item.country || "";
+        return itemCountry
+          .toLowerCase()
+          .includes(selectedCountry.value.toLowerCase());
+      });
+    }
+
+    // Apply year filter
+    if (selectedYear && selectedYear.value && selectedYear.value !== "all") {
+      const year = selectedYear.value;
+      filtered = filtered.filter((item) => {
+        // Check startDate
+        if (item.startDate) {
+          try {
+            const startDateYear = new Date(item.startDate)
+              .getFullYear()
+              .toString();
+            if (startDateYear === year) return true;
+          } catch (e) {
+            if (item.startDate.includes(year)) return true;
           }
-          return item.countryName === countryValue;
-        });
-      }
+        }
 
-      // Apply year filter
-      const yearValue = getYearValue(selectedYear);
-      if (yearValue !== "all") {
-        filtered = filtered.filter((item) => {
-          // Check if startDate exists and matches the year
-          if (item.startDate) {
-            try {
-              const startDateYear = new Date(item.startDate)
-                .getFullYear()
-                .toString();
-              if (startDateYear === yearValue) return true;
-            } catch (e) {
-              // Handle invalid date format
-              if (item.startDate.includes(yearValue)) return true;
-            }
+        // Check finishDate
+        if (item.finishDate) {
+          try {
+            const finishDateYear = new Date(item.finishDate)
+              .getFullYear()
+              .toString();
+            if (finishDateYear === year) return true;
+          } catch (e) {
+            if (item.finishDate.includes(year)) return true;
           }
-          return false;
-        });
-      }
+        }
 
-      // Apply status filter
-      const statusValue = getStatusValue(selectedStatus);
-      if (statusValue !== "all") {
-        filtered = filtered.filter((item) => {
-          if (!item.status) return false;
-          return item.status.toLowerCase().includes(statusValue.toLowerCase());
-        });
-      }
+        // Check start_date (alternative field name)
+        if (item.start_date) {
+          try {
+            const startDateYear = new Date(item.start_date)
+              .getFullYear()
+              .toString();
+            if (startDateYear === year) return true;
+          } catch (e) {
+            if (item.start_date.includes(year)) return true;
+          }
+        }
 
+        return false;
+      });
+    }
+
+    // Apply status filter
+    if (
+      selectedStatus &&
+      selectedStatus.value &&
+      selectedStatus.value !== "all"
+    ) {
+      filtered = filtered.filter((item) => {
+        if (!item.status) return false;
+        const itemStatus = item.status.toLowerCase();
+        const selectedStatusValue = selectedStatus.value.toLowerCase();
+        return itemStatus.includes(selectedStatusValue);
+      });
+    }
+
+    // Update filtered data
       setFilteredData(filtered);
 
-      // Update map countries based on filtered results
-      const countries = filtered.reduce((acc: string[], item) => {
-        if (item.countryName && !acc.includes(item.countryName)) {
-          acc.push(item.countryName);
-        }
-        return acc;
-      }, []);
+    // Update map countries based on filtered results
+    const countries = filtered.reduce((acc: string[], item) => {
+      const country = item.countryName || item.country || "";
+      if (country && !acc.includes(country)) {
+        acc.push(country);
+      }
+      return acc;
+    }, []);
 
-      setSelectedCountries(countries);
-    } else {
-      setFilteredData([]);
-      setSelectedCountries([]);
-    }
+    setSelectedCountries(countries);
   }, [data, selectedCountry, selectedYear, selectedStatus]);
 
   // Clear all filters
   const handleReset = () => {
     setSelectedCategory(null);
     setSelectedQueryType(null);
+    setSelectedQuestion(null);
     setSelectedCountry(null);
     setPolicyType(null);
     setSelectedYear(null);
@@ -1088,10 +1113,20 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
   const handleCategoryChange = (option: DropDownOption | null) => {
     setSelectedCategory(option);
-    setSelectedQueryType(null);
 
-    // Don't reset filters when changing category
-    // This allows filters to persist across category changes
+    // Reset query type and question when category changes
+    setSelectedQueryType(null);
+    setSelectedQuestion(null);
+
+    // Reset filters
+    setSelectedCountry(null);
+    setSelectedYear(null);
+    setSelectedStatus(null);
+
+    // Clear data
+    setData([]);
+    setFilteredData([]);
+    setSelectedCountries([]);
   };
 
   const exportTableDataToCSV = (data: any[], fields: string[]) => {
@@ -1183,11 +1218,9 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
     // Set initial year if provided in URL
     if (yearParam) {
-      const yearOption = yearOptions.find(
-        (option) => option.value === yearParam
-      );
+      const yearOption = yearOptions.find((option) => option === yearParam);
       if (yearOption) {
-        setSelectedYear(yearOption);
+        setSelectedYear({ label: yearOption, value: yearOption });
       }
     }
 
@@ -1220,6 +1253,28 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     return status && status.value ? status.value : "all";
   };
 
+  // Update the handlers to properly set the state
+  const handleCountryChange = (country: string) => {
+    const option = countryOptions.find((opt) => opt.value === country);
+    setSelectedCountry(option || null);
+  };
+
+  const handleYearChange = (year: string) => {
+    const option = { label: year, value: year };
+    setSelectedYear(option);
+  };
+
+  const handleStatusChange = (status: string) => {
+    const option = statusOptions.find((opt) => opt.value === status);
+    setSelectedStatus(option || null);
+  };
+
+  // Update the handleQuestionChange function
+  const handleQuestionChange = (option: SelectOption | null) => {
+    setSelectedQueryType(option as DropDownOption | null);
+    setSelectedQuestion(option as DropDownOption | null);
+  };
+
   return (
     <>
       <Helmet>
@@ -1235,151 +1290,35 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
           <div className="flex flex-col items-center justify-start w-full bg-white-A700">
             <div className="flex flex-col items-center justify-start w-full">
               {/* Header Section */}
-              <div className="flex flex-row justify-center items-center w-full p-6 sm:p-5 border-b-2 border-deep_orange-200 bg-gray-50">
-                <Heading size="2xl" as="h1" className="text-center">
+              <div className="flex flex-row justify-center items-center w-full p-8 sm:p-6 border-b-2 border-deep_orange-200 bg-gray-50">
+                <Heading
+                  size="2xl"
+                  as="h1"
+                  className="text-center text-gray-800 font-semibold"
+                >
                   {translations.table.title}
                 </Heading>
               </div>
 
               {/* Main Content Section */}
               <div className="flex flex-row md:flex-col justify-between items-start w-full gap-10 px-6 sm:px-4 max-w-[1331px]">
-                {/* Sidebar Section - Dynamic Filters */}
-                <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
-                  <Button
-                    size="xs"
-                    variant="outline"
-                    className="mb-4 gap-2.5 w-full rounded-[35px]"
-                    onClick={handleReset}
-                  >
-                    {translations.buttons.reset}
-                  </Button>
-
-                  <div className="flex flex-col gap-6">
-                    {/* Category Selection */}
-                    <div>
-                      <Text size="3xl" as="p" className="mb-2">
-                        {translations.labels.category}
-                      </Text>
-                      <SelectBox
-                        shape="round"
-                        name="categoria"
-                        placeholder={translations.labels.selectCategory}
-                        options={[
-                          {
-                            label: translations.categories.initiatives,
-                            value: "initiatives",
-                          },
-                          {
-                            label: translations.categories.policies,
-                            value: "policies",
-                          },
-                          {
-                            label: translations.categories.factors,
-                            value: "factors",
-                          },
-                        ]}
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        className="w-full border-gray-300_01 border rounded-md"
-                      />
-                    </div>
-
-                    {/* Query Type Selection - New */}
-                    {selectedCategory && (
-                      <div>
-                        <Text size="3xl" as="p" className="mb-2">
-                          {translations.labels.question || "Query Type"}
-                        </Text>
-                        <SelectBox
-                          shape="round"
-                          name="queryType"
-                          placeholder={
-                            translations.labels.selectQuestion ||
-                            "Select Query Type"
-                          }
-                          options={getQueriesByCategory(selectedCategory.value)}
-                          value={selectedQueryType}
-                          onChange={(option) => {
-                            setSelectedQueryType(option);
-                            // Reset filters when query type changes
-                            if (option && option.value !== "all") {
-                              setSelectedCountry(null);
-                              setPolicyType(null);
-                              setSelectedYear(null);
-                              setSelectedAudienceGender(null);
-                              setSelectedAudienceAge(null);
-                              setSelectedLocation(null);
-                              setSelectedLocationType(null);
-                              setSelectedEducationalLevel(null);
-                              setSelectedStatus(null);
-                              setSelectedImpactType(null);
-                              setSelectedContextType(null);
-                              setSelectedFactor(null);
-                            }
-                          }}
-                          className="w-full border-gray-300_01 border rounded-md"
-                        />
-                      </div>
-                    )}
-
-                    {/* Dynamic Filters Based on Category */}
-                    {selectedCategory && (
-                      <div className="flex flex-col gap-4">
-                        <Text size="2xl" as="p" className="font-medium">
-                          {translations.labels.filters}
-                        </Text>
-
-                        {/* Common filter: Country */}
-                        <div>
-                          <Text size="md" as="p" className="mb-1">
-                            {translations.filters.country}
-                          </Text>
-                          <SelectBox
-                            shape="round"
-                            name="country"
-                            placeholder={translations.labels.selectCountry}
-                            options={countryOptions}
-                            value={selectedCountry}
-                            onChange={(option) => setSelectedCountry(option)}
-                            className="w-full border-gray-300_01 border rounded-md"
-                          />
-                        </div>
-
-                        {/* Common filter: Year */}
-                        <div>
-                          <Text size="md" as="p" className="mb-1">
-                            {translations.filters.startYear}
-                          </Text>
-                          <SelectBox
-                            shape="round"
-                            name="year"
-                            placeholder={translations.labels.selectYear}
-                            options={yearOptions}
-                            value={selectedYear}
-                            onChange={(option) => setSelectedYear(option)}
-                            className="w-full border-gray-300_01 border rounded-md"
-                          />
-                        </div>
-
-                        {/* Common filter: Status */}
-                        <div>
-                          <Text size="md" as="p" className="mb-1">
-                            {translations.filters.status}
-                          </Text>
-                          <SelectBox
-                            shape="round"
-                            name="status"
-                            placeholder={translations.labels.selectStatus}
-                            options={statusOptions}
-                            value={selectedStatus}
-                            onChange={(option) => setSelectedStatus(option)}
-                            className="w-full border-gray-300_01 border rounded-md"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                {/* Sidebar Section */}
+                <Sidebar
+                  selectedCategory={selectedCategory?.value || null}
+                  selectedQuestion={selectedQueryType?.value || null}
+                  selectedCountries={selectedCountries}
+                  selectedYears={selectedYears}
+                  selectedStatuses={selectedStatuses}
+                  countryOptions={countryOptions}
+                  yearOptions={yearOptions}
+                  statusOptions={statusOptions}
+                  onCategoryChange={handleCategoryChange}
+                  onQuestionChange={handleQuestionChange}
+                  onCountryChange={handleCountryChange}
+                  onYearChange={handleYearChange}
+                  onStatusChange={handleStatusChange}
+                  onReset={handleReset}
+                />
 
                 {/* Main Content Area */}
                 <div className="flex flex-col w-[70%] md:w-full">
@@ -1473,11 +1412,22 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
                     {/* Map Content */}
                     <TabPanel className="mt-6">
+                      <div className="flex flex-col gap-4">
+                        {selectedQueryType && (
+                          <Text
+                            size="xl"
+                            as="p"
+                            className="mb-4 text-center text-gray-700 font-medium"
+                          >
+                            {selectedQueryType.label}
+                      </Text>
+                        )}
                       <div className="relative w-full h-[352px] overflow-hidden rounded-lg">
                         <GoogleMapComponent
                           initiatives={filteredData}
                           selectedCountries={selectedCountries}
                         />
+                        </div>
                       </div>
                     </TabPanel>
                   </Tabs>

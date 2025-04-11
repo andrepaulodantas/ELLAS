@@ -22,7 +22,9 @@ const Footer = () => {
           <div className="footer-grid">
             {/* Left Column */}
             <div className="footer-column left-column">
-              <h3 className="footer-title">{translations.footer.contacts}</h3>
+              <h3 className="footer-title">
+                {translations?.footer?.contacts || "Contacts"}
+              </h3>
               <div className="footer-links">
                 <a href="https://ellas.ufmt.br" className="footer-link">
                   www.ellas.ufmt.br
@@ -42,7 +44,7 @@ const Footer = () => {
               </div>
 
               <h3 className="footer-title connect-title">
-                {translations.footer.connect}
+                {translations?.footer?.connect || "Connect with ELLAS"}
               </h3>
               <div className="social-icons">
                 <a
@@ -118,7 +120,9 @@ const Footer = () => {
 
             {/* Center Column */}
             <div className="footer-column center-column">
-              <h3 className="footer-title">{translations.partners}</h3>
+              <h3 className="footer-title">
+                {translations?.partners || "Partners"}
+              </h3>
               <div className="partner-logo-main">
                 <a
                   href="https://www.idrc.ca/en"
@@ -134,7 +138,7 @@ const Footer = () => {
               </div>
 
               <h3 className="footer-title institutions-title">
-                {translations.institutions}
+                {translations?.footer?.institutions || "Institutions"}
               </h3>
               <div className="institutions-row">
                 <a
@@ -234,22 +238,48 @@ const Footer = () => {
             {/* Right Column */}
             <div className="footer-column right-column">
               <h3 className="footer-title">
-                {translations.footer.usefulLinks}
+                {translations?.footer?.usefulLinks?.text || "Useful Links"}
               </h3>
               <div className="footer-links">
-                <Link to="/accessibility" className="footer-link">
-                  {translations.footer.accessibility}
-                </Link>
-                <Link to="/terms" className="footer-link">
-                  {translations.footer.terms}
-                </Link>
-                <Link to="/privacy" className="footer-link">
-                  {translations.footer.privacy}
-                </Link>
+                <a
+                  href={translations?.footer?.usefulLinks?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  {translations?.footer?.usefulLinks?.text || "Useful Links"}
+                </a>
+                <a
+                  href={translations?.footer?.accessibility?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  {translations?.footer?.accessibility?.text ||
+                    "Web Accessibility"}
+                </a>
+                <a
+                  href={translations?.footer?.terms?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  {translations?.footer?.terms?.text || "Terms of Use"}
+                </a>
+                <a
+                  href={translations?.footer?.privacy?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  {translations?.footer?.privacy?.text || "Privacy Policy"}
+                </a>
               </div>
 
               <div className="copyright-container">
-                <p className="copyright-text">{translations.footer.rights}</p>
+                <p className="copyright-text">
+                  {translations?.footer?.rights || "All rights reserved"}
+                </p>
                 <p className="copyright-text">© 2024 ELLAS</p>
               </div>
             </div>

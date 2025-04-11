@@ -29,6 +29,57 @@ const HomeOnePage = () => {
     []
   );
 
+  const handleCardClick = (queryType: string) => {
+    const params = new URLSearchParams();
+
+    switch (queryType) {
+      case "femaleLeadership":
+        params.append("category", "factors");
+        params.append(
+          "queryType",
+          encodeURIComponent(
+            "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others)?"
+          )
+        );
+        break;
+      case "blackWomenBrazil":
+        params.append("category", "initiatives");
+        params.append(
+          "queryType",
+          encodeURIComponent(`
+PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender where {
+  ?initiative a Ellas:Initiative.
+  ?initiative rdfs:label ?initiativeName.
+  ?initiative Ellas:focused_on ?targetAudience.
+  ?targetAudience a Ellas:Target_Audience_Race.
+  ?targetAudience rdfs:label ?targetAudienceRace.
+  ?initiative Ellas:focused_on ?targetAudienceG.
+  ?targetAudienceG a Ellas:Target_Audience_Gender.
+  ?targetAudienceG rdfs:label ?targetAudienceGender.
+  ?initiative Ellas:created_in ?country.
+  ?country rdfs:label ?countryName.
+  filter( regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black") )
+  filter( regex(str(?targetAudienceGender), "Feminine"))
+  filter( regex(str(?countryName), "Brazil"))
+}`)
+        );
+        break;
+      case "genderEquality":
+        params.append("category", "policies");
+        params.append(
+          "queryType",
+          encodeURIComponent(
+            "What types of gender policies/processes/practices exist in Latin America?"
+          )
+        );
+        break;
+    }
+
+    navigate(`/buscaone?${params.toString()}`);
+  };
+
   // Definindo textos dos cards destacados baseados no idioma
   const featuredCardsData = {
     pt: [
@@ -104,14 +155,15 @@ const HomeOnePage = () => {
 
   // Usar cards destacados baseados no idioma atual
   const currentFeaturedCards =
-    featuredCardsData[language] || featuredCardsData.pt;
+    featuredCardsData[language as keyof typeof featuredCardsData] ||
+    featuredCardsData.pt;
 
   const percentages = [
     { range: "01-25%", color: "bg-red-300" },
     { range: "26-50%", color: "bg-red-400" },
     { range: "51-75%", color: "bg-red-500" },
     { range: "76-100%", color: "bg-red-600" },
-    { range: translations.filters.noData || "No data", color: "bg-gray-300" },
+    { range: translations?.filters?.noData || "No data", color: "bg-gray-300" },
   ];
 
   const handleAboutClick = () => {
@@ -169,10 +221,10 @@ const HomeOnePage = () => {
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="text-center mb-8 md:mb-12">
               <Heading size="xl" as="h2" className="mb-3 md:mb-4">
-                {translations.explore}
+                {translations?.explore || "Explore"}
               </Heading>
               <Text as="p" className="text-gray-600 max-w-2xl mx-auto px-2">
-                {translations.exploreDescription}
+                {translations?.exploreDescription || "Explore the ELLAS portal"}
               </Text>
             </div>
             <ExploreCards />
@@ -205,13 +257,14 @@ const HomeOnePage = () => {
                     as="h2"
                     className="text-center text-purple-800"
                   >
-                    {translations.featuredData}
+                    {translations?.featuredData || "Featured Data"}
                   </Heading>
                   <Text
                     as="p"
                     className="!text-gray-900 !leading-5 text-center"
                   >
-                    {translations.featuredQuestions.subtitle}
+                    {translations?.featuredQuestions?.subtitle ||
+                      "Select one of the most searched questions to begin."}
                   </Text>
                   <Slider
                     autoPlay
@@ -247,9 +300,17 @@ const HomeOnePage = () => {
                           size="sm"
                           shape="round"
                           className="mt-4 self-start"
-                          onClick={() => navigate("/buscaone")}
+                          onClick={() => {
+                            const queryType =
+                              index === 0
+                                ? "femaleLeadership"
+                                : index === 1
+                                ? "blackWomenBrazil"
+                                : "genderEquality";
+                            handleCardClick(queryType);
+                          }}
                         >
-                          {translations.learnMore}
+                          {translations?.common?.learnMore || "Learn More"}
                         </Button>
                       </div>
                     ))}

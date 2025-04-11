@@ -41,6 +41,9 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   const [years, setYears] = useState<string[]>([]);
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [dynamicFields, setDynamicFields] = useState<string[]>([]);
+  const [countryCounts, setCountryCounts] = useState<{ [key: string]: number }>(
+    {}
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   // New filter states
@@ -1088,6 +1091,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
   // Clear all filters
   const handleReset = () => {
+    // Reset all state variables
     setSelectedCategory(null);
     setSelectedQueryType(null);
     setSelectedQuestion(null);
@@ -1103,9 +1107,12 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
     setSelectedImpactType(null);
     setSelectedContextType(null);
     setSelectedFactor(null);
-
+    setData([]);
     setFilteredData([]);
     setSelectedCountries([]);
+    setDynamicFields([]);
+    setCountryCounts({});
+    setYears([]);
 
     // Clear URL params on reset
     navigate("/buscaone", { replace: true });

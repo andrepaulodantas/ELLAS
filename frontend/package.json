@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/color-mode": "^2.2.0",
+    "@chakra-ui/react": "^3.15.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@googlemaps/js-api-loader": "^1.16.6",
@@ -31,7 +33,7 @@
     "d3-shape": "^3.2.0",
     "d3-zoom": "^3.0.0",
     "file-saver": "^2.0.5",
-    "framer-motion": "^10.16.4",
+    "framer-motion": "^10.18.0",
     "html2canvas": "^1.4.1",
     "i18next": "^23.16.8",
     "i18next-browser-languagedetector": "^7.2.2",

@@ -1,4 +1,11 @@
 {
+  "navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "openData": "Datos Abiertos",
+    "supportELLAS": "Apoya a ELLAS",
+    "contact": "Contacto"
+  },
   "home": "Inicio",
   "explore": "Explorar",
   "exploreDescription": "El portal ELLAS genera y difunde datos abiertos conectados con enfoque en países de América Latina. Surgió de la unión de instituciones de Brasil, Bolivia y Perú.",
@@ -44,7 +51,13 @@
     "country": "País",
     "year": "Año",
     "type": "Tipo",
-    "noData": "No hay datos disponibles"
+    "noData": "No hay datos disponibles",
+    "startDate": "Fecha de Inicio",
+    "policyTypes": {
+      "educational": "Educativo",
+      "legislation": "Legislación",
+      "program": "Programa"
+    }
   },
   "buttons": {
     "reset": "Reiniciar",
@@ -56,10 +69,22 @@
   "footer": {
     "contacts": "Contactos",
     "connect": "Conéctate con ELLAS",
-    "usefulLinks": "Enlaces Útiles",
-    "accessibility": "Accesibilidad Web",
-    "terms": "Términos de Uso",
-    "privacy": "Política de Privacidad",
+    "usefulLinks": {
+      "text": "Enlaces Útiles",
+      "url": "https://ellas.ufmt.br/es/enlaces-utiles/"
+    },
+    "accessibility": {
+      "text": "Accesibilidad Web",
+      "url": "https://ellas.ufmt.br/es/accesibilidad/"
+    },
+    "terms": {
+      "text": "Términos de Uso",
+      "url": "https://ellas.ufmt.br/es/terminos-de-uso/"
+    },
+    "privacy": {
+      "text": "Política de Privacidad",
+      "url": "https://ellas.ufmt.br/es/politica-de-privacidad/"
+    },
     "rights": "Todos los derechos reservados",
     "institutions": "Instituciones"
   },

@@ -62,6 +62,24 @@ const Sidebar: React.FC<SidebarProps> = ({
       selectedQuestion.toLowerCase().includes("implemented") ||
       selectedQuestion.toLowerCase().includes("status"));
 
+  // Parse country data - to handle cases where multiple countries are listed in one field
+  const parseCountryString = (countryString: string) => {
+    if (!countryString) return [];
+    // Handle common separators like "and", "&", ",", "y", etc.
+    const countries = countryString.split(/\s+and\s+|\s*[,&]\s*|\s+y\s+/);
+    return countries.map((country) => country.trim()).filter(Boolean);
+  };
+
+  // Check if a country is selected (either directly or as part of a multi-country entry)
+  const isCountrySelected = (countryValue: string) => {
+    return selectedCountries.some((selectedCountry) => {
+      const countries = parseCountryString(selectedCountry);
+      return countries.some(
+        (c) => c.toLowerCase() === countryValue.toLowerCase()
+      );
+    });
+  };
+
   return (
     <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
       <Button
@@ -175,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     >
                       <input
                         type="checkbox"
-                        checked={selectedCountries.includes(country.value)}
+                        checked={isCountrySelected(country.value)}
                         onChange={() => onCountryChange(country.value)}
                         className="w-4 h-4 text-deep_orange-200 border-gray-300 rounded focus:ring-deep_orange-200"
                       />
@@ -202,7 +220,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }}
                 >
                   <Text size="3xl" as="p" className="text-gray-700 font-medium">
-                    {translations.filters.startYear}
+                    {translations.filters.startDate}
                   </Text>
                   <svg
                     className="w-5 h-5 text-gray-500"
@@ -255,7 +273,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }}
                 >
                   <Text size="3xl" as="p" className="text-gray-700 font-medium">
-                    {translations.filters.status}
+                    {translations.filters.statuses}
                   </Text>
                   <svg
                     className="w-5 h-5 text-gray-500"

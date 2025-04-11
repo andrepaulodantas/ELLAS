@@ -38,13 +38,19 @@ const StyledAppBar = styled(AppBar)`
 `;
 
 const NavButton = styled(Button)`
-  color: #4a2b4e;
-  font-weight: 500;
+  color: #4a2b4e !important;
+  font-weight: 600;
   padding: 8px 16px;
   text-transform: none;
   font-size: 16px;
   position: relative;
   white-space: nowrap;
+  opacity: 1;
+
+  &:hover {
+    color: #ff4081 !important;
+    opacity: 1;
+  }
 
   @media (max-width: 1024px) {
     padding: 8px 12px;
@@ -344,17 +350,17 @@ const Header = () => {
   };
 
   const menuItems: MenuItem[] = [
-    { label: translations.home, path: "/" },
+    { label: translations.navigation.home, path: "/" },
     {
-      label: translations.about,
+      label: translations.navigation.about,
       path: "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/",
     },
-    { label: translations.openData, path: "/buscaone" },
+    { label: translations.navigation.openData, path: "/buscaone" },
     {
-      label: translations.support,
+      label: translations.navigation.supportELLAS,
       path: "https://ellas.ufmt.br/pt/parceiros/",
     },
-    { label: translations.contact, path: "https://ellas.ufmt.br/" },
+    { label: translations.navigation.contact, path: "https://ellas.ufmt.br/" },
   ];
 
   const handleMenuItemClick = (item: MenuItem) => {

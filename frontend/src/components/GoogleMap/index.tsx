@@ -85,8 +85,21 @@ const MapComponent: React.FC<MapComponentProps> = ({
     navigate("/buscaone?category=initiatives&question=all_initiatives");
   };
 
+  // Parse country data - to handle cases where multiple countries are listed in one field
+  const parseCountryString = (countryString: string) => {
+    if (!countryString) return [];
+    // Handle common separators like "and", "&", ",", "y", etc.
+    const countries = countryString.split(/\s+and\s+|\s*[,&]\s*|\s+y\s+/);
+    return countries.map((country) => country.trim()).filter(Boolean);
+  };
+
   const getCountryStyle = (country: string) => {
-    const isSelected = selectedCountries.includes(country);
+    // Check if the country is selected either directly or as part of a multi-country entry
+    const isSelected = selectedCountries.some((selectedCountry) => {
+      const countries = parseCountryString(selectedCountry);
+      return countries.some((c) => c.toLowerCase() === country.toLowerCase());
+    });
+
     return {
       fillColor: isSelected ? "#FF4081" : "#cccccc",
       fillOpacity: isSelected ? 0.6 : 0.3,
@@ -201,13 +214,19 @@ const MapComponent: React.FC<MapComponentProps> = ({
         />
 
         {Object.entries(geoJsonData).map(([country, data]) => {
-          // Only render selected countries
-          const isSelected = selectedCountries.includes(country);
-          if (!isSelected) return null;
+          // Check if the country should be rendered based on selected countries
+          const shouldRender = selectedCountries.some((selectedCountry) => {
+            const countries = parseCountryString(selectedCountry);
+            return countries.some(
+              (c) => c.toLowerCase() === country.toLowerCase()
+            );
+          });
+
+          if (!shouldRender) return null;
 
           return (
             <GeoJSON
-              key={country} // Using a stable key to prevent re-rendering
+              key={country}
               data={data}
               style={() => getCountryStyle(country)}
               onEachFeature={(feature, layer) => {
@@ -216,20 +235,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 });
 
                 const initiativesCount = initiatives.filter((i) => {
-                  // Check if the initiative is for this country
-                  if (i.country === country) return true;
-
-                  // Handle multiple countries in a single field
-                  if (i.countryName && typeof i.countryName === "string") {
-                    const countries = i.countryName.split(
-                      /\s+and\s+|\s*[,&]\s*|\s+y\s+/
-                    );
-                    return countries.some(
-                      (c) => c.trim().toLowerCase() === country.toLowerCase()
-                    );
-                  }
-
-                  return false;
+                  const itemCountry = i.countryName || i.country || "";
+                  const countries = parseCountryString(itemCountry);
+                  return countries.some(
+                    (c) => c.trim().toLowerCase() === country.toLowerCase()
+                  );
                 }).length;
 
                 layer.bindPopup(`

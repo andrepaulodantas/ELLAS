@@ -329,12 +329,26 @@ const BuscaTwoPage = () => {
 
     let filtered = [...data];
 
+    // Parse country data - to handle cases where multiple countries are listed in one field
+    const parseCountryString = (countryString: string) => {
+      if (!countryString) return [];
+      // Handle common separators like "and", "&", ",", "y", etc.
+      const countries = countryString.split(/\s+and\s+|\s*[,&]\s*|\s+y\s+/);
+      return countries.map((country) => country.trim()).filter(Boolean);
+    };
+
     // Apply country filter
     if (selectedCountries.length > 0 && !selectedCountries.includes("all")) {
       filtered = filtered.filter((item) => {
         const itemCountry = item.countryName || item.country || "";
-        return selectedCountries.some(
-          (country) => itemCountry.toLowerCase() === country.toLowerCase()
+        const countries = parseCountryString(itemCountry);
+
+        // Check if any of the parsed countries matches any selected country
+        return countries.some((country) =>
+          selectedCountries.some(
+            (selectedCountry) =>
+              country.toLowerCase() === selectedCountry.toLowerCase()
+          )
         );
       });
     }
@@ -383,8 +397,10 @@ const BuscaTwoPage = () => {
     } else {
       setSelectedCountries((prev) => {
         if (prev.includes(country)) {
+          // Remove o país se já estiver selecionado
           return prev.filter((c) => c !== country);
         } else {
+          // Adiciona o país se não estiver selecionado
           return [...prev, country];
         }
       });
@@ -424,16 +440,20 @@ const BuscaTwoPage = () => {
   };
 
   const handleReset = () => {
+    // Reset all state variables
     setSelectedCategory(null);
     setSelectedQuestion(null);
-    setSelectedCountries([]);
-    setSelectedYears([]);
+    setSelectedTime(null);
+    setSelectedStatus("ambos");
     setSelectedStatuses([]);
+    setSelectedVisualization("paises");
     setData([]);
     setFilteredData([]);
+    setYears([]);
+    setSelectedCountries([]);
     setDynamicFields([]);
     setCountryCounts({});
-    setYears([]);
+    setSelectedYears([]);
 
     // Clear URL params on reset
     navigate("/buscatwo", { replace: true });

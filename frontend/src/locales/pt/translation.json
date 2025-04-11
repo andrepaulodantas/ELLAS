@@ -1,5 +1,5 @@
 {
-  "home": "Home",
+  "home": "Início",
   "explore": "Explorar",
   "exploreDescription": "O portal ELLAS gera e divulga dados abertos conectados como foco em países da América Latina. Ele surgiu a partir da união de instituições do Brasil, Bolívia e Peru.",
   "about": "Sobre",
@@ -44,7 +44,13 @@
     "country": "País",
     "year": "Ano",
     "type": "Tipo",
-    "noData": "Nenhum dado disponível"
+    "noData": "Nenhum dado disponível",
+    "startDate": "Data de Início",
+    "policyTypes": {
+      "educational": "Educacional",
+      "legislation": "Legislação",
+      "program": "Programa"
+    }
   },
   "buttons": {
     "reset": "Reiniciar",
@@ -56,10 +62,22 @@
   "footer": {
     "contacts": "Contatos",
     "connect": "Conecte-se ao ELLAS",
-    "usefulLinks": "Links Úteis",
-    "accessibility": "Acessibilidade na Web",
-    "terms": "Termos de Uso",
-    "privacy": "Política de Privacidade",
+    "usefulLinks": {
+      "text": "Links Úteis",
+      "url": "https://ellas.ufmt.br/pt/links-uteis/"
+    },
+    "accessibility": {
+      "text": "Acessibilidade na Web",
+      "url": "https://ellas.ufmt.br/pt/acessibilidade/"
+    },
+    "terms": {
+      "text": "Termos de Uso",
+      "url": "https://ellas.ufmt.br/pt/termos-de-uso/"
+    },
+    "privacy": {
+      "text": "Política de Privacidade",
+      "url": "https://ellas.ufmt.br/pt/politica-de-privacidade/"
+    },
     "rights": "Todos os direitos reservados",
     "institutions": "Instituições"
   },
@@ -117,5 +135,12 @@
     "question": "Pergunta",
     "selectCategory": "Selecione uma Categoria",
     "selectQuestion": "Selecione uma Pergunta"
+  },
+  "navigation": {
+    "home": "Início",
+    "about": "Sobre",
+    "openData": "Dados Abertos",
+    "supportELLAS": "Apoie ELLAS",
+    "contact": "Contato"
   }
 }

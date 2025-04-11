@@ -314,15 +314,19 @@ const BuscaTwoOnePage = () => {
   };
 
   const handleReset = () => {
+    // Reset all state variables
     setSelectedCategory(null);
     setSelectedQuestion(null);
+    setData([]);
+    setDynamicFields([]);
+    setFilteredData([]);
+    setCountryCounts({});
+    setSelectedTime(null);
+    setSelectedStatus("ambos");
+    setSelectedVisualization("linhas");
     setSelectedCountry(null);
     setSelectedYear(null);
     setSelectedStatusFilter(null);
-    setData([]);
-    setFilteredData([]);
-    setDynamicFields([]);
-    setCountryCounts({});
 
     // Clear URL params on reset
     navigate("/buscatwoone", { replace: true });

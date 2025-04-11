@@ -1,7 +1,6 @@
 import axios from "axios";
 import { questionQueries } from "../utils/questions";
 import { useLanguage } from "../contexts/LanguageContext";
-import { translations } from "../contexts/LanguageContext";
 
 const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
 
@@ -1877,7 +1876,29 @@ export const getQueriesByCategory = (
     : "es";
 
   // Get the translations for the specified language
-  const translationObj = translations[normalizedLang as "pt" | "en" | "es"];
+  const translationObj = {
+    pt: {
+      queries: {
+        policies: {},
+        initiatives: {},
+        factors: {},
+      },
+    },
+    en: {
+      queries: {
+        policies: {},
+        initiatives: {},
+        factors: {},
+      },
+    },
+    es: {
+      queries: {
+        policies: {},
+        initiatives: {},
+        factors: {},
+      },
+    },
+  }[normalizedLang as "pt" | "en" | "es"];
 
   // Categories to check in different languages
   const policyCategories = ["políticas", "policies", "políticas"];
@@ -1897,3 +1918,52 @@ export const getQueriesByCategory = (
 
   return {};
 };
+
+// Create a custom hook to use translations in the service
+const useApiService = () => {
+  const { translations } = useLanguage();
+
+  const getPolicies = async (query: string) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}?query=${encodeURIComponent(query)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching policies:", error);
+      throw error;
+    }
+  };
+
+  const getInitiatives = async (query: string) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}?query=${encodeURIComponent(query)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching initiatives:", error);
+      throw error;
+    }
+  };
+
+  const getFactors = async (query: string) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}?query=${encodeURIComponent(query)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching factors:", error);
+      throw error;
+    }
+  };
+
+  return {
+    getPolicies,
+    getInitiatives,
+    getFactors,
+  };
+};
+
+export default useApiService;

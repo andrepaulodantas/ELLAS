@@ -44,7 +44,13 @@
     "country": "Country",
     "year": "Year",
     "type": "Type",
-    "noData": "No data available"
+    "noData": "No data available",
+    "startDate": "Start Date",
+    "policyTypes": {
+      "educational": "Educational",
+      "legislation": "Legislation",
+      "program": "Program"
+    }
   },
   "buttons": {
     "reset": "Reset",
@@ -56,10 +62,22 @@
   "footer": {
     "contacts": "Contacts",
     "connect": "Connect with ELLAS",
-    "usefulLinks": "Useful Links",
-    "accessibility": "Web Accessibility",
-    "terms": "Terms of Use",
-    "privacy": "Privacy Policy",
+    "usefulLinks": {
+      "text": "Useful Links",
+      "url": "https://ellas.ufmt.br/en/useful-links/"
+    },
+    "accessibility": {
+      "text": "Web Accessibility",
+      "url": "https://ellas.ufmt.br/en/accessibility/"
+    },
+    "terms": {
+      "text": "Terms of Use",
+      "url": "https://ellas.ufmt.br/en/terms-of-use/"
+    },
+    "privacy": {
+      "text": "Privacy Policy",
+      "url": "https://ellas.ufmt.br/en/privacy-policy/"
+    },
     "rights": "All rights reserved",
     "institutions": "Institutions"
   },

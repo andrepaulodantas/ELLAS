@@ -1,15 +1,20 @@
 {
-  "home": "Home",
+  "home": {
+    "title": "Open Data for Gender Equity in Science and Technology in Latin America"
+  },
+  "common": {
+    "learnMore": "Learn More",
+    "chooseCategory": "Choose a Category",
+    "askData": "What would you like to ask the data?",
+    "search": "Search",
+    "searchPlaceholder": "Search"
+  },
   "explore": "Explore",
   "exploreDescription": "The ELLAS portal generates and disseminates connected open data focusing on Latin American countries. It emerged from the union of institutions from Brazil, Bolivia, and Peru.",
   "about": "About",
   "openData": "Open Data",
   "support": "Support ELLAS",
   "login": "Login",
-  "search": "Search",
-  "chooseCategory": "Choose a Category",
-  "askData": "What would you like to ask the data?",
-  "learnMore": "Learn More",
   "project": "The Project",
   "team": "The Team",
   "partners": "Partners",
@@ -121,7 +126,7 @@
     }
   },
   "table": {
-    "title": "Maps Maps",
+    "title": "Open Data",
     "noData": "No data available",
     "loading": "Loading data...",
     "search": "Search",

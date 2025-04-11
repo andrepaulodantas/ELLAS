@@ -97,8 +97,7 @@ const InfoSection = () => {
             </div>
           </div>
 
-          <a
-            href="#"
+          <button
             onClick={handleSaibaMaisClick}
             className="saiba-mais-button"
           >
@@ -113,7 +112,7 @@ const InfoSection = () => {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>

@@ -15,10 +15,15 @@ interface Home {
   featuredData: string;
   selectQuestion: string;
   cards: Cards;
+  title: string;
 }
 
 interface Common {
   learnMore: string;
+  chooseCategory: string;
+  askData: string;
+  search: string;
+  searchPlaceholder: string;
 }
 
 interface FooterLink {
@@ -135,6 +140,19 @@ interface Navigation {
   contact: string;
 }
 
+interface Categories {
+  initiatives: string;
+  policies: string;
+  factors: string;
+  otherData: string;
+  descriptions: {
+    policies: string;
+    initiatives: string;
+    factors: string;
+    otherData: string;
+  };
+}
+
 export interface Translations {
   home: Home;
   common: Common;
@@ -144,6 +162,7 @@ export interface Translations {
   dataChart: DataChart;
   latinAmericaSection: LatinAmericaSection;
   navigation: Navigation;
+  categories: Categories;
   [key: string]: any;
 }
 
@@ -179,9 +198,14 @@ const defaultTranslations: Translations = {
         description: "Impact factors on female leadership in Latin America",
       },
     },
+    title: "Welcome to ELLAS",
   },
   common: {
     learnMore: "Learn More",
+    chooseCategory: "Choose Category",
+    askData: "Ask Data",
+    search: "Search",
+    searchPlaceholder: "Search...",
   },
   footer: {
     contacts: "Contacts",
@@ -293,6 +317,18 @@ const defaultTranslations: Translations = {
     subtitle: "Regional Overview",
     description:
       "Comprehensive data and analysis of women in STEM across Latin America",
+  },
+  categories: {
+    initiatives: "Initiatives",
+    policies: "Policies",
+    factors: "Factors",
+    otherData: "Other Data",
+    descriptions: {
+      policies: "Policies",
+      initiatives: "Initiatives",
+      factors: "Factors",
+      otherData: "Other Data",
+    },
   },
 };
 

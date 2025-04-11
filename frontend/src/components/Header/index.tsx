@@ -18,6 +18,7 @@ import {
   ListItem,
   ListItemText,
   Collapse,
+  InputBase,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -246,24 +247,48 @@ const ContentWrapper = styled(Box)`
 
 const SearchBox = styled(Box)`
   background: white;
-  border-radius: 30px;
+  border-radius: 40px;
   padding: 6px;
   display: flex;
   align-items: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin: 24px 0;
+  width: 110%;
+  max-width: 900px;
+  flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 12px;
+    gap: 12px;
+    width: 100%;
+  }
 `;
 
 const SearchButton = styled(Button)`
   background-color: #ff4081;
   color: white;
-  border-radius: 20px;
-  padding: 8px 24px;
+  border-radius: 30px;
+  padding: 12px 32px;
   text-transform: none;
   font-weight: 500;
+  font-size: 16px;
+  margin: 0 6px;
+  height: 48px;
+  min-width: 140px;
 
   &:hover {
     background-color: #f50057;
+  }
+
+  .MuiSvgIcon-root {
+    font-size: 20px;
+    margin-right: 8px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 0;
   }
 `;
 
@@ -276,11 +301,59 @@ const KnowMoreButton = styled(Button)`
   font-size: 16px;
   margin-top: 24px;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover {
     background-color: #5c375f;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(74, 43, 78, 0.2);
+  }
+
+  .MuiSvgIcon-root {
+    font-size: 20px;
+    margin-left: 4px;
+  }
+`;
+
+const CategorySelect = styled(Box)`
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  margin: 0 8px;
+
+  select {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    color: #4a2b4e;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+
+    &:focus {
+      background-color: rgba(74, 43, 78, 0.05);
+    }
+  }
+`;
+
+const SearchInput = styled(InputBase)`
+  flex: 1;
+  margin-left: 8px;
+  font-size: 16px;
+
+  input {
+    padding: 12px 16px;
+    width: 100%;
+
+    &::placeholder {
+      color: #666;
+      opacity: 0.8;
+    }
   }
 `;
 
@@ -303,6 +376,8 @@ const Header = () => {
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const images = [
     "/images/img_fundo_home_1.png",
     "/images/img_fundo_home_3.png",
@@ -371,6 +446,20 @@ const Header = () => {
     } else {
       handleNavigation(item.path);
     }
+  };
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    if (selectedCategory) {
+      params.append("category", selectedCategory);
+    }
+
+    if (searchQuery) {
+      params.append("queryType", encodeURIComponent(searchQuery));
+    }
+
+    navigate(`/buscaone?${params.toString()}`);
   };
 
   return (
@@ -472,7 +561,7 @@ const Header = () => {
                   textAlign: "left",
                   position: "relative",
                   zIndex: 2,
-                  mt: 8,
+                  mt: 15,
                   mb: 8,
                   "@media (min-width: 1200px)": {
                     ml: "10%",
@@ -486,72 +575,112 @@ const Header = () => {
                     color: "#4A2B4E",
                     fontWeight: 600,
                     mb: 3,
-                    lineHeight: 1.2,
-                    fontSize: { xs: "2rem", md: "2.5rem" },
+                    lineHeight: 1.3,
+                    fontSize: { xs: "2rem", md: "2.8rem" },
+                    maxWidth: "800px",
                   }}
                 >
-                  {translations.openData}
+                  {translations.home?.title ||
+                    "Dados abertos para Equidade de Gênero em Ciência e Tecnologia na América Latina"}
                 </Typography>
 
-                <KnowMoreButton variant="contained">
-                  {translations.learnMore}
+                <KnowMoreButton
+                  variant="contained"
+                  onClick={() =>
+                    window.open("https://ellas.ufmt.br/", "_blank")
+                  }
+                  endIcon={<NavigateNextIcon />}
+                >
+                  {translations.common?.learnMore || "Saiba mais"}
                 </KnowMoreButton>
 
-                <SearchBox sx={{ mt: 6 }}>
-                  <Box sx={{ display: "flex", flex: 1, px: 2 }}>
+                <SearchBox sx={{ mt: 8 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flex: 1,
+                      px: 2,
+                      alignItems: "center",
+                      width: "100%",
+                      flexDirection: { xs: "column", sm: "row" },
+                      gap: { xs: 2, sm: 0 },
+                    }}
+                  >
                     <Box
                       sx={{
                         flex: 1,
                         display: "flex",
                         alignItems: "center",
-                        mr: 2,
+                        width: { xs: "100%", sm: "auto" },
                       }}
                     >
-                      <IconButton size="small" sx={{ color: "#4A2B4E" }}>
-                        <CategoryIcon />
+                      <IconButton size="medium" sx={{ color: "#4A2B4E", p: 1 }}>
+                        <CategoryIcon sx={{ fontSize: 22 }} />
                       </IconButton>
-                      <input
-                        placeholder={translations.chooseCategory}
-                        style={{
-                          border: "none",
-                          outline: "none",
-                          width: "100%",
-                          padding: "8px 12px",
-                          fontSize: "14px",
-                          color: "#4A2B4E",
-                        }}
-                      />
+                      <CategorySelect>
+                        <select
+                          value={selectedCategory}
+                          onChange={(e) => setSelectedCategory(e.target.value)}
+                        >
+                          <option value="">
+                            {translations.common?.chooseCategory ||
+                              "Escolha uma Categoria"}
+                          </option>
+                          <option value="initiatives">
+                            {translations.categories?.initiatives ||
+                              "Iniciativas"}
+                          </option>
+                          <option value="policies">
+                            {translations.categories?.policies || "Políticas"}
+                          </option>
+                          <option value="factors">
+                            {translations.categories?.factors || "Fatores"}
+                          </option>
+                        </select>
+                      </CategorySelect>
                     </Box>
                     <Box
                       sx={{
-                        borderLeft: "1px solid rgba(0,0,0,0.1)",
-                        pl: 2,
+                        borderLeft: {
+                          xs: "none",
+                          sm: "1px solid rgba(0,0,0,0.1)",
+                        },
+                        borderTop: {
+                          xs: "1px solid rgba(0,0,0,0.1)",
+                          sm: "none",
+                        },
+                        pl: { xs: 0, sm: 2 },
+                        pt: { xs: 2, sm: 0 },
                         display: "flex",
                         alignItems: "center",
-                        flex: 2,
+                        flex: 1.5,
+                        width: { xs: "100%", sm: "auto" },
                       }}
                     >
-                      <IconButton size="small" sx={{ color: "#4A2B4E" }}>
-                        <SearchIcon />
+                      <IconButton size="medium" sx={{ color: "#4A2B4E", p: 1 }}>
+                        <SearchIcon sx={{ fontSize: 22 }} />
                       </IconButton>
-                      <input
-                        placeholder={translations.askData}
-                        style={{
-                          border: "none",
-                          outline: "none",
-                          width: "100%",
-                          padding: "8px 12px",
-                          fontSize: "14px",
-                          color: "#4A2B4E",
+                      <SearchInput
+                        placeholder={
+                          translations.common?.searchPlaceholder || "Procurar"
+                        }
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === "Enter") {
+                            handleSearch();
+                          }
                         }}
                       />
                     </Box>
                   </Box>
-                  <Box sx={{ p: 0.5 }}>
-                    <SearchButton variant="contained">
-                      {translations.search}
-                    </SearchButton>
-                  </Box>
+                  <SearchButton
+                    variant="contained"
+                    onClick={handleSearch}
+                    startIcon={<SearchIcon />}
+                  >
+                    {translations.common?.search || "Pesquisar"}
+                  </SearchButton>
                 </SearchBox>
               </Box>
             </Container>

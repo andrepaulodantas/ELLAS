@@ -6,7 +6,9 @@
     "supportELLAS": "Apoya a ELLAS",
     "contact": "Contacto"
   },
-  "home": "Inicio",
+  "home": {
+    "title": "Datos abiertos para la Equidad de Género en Ciencia y Tecnología en América Latina"
+  },
   "explore": "Explorar",
   "exploreDescription": "El portal ELLAS genera y difunde datos abiertos conectados con enfoque en países de América Latina. Surgió de la unión de instituciones de Brasil, Bolivia y Perú.",
   "about": "Acerca de",
@@ -14,8 +16,8 @@
   "support": "Apoya a ELLAS",
   "login": "Iniciar Sesión",
   "search": "Buscar",
-  "chooseCategory": "Elige una Categoría",
-  "askData": "¿Qué quieres preguntar a los datos?",
+  "chooseCategory": "Elija una Categoría",
+  "askData": "¿Qué desea preguntar a los datos?",
   "learnMore": "Saber más",
   "project": "El Proyecto",
   "team": "El Equipo",
@@ -128,7 +130,7 @@
     }
   },
   "table": {
-    "title": "Mapa de Mapas",
+    "title": "Datos abiertos",
     "noData": "No hay datos disponibles",
     "loading": "Cargando datos...",
     "search": "Buscar",
@@ -142,5 +144,12 @@
     "question": "Pregunta",
     "selectCategory": "Selecciona una Categoría",
     "selectQuestion": "Selecciona una Pregunta"
+  },
+  "common": {
+    "learnMore": "Saber más",
+    "chooseCategory": "Elija una Categoría",
+    "askData": "¿Qué desea preguntar a los datos?",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar"
   }
 }

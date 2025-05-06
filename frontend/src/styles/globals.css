@@ -24,3 +24,37 @@
     @apply flex-grow text-center;
   }
 } 
+
+/* Estilos responsivos para selects e dropdowns */
+@media (max-width: 550px) {
+  select, .dropdown-container select {
+    font-size: 14px !important;
+    padding: 8px !important;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  
+  select option {
+    font-size: 14px;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+  
+  /* Melhorar a aparência do dropdown em dispositivos móveis */
+  .dropdown-container {
+    width: 100%;
+  }
+  
+  .question-select {
+    max-height: 38px;
+  }
+  
+  /* Garantir que o texto dentro dos selects wrap em telas pequenas */
+  .css-1dimb5e-singleValue, 
+  .css-qc6sy-singleValue {
+    white-space: normal !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: calc(100% - 20px) !important;
+  }
+} 

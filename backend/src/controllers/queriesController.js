@@ -119,9 +119,6 @@ async function queryPoliciesByCountryAndDate(req, res) {
       ?country rdfs:label ?countryName.
       ?policy Ellas:start_date ?start_date
       filter(xsd:integer(?start_date) > 2015)
-      filter(regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
-      regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
-      regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))    
     }
   `;
   try {

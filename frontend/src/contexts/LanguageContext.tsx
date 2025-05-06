@@ -24,6 +24,7 @@ interface Common {
   askData: string;
   search: string;
   searchPlaceholder: string;
+  selectQuestion: string;
 }
 
 interface FooterLink {
@@ -206,6 +207,7 @@ const defaultTranslations: Translations = {
     askData: "Ask Data",
     search: "Search",
     searchPlaceholder: "Search...",
+    selectQuestion: "Select Question",
   },
   footer: {
     contacts: "Contacts",

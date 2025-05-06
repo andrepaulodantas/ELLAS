@@ -3,6 +3,7 @@ import Select, {
   ActionMeta,
   components,
   DropdownIndicatorProps,
+  StylesConfig,
 } from "react-select";
 import { GroupBase } from "react-select";
 
@@ -83,6 +84,62 @@ const SelectBox = forwardRef<any, SelectBoxProps>(
       );
     };
 
+    // Customize styles for better mobile experience
+    const customStyles: StylesConfig<SelectOption, boolean> = {
+      control: (provided, state) => ({
+        ...provided,
+        minHeight: '38px',
+        fontSize: '14px',
+        '@media (max-width: 550px)': {
+          fontSize: '13px',
+          minHeight: '34px',
+        },
+      }),
+      placeholder: (provided) => ({
+        ...provided,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        '@media (max-width: 550px)': {
+          fontSize: '13px',
+        },
+      }),
+      menu: (provided) => ({
+        ...provided,
+        zIndex: 9999,
+        '@media (max-width: 550px)': {
+          width: 'calc(100% + 20px)',
+          left: '-10px', // Expand beyond container
+        },
+      }),
+      menuList: (provided) => ({
+        ...provided,
+        maxHeight: '40vh', // Limit height on mobile
+        '@media (max-width: 550px)': {
+          maxHeight: '35vh',
+        },
+      }),
+      option: (provided, state) => ({
+        ...provided,
+        fontSize: '14px',
+        padding: '8px 12px',
+        '@media (max-width: 550px)': {
+          fontSize: '13px',
+          padding: '10px',
+        },
+      }),
+      singleValue: (provided) => ({
+        ...provided,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        maxWidth: 'calc(100% - 20px)',
+        '@media (max-width: 550px)': {
+          fontSize: '13px',
+        },
+      }),
+    };
+
     return (
       <Select<SelectOption, boolean>
         ref={ref}
@@ -91,6 +148,7 @@ const SelectBox = forwardRef<any, SelectBoxProps>(
         placeholder={placeholder}
         isMulti={isMulti}
         value={value}
+        styles={customStyles}
         onChange={(newValue: any, actionMeta: ActionMeta<SelectOption>) => {
           if (onChange) {
             onChange(newValue as SelectOption | null, actionMeta);

@@ -7,7 +7,10 @@
     "contact": "Contacto"
   },
   "home": {
-    "title": "Datos abiertos para la Equidad de Género en Ciencia y Tecnología en América Latina"
+    "title": "Datos abiertos para la Equidad de Género en Ciencia y Tecnología en América Latina",
+    "exploreData": "Explora los datos",
+    "selectFeaturedQuestion": "Selecciona una de las preguntas más buscadas para comenzar.",
+    "featuredData": "Datos Destacados"
   },
   "explore": "Explorar",
   "exploreDescription": "El portal ELLAS genera y difunde datos abiertos conectados con enfoque en países de América Latina. Surgió de la unión de instituciones de Brasil, Bolivia y Perú.",
@@ -34,6 +37,24 @@
     "lines": "Líneas",
     "description": "Explora iniciativas que apoyan a mujeres en STEM en América Latina"
   },
+  "busca": {
+    "dadosAbertos": "Datos Abiertos",
+    "tabelaDeDados": "Tabla de Datos",
+    "totalPorPais": "Total por país",
+    "filter": "Filtrar",
+    "filterType": "Filtrar por tipo",
+    "filterCountry": "Filtrar por país",
+    "filterYear": "Filtrar por año",
+    "filterStatus": "Filtrar por estado",
+    "clearFilters": "Limpiar filtros",
+    "applyFilters": "Aplicar filtros",
+    "noResults": "Sin resultados para mostrar",
+    "totalResults": "Resultados totales",
+    "showingResults": "Mostrando {{count}} de {{total}} resultados",
+    "downloadData": "Descargar datos",
+    "shareResults": "Compartir resultados",
+    "viewDetails": "Ver detalles"
+  },
   "contact": "Contacto",
   "categories": {
     "policies": "Políticas",
@@ -41,10 +62,10 @@
     "factors": "Factores",
     "otherData": "Otros Datos",
     "descriptions": {
-      "policies": "Descripción de políticas",
-      "initiatives": "Descripción de iniciativas",
-      "factors": "Descripción de factores",
-      "otherData": "Descripción de otros datos"
+      "policies": "Legislaciones y decretos que promueven la participación de mujeres en las áreas STEM",
+      "initiatives": "Eventos, programas y otras acciones para la inserción y permanencia de mujeres en carreras de tecnología",
+      "factors": "Datos recopilados por el equipo ELLAS para identificar factores que afectan la presencia de mujeres en STEM en América del Sur",
+      "otherData": "Datos secundarios de otras bases de datos asociadas al proyecto ELLAS"
     }
   },
   "filters": {
@@ -66,7 +87,8 @@
     "apply": "Aplicar",
     "share": "Compartir",
     "export": "Exportar",
-    "viewAll": "Ver Todos los Datos"
+    "viewAll": "Ver Todos los Datos",
+    "explore": "Explorar"
   },
   "footer": {
     "contacts": "Contactos",
@@ -97,7 +119,33 @@
   },
   "featuredQuestions": {
     "title": "¿No sabes por dónde empezar?",
-    "subtitle": "Selecciona una de las preguntas más buscadas para comenzar."
+    "subtitle": "Selecciona una de las preguntas más buscadas para comenzar.",
+    "questions": [
+      {
+        "category": "Políticas",
+        "question": "¿Qué tipos de políticas de género se implementaron en los países en un año determinado?"
+      },
+      {
+        "category": "Políticas",
+        "question": "¿Cómo las políticas identificadas/analizadas están promoviendo la participación de las mujeres en las áreas STEM?"
+      },
+      {
+        "category": "Iniciativas",
+        "question": "¿Qué iniciativas se desarrollan por nivel escolar?"
+      },
+      {
+        "category": "Iniciativas",
+        "question": "¿Qué iniciativas atienden a las mujeres negras?"
+      },
+      {
+        "category": "Factores",
+        "question": "¿Cuáles son los factores contextuales que impactan positiva o negativamente al género femenino?"
+      },
+      {
+        "category": "Factores",
+        "question": "¿Cuáles son los factores contextuales que impactan positiva o negativamente (el liderazgo, motivación, etc.) en cada país?"
+      }
+    ]
   },
   "countries": {
     "brasil": "Brasil",
@@ -150,6 +198,7 @@
     "chooseCategory": "Elija una Categoría",
     "askData": "¿Qué desea preguntar a los datos?",
     "search": "Buscar",
-    "searchPlaceholder": "Buscar"
+    "searchPlaceholder": "Buscar",
+    "loading": "Cargando..."
   }
 }

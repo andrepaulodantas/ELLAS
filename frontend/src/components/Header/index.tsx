@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import {
   AppBar,
@@ -19,6 +19,10 @@ import {
   ListItemText,
   Collapse,
   InputBase,
+  Popper,
+  Paper,
+  ClickAwayListener,
+  Grow,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -32,6 +36,7 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useAuth } from "../../contexts/AuthContext";
 import LanguageSwitcher from "../LanguageSwitcher";
+import { questionQueries } from "../../utils/questions";
 
 const StyledAppBar = styled(AppBar)`
   background-color: white;
@@ -178,9 +183,9 @@ const SearchContainer = styled(Box)`
     bottom: 0;
     background: linear-gradient(
       to right,
-      rgba(255, 255, 255, 0.75) 0%,
-      rgba(255, 255, 255, 0.65) 50%,
-      rgba(255, 255, 255, 0.75) 100%
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      rgba(255, 255, 255, 0.45) 100%
     );
     z-index: 1;
   }
@@ -209,7 +214,7 @@ const BackgroundImage = styled("div")<{ image: string }>`
   opacity: 0;
   transition: opacity 1s ease-in-out;
   &.active {
-    opacity: 1;
+    opacity: 0.7;
   }
 `;
 
@@ -243,19 +248,24 @@ const ContentWrapper = styled(Box)`
   position: relative;
   z-index: 2;
   width: 100%;
+
+  /* Garante que os elementos interativos dentro do ContentWrapper tenham z-index maior */
+  .interactive-element {
+    position: relative;
+    z-index: 100;
+  }
 `;
 
 const SearchBox = styled(Box)`
   background: white;
-  border-radius: 40px;
+  border-radius: 30px;
   padding: 6px;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   margin: 24px 0;
-  width: 110%;
-  max-width: 900px;
-  flex-direction: row;
+  width: 115%;
+  max-width: 1000px;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -265,20 +275,45 @@ const SearchBox = styled(Box)`
   }
 `;
 
+const SearchInnerBox = styled(Box)`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  padding-right: 8px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    padding-right: 0;
+  }
+`;
+
 const SearchButton = styled(Button)`
   background-color: #ff4081;
   color: white;
   border-radius: 30px;
-  padding: 12px 32px;
+  padding: 6px 24px;
   text-transform: none;
   font-weight: 500;
   font-size: 16px;
-  margin: 0 6px;
+  margin: 6px 6px 6px 0;
   height: 48px;
-  min-width: 140px;
+  min-width: 120px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 
   &:hover {
     background-color: #f50057;
+    box-shadow: 0 4px 12px rgba(255, 64, 129, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 64, 129, 0.2);
   }
 
   .MuiSvgIcon-root {
@@ -289,6 +324,19 @@ const SearchButton = styled(Button)`
   @media (max-width: 768px) {
     width: 100%;
     margin: 0;
+  }
+`;
+
+const FieldDivider = styled(Box)`
+  width: 0px;
+  height: 36px;
+  background-color: rgba(0, 0, 0, 0.05);
+  margin: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 1px;
+    margin: 8px 0;
   }
 `;
 
@@ -334,10 +382,142 @@ const CategorySelect = styled(Box)`
     background: transparent;
     cursor: pointer;
     appearance: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
     &:focus {
       background-color: rgba(74, 43, 78, 0.05);
     }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    option {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      padding: 10px;
+      max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+      padding: 10px 14px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    width: 100%;
+  }
+`;
+
+// Custom dropdown components
+const CustomDropdown = styled(Box)`
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  z-index: 1000;
+`;
+
+const DropdownButton = styled(Box)`
+  width: 100%;
+  padding: 12px 10px;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 16px;
+  color: #4a2b4e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-height: 48px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    background-color: rgba(74, 43, 78, 0.05);
+    border-color: rgba(0, 0, 0, 0.12);
+  }
+
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: white;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .dropdown-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 30px);
+    font-weight: 400;
+  }
+
+  .dropdown-icon {
+    color: #4a2b4e;
+    margin-left: 8px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+`;
+
+const DropdownList = styled(Box)`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  margin-top: 4px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #b8b8b8;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 768px) {
+    max-height: 250px;
+  }
+`;
+
+const DropdownItem = styled(Box)`
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #4a2b4e;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 64, 129, 0.08);
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 14px;
   }
 `;
 
@@ -366,6 +546,24 @@ interface MenuItem {
   }>;
 }
 
+// Adicionar definição do StyledMenuItem
+const StyledMenuItem = styled(MenuItem)`
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #4a2b4e;
+  white-space: normal;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: rgba(255, 64, 129, 0.08);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -377,7 +575,10 @@ const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedQuestion, setSelectedQuestion] = useState("");
+  const [filteredQuestions, setFilteredQuestions] = useState<string[]>([]);
+  const [questionDropdownOpen, setQuestionDropdownOpen] = useState(false);
+  const questionButtonRef = useRef<HTMLDivElement>(null);
   const images = [
     "/images/img_fundo_home_1.png",
     "/images/img_fundo_home_3.png",
@@ -386,16 +587,28 @@ const Header = () => {
   const isHomePage = location.pathname === "/";
 
   useEffect(() => {
-    if (isHomePage) {
-      const timer = setInterval(() => {
-        setCurrentImageIndex((prev) =>
-          prev === images.length - 1 ? 0 : prev + 1
-        );
-      }, 5000);
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000);
 
-      return () => clearInterval(timer);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  // Update filtered questions when category changes
+  useEffect(() => {
+    if (selectedCategory) {
+      const currentLang = language as "pt" | "en" | "es";
+      // Get questions from the questions.ts file based on selected category
+      const questions = questionQueries[selectedCategory]?.[currentLang] || [];
+      setFilteredQuestions(questions);
+    } else {
+      setFilteredQuestions([]);
     }
-  }, [isHomePage, images.length]);
+    setSelectedQuestion("");
+    setQuestionDropdownOpen(false);
+  }, [selectedCategory, language]);
 
   const handleClose = () => {
     setLangAnchor(null);
@@ -425,17 +638,26 @@ const Header = () => {
   };
 
   const menuItems: MenuItem[] = [
-    { label: translations.navigation.home, path: "/" },
+    {
+      label: translations.navigation.home,
+      path: "/",
+    },
     {
       label: translations.navigation.about,
       path: "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/",
     },
-    { label: translations.navigation.openData, path: "/buscaone" },
+    {
+      label: "Dados Abertos",
+      path: "/buscaone",
+    },
     {
       label: translations.navigation.supportELLAS,
       path: "https://ellas.ufmt.br/pt/parceiros/",
     },
-    { label: translations.navigation.contact, path: "https://ellas.ufmt.br/" },
+    {
+      label: translations.navigation.contact,
+      path: "https://ellas.ufmt.br/pt/inicio/",
+    },
   ];
 
   const handleMenuItemClick = (item: MenuItem) => {
@@ -448,18 +670,57 @@ const Header = () => {
     }
   };
 
+  const toggleQuestionDropdown = () => {
+    if (!selectedCategory) return;
+    setQuestionDropdownOpen(!questionDropdownOpen);
+  };
+
+  const handleQuestionSelect = (question: string) => {
+    setSelectedQuestion(question);
+    setQuestionDropdownOpen(false);
+  };
+
   const handleSearch = () => {
     const params = new URLSearchParams();
 
     if (selectedCategory) {
       params.append("category", selectedCategory);
+
+      const countriesInAlphabeticalOrder =
+        "Argentina,Bolivia,Brazil,Chile,Colombia,Mexico,Peru";
+
+      if (selectedCategory === "initiatives" && !selectedQuestion) {
+        params.append("preselect", countriesInAlphabeticalOrder);
+      } else if (selectedCategory === "policies" && !selectedQuestion) {
+        params.append("preselect", countriesInAlphabeticalOrder);
+      } else if (selectedCategory === "factors" && !selectedQuestion) {
+        params.append("preselect", countriesInAlphabeticalOrder);
+      } else if (selectedCategory === "otherData" && !selectedQuestion) {
+        params.append("preselect", countriesInAlphabeticalOrder);
+      }
     }
 
-    if (searchQuery) {
-      params.append("queryType", encodeURIComponent(searchQuery));
+    if (selectedQuestion) {
+      params.append("queryType", encodeURIComponent(selectedQuestion));
     }
 
     navigate(`/buscaone?${params.toString()}`);
+  };
+
+  // Função para obter o texto do placeholder de acordo com o idioma
+  const getPlaceholderText = () => {
+    if (!translations.common?.selectQuestion) {
+      // Fallback case if translations aren't loaded
+      const placeholders = {
+        pt: "Selecione uma Pergunta",
+        en: "Select a Question",
+        es: "Seleccione una Pregunta",
+      };
+      return (
+        placeholders[language as keyof typeof placeholders] || placeholders.pt
+      );
+    }
+    return translations.common.selectQuestion;
   };
 
   return (
@@ -594,41 +855,54 @@ const Header = () => {
                   {translations.common?.learnMore || "Saiba mais"}
                 </KnowMoreButton>
 
-                <SearchBox sx={{ mt: 8 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flex: 1,
-                      px: 2,
-                      alignItems: "center",
-                      width: "100%",
-                      flexDirection: { xs: "column", sm: "row" },
-                      gap: { xs: 2, sm: 0 },
-                    }}
-                  >
+                <SearchBox>
+                  <SearchInnerBox>
                     <Box
                       sx={{
-                        flex: 1,
                         display: "flex",
                         alignItems: "center",
-                        width: { xs: "100%", sm: "auto" },
+                        flex: { xs: "1", sm: "0.6" },
+                        pl: 2,
+                        width: "100%",
                       }}
                     >
                       <IconButton size="medium" sx={{ color: "#4A2B4E", p: 1 }}>
                         <CategoryIcon sx={{ fontSize: 22 }} />
                       </IconButton>
-                      <CategorySelect>
+                      <CategorySelect sx={{ width: "100%" }}>
                         <select
                           value={selectedCategory}
                           onChange={(e) => setSelectedCategory(e.target.value)}
                         >
                           <option value="">
                             {translations.common?.chooseCategory ||
-                              "Escolha uma Categoria"}
+                              (() => {
+                                const placeholders = {
+                                  pt: "Escolha uma Categoria",
+                                  en: "Choose a Category",
+                                  es: "Elija una Categoría",
+                                };
+                                return (
+                                  placeholders[
+                                    language as keyof typeof placeholders
+                                  ] || placeholders.pt
+                                );
+                              })()}
                           </option>
                           <option value="initiatives">
                             {translations.categories?.initiatives ||
-                              "Iniciativas"}
+                              (() => {
+                                const placeholders = {
+                                  pt: "Iniciativas",
+                                  en: "Initiatives",
+                                  es: "Iniciativas",
+                                };
+                                return (
+                                  placeholders[
+                                    language as keyof typeof placeholders
+                                  ] || placeholders.pt
+                                );
+                              })()}
                           </option>
                           <option value="policies">
                             {translations.categories?.policies || "Políticas"}
@@ -636,48 +910,138 @@ const Header = () => {
                           <option value="factors">
                             {translations.categories?.factors || "Fatores"}
                           </option>
+                          <option value="otherData">
+                            {translations.categories?.otherData ||
+                              "Outros Dados"}
+                          </option>
                         </select>
                       </CategorySelect>
                     </Box>
+
+                    <FieldDivider
+                      sx={{ display: { xs: "block", sm: "none" } }}
+                    />
+
                     <Box
                       sx={{
-                        borderLeft: {
-                          xs: "none",
-                          sm: "1px solid rgba(0,0,0,0.1)",
-                        },
-                        borderTop: {
-                          xs: "1px solid rgba(0,0,0,0.1)",
-                          sm: "none",
-                        },
-                        pl: { xs: 0, sm: 2 },
-                        pt: { xs: 2, sm: 0 },
                         display: "flex",
                         alignItems: "center",
-                        flex: 1.5,
-                        width: { xs: "100%", sm: "auto" },
+                        flex: { xs: "1", sm: "1.2" },
+                        pl: { xs: 2, sm: 1 },
+                        pr: 1,
+                        width: "100%",
+                        position: "relative",
+                        ml: { xs: 0, sm: 0 },
                       }}
                     >
-                      <IconButton size="medium" sx={{ color: "#4A2B4E", p: 1 }}>
-                        <SearchIcon sx={{ fontSize: 22 }} />
-                      </IconButton>
-                      <SearchInput
-                        placeholder={
-                          translations.common?.searchPlaceholder || "Procurar"
-                        }
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") {
-                            handleSearch();
-                          }
+                      <DropdownButton
+                        ref={questionButtonRef}
+                        onClick={toggleQuestionDropdown}
+                        className={!selectedCategory ? "disabled" : ""}
+                        sx={{ width: "100%" }}
+                      >
+                        <Typography
+                          className="dropdown-text"
+                          sx={{
+                            color: selectedQuestion
+                              ? "#4A2B4E"
+                              : "rgba(0, 0, 0, 0.6)",
+                            fontWeight: selectedQuestion ? 500 : 400,
+                            fontSize: { xs: "14px", sm: "16px" },
+                          }}
+                        >
+                          {selectedQuestion || getPlaceholderText()}
+                        </Typography>
+                        {selectedCategory && (
+                          <Box className="dropdown-icon">
+                            {questionDropdownOpen ? (
+                              <ExpandLess />
+                            ) : (
+                              <ExpandMore />
+                            )}
+                          </Box>
+                        )}
+                      </DropdownButton>
+
+                      <Popper
+                        open={questionDropdownOpen}
+                        anchorEl={questionButtonRef.current}
+                        role={undefined}
+                        placement="bottom-start"
+                        transition
+                        disablePortal={false}
+                        style={{
+                          zIndex: 9999,
+                          width: questionButtonRef.current?.offsetWidth,
+                          marginTop: "2px",
                         }}
-                      />
+                        modifiers={[
+                          {
+                            name: "preventOverflow",
+                            enabled: true,
+                            options: {
+                              altAxis: true,
+                              altBoundary: true,
+                              tether: true,
+                              rootBoundary: "document",
+                              padding: 8,
+                            },
+                          },
+                        ]}
+                      >
+                        {({ TransitionProps, placement }) => (
+                          <Grow
+                            {...TransitionProps}
+                            style={{
+                              transformOrigin:
+                                placement === "bottom-start"
+                                  ? "left top"
+                                  : "left bottom",
+                            }}
+                          >
+                            <Paper
+                              elevation={8}
+                              sx={{
+                                mt: 1,
+                                maxHeight: 300,
+                                overflow: "auto",
+                                width: "100%",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              <ClickAwayListener
+                                onClickAway={() =>
+                                  setQuestionDropdownOpen(false)
+                                }
+                              >
+                                <Box>
+                                  {filteredQuestions.map((question, idx) => (
+                                    <StyledMenuItem
+                                      key={idx}
+                                      onClick={() =>
+                                        handleQuestionSelect(question)
+                                      }
+                                    >
+                                      {question}
+                                    </StyledMenuItem>
+                                  ))}
+                                </Box>
+                              </ClickAwayListener>
+                            </Paper>
+                          </Grow>
+                        )}
+                      </Popper>
                     </Box>
-                  </Box>
+                  </SearchInnerBox>
+
                   <SearchButton
                     variant="contained"
                     onClick={handleSearch}
                     startIcon={<SearchIcon />}
+                    sx={{
+                      minWidth: { xs: "100%", sm: "120px" },
+                      margin: { xs: 0, sm: "6px" },
+                    }}
                   >
                     {translations.common?.search || "Pesquisar"}
                   </SearchButton>

@@ -1,30 +1,29 @@
 // src/constants/questions.ts
 
-export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
-  {
+export const questionQueries: { [key: string]: { [lang: string]: string[] } } = {
     policies: {
       en: [
         "In which countries the policy was applied?",
         "What types of gender policies/processes/practices exist in Latin America?",
         "How policies identified/analyzed are promoting women's participation in STEM fields?",
-        "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+      "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?"
       ],
       pt: [
         "Em quais países a política foi aplicada?",
         "Quais tipos de políticas/processos/práticas de gênero existem na América Latina?",
         "Como as políticas identificadas/analisadas estão promovendo a participação das mulheres em áreas STEM?",
-        "Quais tipos de políticas/processos/práticas de gênero foram implementadas na Bolívia, Brasil e Peru desde 2015?",
+      "Quais tipos de políticas/processos/práticas de gênero foram implementadas na Bolívia, Brasil e Peru desde 2015?"
       ],
       es: [
         "¿En qué países se aplicó la política?",
         "¿Qué tipos de políticas/procesos/prácticas de género existen en América Latina?",
         "¿Cómo las políticas identificadas/analizadas están promoviendo la participación de las mujeres en campos STEM?",
-        "¿Qué tipos de políticas/procesos/prácticas de género se han implementado en Bolivia, Brasil y Perú desde 2015?",
-      ],
+      "¿Qué tipos de políticas/procesos/prácticas de género se han implementado en Bolivia, Brasil y Perú desde 2015?"
+    ]
     },
     initiatives: {
       en: [
-        "Which/How many initiatives are carried out by countries?",
+      "Which/How many initiatives are carried out in countries?",
         "What data source are used for initiative?",
         "What is the initiative's social network(s)?",
         "How many initiatives are of program?",
@@ -50,10 +49,10 @@ export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
         "Have the initiatives already been implemented or are they still in the design phase?",
         "Which initiatives are already finished?",
         "What is the initiative's website (URL)?",
-        "How many initiatives are part of communities?",
+      "How many initiatives are part of communities?"
       ],
       pt: [
-        "Quais/Quantas iniciativas são realizadas por países?",
+      "Quais/Quantas iniciativas são realizadas nos países?",
         "Quais fontes de dados são usadas para a iniciativa?",
         "Quais são as redes sociais da iniciativa?",
         "Quantas iniciativas são de programa?",
@@ -79,10 +78,10 @@ export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
         "As iniciativas já foram implementadas ou ainda estão na fase de planejamento?",
         "Quais iniciativas já foram concluídas?",
         "Qual é o site da iniciativa (URL)?",
-        "Quantas iniciativas fazem parte de comunidades?",
+      "Quantas iniciativas fazem parte de comunidades?"
       ],
       es: [
-        "¿Cuáles/Cuántas iniciativas se llevan a cabo por países?",
+      "¿Cuáles/Cuántas iniciativas se llevan a cabo en los países?",
         "¿Qué fuentes de datos se utilizan para la iniciativa?",
         "¿Cuáles son las redes sociales de la iniciativa?",
         "¿Cuántas iniciativas son de programa?",
@@ -108,8 +107,8 @@ export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
         "¿Las iniciativas ya se han implementado o todavía están en fase de diseño?",
         "¿Qué iniciativas ya han finalizado?",
         "¿Cuál es el sitio web de la iniciativa (URL)?",
-        "¿Cuántas iniciativas forman parte de comunidades?",
-      ],
+      "¿Cuántas iniciativas forman parte de comunidades?"
+    ]
     },
     factors: {
       en: [
@@ -119,7 +118,7 @@ export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
         "What are the CONTEXTUAL FACTORS that impact Positively/Negatively the GENDER Female?",
         "What are the IMPACTS of CONTEXTUAL FACTOR X?",
         "Which are the IMPACT TYPES of the CONTEXTUAL FACTOR Y in Latin American INSTITUTIONS?",
-        "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?",
+      "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation,others) in the country X?"
       ],
       pt: [
         "Quais são os FATORES CONTEXTUAIS positivos nos PAÍSES ANALISADOS?",
@@ -128,7 +127,7 @@ export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
         "Quais são os FATORES CONTEXTUAIS que impactam Positivamente/Negativamente o GÊNERO Feminino?",
         "Quais são os IMPACTOS do FATOR CONTEXTUAL X?",
         "Quais são os TIPOS DE IMPACTO do FATOR CONTEXTUAL Y nas INSTITUIÇÕES da América Latina?",
-        "Quais são os FATORES CONTEXTUAIS que impactam Positivamente/Negativamente no IMPACTO (IMPACTO=Liderança, permanência, motivação, outros) no país X?",
+      "Quais são os FATORES CONTEXTUAIS que impactam Positivamente/Negativamente no IMPACTO (IMPACTO=Liderança, permanência, motivação, outros) no país X?"
       ],
       es: [
         "¿Cuáles son los FACTORES CONTEXTUALES positivos en los PAÍSES ANALIZADOS?",
@@ -137,9 +136,9 @@ export const questionQueries: { [key: string]: { [lang: string]: string[] } } =
         "¿Cuáles son los FACTORES CONTEXTUALES que impactan Positivamente/Negativamente al GÉNERO Femenino?",
         "¿Cuáles son los IMPACTOS del FACTOR CONTEXTUAL X?",
         "¿Cuáles son los TIPOS DE IMPACTO del FACTOR CONTEXTUAL Y en las INSTITUCIONES Latinoamericanas?",
-        "¿Cuáles son los FACTORES CONTEXTUALES que impactan Positivamente/Negativamente en el IMPACTO (IMPACTO=Liderazgo, permanencia, motivación, otros) en el país X?",
-      ],
-    },
+      "¿Cuáles son los FACTORES CONTEXTUALES que impactan Positivamente/Negativamente en el IMPACTO (IMPACTO=Liderazgo, permanencia, motivación, otros) en el país X?"
+    ]
+  }
   };
 
 // Only tracking English questions for time-related filtering, as this is used internally
@@ -148,5 +147,5 @@ export const timeRelatedQuestions = [
   "What initiatives are being developed at a given school level?",
   "Have the initiatives already been implemented or are they still in the design phase?",
   "Which initiatives are already finished?",
-  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?",
+  "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?"
 ].map((q) => q.trim().toLowerCase());

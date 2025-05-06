@@ -1,23 +1,57 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, Img, Heading, Text, Slider } from "../components";
 import Header from "../components/Header";
 import { motion } from "framer-motion";
 import { fetchInitiativesByCountry } from "../services/apiService";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import SocialMediaLink from "../components/SocialMediaLink";
+import IconWrapper from "../components/IconWrapper";
 
 const HomePage: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [initiatives, setInitiatives] = useState([]);
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
+  // Funções de compartilhamento em redes sociais
+  const shareOnFacebook = () => {
+    const url = window.location.href;
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      "_blank"
+    );
+  };
 
+  const shareOnTwitter = () => {
+    const url = window.location.href;
+    const text =
+      t("share.text") || "ELLAS - Mulheres Latino-americanas nas Artes";
+    window.open(
+      `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+      "_blank"
+    );
+  };
+
+  const shareOnLinkedin = () => {
+    const url = window.location.href;
+    const title =
+      t("share.text") || "ELLAS - Mulheres Latino-americanas nas Artes";
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}`,
+      "_blank"
+    );
+  };
+
+  const shareOnWhatsapp = () => {
+    const url = window.location.href;
+    const text =
+      t("share.text") || "ELLAS - Mulheres Latino-americanas nas Artes";
+    window.open(`https://api.whatsapp.com/send?text=${text} ${url}`, "_blank");
+  };
+
+  useEffect(() => {
     fetchInitiativesByCountry("Brazil")
       .then((data) => {
-        setInitiatives(data.results.bindings);
         setLoading(false);
       })
       .catch((error) => {
@@ -26,67 +60,79 @@ const HomePage: React.FC = () => {
       });
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-  };
-
   const categories = [
     {
-      title: "Políticas",
-      description:
-        "Políticas e medidas implementadas nos países da América Latina para inclusão de mulheres na STEM",
+      title: t("categories.policies"),
+      description: {
+        pt: "Legislações e decretos que promovem a participação de mulheres nas áreas STEM",
+        es: "Legislaciones y decretos que promueven la participación de mujeres en las áreas STEM",
+        en: "Legislation and decrees that promote the participation of women in STEM fields",
+      },
       icon: "images/img_iconx24_white_a700.svg",
       bgColor: "bg-red-300",
     },
     {
-      title: "Iniciativas",
-      description:
-        "Eventos, programas e outras ações para a inserção e retenção de mulheres em carreiras tecnológicas",
+      title: t("categories.initiatives"),
+      description: {
+        pt: "Eventos, programas e outras ações para inserção e permanência de mulheres nas carreiras de tecnologia",
+        es: "Eventos, programas y otras acciones para la inserción y permanencia de mujeres en carreras de tecnología",
+        en: "Events, programs and other actions for the inclusion and retention of women in technology careers",
+      },
       icon: "images/img_iconx24_white_a700.svg",
       bgColor: "bg-deep_orange-200",
     },
     {
-      title: "Fatores",
-      description:
-        "Descubra os principais fatores que impactam a liderança feminina na América Latina",
+      title: t("categories.factors"),
+      description: {
+        pt: "Dados coletados pela equipe ELLAS para identificar fatores que afetam a presença de mulheres em STEM na América do Sul",
+        es: "Datos recopilados por el equipo ELLAS para identificar factores que afectan la presencia de mujeres en STEM en América del Sur",
+        en: "Data collected by the ELLAS team to identify factors affecting the presence of women in STEM in South America",
+      },
       icon: "images/img_iconx24_white_a700.svg",
       bgColor: "bg-pink-300",
+    },
+    {
+      title: t("categories.otherData"),
+      description: {
+        pt: "Dados secundários de outras bases de dados associadas ao projeto ELLAS",
+        es: "Datos secundarios de otras bases de datos asociadas al proyecto ELLAS",
+        en: "Secondary data from other databases associated with the ELLAS project",
+      },
+      icon: "images/img_iconx24_white_a700.svg",
+      bgColor: "bg-purple-300",
     },
   ];
 
   const featuredData = [
     {
-      title: "Fatores de impacto mais recorrentes",
-      description:
-        "Conheça os principais fatores que influenciam na liderança feminina na tecnologia",
+      title: t("featured.impactFactors.title"),
+      description: t("featured.impactFactors.description"),
       image: "images/img_mask_group.png",
     },
     {
-      title: "Aumento de iniciativas para mulheres no Brasil",
-      description: "Entenda como tem evoluído o apoio às mulheres em STEM",
+      title: t("featured.initiatives.title"),
+      description: t("featured.initiatives.description"),
       image: "images/img_mask_group.png",
     },
     {
-      title: "Dados essenciais sobre equidade de gênero",
-      description:
-        "O portal reúne quantidade de dados por país sobre equidade de gênero",
+      title: t("featured.essentialData.title"),
+      description: t("featured.essentialData.description"),
       image: "images/img_mask_group.png",
     },
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t("common.loading")}</div>;
   }
+
+  // Get the current language
+  const currentLanguage = localStorage.getItem("i18nextLng") || "pt";
 
   return (
     <>
       <Helmet>
-        <title>ELLAS - Home</title>
-        <meta
-          name="description"
-          content="Web site created using create-react-app"
-        />
+        <title>ELLAS - {t("common.home")}</title>
+        <meta name="description" content={t("meta.description")} />
       </Helmet>
       <div className="flex flex-col min-h-screen">
         <Header />
@@ -100,8 +146,7 @@ const HomePage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="text-4xl font-bold mb-4"
                 >
-                  Dados abertos para Equidade de Gênero em Ciência e Tecnologia
-                  na América Latina
+                  {t("home.title")}
                 </motion.h1>
                 <Button
                   className="mt-6"
@@ -109,13 +154,13 @@ const HomePage: React.FC = () => {
                   size="lg"
                   onClick={() => (window.location.href = "#explore")}
                 >
-                  Explorar
+                  {t("buttons.explore")}
                 </Button>
               </div>
               <div className="w-1/2">
                 <Img
                   src="images/img_hero_image.png"
-                  alt="Hero"
+                  alt={t("alt.hero")}
                   className="w-full h-auto"
                 />
               </div>
@@ -126,7 +171,7 @@ const HomePage: React.FC = () => {
           <section id="explore" className="py-16 bg-gray-50">
             <div className="container mx-auto px-4">
               <Heading size="2xl" as="h2" className="text-center mb-12">
-                Explore os dados
+                {t("home.exploreData")}
               </Heading>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {categories.map((category, index) => (
@@ -149,7 +194,8 @@ const HomePage: React.FC = () => {
                         {category.title}
                       </Heading>
                       <Text as="p" className="!text-white-A700">
-                        {category.description}
+                        {category.description[currentLanguage] ||
+                          category.description.pt}
                       </Text>
                     </div>
                   </motion.div>
@@ -162,10 +208,10 @@ const HomePage: React.FC = () => {
           <section className="py-16 bg-red-50">
             <div className="container mx-auto px-4">
               <Heading size="2xl" as="h2" className="text-center mb-12">
-                Dados em destaque
+                {t("home.featuredData")}
               </Heading>
               <Text as="p" className="text-center mb-8">
-                Selecione uma das perguntas mais pesquisadas para começar.
+                {t("home.selectFeaturedQuestion")}
               </Text>
               <Slider
                 autoPlay
@@ -206,18 +252,13 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="w-full md:w-1/2">
                   <Heading size="2xl" as="h2" className="mb-6">
-                    América Latina em foco!
+                    {t("home.latinAmerica.title")}
                   </Heading>
                   <Text as="p" className="mb-6">
-                    O portal ELLAS para divulgação aberta concentra dados sobre
-                    fatores de gênero na América Latina. De origem a coleta de
-                    dados de iniciativas de até 10 anos de atuação.
+                    {t("home.latinAmerica.description1")}
                   </Text>
                   <Text as="p" className="mb-6">
-                    Um país representado no mapa abaixo é possível mapear e
-                    mensurar dados e informações, resultados obtidos e
-                    conclusões a correlação em mais setores de educação STEM na
-                    América do Sul.
+                    {t("home.latinAmerica.description2")}
                   </Text>
                   <Button
                     shape="round"
@@ -227,15 +268,56 @@ const HomePage: React.FC = () => {
                         "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/")
                     }
                   >
-                    Saiba mais
+                    {t("buttons.learnMore")}
                   </Button>
                 </div>
                 <div className="w-full md:w-1/2">
                   <Img
                     src="images/map_south_america.svg"
-                    alt="Mapa da América Latina"
+                    alt={t("alt.latinAmericaMap")}
                     className="w-full h-auto"
                   />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Botões de compartilhamento em redes sociais */}
+          <section className="py-8 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <div className="flex flex-col items-center">
+                <Heading size="lg" as="h3" className="mb-4">
+                  {t("share.title") || "Compartilhe esse conteúdo"}
+                </Heading>
+                <div className="flex items-center justify-center space-x-4">
+                  <SocialMediaLink
+                    onClick={shareOnFacebook}
+                    aria-label="Facebook"
+                    className="facebook"
+                  >
+                    <IconWrapper icon={FaFacebook} size={28} />
+                  </SocialMediaLink>
+                  <SocialMediaLink
+                    onClick={shareOnTwitter}
+                    aria-label="Twitter"
+                    className="twitter"
+                  >
+                    <IconWrapper icon={FaTwitter} size={28} />
+                  </SocialMediaLink>
+                  <SocialMediaLink
+                    onClick={shareOnLinkedin}
+                    aria-label="LinkedIn"
+                    className="linkedin"
+                  >
+                    <IconWrapper icon={FaLinkedin} size={28} />
+                  </SocialMediaLink>
+                  <SocialMediaLink
+                    onClick={shareOnWhatsapp}
+                    aria-label="WhatsApp"
+                    className="whatsapp"
+                  >
+                    <IconWrapper icon={FaWhatsapp} size={28} />
+                  </SocialMediaLink>
                 </div>
               </div>
             </div>

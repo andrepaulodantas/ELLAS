@@ -1,13 +1,17 @@
 {
   "home": {
-    "title": "Open Data for Gender Equity in Science and Technology in Latin America"
+    "title": "Open Data for Gender Equity in Science and Technology in Latin America",
+    "exploreData": "Explore the data",
+    "selectFeaturedQuestion": "Select one of the most searched questions to begin.",
+    "featuredData": "Featured Data"
   },
   "common": {
     "learnMore": "Learn More",
     "chooseCategory": "Choose a Category",
     "askData": "What would you like to ask the data?",
     "search": "Search",
-    "searchPlaceholder": "Search"
+    "searchPlaceholder": "Search",
+    "loading": "Loading..."
   },
   "explore": "Explore",
   "exploreDescription": "The ELLAS portal generates and disseminates connected open data focusing on Latin American countries. It emerged from the union of institutions from Brazil, Bolivia, and Peru.",
@@ -30,6 +34,24 @@
     "lines": "Lines",
     "description": "Explore initiatives supporting women in STEM across Latin America"
   },
+  "busca": {
+    "dadosAbertos": "Open Data",
+    "tabelaDeDados": "Data Table",
+    "totalPorPais": "Total by country",
+    "filter": "Filter",
+    "filterType": "Filter by type",
+    "filterCountry": "Filter by country",
+    "filterYear": "Filter by year",
+    "filterStatus": "Filter by status",
+    "clearFilters": "Clear filters",
+    "applyFilters": "Apply filters",
+    "noResults": "No results to show",
+    "totalResults": "Total results",
+    "showingResults": "Showing {{count}} of {{total}} results",
+    "downloadData": "Download data",
+    "shareResults": "Share results",
+    "viewDetails": "View details"
+  },
   "contact": "Contact",
   "categories": {
     "policies": "Policies",
@@ -37,10 +59,10 @@
     "factors": "Factors",
     "otherData": "Other Data",
     "descriptions": {
-      "policies": "Description of policies",
-      "initiatives": "Description of initiatives",
-      "factors": "Description of factors",
-      "otherData": "Description of other data"
+      "policies": "Legislation and decrees that promote the participation of women in STEM fields",
+      "initiatives": "Events, programs and other actions for the inclusion and retention of women in technology careers",
+      "factors": "Data collected by the ELLAS team to identify factors affecting the presence of women in STEM in South America",
+      "otherData": "Secondary data from other databases associated with the ELLAS project"
     }
   },
   "filters": {
@@ -62,7 +84,8 @@
     "apply": "Apply",
     "share": "Share",
     "export": "Export",
-    "viewAll": "View All Data"
+    "viewAll": "View All Data",
+    "explore": "Explore"
   },
   "footer": {
     "contacts": "Contacts",
@@ -93,7 +116,33 @@
   },
   "featuredQuestions": {
     "title": "Not sure where to start?",
-    "subtitle": "Select one of the most searched questions to begin."
+    "subtitle": "Select one of the most searched questions to begin.",
+    "questions": [
+      {
+        "category": "Policies",
+        "question": "What types of gender policies were implemented in countries in a given year?"
+      },
+      {
+        "category": "Policies",
+        "question": "How are the identified/analyzed policies promoting women's participation in STEM fields?"
+      },
+      {
+        "category": "Initiatives",
+        "question": "What initiatives are developed by school level?"
+      },
+      {
+        "category": "Initiatives",
+        "question": "What initiatives serve Black women?"
+      },
+      {
+        "category": "Factors",
+        "question": "What are the contextual factors that positively or negatively impact the female gender?"
+      },
+      {
+        "category": "Factors",
+        "question": "What are the contextual factors that positively or negatively impact (leadership, motivation, etc.) in each country?"
+      }
+    ]
   },
   "countries": {
     "brasil": "Brazil",

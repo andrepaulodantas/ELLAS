@@ -27,7 +27,8 @@ const LatinAmericaSection: React.FC = () => {
 
             // Adicionar dados de porcentagem para cada país
             if (data.features && data.features.length > 0) {
-              const percentage = countryPercentages[countryCode] || 0;
+              // Usar null diretamente quando não há dados disponíveis
+              const percentage = countryPercentages[countryCode];
               data.features[0].properties.percentage = percentage;
               features.push(data.features[0]);
             }
@@ -73,7 +74,7 @@ const LatinAmericaSection: React.FC = () => {
     if (feature.properties) {
       const { name, percentage } = feature.properties;
       const countryName = translations.countries[name?.toLowerCase()] || name;
-      const percentageText = percentage
+      const percentageText = percentage !== null && percentage !== undefined
         ? `${percentage}%`
         : translations.filters.noData;
 

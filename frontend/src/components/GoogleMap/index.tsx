@@ -14,11 +14,13 @@ interface Initiative {
 interface MapComponentProps {
   initiatives: Initiative[];
   selectedCountries: string[];
+  questionTitle?: string;
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({
   initiatives,
   selectedCountries,
+  questionTitle,
 }) => {
   const navigate = useNavigate();
   const { translations, language } = useLanguage();

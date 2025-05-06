@@ -13,6 +13,8 @@ import Carousel from "./Carousel";
 import DataChart from "./DataChart";
 import DataCards from "./DataCards";
 import LatinAmericaSection from "./LatinAmericaSection";
+import SearchBar from "./SearchBar";
+import FeaturedQuestions from "./FeaturedQuestions";
 
 export {
   Img,
@@ -29,4 +31,6 @@ export {
   DataChart,
   DataCards,
   LatinAmericaSection,
+  SearchBar,
+  FeaturedQuestions,
 };

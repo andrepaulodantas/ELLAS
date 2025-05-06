@@ -30,12 +30,6 @@ const Header: React.FC = () => {
             >
               {translations.about || 'About'}
             </Link>
-            <Link 
-              to="/open-data" 
-              className="text-sm text-gray-600 hover:text-purple-600 transition-colors"
-            >
-              {translations.openData || 'Open Data'}
-            </Link>
             <button className="bg-purple-600 text-white px-4 py-1 rounded text-sm hover:bg-purple-700 transition-colors">
               {translations.login || 'Login'}
             </button>
@@ -65,13 +59,6 @@ const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {translations.about || 'About'}
-              </Link>
-              <Link 
-                to="/open-data" 
-                className="block py-2 text-sm text-gray-600 hover:text-purple-600 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {translations.openData || 'Open Data'}
               </Link>
               <div className="pt-2 pb-3">
                 <button className="w-full bg-purple-600 text-white px-4 py-2 rounded text-sm hover:bg-purple-700 transition-colors">

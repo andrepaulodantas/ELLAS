@@ -257,7 +257,7 @@ select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender wh
                     as="h2"
                     className="text-center text-purple-800"
                   >
-                    {translations?.featuredData || "Featured Data"}
+                    {translations?.home?.featuredData || "Featured Data"}
                   </Heading>
                   <Text
                     as="p"

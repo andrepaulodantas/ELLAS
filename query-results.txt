@@ -1,0 +1,132 @@
+[1;33mTesting SPARQL queries for ELLAS platform...[0m
+==================================================================
+This will test all endpoints and report which ones return empty results.
+==================================================================
+
+[1;33mTESTING POLICY QUERIES[0m
+==================================================================
+[1;33mTesting: Policies Applied In Countries[0m
+[0;32m[SUCCESS] Found 45 results for: Policies Applied In Countries[0m
+----------------------------------------------------------------
+[1;33mTesting: Policy Types In Latin America[0m
+[0;32m[SUCCESS] Found 42 results for: Policy Types In Latin America[0m
+----------------------------------------------------------------
+[1;33mTesting: Policies Promoting Women In STEM[0m
+[0;32m[SUCCESS] Found 28 results for: Policies Promoting Women In STEM[0m
+----------------------------------------------------------------
+[1;33mTesting: Policies Implemented In Countries Since 2015[0m
+[0;32m[SUCCESS] Found 10 results for: Policies Implemented In Countries Since 2015[0m
+----------------------------------------------------------------
+
+[1;33mTESTING INITIATIVES QUERIES[0m
+==================================================================
+[1;33mTesting: Initiatives By Country[0m
+[0;32m[SUCCESS] Found 245 results for: Initiatives By Country[0m
+----------------------------------------------------------------
+[1;33mTesting: Data Sources For Initiatives[0m
+[0;32m[SUCCESS] Found 245 results for: Data Sources For Initiatives[0m
+----------------------------------------------------------------
+[1;33mTesting: Social Networks For Initiatives[0m
+[0;32m[SUCCESS] Found 229 results for: Social Networks For Initiatives[0m
+----------------------------------------------------------------
+[1;33mTesting: Program Initiatives[0m
+[0;32m[SUCCESS] Found 19 results for: Program Initiatives[0m
+----------------------------------------------------------------
+[1;33mTesting: Public Private Initiatives[0m
+[0;31m[EMPTY] No results found for: Public Private Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Individual Coordinated Initiatives[0m
+[0;31m[EMPTY] No results found for: Individual Coordinated Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives For Black Women[0m
+[0;31m[EMPTY] No results found for: Initiatives For Black Women (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Active Initiatives[0m
+[0;32m[SUCCESS] Found 101 results for: Active Initiatives[0m
+----------------------------------------------------------------
+[1;33mTesting: Coordinator Gender For Initiatives[0m
+[0;31m[EMPTY] No results found for: Coordinator Gender For Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiative Objectives[0m
+[0;32m[SUCCESS] Found 224 results for: Initiative Objectives[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiative Formats[0m
+[0;32m[SUCCESS] Found 38 results for: Initiative Formats[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives For Girls Or Adolescents[0m
+[0;31m[EMPTY] No results found for: Initiatives For Girls Or Adolescents (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Target Audience Gender For Initiatives[0m
+[0;31m[EMPTY] No results found for: Target Audience Gender For Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By Educational Level[0m
+[0;31m[EMPTY] No results found for: Initiatives By Educational Level (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives For Vulnerable Groups[0m
+[0;31m[EMPTY] No results found for: Initiatives For Vulnerable Groups (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: School Community Involvement In Initiatives[0m
+[0;31m[EMPTY] No results found for: School Community Involvement In Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By City[0m
+[0;32m[SUCCESS] Found 51 results for: Initiatives By City[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By State[0m
+[0;32m[SUCCESS] Found 51 results for: Initiatives By State[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By Area[0m
+[0;32m[SUCCESS] Found 68 results for: Initiatives By Area[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By Region[0m
+[0;32m[SUCCESS] Found 14 results for: Initiatives By Region[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By Reach[0m
+[0;32m[SUCCESS] Found 123 results for: Initiatives By Reach[0m
+----------------------------------------------------------------
+[1;33mTesting: Funded Initiatives[0m
+[0;31m[EMPTY] No results found for: Funded Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiative Funding Sectors[0m
+[0;32m[SUCCESS] Found 90 results for: Initiative Funding Sectors[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiatives By Phase[0m
+[0;31m[EMPTY] No results found for: Initiatives By Phase (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Finished Initiatives[0m
+[0;31m[EMPTY] No results found for: Finished Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+[1;33mTesting: Initiative Websites[0m
+[0;32m[SUCCESS] Found 24 results for: Initiative Websites[0m
+----------------------------------------------------------------
+[1;33mTesting: Community Initiatives[0m
+[0;31m[EMPTY] No results found for: Community Initiatives (Category: Initiatives)[0m
+----------------------------------------------------------------
+
+[1;33mTESTING FACTORS QUERIES[0m
+==================================================================
+[1;33mTesting: Positive Contextual Factors[0m
+[0;31m[EMPTY] No results found for: Positive Contextual Factors (Category: Factors)[0m
+----------------------------------------------------------------
+[1;33mTesting: Negative Contextual Factors In Institution[0m
+[0;31m[EMPTY] No results found for: Negative Contextual Factors In Institution (Category: Factors)[0m
+----------------------------------------------------------------
+[1;33mTesting: Contextual Factors By Education Type[0m
+[0;31m[EMPTY] No results found for: Contextual Factors By Education Type (Category: Factors)[0m
+----------------------------------------------------------------
+[1;33mTesting: Contextual Factors Impacting Females[0m
+[0;31m[EMPTY] No results found for: Contextual Factors Impacting Females (Category: Factors)[0m
+----------------------------------------------------------------
+[1;33mTesting: Impacts Of Contextual Factor[0m
+[0;31m[EMPTY] No results found for: Impacts Of Contextual Factor (Category: Factors)[0m
+----------------------------------------------------------------
+[1;33mTesting: Impact Types Of Contextual Factors[0m
+[0;31m[EMPTY] No results found for: Impact Types Of Contextual Factors (Category: Factors)[0m
+----------------------------------------------------------------
+[1;33mTesting: Contextual Factors Impacting Specific Impacts[0m
+[0;31m[EMPTY] No results found for: Contextual Factors Impacting Specific Impacts (Category: Factors)[0m
+----------------------------------------------------------------
+
+[1;33mSUMMARY[0m
+==================================================================
+Testing complete. Review the results above to identify empty queries.
+==================================================================

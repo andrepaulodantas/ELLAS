@@ -12,6 +12,7 @@ import FazerLoginThree from "../pages/FazerLoginThree";
 import BuscaOne from "../pages/BuscaOne";
 import BuscaTwo from "../pages/BuscaTwo";
 import BuscaTwoOne from "../pages/BuscaTwoOne";
+import DadosAbertos from "../pages/DadosAbertos";
 import Estilos from "../pages/Estilos";
 import Componentes from "../pages/Componentes";
 import ApoieEllas from "../pages/ApoieEllas/ApoieEllas";

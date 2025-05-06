@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, Button, SelectBox } from "..";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
@@ -80,8 +80,53 @@ const Sidebar: React.FC<SidebarProps> = ({
     });
   };
 
+  // Get question options based on selected category
+  const getQuestionOptions = () => {
+    if (!selectedCategory) return [];
+    
+    const options = questionQueries[selectedCategory]?.[language]?.map((q) => ({
+      label: q,
+      value: q,
+    })) || [];
+    
+    // Make sure the currently selected question is in the options
+    if (selectedQuestion && !options.some(opt => opt.value === selectedQuestion)) {
+      options.unshift({
+        label: selectedQuestion,
+        value: selectedQuestion
+      });
+    }
+    
+    return options;
+  };
+  
+  // Force dropdown to show when component mounts if question is already selected
+  useEffect(() => {
+    // Show all dropdown elements if they have values selected
+    if (selectedQuestion || selectedCountries.length > 0) {
+      const countryDropdown = document.getElementById("countryDropdown");
+      if (countryDropdown) {
+        countryDropdown.style.display = "block";
+      }
+    }
+    
+    if (showYearFilter || selectedYears.length > 0) {
+      const yearDropdown = document.getElementById("yearDropdown");
+      if (yearDropdown) {
+        yearDropdown.style.display = "block";
+      }
+    }
+    
+    if (showStatusFilter || selectedStatuses.length > 0) {
+      const statusDropdown = document.getElementById("statusDropdown");
+      if (statusDropdown) {
+        statusDropdown.style.display = "block";
+      }
+    }
+  }, [selectedQuestion, showYearFilter, showStatusFilter, selectedCountries, selectedYears, selectedStatuses]);
+
   return (
-    <div className="h-auto w-[29%] md:w-full bg-white-A700 shadow-md p-6 sm:p-4">
+    <div className="h-auto w-[29%] md:w-full lg:w-full bg-white-A700 shadow-md p-6 sm:p-4 sm:mb-4">
       <Button
         size="xs"
         variant="outline"
@@ -94,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex flex-col gap-6">
         {/* Category Selection */}
         <div>
-          <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium">
+          <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium sm:text-xl">
             {translations.labels.category}
           </Text>
           <SelectBox
@@ -121,19 +166,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Question Selection */}
         {selectedCategory && (
           <div>
-            <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium">
+            <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium sm:text-xl">
               {translations.labels.question}
             </Text>
             <SelectBox
               shape="round"
               name="pergunta"
               placeholder={translations.labels.selectQuestion}
-              options={
-                questionQueries[selectedCategory]?.[language]?.map((q) => ({
-                  label: q,
-                  value: q,
-                })) || []
-              }
+              options={getQuestionOptions()}
               value={
                 selectedQuestion
                   ? {
@@ -151,7 +191,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Filters Section */}
         {selectedCategory && (
           <div className="flex flex-col gap-4">
-            <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium">
+            <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium sm:text-xl">
               {translations.labels.filters}
             </Text>
 
@@ -167,7 +207,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }
                 }}
               >
-                <Text size="3xl" as="p" className="text-gray-700 font-medium">
+                <Text size="3xl" as="p" className="text-gray-700 font-medium sm:text-xl">
                   {translations.filters.country}
                 </Text>
                 <svg
@@ -185,7 +225,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </svg>
               </div>
               <div id="countryDropdown" className="hidden">
-                <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto border border-gray-300 rounded-md p-2 bg-white shadow-sm">
+                <div className="flex flex-col gap-2 max-h-[200px] sm:max-h-[150px] overflow-y-auto border border-gray-300 rounded-md p-2 bg-white shadow-sm">
                   {countryOptions.map((country) => (
                     <label
                       key={country.value}
@@ -197,7 +237,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         onChange={() => onCountryChange(country.value)}
                         className="w-4 h-4 text-deep_orange-200 border-gray-300 rounded focus:ring-deep_orange-200"
                       />
-                      <Text size="md" as="span" className="text-gray-700">
+                      <Text size="md" as="span" className="text-gray-700 sm:text-sm">
                         {country.label}
                       </Text>
                     </label>

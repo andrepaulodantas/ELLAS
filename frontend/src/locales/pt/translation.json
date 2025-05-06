@@ -1,13 +1,17 @@
 {
   "home": {
-    "title": "Dados abertos para Equidade de Gênero em Ciência e Tecnologia na América Latina"
+    "title": "Dados abertos para Equidade de Gênero em Ciência e Tecnologia na América Latina",
+    "exploreData": "Explore os dados",
+    "selectFeaturedQuestion": "Selecione uma das perguntas mais pesquisadas para começar.",
+    "featuredData": "Dados em Destaque"
   },
   "common": {
     "learnMore": "Saiba mais",
     "chooseCategory": "Escolha uma Categoria",
     "askData": "O que deseja perguntar aos dados?",
     "search": "Pesquisar",
-    "searchPlaceholder": "Procurar"
+    "searchPlaceholder": "Procurar",
+    "loading": "Carregando..."
   },
   "explore": "Explorar",
   "exploreDescription": "O portal ELLAS gera e divulga dados abertos conectados como foco em países da América Latina. Ele surgiu a partir da união de instituições do Brasil, Bolívia e Peru.",
@@ -30,6 +34,24 @@
     "lines": "Linhas",
     "description": "Explore iniciativas que apoiam mulheres em STEM na América Latina"
   },
+  "busca": {
+    "dadosAbertos": "Dados Abertos",
+    "tabelaDeDados": "Tabela de Dados",
+    "totalPorPais": "Total por país",
+    "filter": "Filtrar",
+    "filterType": "Filtrar por tipo",
+    "filterCountry": "Filtrar por país",
+    "filterYear": "Filtrar por ano",
+    "filterStatus": "Filtrar por status",
+    "clearFilters": "Limpar filtros",
+    "applyFilters": "Aplicar filtros",
+    "noResults": "Sem resultados para mostrar",
+    "totalResults": "Total de resultados",
+    "showingResults": "Mostrando {{count}} de {{total}} resultados",
+    "downloadData": "Baixar dados",
+    "shareResults": "Compartilhar resultados",
+    "viewDetails": "Ver detalhes"
+  },
   "contact": "Contato",
   "categories": {
     "policies": "Políticas",
@@ -37,10 +59,10 @@
     "factors": "Fatores",
     "otherData": "Outros Dados",
     "descriptions": {
-      "policies": "Descrição de políticas",
-      "initiatives": "Descrição de iniciativas",
-      "factors": "Descrição de fatores",
-      "otherData": "Descrição de outros dados"
+      "policies": "Legislações e decretos que promovem a participação de mulheres nas áreas STEM",
+      "initiatives": "Eventos, programas e outras ações para inserção e permanência de mulheres nas carreiras de tecnologia",
+      "factors": "Dados coletados pela equipe ELLAS para identificar fatores que afetam a presença de mulheres em STEM na América do Sul",
+      "otherData": "Dados secundários de outras bases de dados associadas ao projeto ELLAS"
     }
   },
   "filters": {
@@ -62,7 +84,8 @@
     "apply": "Aplicar",
     "share": "Compartilhar",
     "export": "Exportar",
-    "viewAll": "Ver Todos os Dados"
+    "viewAll": "Ver Todos os Dados",
+    "explore": "Explorar"
   },
   "footer": {
     "contacts": "Contatos",
@@ -93,7 +116,33 @@
   },
   "featuredQuestions": {
     "title": "Não sabe por onde começar?",
-    "subtitle": "Selecione uma das perguntas mais pesquisadas para começar."
+    "subtitle": "Selecione uma das perguntas mais pesquisadas para começar.",
+    "questions": [
+      {
+        "category": "Políticas",
+        "question": "Que tipos de políticas de gênero foram implementadas nos países em determinado ano?"
+      },
+      {
+        "category": "Políticas",
+        "question": "Como as políticas identificadas/analisadas estão promovendo a participação das mulheres nas áreas STEM?"
+      },
+      {
+        "category": "Iniciativas",
+        "question": "Que iniciativas são desenvolvidas por nível de escolar?"
+      },
+      {
+        "category": "Iniciativas",
+        "question": "Que iniciativas atendem as mulheres negras?"
+      },
+      {
+        "category": "Fatores",
+        "question": "Quais são os fatores contextuais que impactam positiva ou negativamente o gênero feminino?"
+      },
+      {
+        "category": "Fatores",
+        "question": "Quais são os fatores contextuais que impactam positiva ou negativamente (a liderança, motivação, etc. em cada país?"
+      }
+    ]
   },
   "countries": {
     "brasil": "Brasil",

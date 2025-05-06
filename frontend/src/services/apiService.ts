@@ -76,30 +76,17 @@ export const fetchPoliciesImplementedInCountriesSince2015 = (
 ) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-select ?policyName ?countryName ?start_date  where {
-
+    select ?policyName ?countryName ?start_date where {
 ?policy a Ellas:Policy.
-
 ?policy rdfs:label ?policyName.
-
 ?policy Ellas:created_in ?country.
-
 ?country rdfs:label ?countryName.
-
 ?policy Ellas:start_date ?start_date
-
 filter(xsd:integer(?start_date) > 2015)
-
-filter(regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
-
-regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
-
-regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))}
+    }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -107,36 +94,21 @@ regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))}
 // Consultas relacionadas às Iniciativas (Activity 3)
 
 // Quais e quantas iniciativas são realizadas no Brasil?
-// export const fetchInitiativesByCountry = (countryName, initiativeName, initiativeStatus, startDate, finishDate) => {
 export const fetchInitiativesByCountry = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-select ?policyName ?countryName ?start_date  where {
-
-?policy a Ellas:Policy.
-
-?policy rdfs:label ?policyName.
-
-?policy Ellas:created_in ?country.
-
-?country rdfs:label ?countryName.
-
-?policy Ellas:start_date ?start_date
-
-filter(xsd:integer(?start_date) > 2015)
-
-filter(regex(str(?countryName),"Peru") || regex(str(?countryName),"peru") ||
-
-regex(str(?countryName),"Brazil") || regex(str(?countryName),"brazil") ||
-
-regex(str(?countryName),"Bolivia") ||regex(str(?countryName),"bolivia"))}
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT ?initiativeName ?countryName ?startDate ?status
+    WHERE {
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      ?initiative Ellas:created_in ?country.
+      ?country rdfs:label ?countryName.
+      OPTIONAL { ?initiative Ellas:startDate ?startDate }
+      OPTIONAL { ?initiative Ellas:initiative_status ?status }
+    }
   `;
-  return fetchQuery(defaultQuery);
+  return fetchQuery(query || defaultQuery);
 };
 
 // Quais fontes de dados são usadas para a iniciativa?
@@ -378,34 +350,26 @@ select ?initiativeName ?countryName ?targetAudienceGender where {
 export const fetchInitiativesForBlackWomen = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender where {
-
+    SELECT ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender WHERE {
 ?initiative a Ellas:Initiative.
-
 ?initiative rdfs:label ?initiativeName.
-
 ?initiative Ellas:focused_on ?targetAudience.
-
 ?targetAudience a Ellas:Target_Audience_Race.
-
 ?targetAudience rdfs:label ?targetAudienceRace.
-
 ?initiative Ellas:focused_on ?targetAudienceG.
-
 ?targetAudienceG a Ellas:Target_Audience_Gender.
-
 ?targetAudienceG rdfs:label ?targetAudienceGender.
-
 ?initiative Ellas:created_in ?country.
-
 ?country rdfs:label ?countryName.
 
-filter( regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black")   )
+      # More flexible case-insensitive match for Black
+      FILTER(REGEX(STR(?targetAudienceRace), "Black|black"))
 
-filter( regex(str(?targetAudienceGender), "Feminine")) }
+      # More flexible case-insensitive match for Feminine
+      FILTER(REGEX(STR(?targetAudienceGender), "Feminine|feminine"))
+    }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -983,32 +947,31 @@ filter(regex (str(?contextType),"University"))}
 
 // Contextual factors impacting specific impacts (e.g., leadership) in a country
 export const fetchContextualFactorsImpactingSpecificImpacts = async () => {
+  try {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?contextualFactorName ?impactType ?impact ?countryName  where {
-
+      select ?contextualFactorName ?impactType ?impact ?countryName where {
 ?factor a Ellas:Factor.
-
 ?contextualFactor rdfs:subClassOf ?factor.
-
 ?contextualFactor rdfs:label ?contextualFactorName.
-
 ?contextualFactor Ellas:factors_impact_type ?impactType.
-
 ?contextualFactor Ellas:factors_impact ?impact.
-
 ?contextualFactor Ellas:analyzed_in ?country.
-
 ?country rdfs:label ?countryName.
-
 filter(?impactType ="Positive"@en)
-
-filter(regex(str(?impact),"Leadership")||regex(str(?impact),"leadership")) }
+        filter(regex(str(?impact),"Leadership")||regex(str(?impact),"leadership"))
+      }
   `;
-  return await fetchQuery(query);
+    console.log("Executing leadership impact query...");
+    const result = await fetchQuery(query);
+    console.log("Leadership impact query result:", JSON.stringify(result));
+    return result;
+  } catch (error) {
+    console.error("Error in fetchContextualFactorsImpactingSpecificImpacts:", error);
+    throw error;
+  }
 };
 
 // Map of English questions to their corresponding fetch functions
@@ -1036,6 +999,8 @@ export const questionFunctions: { [key: string]: () => Promise<any> } = {
 
   // Initiative-related questions
   "Which/How many initiatives are carried out by countries?":
+    fetchInitiativesByCountry,
+  "Which/How many initiatives are carried out in countries?":
     fetchInitiativesByCountry,
   "What are the incentive Maps?": fetchInitiativesByCountry,
   "How many initiatives exist in the community?": fetchCommunityInitiatives,
@@ -1111,6 +1076,8 @@ export const questionFunctions: { [key: string]: () => Promise<any> } = {
     fetchImpactTypesOfContextualFactors,
   "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?":
     fetchContextualFactorsImpactingSpecificImpacts,
+  "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation,others) in the country X?":
+    fetchContextualFactorsImpactingSpecificImpacts,
   "Which contextual factors impact specific impacts?":
     fetchContextualFactorsImpactingSpecificImpacts,
   "What are the negative contextual factors?":
@@ -1128,6 +1095,8 @@ export const questionFunctions: { [key: string]: () => Promise<any> } = {
   "What are the impacts?": fetchImpactsOfContextualFactor,
   "What are the impact types?": fetchImpactTypesOfContextualFactors,
   "What factors impact leadership?":
+    fetchContextualFactorsImpactingSpecificImpacts,
+  "Leadership impact of contextual factors": 
     fetchContextualFactorsImpactingSpecificImpacts,
 };
 

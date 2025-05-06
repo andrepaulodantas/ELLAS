@@ -1166,7 +1166,6 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
         // Get the query string from buildDynamicQuery
         const dynamicQuestion = buildDynamicQuery();
-        console.log("Query to execute:", dynamicQuestion);
 
         // Normalize the question for better matching
         const normalizedQuestion = dynamicQuestion.trim().toLowerCase();
@@ -1180,9 +1179,6 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
           normalizedQuestion.includes("impact") &&
           normalizedQuestion.includes("leadership")
         ) {
-          console.log(
-            "Leadership impact query detected, using specific handler"
-          );
           englishQuestion = "What factors impact leadership?";
         }
 
@@ -1194,9 +1190,6 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
           selectedCountry &&
           selectedCountry.value !== "all"
         ) {
-          console.log(
-            `Creating custom query for initiatives in ${selectedCountry.value}`
-          );
           customQuery = `
             PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -1216,20 +1209,17 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
             "Which/How many initiatives are carried out in countries?";
         }
 
-        console.log("Looking for function with key:", englishQuestion);
         const fetchFunction = englishQuestion
           ? questionFunctions[englishQuestion]
           : undefined;
 
         if (fetchFunction && typeof fetchFunction === "function") {
-          console.log("Function found, executing query...");
           // Pass the custom query if we have one
           const response = customQuery
             ? await (fetchFunction as (query?: string) => Promise<any>)(
                 customQuery
               )
             : await fetchFunction();
-          console.log("Response received:", response);
 
           if (
             response?.results?.bindings &&
@@ -1262,19 +1252,16 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
             }, []);
             setSelectedCountries(countries);
           } else {
-            console.log("No results found in the response");
             setData([]);
             setFilteredData([]);
             setSelectedCountries([]);
           }
         } else {
-          console.error("No fetch function found for query:", englishQuestion);
           setData([]);
           setFilteredData([]);
           setSelectedCountries([]);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
         setData([]);
         setFilteredData([]);
         setSelectedCountries([]);
@@ -1451,33 +1438,66 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   };
 
   // Função para exportar o mapa como imagem PNG
-  const exportMapAsPNG = () => {
-    // Encontrar o elemento do mapa
-    const mapElement = document.querySelector("#map-container") as HTMLElement;
-    if (!mapElement) {
-      console.error("Elemento do mapa não encontrado");
-      return;
-    }
-
-    // Usar html2canvas (precisaria ser instalado como dependência)
+  const exportMapAsPNG = async () => {
     try {
-      import("html2canvas")
-        .then((html2canvas) => {
-          html2canvas.default(mapElement).then((canvas) => {
-            // Converter para URL de dados e baixar
-            const imgData = canvas.toDataURL("image/png");
-            const link = document.createElement("a");
-            link.href = imgData;
-            link.download = "ellas_map.png";
-            link.click();
-          });
-        })
-        .catch((err) => {
-          console.error("Erro ao exportar imagem:", err);
-          alert(translations.errors?.exportImage || "Erro ao exportar imagem");
-        });
+      // Aguardar um pequeno delay para garantir que o mapa esteja renderizado
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Encontrar o elemento do mapa - tentar diferentes seletores
+      const mapElement = document.querySelector("#map-container .leaflet-container") as HTMLElement;
+      if (!mapElement) {
+        alert(translations.errors?.exportImage || "Elemento do mapa não encontrado");
+        return;
+      }
+
+      // Importar html2canvas dinamicamente
+      const html2canvas = (await import("html2canvas")).default;
+      
+      // Configurar opções do html2canvas
+      const options = {
+        scale: 2, // Aumentar a qualidade da imagem
+        useCORS: true, // Permitir carregamento de imagens cross-origin
+        logging: false, // Desabilitar logs
+        backgroundColor: "#ffffff", // Fundo branco
+        allowTaint: true, // Permitir imagens de diferentes origens
+        foreignObjectRendering: true, // Melhor renderização de elementos SVG
+        removeContainer: true, // Remover container temporário após a captura
+        onclone: (clonedDoc) => {
+          // Garantir que o mapa esteja visível no clone
+          const clonedMap = clonedDoc.querySelector("#map-container .leaflet-container");
+          if (clonedMap) {
+            (clonedMap as HTMLElement).style.visibility = "visible";
+            (clonedMap as HTMLElement).style.opacity = "1";
+          }
+        }
+      };
+
+      // Capturar o elemento como canvas
+      const canvas = await html2canvas(mapElement, options);
+      
+      // Converter para blob
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert(translations.errors?.exportImage || "Erro ao gerar imagem");
+          return;
+        }
+
+        // Criar URL do blob
+        const url = URL.createObjectURL(blob);
+        
+        // Criar link de download
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "ellas_map.png";
+        
+        // Simular clique e limpar
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, "image/png", 1.0); // Usar qualidade máxima
     } catch (error) {
-      console.error("Erro ao importar html2canvas:", error);
+      console.error("Erro ao exportar imagem:", error);
       alert(translations.errors?.exportImage || "Erro ao exportar imagem");
     }
   };
@@ -1519,17 +1539,14 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
               doc.save("ellas_data.pdf");
             })
-            .catch((err) => {
-              console.error("Erro ao exportar PDF:", err);
+            .catch(() => {
               alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
             });
         })
-        .catch((err) => {
-          console.error("Erro ao exportar PDF:", err);
+        .catch(() => {
           alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
         });
     } catch (error) {
-      console.error("Erro ao importar jsPDF:", error);
       alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
     }
   };
@@ -1659,6 +1676,38 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   const handleQuestionChange = (option: SelectOption | null) => {
     setSelectedQueryType(option as DropDownOption | null);
     setSelectedQuestion(option as DropDownOption | null);
+  };
+
+  const exportTableAsPNG = async () => {
+    try {
+      const tableElement = document.querySelector('.table-image-container') as HTMLElement;
+      if (!tableElement) {
+        alert(translations.errors?.exportImage || 'Tabela não encontrada');
+        return;
+      }
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(tableElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#fff',
+      });
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert(translations.errors?.exportImage || 'Erro ao gerar imagem');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ellas_tabela.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 'image/png', 1.0);
+    } catch (error) {
+      alert(translations.errors?.exportImage || 'Erro ao exportar imagem');
+    }
   };
 
   return (
@@ -1853,7 +1902,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      exportMapAsPNG();
+                      exportTableAsPNG();
                     }}
                     className="instagram"
                     title={translations.download?.image || "Baixar Imagem"}
@@ -1906,7 +1955,7 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     )}
 
                     <div className="flex flex-col w-full">
-                      <div className="relative w-full h-[352px] overflow-hidden rounded-lg">
+                      <div id="map-container" className="relative w-full h-[352px] overflow-hidden rounded-lg">
                         <GoogleMapComponent
                           initiatives={filteredData}
                           selectedCountries={selectedCountries}
@@ -1937,13 +1986,42 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                     <Heading as="h3" size="xl" className="mb-4">
                       {translations.busca?.tabelaDeDados || "Tabela de Dados"}
                     </Heading>
-                    <DataTable
-                      data={filteredData}
-                      dynamicFields={dynamicFields}
-                      exportTableDataToCSV={exportTableDataToCSV}
-                      className="mb-6"
-                      key={language}
-                    />
+                    <div className="flex items-center justify-end gap-2 mb-2">
+                      <DownloadIcon
+                        onClick={() => exportDataAsPDF()}
+                        title={translations.download?.pdf || "Baixar PDF"}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v1.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8c0-.55.45-1 1-1H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2c-.28 0-.5-.22-.5-.5v-5c0-.28.22-.5.5-.5h2c.83 0 1.5.67 1.5 1.5v3zm4-3.75c0 .41-.34.75-.75.75H19v1h.75c.41 0 .75.34.75.75s-.34.75-.75.75H19v1.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8c0-.55.45-1 1-1h1.25c.41 0 .75.34.75.75zM9 9.5h1v-1H9v1zM3 6c-.55 0-1 .45-1 1v13c0 1.1.9 2 2 2h13c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1-.45-1-1V7c0-.55-.45-1-1-1zm11 5.5h1v-3h-1v3z" />
+                        </svg>
+                      </DownloadIcon>
+                      <DownloadIcon
+                        onClick={() => exportTableDataToCSV(filteredData, dynamicFields)}
+                        title={translations.download?.csv || "Baixar CSV"}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
+                          <path d="M5 13h3v-3H5v3zm0 4h3v-3H5v3zm4-4h3v-3H9v3z" />
+                        </svg>
+                      </DownloadIcon>
+                      <DownloadIcon
+                        onClick={() => exportTableAsPNG()}
+                        title={translations.download?.image || "Baixar Imagem"}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                        </svg>
+                      </DownloadIcon>
+                    </div>
+                    <div className="table-image-container">
+                      <DataTable
+                        data={filteredData}
+                        dynamicFields={dynamicFields}
+                        exportTableDataToCSV={exportTableDataToCSV}
+                        className="mb-6"
+                        key={language}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

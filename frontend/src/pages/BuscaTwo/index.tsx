@@ -679,13 +679,9 @@ const BuscaTwoPage = () => {
             setSelectedQuestion(foundQuestion);
           } else if (questions.length > 0) {
             // If no match found but we have questions, use the first one
-            console.log(
-              "No matching question found, using first available question."
-            );
             setSelectedQuestion(questions[0]);
           }
         } catch (error) {
-          console.error("Error decoding queryType parameter:", error);
           // In case of error, try to use the first available question
           const questions = questionQueries[categoryParam]?.[language] || [];
           if (questions.length > 0) {
@@ -770,7 +766,6 @@ const BuscaTwoPage = () => {
       ".chart-container"
     ) as HTMLElement;
     if (!chartElement) {
-      console.error("Elemento do gráfico não encontrado");
       return;
     }
 
@@ -787,12 +782,10 @@ const BuscaTwoPage = () => {
             link.click();
           });
         })
-        .catch((err) => {
-          console.error("Erro ao exportar imagem:", err);
+        .catch(() => {
           alert(translations.errors?.exportImage || "Erro ao exportar imagem");
         });
     } catch (error) {
-      console.error("Erro ao importar html2canvas:", error);
       alert(translations.errors?.exportImage || "Erro ao exportar imagem");
     }
   };
@@ -830,17 +823,14 @@ const BuscaTwoPage = () => {
 
               doc.save("ellas_data.pdf");
             })
-            .catch((err) => {
-              console.error("Erro ao exportar PDF:", err);
+            .catch(() => {
               alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
             });
         })
-        .catch((err) => {
-          console.error("Erro ao exportar PDF:", err);
+        .catch(() => {
           alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
         });
     } catch (error) {
-      console.error("Erro ao importar jsPDF:", error);
       alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
     }
   };
@@ -1111,6 +1101,38 @@ const BuscaTwoPage = () => {
     [translations]
   );
 
+  const exportTableAsPNG = async () => {
+    try {
+      const tableElement = document.querySelector('.table-image-container') as HTMLElement;
+      if (!tableElement) {
+        alert(translations.errors?.exportImage || 'Tabela não encontrada');
+        return;
+      }
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(tableElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#fff',
+      });
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert(translations.errors?.exportImage || 'Erro ao gerar imagem');
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ellas_tabela.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }, 'image/png', 1.0);
+    } catch (error) {
+      alert(translations.errors?.exportImage || 'Erro ao exportar imagem');
+    }
+  };
+
   return (
     <>
       <Helmet>
@@ -1249,7 +1271,7 @@ const BuscaTwoPage = () => {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      exportChartAsPNG();
+                      exportTableAsPNG();
                     }}
                     className="instagram"
                     title={translations.download?.image || "Baixar Imagem"}
@@ -1321,70 +1343,72 @@ const BuscaTwoPage = () => {
                         <div className="h-px w-full bg-gray-300"></div>
 
                         <ChartContainer>
-                          <ChartTitle>
-                            {selectedQuestion
-                              ? selectedQuestion
-                              : translations.labels?.selectQuestion ||
-                                "Selecione uma Pergunta"}
-                          </ChartTitle>
-                          <BarChart>
-                            <ScaleContainer>
-                              <span>0</span>
-                              <span>45</span>
-                              <span>90</span>
-                              <span>135</span>
-                              <span>180</span>
-                            </ScaleContainer>
+                          <div className="chart-container">
+                            <ChartTitle>
+                              {selectedQuestion
+                                ? selectedQuestion
+                                : translations.labels?.selectQuestion ||
+                                  "Selecione uma Pergunta"}
+                            </ChartTitle>
+                            <BarChart>
+                              <ScaleContainer>
+                                <span>0</span>
+                                <span>45</span>
+                                <span>90</span>
+                                <span>135</span>
+                                <span>180</span>
+                              </ScaleContainer>
 
-                            {Object.entries(countryCounts).map(
-                              ([country, count]) => {
-                                // Ajustando para escala máxima de 180
-                                const maxDisplayValue = 180;
-                                const maxValue = Math.max(
-                                  ...Object.values(countryCounts)
-                                );
-                                const ratio = maxDisplayValue / maxValue;
-                                // Ajustar a escala para tornar valores pequenos mais visíveis
-                                // Usar no mínimo 3% para barras muito pequenas
-                                const percentage = Math.max(
-                                  (count / maxValue) * 100,
-                                  count > 0 ? 3 : 0
-                                );
+                              {Object.entries(countryCounts).map(
+                                ([country, count]) => {
+                                  // Ajustando para escala máxima de 180
+                                  const maxDisplayValue = 180;
+                                  const maxValue = Math.max(
+                                    ...Object.values(countryCounts)
+                                  );
+                                  const ratio = maxDisplayValue / maxValue;
+                                  // Ajustar a escala para tornar valores pequenos mais visíveis
+                                  // Usar no mínimo 3% para barras muito pequenas
+                                  const percentage = Math.max(
+                                    (count / maxValue) * 100,
+                                    count > 0 ? 3 : 0
+                                  );
 
-                                return (
-                                  <BarContainer key={country}>
-                                    <CountryLabel>{country}</CountryLabel>
-                                    <BarWrapper>
-                                      <BarElement width={percentage} />
-                                      <CountValue>
-                                        {count < 10 ? `0${count}` : count}
-                                      </CountValue>
-                                    </BarWrapper>
-                                  </BarContainer>
-                                );
-                              }
-                            )}
-
-                            <SourceText>
-                              {translations.source?.inep ||
-                                "Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS"}
-                              <DownloadIcon
-                                onClick={() =>
-                                  exportTableDataToCSV(
-                                    filteredData,
-                                    dynamicFields
-                                  )
+                                  return (
+                                    <BarContainer key={country}>
+                                      <CountryLabel>{country}</CountryLabel>
+                                      <BarWrapper>
+                                        <BarElement width={percentage} />
+                                        <CountValue>
+                                          {count < 10 ? `0${count}` : count}
+                                        </CountValue>
+                                      </BarWrapper>
+                                    </BarContainer>
+                                  );
                                 }
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
+                              )}
+
+                              <SourceText>
+                                {translations.source?.inep ||
+                                  "Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS"}
+                                <DownloadIcon
+                                  onClick={() =>
+                                    exportTableDataToCSV(
+                                      filteredData,
+                                      dynamicFields
+                                    )
+                                  }
                                 >
-                                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-                                </svg>
-                              </DownloadIcon>
-                            </SourceText>
-                          </BarChart>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                                  </svg>
+                                </DownloadIcon>
+                              </SourceText>
+                            </BarChart>
+                          </div>
                         </ChartContainer>
                       </div>
                     </div>
@@ -1395,12 +1419,41 @@ const BuscaTwoPage = () => {
                     <Heading as="h3" size="xl" className="mb-4">
                       {translations.busca?.tabelaDeDados || "Tabela de Dados"}
                     </Heading>
-                    <DataTable
-                      data={filteredData}
-                      dynamicFields={dynamicFields}
-                      exportTableDataToCSV={exportTableDataToCSV}
-                      key={language}
-                    />
+                    <div className="flex items-center justify-end gap-2 mb-2">
+                      <DownloadIcon
+                        onClick={() => exportDataAsPDF()}
+                        title={translations.download?.pdf || "Baixar PDF"}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v1.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8c0-.55.45-1 1-1H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2c-.28 0-.5-.22-.5-.5v-5c0-.28.22-.5.5-.5h2c.83 0 1.5.67 1.5 1.5v3zm4-3.75c0 .41-.34.75-.75.75H19v1h.75c.41 0 .75.34.75.75s-.34.75-.75.75H19v1.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8c0-.55.45-1 1-1h1.25c.41 0 .75.34.75.75zM9 9.5h1v-1H9v1zM3 6c-.55 0-1 .45-1 1v13c0 1.1.9 2 2 2h13c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1-.45-1-1V7c0-.55-.45-1-1-1zm11 5.5h1v-3h-1v3z" />
+                        </svg>
+                      </DownloadIcon>
+                      <DownloadIcon
+                        onClick={() => exportTableDataToCSV(filteredData, dynamicFields)}
+                        title={translations.download?.csv || "Baixar CSV"}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
+                          <path d="M5 13h3v-3H5v3zm0 4h3v-3H5v3zm4-4h3v-3H9v3z" />
+                        </svg>
+                      </DownloadIcon>
+                      <DownloadIcon
+                        onClick={() => exportTableAsPNG()}
+                        title={translations.download?.image || "Baixar Imagem"}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                        </svg>
+                      </DownloadIcon>
+                    </div>
+                    <div className="table-image-container">
+                      <DataTable
+                        data={filteredData}
+                        dynamicFields={dynamicFields}
+                        exportTableDataToCSV={exportTableDataToCSV}
+                        key={language}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

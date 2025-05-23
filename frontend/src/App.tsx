@@ -8,6 +8,7 @@ import { SidebarProvider } from "./contexts/SidebarStateContext";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import "./i18n";
+import AdvancedSearchPage from './pages/AdvancedSearch';
 
 // Componente para remover hash da URL se existir
 const HashRemover = () => {

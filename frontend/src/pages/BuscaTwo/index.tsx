@@ -1263,8 +1263,8 @@ const BuscaTwoPage = () => {
                       viewBox="0 0 24 24"
                       fill="currentColor"
                     >
-                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm1 5.5v-2h-4v2h4zm-4 1v2h4v-2h-4z" />
-                      <path d="M5 13h3v-3H5v3zm0 4h3v-3H5v3zm4-8v3h10V9H9zm0 7h10v-3H9v3z" />
+                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" />
+                      <path d="M5 13h3v-3H5v3zm0 4h3v-3H5v3zm4-4h3v-3H9v3z" />
                     </svg>
                   </SocialIcon>
                   <SocialIcon
@@ -1344,70 +1344,70 @@ const BuscaTwoPage = () => {
 
                         <ChartContainer>
                           <div className="chart-container">
-                            <ChartTitle>
-                              {selectedQuestion
-                                ? selectedQuestion
-                                : translations.labels?.selectQuestion ||
-                                  "Selecione uma Pergunta"}
-                            </ChartTitle>
-                            <BarChart>
-                              <ScaleContainer>
-                                <span>0</span>
-                                <span>45</span>
-                                <span>90</span>
-                                <span>135</span>
-                                <span>180</span>
-                              </ScaleContainer>
+                          <ChartTitle>
+                            {selectedQuestion
+                              ? selectedQuestion
+                              : translations.labels?.selectQuestion ||
+                                "Selecione uma Pergunta"}
+                          </ChartTitle>
+                          <BarChart>
+                            <ScaleContainer>
+                              <span>0</span>
+                              <span>45</span>
+                              <span>90</span>
+                              <span>135</span>
+                              <span>180</span>
+                            </ScaleContainer>
 
-                              {Object.entries(countryCounts).map(
-                                ([country, count]) => {
-                                  // Ajustando para escala máxima de 180
-                                  const maxDisplayValue = 180;
-                                  const maxValue = Math.max(
-                                    ...Object.values(countryCounts)
-                                  );
-                                  const ratio = maxDisplayValue / maxValue;
-                                  // Ajustar a escala para tornar valores pequenos mais visíveis
-                                  // Usar no mínimo 3% para barras muito pequenas
-                                  const percentage = Math.max(
-                                    (count / maxValue) * 100,
-                                    count > 0 ? 3 : 0
-                                  );
+                            {Object.entries(countryCounts).map(
+                              ([country, count]) => {
+                                // Ajustando para escala máxima de 180
+                                const maxDisplayValue = 180;
+                                const maxValue = Math.max(
+                                  ...Object.values(countryCounts)
+                                );
+                                const ratio = maxDisplayValue / maxValue;
+                                // Ajustar a escala para tornar valores pequenos mais visíveis
+                                // Usar no mínimo 3% para barras muito pequenas
+                                const percentage = Math.max(
+                                  (count / maxValue) * 100,
+                                  count > 0 ? 3 : 0
+                                );
 
-                                  return (
-                                    <BarContainer key={country}>
-                                      <CountryLabel>{country}</CountryLabel>
-                                      <BarWrapper>
-                                        <BarElement width={percentage} />
-                                        <CountValue>
-                                          {count < 10 ? `0${count}` : count}
-                                        </CountValue>
-                                      </BarWrapper>
-                                    </BarContainer>
-                                  );
+                                return (
+                                  <BarContainer key={country}>
+                                    <CountryLabel>{country}</CountryLabel>
+                                    <BarWrapper>
+                                      <BarElement width={percentage} />
+                                      <CountValue>
+                                        {count < 10 ? `0${count}` : count}
+                                      </CountValue>
+                                    </BarWrapper>
+                                  </BarContainer>
+                                );
+                              }
+                            )}
+
+                            <SourceText>
+                              {translations.source?.inep ||
+                                "Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS"}
+                              <DownloadIcon
+                                onClick={() =>
+                                  exportTableDataToCSV(
+                                    filteredData,
+                                    dynamicFields
+                                  )
                                 }
-                              )}
-
-                              <SourceText>
-                                {translations.source?.inep ||
-                                  "Fonte: INEP, UNESCO e Dados Secundários da plataforma ELLAS"}
-                                <DownloadIcon
-                                  onClick={() =>
-                                    exportTableDataToCSV(
-                                      filteredData,
-                                      dynamicFields
-                                    )
-                                  }
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
                                 >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-                                  </svg>
-                                </DownloadIcon>
-                              </SourceText>
-                            </BarChart>
+                                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                                </svg>
+                              </DownloadIcon>
+                            </SourceText>
+                          </BarChart>
                           </div>
                         </ChartContainer>
                       </div>
@@ -1447,12 +1447,12 @@ const BuscaTwoPage = () => {
                       </DownloadIcon>
                     </div>
                     <div className="table-image-container">
-                      <DataTable
-                        data={filteredData}
-                        dynamicFields={dynamicFields}
-                        exportTableDataToCSV={exportTableDataToCSV}
-                        key={language}
-                      />
+                    <DataTable
+                      data={filteredData}
+                      dynamicFields={dynamicFields}
+                      exportTableDataToCSV={exportTableDataToCSV}
+                      key={language}
+                    />
                     </div>
                   </div>
                 </div>

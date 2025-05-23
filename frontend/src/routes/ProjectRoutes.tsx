@@ -20,6 +20,7 @@ import Contato from "../pages/Contato/Contato";
 import Faq from "../pages/FAQ";
 import GraphView from "../components/GraphView";
 import PrivateRoute from "../components/PrivateRoute"; // Import the PrivateRoute component
+import AdvancedSearchPage from "../pages/AdvancedSearch";
 
 const ProjectRoutes = () => {
   const defaultSearchHandler = () => {
@@ -68,6 +69,7 @@ const ProjectRoutes = () => {
       path: "/policies-by-country-and-date",
       element: <GraphView queryType="policiesByCountryAndDate" />,
     },
+    { path: "/advanced-search", element: <AdvancedSearchPage /> },
   ]);
 
   return element;

@@ -4,6 +4,7 @@
 # This script tests all SPARQL queries by sending them to the endpoint
 # and checking for valid responses
 
+#ENDPOINT="http://200.17.60.189:7200/repositories/EllasV2"
 ENDPOINT="http://200.17.60.189:7200/repositories/EllasV2"
 AUTH_HEADER="Authorization: Basic $(echo -n "integracao:Ellas@integration" | base64)"
 CONTENT_TYPE="Content-Type: application/sparql-query"

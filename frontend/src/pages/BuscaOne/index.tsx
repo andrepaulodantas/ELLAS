@@ -1445,10 +1445,10 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
       // Encontrar o elemento do mapa - tentar diferentes seletores
       const mapElement = document.querySelector("#map-container .leaflet-container") as HTMLElement;
-      if (!mapElement) {
+    if (!mapElement) {
         alert(translations.errors?.exportImage || "Elemento do mapa não encontrado");
-        return;
-      }
+      return;
+    }
 
       // Importar html2canvas dinamicamente
       const html2canvas = (await import("html2canvas")).default;
@@ -1486,13 +1486,13 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
         const url = URL.createObjectURL(blob);
         
         // Criar link de download
-        const link = document.createElement("a");
+            const link = document.createElement("a");
         link.href = url;
-        link.download = "ellas_map.png";
+            link.download = "ellas_map.png";
         
         // Simular clique e limpar
         document.body.appendChild(link);
-        link.click();
+            link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
       }, "image/png", 1.0); // Usar qualidade máxima
@@ -2014,13 +2014,13 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                       </DownloadIcon>
                     </div>
                     <div className="table-image-container">
-                      <DataTable
-                        data={filteredData}
-                        dynamicFields={dynamicFields}
-                        exportTableDataToCSV={exportTableDataToCSV}
-                        className="mb-6"
-                        key={language}
-                      />
+                    <DataTable
+                      data={filteredData}
+                      dynamicFields={dynamicFields}
+                      exportTableDataToCSV={exportTableDataToCSV}
+                      className="mb-6"
+                      key={language}
+                    />
                     </div>
                   </div>
                 </div>

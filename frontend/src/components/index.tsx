@@ -15,6 +15,7 @@ import DataCards from "./DataCards";
 import LatinAmericaSection from "./LatinAmericaSection";
 import SearchBar from "./SearchBar";
 import FeaturedQuestions from "./FeaturedQuestions";
+import { default as QueryBuilder } from './QueryBuilder';
 
 export {
   Img,
@@ -33,4 +34,5 @@ export {
   LatinAmericaSection,
   SearchBar,
   FeaturedQuestions,
+  QueryBuilder,
 };

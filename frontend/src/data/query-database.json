@@ -1,0 +1,249 @@
+{
+  "metadata": {
+    "created": "2023-06-14T10:00:00.000Z",
+    "version": "1.0.0"
+  },
+  "categories": {
+    "policies": {
+      "count": 4,
+      "queries": [
+        "In which countries the policy was applied?",
+        "What types of gender policies/processes/practices exist in Latin America?",
+        "How policies identified/analyzed are promoting women's participation in STEM fields?",
+        "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?"
+      ]
+    },
+    "initiatives": {
+      "count": 8,
+      "queries": [
+        "Which/How many initiatives are carried out in countries?",
+        "What initiatives are active?",
+        "Have the initiatives already been implemented or are they still in the design phase?",
+        "Which initiatives are already finished?",
+        "What initiatives serve girls or adolescents?", 
+        "What initiatives serve black women?",
+        "Are the initiatives funded?",
+        "What is the initiative's website (URL)?"
+      ]
+    },
+    "factors": {
+      "count": 2,
+      "queries": [
+        "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?",
+        "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?"
+      ]
+    }
+  },
+  "queries": {
+    "In which countries the policy was applied?": {
+      "category": "policies",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?policyName ?countryName WHERE { ?policy a Ellas:Policy. ?policy rdfs:label ?policyName. ?policy Ellas:created_in ?country. ?country rdfs:label ?countryName. }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["policyName", "countryName"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What types of gender policies/processes/practices exist in Latin America?": {
+      "category": "policies",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?policyName ?countryName ?policyType ?startDate WHERE { ?policy a Ellas:Policy. ?policy rdfs:label ?policyName. ?policy Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?policy Ellas:policy_type ?policyType } OPTIONAL { ?policy Ellas:start_date ?startDate } }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["policyName", "countryName", "policyType", "startDate"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "How policies identified/analyzed are promoting women's participation in STEM fields?": {
+      "category": "policies",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?policyName ?countryName ?objective WHERE { ?policy a Ellas:Policy. ?policy rdfs:label ?policyName. ?policy Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?policy Ellas:policy_objective ?objective } FILTER(CONTAINS(LCASE(STR(?objective)), 'stem') || CONTAINS(LCASE(STR(?objective)), 'science') || CONTAINS(LCASE(STR(?objective)), 'women') || CONTAINS(LCASE(STR(?policyName)), 'women') || CONTAINS(LCASE(STR(?policyName)), 'gender')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["policyName", "countryName", "objective"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What types of gender policies/processes/practices have been implemented in Bolivia, Brazil and Peru since 2015?": {
+      "category": "policies",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> SELECT ?policyName ?countryName ?start_date WHERE { ?policy a Ellas:Policy. ?policy rdfs:label ?policyName. ?policy Ellas:created_in ?country. ?country rdfs:label ?countryName. ?policy Ellas:start_date ?start_date filter(xsd:integer(?start_date) > 2015) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["policyName", "countryName", "start_date"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "Which/How many initiatives are carried out in countries?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?startDate ?status WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:startDate ?startDate } OPTIONAL { ?initiative Ellas:initiative_status ?status } }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "startDate", "status"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What initiatives are active?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?startDate ?status WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:startDate ?startDate } ?initiative Ellas:initiative_status ?status. FILTER(CONTAINS(LCASE(STR(?status)), 'active')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "startDate", "status"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "Have the initiatives already been implemented or are they still in the design phase?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?startDate ?status WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:startDate ?startDate } ?initiative Ellas:initiative_status ?status. FILTER(CONTAINS(LCASE(STR(?status)), 'design') || CONTAINS(LCASE(STR(?status)), 'planning')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "startDate", "status"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "Which initiatives are already finished?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?startDate ?status WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:startDate ?startDate } ?initiative Ellas:initiative_status ?status. FILTER(CONTAINS(LCASE(STR(?status)), 'finished')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "startDate", "status"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What initiatives serve girls or adolescents?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?audienceAge ?audienceGender WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:audience_age ?audienceAge } OPTIONAL { ?initiative Ellas:audience_gender ?audienceGender } FILTER(CONTAINS(LCASE(STR(?audienceAge)), 'children') || CONTAINS(LCASE(STR(?audienceAge)), 'teenagers') || CONTAINS(LCASE(STR(?audienceAge)), 'adolescent')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "audienceAge", "audienceGender"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What initiatives serve black women?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?audienceRace ?audienceGender WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:audience_race ?audienceRace } OPTIONAL { ?initiative Ellas:audience_gender ?audienceGender } FILTER(CONTAINS(LCASE(STR(?audienceRace)), 'black') && CONTAINS(LCASE(STR(?audienceGender)), 'female')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "audienceRace", "audienceGender"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "Are the initiatives funded?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?organizationName WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:funded_by ?organization. ?organization rdfs:label ?organizationName. } }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "organizationName"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What is the initiative's website (URL)?": {
+      "category": "initiatives",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?initiativeName ?countryName ?website WHERE { ?initiative a Ellas:Initiative. ?initiative rdfs:label ?initiativeName. ?initiative Ellas:created_in ?country. ?country rdfs:label ?countryName. OPTIONAL { ?initiative Ellas:initiative_website ?website. } }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["initiativeName", "countryName", "website"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?": {
+      "category": "factors",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?factorName ?countryName ?impactType WHERE { ?factor a Ellas:Contextual_Factor. ?factor rdfs:label ?factorName. ?factor Ellas:located_in ?country. ?country rdfs:label ?countryName. ?factor Ellas:impact_type ?impactType. FILTER(CONTAINS(LCASE(STR(?impactType)), 'positive')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["factorName", "countryName", "impactType"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    },
+    "What are the negative CONTEXTUAL FACTORS in activities in Institution X in COUNTRIES ANALYZED?": {
+      "category": "factors",
+      "sparqlQuery": "PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?factorName ?countryName ?impactType ?institutionName WHERE { ?factor a Ellas:Contextual_Factor. ?factor rdfs:label ?factorName. ?factor Ellas:located_in ?country. ?country rdfs:label ?countryName. ?factor Ellas:impact_type ?impactType. OPTIONAL { ?factor Ellas:institution ?institution. ?institution rdfs:label ?institutionName } FILTER(CONTAINS(LCASE(STR(?impactType)), 'negative')) }",
+      "result": {
+        "success": true,
+        "data": {
+          "head": {
+            "vars": ["factorName", "countryName", "impactType", "institutionName"]
+          },
+          "results": {
+            "bindings": []
+          }
+        }
+      }
+    }
+  }
+} 

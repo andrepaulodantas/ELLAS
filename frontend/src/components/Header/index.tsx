@@ -33,6 +33,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import CategoryIcon from "@mui/icons-material/Category";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import TuneIcon from "@mui/icons-material/Tune";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useAuth } from "../../contexts/AuthContext";
 import LanguageSwitcher from "../LanguageSwitcher";
@@ -564,6 +565,31 @@ const StyledMenuItem = styled(MenuItem)`
   }
 `;
 
+// Adicione um novo estilo para o botão de busca avançada
+const AdvancedSearchButton = styled(Button)`
+  background-color: #ff6b81;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 25px;
+  text-transform: none;
+  font-size: 14px;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  &:hover {
+    background-color: #ff5672;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 107, 129, 0.3);
+  }
+  
+  svg {
+    font-size: 18px;
+  }
+`;
+
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -723,6 +749,11 @@ const Header = () => {
     return translations.common.selectQuestion;
   };
 
+  // Função para navegar para a página de busca avançada
+  const handleAdvancedSearch = () => {
+    navigate("/advanced-search");
+  };
+
   return (
     <>
       <StyledAppBar position="sticky">
@@ -758,6 +789,16 @@ const Header = () => {
                 <Box sx={{ display: "flex", alignItems: "center", ml: 2 }}>
                   <LanguageSwitcher />
                 </Box>
+
+                {/* Botão de Busca Avançada */}
+                <AdvancedSearchButton 
+                  onClick={handleAdvancedSearch}
+                  variant="contained"
+                >
+                  <TuneIcon />
+                  {language === 'pt' ? 'Busca Avançada' : 
+                   language === 'es' ? 'Búsqueda Avanzada' : 'Advanced Search'}
+                </AdvancedSearchButton>
               </NavContainer>
             )}
           </StyledToolbar>

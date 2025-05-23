@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
+// const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
+const BASE_URL = "https://app.ellas.ufmt.br/repositories/EllasV2";
 
 const api = axios.create({
   baseURL: BASE_URL,

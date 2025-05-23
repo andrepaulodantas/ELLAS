@@ -1145,7 +1145,7 @@ const BuscaTwoOnePage = () => {
                     </QuestionTitle>
                     <div className="w-full">
                       <div className="chart-container">
-                        {renderChart()}
+                      {renderChart()}
                       </div>
                       <div className="text-right text-sm text-gray-600 mt-2 pr-2">
                         {translations.source?.inep ||
@@ -1199,12 +1199,12 @@ const BuscaTwoOnePage = () => {
                       </DownloadIcon>
                     </div>
                     <div className="table-image-container">
-                      <DataTable
-                        data={filteredData}
-                        dynamicFields={dynamicFields}
-                        exportTableDataToCSV={exportTableDataToCSV}
-                        key={language}
-                      />
+                    <DataTable
+                      data={filteredData}
+                      dynamicFields={dynamicFields}
+                      exportTableDataToCSV={exportTableDataToCSV}
+                      key={language}
+                    />
                     </div>
                   </div>
                 </div>

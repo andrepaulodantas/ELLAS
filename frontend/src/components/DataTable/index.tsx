@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
+import {
+  executePropertyQuery,
+  processPropertyQueryResults,
+} from "../../services/apiService";
+import Modal from "../Modal";
+import PropertyResults from "../PropertyResults";
 import "./styles.css";
 
 // Define o tipo de dado para as linhas da tabela
@@ -8,6 +14,7 @@ interface DataTableProps {
   dynamicFields: string[];
   exportTableDataToCSV: (data: any[], fields: string[]) => void;
   className?: string;
+  category?: string; // Categoria dos dados: 'policy', 'initiative', 'factor'
 }
 
 interface SortConfig {
@@ -15,14 +22,27 @@ interface SortConfig {
   direction: "asc" | "desc";
 }
 
+interface PropertyQueryResult {
+  headers: string[];
+  rows: Array<Record<string, any>>;
+  title: string;
+}
+
 const DataTable: React.FC<DataTableProps> = ({
   data,
   dynamicFields,
   exportTableDataToCSV,
   className = "",
+  category = "unknown",
 }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [propertyResults, setPropertyResults] =
+    useState<PropertyQueryResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { translations, language } = useLanguage();
 
   // Format column headers to be more user-friendly
@@ -101,6 +121,99 @@ const DataTable: React.FC<DataTableProps> = ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  // Função para determinar se um campo é uma propriedade clicável
+  const isClickableProperty = (field: string, value: any): boolean => {
+    if (!value || value === "N/A" || value === "") return false;
+
+    // Lista de campos que devem ser clicáveis (propriedades)
+    const clickableFields = [
+      "POLICYNAME",
+      "COUNTRYNAME",
+      "DESCRIPTION",
+      "POLICY_TYPE",
+      "INITIATIVENAME",
+      "ORGANIZATIONNAME",
+      "INITIATIVE_STATUS",
+      "INITIATIVE_FORMAT",
+      "FACTORNAME",
+      "FACTOR_TYPE",
+      "IMPACT_TYPE",
+      // Adicione mais campos conforme necessário
+    ];
+
+    return clickableFields.includes(field.toUpperCase());
+  };
+
+  // Função para lidar com clique em propriedades
+  const handlePropertyClick = async (
+    field: string,
+    value: any,
+    rowData: any
+  ) => {
+    if (!value || value === "N/A" || value === "") return;
+
+    setModalOpen(true);
+    setModalTitle(
+      `Dados relacionados: ${formatColumnHeader(field)} - ${value}`
+    );
+    setLoading(true);
+    setError(null);
+    setPropertyResults(null);
+
+    try {
+      // Converter campo para propriedade da ontologia
+      const propertyName = convertFieldToProperty(field);
+      const propertyPath = [propertyName];
+
+      console.log(
+        `Executando consulta para propriedade: ${propertyName}, valor: ${value}, categoria: ${category}`
+      );
+
+      const data = await executePropertyQuery(category, propertyPath, value);
+      const results = processPropertyQueryResults(data, category, propertyName);
+
+      setPropertyResults(results);
+    } catch (err) {
+      console.error("Erro ao executar consulta de propriedade:", err);
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Converter nomes de campos para propriedades da ontologia
+  const convertFieldToProperty = (field: string): string => {
+    const fieldToPropertyMap: { [key: string]: string } = {
+      POLICYNAME: "policy_name",
+      COUNTRYNAME: "created_in",
+      POLICY_TYPE: "policy_type",
+      INITIATIVENAME: "initiative_name",
+      INITIATIVE_STATUS: "initiative_status",
+      INITIATIVE_FORMAT: "initiative_format",
+      ORGANIZATIONNAME: "organization_name",
+      FACTORNAME: "factor_name",
+      FACTOR_TYPE: "factor_type",
+      IMPACT_TYPE: "impact_type",
+      // Adicione mais mapeamentos conforme necessário
+    };
+
+    return fieldToPropertyMap[field.toUpperCase()] || field.toLowerCase();
+  };
+
+  // Função para fechar o modal
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalTitle("");
+    setPropertyResults(null);
+    setError(null);
+    setLoading(false);
+  };
+
+  // Função para retry
+  const handleRetry = () => {
+    // Implementar retry se necessário
   };
 
   // Aplicar filtros e ordenação
@@ -185,7 +298,20 @@ const DataTable: React.FC<DataTableProps> = ({
                     {dynamicFields.map((field) => (
                       <td
                         key={`${rowIndex}-${field}`}
-                        className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200 break-words max-w-xs"
+                        className={`px-4 py-3 text-sm text-gray-700 border-b border-gray-200 break-words max-w-xs ${
+                          isClickableProperty(field, row[field])
+                            ? "cursor-pointer hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          isClickableProperty(field, row[field]) &&
+                          handlePropertyClick(field, row[field], row)
+                        }
+                        title={
+                          isClickableProperty(field, row[field])
+                            ? "Clique para ver dados relacionados"
+                            : undefined
+                        }
                       >
                         {isValidUrl(row[field]) ? (
                           <a
@@ -193,11 +319,20 @@ const DataTable: React.FC<DataTableProps> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-600 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             {row[field]}
                           </a>
                         ) : (
-                          row[field]
+                          <span
+                            className={
+                              isClickableProperty(field, row[field])
+                                ? "underline-on-hover"
+                                : ""
+                            }
+                          >
+                            {row[field]}
+                          </span>
                         )}
                       </td>
                     ))}
@@ -217,6 +352,21 @@ const DataTable: React.FC<DataTableProps> = ({
           </table>
         </div>
       </div>
+
+      {/* Modal para exibir resultados de propriedades */}
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        title={modalTitle}
+        maxWidth="80vw"
+      >
+        <PropertyResults
+          result={propertyResults}
+          loading={loading}
+          error={error}
+          onRetry={handleRetry}
+        />
+      </Modal>
     </div>
   );
 };

@@ -133,3 +133,51 @@
     align-items: center;
   }
 }
+
+/* Estilos para elementos clicáveis da tabela */
+.underline-on-hover {
+  position: relative;
+}
+
+.underline-on-hover::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #3b82f6;
+  transition: width 0.2s ease;
+}
+
+td:hover .underline-on-hover::after {
+  width: 100%;
+}
+
+/* Indicador visual para células clicáveis */
+td.cursor-pointer::before {
+  content: "🔗";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+td.cursor-pointer:hover::before {
+  opacity: 0.6;
+}
+
+td.cursor-pointer {
+  position: relative;
+  padding-right: 24px !important;
+}
+
+/* Melhorar feedback visual para links clicáveis */
+td.cursor-pointer:active {
+  background-color: #dbeafe !important;
+  transform: scale(0.98);
+  transition: all 0.1s ease;
+}

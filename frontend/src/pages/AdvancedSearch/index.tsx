@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { QueryBuilder } from '../../components';
-import Header from '../../components/Header';
-import './styles.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { QueryBuilder } from "../../components";
+import Header from "../../components/Header";
+import "./styles.css";
 
 interface CustomQuery {
   category: string;
@@ -17,177 +17,206 @@ const AdvancedSearchPage: React.FC = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchCount, setSearchCount] = useState(() => {
-    const savedCount = localStorage.getItem('advanced_search_count');
+    const savedCount = localStorage.getItem("advanced_search_count");
     return savedCount ? parseInt(savedCount) : 0;
   });
   const [searchError, setSearchError] = useState<string | null>(null);
-  const [lastSuccessfulQuery, setLastSuccessfulQuery] = useState<CustomQuery | null>(() => {
-    const lastQuery = localStorage.getItem('last_successful_query');
-    return lastQuery ? JSON.parse(lastQuery) : null;
-  });
-  
+  const [lastSuccessfulQuery, setLastSuccessfulQuery] =
+    useState<CustomQuery | null>(() => {
+      const lastQuery = localStorage.getItem("last_successful_query");
+      return lastQuery ? JSON.parse(lastQuery) : null;
+    });
+
   // Detectar se é a primeira visita à página para mostrar o guia
   const [showGuide, setShowGuide] = useState(() => {
-    const visited = localStorage.getItem('advanced_search_visited');
+    const visited = localStorage.getItem("advanced_search_visited");
     return !visited;
   });
-  
+
   useEffect(() => {
     // Marcar como visitado após o primeiro carregamento
     if (showGuide) {
-      localStorage.setItem('advanced_search_visited', 'true');
+      localStorage.setItem("advanced_search_visited", "true");
     }
   }, [showGuide]);
-  
+
   // Salvar a contagem de buscas e a última busca bem-sucedida no localStorage
   useEffect(() => {
     if (searchCount > 0) {
-      localStorage.setItem('advanced_search_count', searchCount.toString());
+      localStorage.setItem("advanced_search_count", searchCount.toString());
     }
   }, [searchCount]);
-  
+
   useEffect(() => {
     if (lastSuccessfulQuery) {
-      localStorage.setItem('last_successful_query', JSON.stringify(lastSuccessfulQuery));
+      localStorage.setItem(
+        "last_successful_query",
+        JSON.stringify(lastSuccessfulQuery)
+      );
     }
   }, [lastSuccessfulQuery]);
-  
+
   const validateQuery = useCallback((query: CustomQuery): string | null => {
+    console.log("Validando consulta:", query);
+
+    // Validação básica: apenas verificar se uma categoria foi selecionada
     if (!query.category) {
-      return 'É necessário selecionar uma categoria';
+      return "É necessário selecionar uma categoria";
     }
-    
-    if (!query.countries || query.countries.length === 0) {
-      return 'Selecione pelo menos um país para sua consulta';
-    }
-    
+
+    // Não exigir mais a seleção de país para nenhuma consulta
+    // Todas as consultas agora são flexíveis e funcionam com ou sem país selecionado
     return null;
   }, []);
-  
+
   const handleQuerySubmit = async (query: CustomQuery) => {
     setIsSubmitting(true);
     setSearchError(null);
-    
+
     try {
       // Validar a query
       const validationError = validateQuery(query);
       if (validationError) {
         throw new Error(validationError);
       }
-      
+
       // Convert the query to URL parameters for the search page
       const params = new URLSearchParams();
-      
+
       // Add basic parameters
-      params.append('category', query.category);
-      
+      params.append("category", query.category);
+
       if (query.subCategory) {
-        params.append('subCategory', query.subCategory);
+        params.append("subCategory", query.subCategory);
       }
-      
+
       if (query.countries && query.countries.length > 0) {
-        params.append('countries', query.countries.join(','));
+        params.append("countries", query.countries.join(","));
         // Also add preselect parameter for map visualization
-        params.append('preselect', query.countries.join(','));
+        params.append("preselect", query.countries.join(","));
       }
-      
+
       // Add filters as URL parameters
       Object.entries(query.filters).forEach(([key, value]) => {
         if (Array.isArray(value) && value.length > 0) {
-          params.append(key, value.join(','));
-        } else if (value !== null && value !== undefined && value !== '') {
+          params.append(key, value.join(","));
+        } else if (value !== null && value !== undefined && value !== "") {
           params.append(key, String(value));
         }
       });
-      
+
       // Process audience filters specially - convert checkboxes to comma-separated string
-      if (query.filters.audience && Array.isArray(query.filters.audience) && query.filters.audience.length > 0) {
-        params.append('audience', query.filters.audience.join(','));
+      if (
+        query.filters.audience &&
+        Array.isArray(query.filters.audience) &&
+        query.filters.audience.length > 0
+      ) {
+        params.append("audience", query.filters.audience.join(","));
       }
-      
+
       // Add custom fields if any
       if (query.customFields) {
         Object.entries(query.customFields).forEach(([key, value]) => {
-          if (value !== null && value !== undefined && value !== '') {
+          if (value !== null && value !== undefined && value !== "") {
             params.append(`custom_${key}`, String(value));
           }
         });
       }
-      
+
       // Force execution flag to ensure query runs on arrival at BuscaOne
-      params.append('forceExecution', 'true');
-      
+      params.append("forceExecution", "true");
+
       // Armazenar a última consulta bem-sucedida
       setLastSuccessfulQuery(query);
-      
+
       // Increment search count to show the notification
-      setSearchCount(prevCount => prevCount + 1);
-      
+      setSearchCount((prevCount) => prevCount + 1);
+
       // Add timestamp to ensure the query is treated as new by React router
-      params.append('t', Date.now().toString());
-      
+      params.append("t", Date.now().toString());
+
       // Feedback visual antes de navegar
       setTimeout(() => {
-        console.log('Navegando para BuscaOne com parâmetros:', params.toString());
+        console.log(
+          "Navegando para BuscaOne com parâmetros:",
+          params.toString()
+        );
         navigate(`/buscaone?${params.toString()}`);
         setIsSubmitting(false);
       }, 800);
     } catch (error) {
-      console.error('Erro ao processar consulta:', error);
-      setSearchError(error instanceof Error ? error.message : 'Erro desconhecido ao processar a consulta');
+      console.error("Erro ao processar consulta:", error);
+      setSearchError(
+        error instanceof Error
+          ? error.message
+          : "Erro desconhecido ao processar a consulta"
+      );
       setIsSubmitting(false);
     }
   };
-  
+
   // Fechar o guia de introdução
   const closeGuide = () => {
     setShowGuide(false);
   };
-  
+
   // Limpar o histórico de buscas
   const clearSearchHistory = () => {
     setSearchCount(0);
     setLastSuccessfulQuery(null);
-    localStorage.removeItem('advanced_search_count');
-    localStorage.removeItem('last_successful_query');
+    localStorage.removeItem("advanced_search_count");
+    localStorage.removeItem("last_successful_query");
   };
 
   return (
     <>
       <Helmet>
         <title>ELLAS - Busca Avançada</title>
-        <meta name="description" content="Construa consultas personalizadas para explorar os dados do projeto ELLAS sobre igualdade de gênero na América Latina." />
+        <meta
+          name="description"
+          content="Construa consultas personalizadas para explorar os dados do projeto ELLAS sobre igualdade de gênero na América Latina."
+        />
       </Helmet>
-      
+
       <Header />
       <div className="advanced-search-page">
         <div className="advanced-search-header">
           <h1>Busca Avançada</h1>
-          <p>Construa uma consulta personalizada para explorar os dados do projeto ELLAS sobre igualdade de gênero na América Latina</p>
-          
+          <p>
+            Construa uma consulta personalizada para explorar os dados do
+            projeto ELLAS sobre igualdade de gênero na América Latina
+          </p>
+
           {searchCount > 0 && (
-            <div className="search-count-badge" title="Número de consultas realizadas">
+            <div
+              className="search-count-badge"
+              title="Número de consultas realizadas"
+            >
               Consultas: {searchCount}
-              <button 
-                onClick={clearSearchHistory} 
-                className="clear-history-button" 
+              <button
+                onClick={clearSearchHistory}
+                className="clear-history-button"
                 title="Limpar histórico"
               >
                 ×
               </button>
             </div>
           )}
-          
+
           {lastSuccessfulQuery && (
             <div className="last-query-indicator" title="Sua última consulta">
-              Última: {lastSuccessfulQuery.category} - 
-              {lastSuccessfulQuery.countries.length > 0 ? 
-                ` ${lastSuccessfulQuery.countries.length} ${lastSuccessfulQuery.countries.length === 1 ? 'país' : 'países'}` : 
-                ' todos os países'}
+              Última: {lastSuccessfulQuery.category} -
+              {lastSuccessfulQuery.countries.length > 0
+                ? ` ${lastSuccessfulQuery.countries.length} ${
+                    lastSuccessfulQuery.countries.length === 1
+                      ? "país"
+                      : "países"
+                  }`
+                : " todos os países"}
             </div>
           )}
         </div>
-        
+
         {/* Mostrar mensagem de erro se houver */}
         {searchError && (
           <div className="error-message">
@@ -195,17 +224,19 @@ const AdvancedSearchPage: React.FC = () => {
             <button onClick={() => setSearchError(null)}>Fechar</button>
           </div>
         )}
-        
+
         <div className="advanced-search-content">
           <QueryBuilder onQuerySubmit={handleQuerySubmit} />
         </div>
-        
+
         {/* Botão de Construir Consulta fixo na parte inferior */}
         <div className="fixed-build-button">
-          <button 
+          <button
             onClick={() => {
               // Simular o clique no botão "Construir Consulta" dentro do QueryBuilder
-              const buildButton = document.querySelector('.advanced-search-content button.build-query-button') as HTMLButtonElement;
+              const buildButton = document.querySelector(
+                ".advanced-search-content button.build-query-button"
+              ) as HTMLButtonElement;
               if (buildButton) {
                 buildButton.click();
               }
@@ -215,64 +246,78 @@ const AdvancedSearchPage: React.FC = () => {
             Construir Consulta ➔
           </button>
         </div>
-        
+
         {/* Guia de introdução para novos usuários */}
         {showGuide && (
           <div className="guide-overlay">
             <div className="guide-content">
               <h2>Bem-vindo à Busca Avançada ELLAS</h2>
-              <p>Aqui você pode criar consultas personalizadas para explorar nossos dados de gênero e ciência na América Latina.</p>
-              
+              <p>
+                Aqui você pode criar consultas personalizadas para explorar
+                nossos dados de gênero e ciência na América Latina.
+              </p>
+
               <div className="guide-steps">
                 <div className="guide-step">
                   <div className="step-number">1</div>
                   <div className="step-content">
                     <h3>Selecione uma categoria</h3>
-                    <p>Comece escolhendo entre Políticas, Iniciativas ou Fatores.</p>
+                    <p>
+                      Comece escolhendo entre Políticas, Iniciativas ou Fatores.
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="guide-step">
                   <div className="step-number">2</div>
                   <div className="step-content">
                     <h3>Selecione países</h3>
-                    <p>Escolha um ou mais países da América Latina para filtrar os resultados.</p>
+                    <p>
+                      Escolha um ou mais países da América Latina para filtrar
+                      os resultados.
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="guide-step">
                   <div className="step-number">3</div>
                   <div className="step-content">
                     <h3>Configure filtros específicos</h3>
-                    <p>Refine sua consulta com filtros adicionais como ano, tipo de política, status da iniciativa, etc.</p>
+                    <p>
+                      Refine sua consulta com filtros adicionais como ano, tipo
+                      de política, status da iniciativa, etc.
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="guide-step">
                   <div className="step-number">4</div>
                   <div className="step-content">
                     <h3>Construa sua consulta</h3>
-                    <p>Clique em "Construir Consulta" para ver os resultados em formato de mapa e tabela.</p>
+                    <p>
+                      Clique em "Construir Consulta" para ver os resultados em
+                      formato de mapa e tabela.
+                    </p>
                   </div>
                 </div>
               </div>
-              
+
               <button className="guide-close-button" onClick={closeGuide}>
                 Entendi, vamos começar!
               </button>
             </div>
           </div>
         )}
-        
+
         {isSubmitting && (
           <div className="loading-overlay">
             <div className="loading-spinner"></div>
             <p>Construindo sua consulta e buscando dados...</p>
           </div>
         )}
-        
+
         {/* Botão de ajuda flutuante */}
-        <button 
+        <button
           className="help-button"
           onClick={() => setShowGuide(true)}
           aria-label="Mostrar ajuda"
@@ -284,4 +329,4 @@ const AdvancedSearchPage: React.FC = () => {
   );
 };
 
-export default AdvancedSearchPage; 
+export default AdvancedSearchPage;

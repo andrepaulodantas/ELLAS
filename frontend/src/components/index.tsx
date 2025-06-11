@@ -15,7 +15,9 @@ import DataCards from "./DataCards";
 import LatinAmericaSection from "./LatinAmericaSection";
 import SearchBar from "./SearchBar";
 import FeaturedQuestions from "./FeaturedQuestions";
-import { default as QueryBuilder } from './QueryBuilder';
+import { default as QueryBuilder } from "./QueryBuilder";
+import SparqlEditor from "./SparqlEditor";
+import PropertyTestComponent from "./PropertyTestComponent";
 
 export {
   Img,
@@ -35,4 +37,6 @@ export {
   SearchBar,
   FeaturedQuestions,
   QueryBuilder,
+  SparqlEditor,
+  PropertyTestComponent,
 };

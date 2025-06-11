@@ -412,20 +412,28 @@ const fetchQuery = async (query: string) => {
     console.log(
       `✅ Dados de fallback gerados: ${fallbackData.results.bindings.length} resultados`
     );
-    
+
     // ALERTA ESPECIAL para 44 resultados
     if (fallbackData.results.bindings.length === 44) {
-      console.error(`🚨 PROBLEMA IDENTIFICADO: generateSmartFallbackData retornou exatamente 44 resultados!`);
-      console.log(`🔍 DEBUG Query que causou fallback:`, query.substring(0, 300));
-      console.log(`🔍 DEBUG Primeiros 3 resultados de fallback:`, fallbackData.results.bindings.slice(0, 3));
+      console.error(
+        `🚨 PROBLEMA IDENTIFICADO: generateSmartFallbackData retornou exatamente 44 resultados!`
+      );
+      console.log(
+        `🔍 DEBUG Query que causou fallback:`,
+        query.substring(0, 300)
+      );
+      console.log(
+        `🔍 DEBUG Primeiros 3 resultados de fallback:`,
+        fallbackData.results.bindings.slice(0, 3)
+      );
       console.log(`🔍 DEBUG Estrutura do fallback:`, {
         hasHead: !!fallbackData.head,
         headVars: fallbackData.head?.vars,
         bindingsIsArray: Array.isArray(fallbackData.results.bindings),
-        sampleKeys: Object.keys(fallbackData.results.bindings[0] || {})
+        sampleKeys: Object.keys(fallbackData.results.bindings[0] || {}),
       });
     }
-    
+
     return fallbackData;
   }
 

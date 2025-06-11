@@ -1,6 +1,7 @@
 # 🎯 STATUS DO SISTEMA DE FILTRAGEM DINÂMICA
 
 ## ✅ **PROBLEMA RESOLVIDO:**
+
 **Filtragem dinâmica sem botão de pesquisa funcionando com validação de compatibilidade de categorias**
 
 ---
@@ -8,10 +9,12 @@
 ## 📊 **CORREÇÕES IMPLEMENTADAS:**
 
 ### 1. **Estrutura do `selectedGraphPath` Corrigida** ✅
+
 - **Antes**: `[value, label, value, label...]` (confuso)
 - **Depois**: `[property, value, property, value...]` (limpo)
 
 ### 2. **Validação de Compatibilidade de Categoria** ✅
+
 ```typescript
 // Adicionado filtro rigoroso para evitar mistura de propriedades
 const categoryPropertyMap = {
@@ -22,10 +25,12 @@ const categoryPropertyMap = {
 ```
 
 ### 3. **Consultas SPARQL Corrigidas** ✅
+
 - Agora apenas propriedades compatíveis com a categoria são mostradas
 - Prevenção de queries inválidas como `Policy + initiative_reach`
 
 ### 4. **Fluxo de Execução Automática** ✅
+
 - Remoção completa do botão "Pesquisar"
 - Execução automática ao selecionar filtros
 - Limpeza de estado entre navegações
@@ -35,13 +40,15 @@ const categoryPropertyMap = {
 ## 🔄 **FLUXO ATUAL DE FUNCIONAMENTO:**
 
 ### **Passo 1: Seleção de Categoria**
+
 ```
-Usuário clica em "Policy" 
+Usuário clica em "Policy"
 → Carrega dados básicos (83 resultados)
 → Mostra apenas propriedades compatíveis com Policy
 ```
 
 ### **Passo 2: Seleção de Propriedade**
+
 ```
 Usuário clica em "Start date"
 → Carrega valores disponíveis (22 valores)
@@ -49,6 +56,7 @@ Usuário clica em "Start date"
 ```
 
 ### **Passo 3: Seleção de Valor**
+
 ```
 Usuário clica em "2013-2019"
 → Executa consulta filtrada automaticamente
@@ -57,6 +65,7 @@ Usuário clica em "2013-2019"
 ```
 
 ### **Passo 4: Filtros Adicionais**
+
 ```
 Usuário pode continuar filtrando
 → Apenas propriedades válidas são mostradas
@@ -68,6 +77,7 @@ Usuário pode continuar filtrando
 ## ⚠️ **PROBLEMA ANTERIOR IDENTIFICADO:**
 
 **Nos logs do usuário**, o sistema estava permitindo:
+
 1. ✅ **Policy** + **start_date** = "2013-2019" → 1 resultado ✅
 2. ❌ **Policy** + **initiative_reach** = "Local" → 0 resultados ❌
 
@@ -98,10 +108,11 @@ Usuário pode continuar filtrando
 ---
 
 ## 🎉 **STATUS FINAL:**
+
 **✅ SISTEMA DE FILTRAGEM DINÂMICA FUNCIONANDO**
 
 - ✅ Sem botão de pesquisa
-- ✅ Filtragem automática 
+- ✅ Filtragem automática
 - ✅ Validação de compatibilidade
 - ✅ Prevenção de queries inválidas
 - ✅ Interface responsiva

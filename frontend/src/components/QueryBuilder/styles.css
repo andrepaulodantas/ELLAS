@@ -1153,8 +1153,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive design for results table */
@@ -1164,30 +1168,30 @@
     overflow-y: auto;
     max-height: 400px;
   }
-  
+
   .results-table {
     min-width: 800px;
     font-size: 12px;
   }
-  
+
   .results-table th,
   .results-table td {
     padding: 8px 12px;
     white-space: nowrap;
   }
-  
+
   .col-description,
   .col-objective {
     max-width: 200px;
     white-space: normal;
   }
-  
+
   .results-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .results-info {
     width: 100%;
     justify-content: flex-start;

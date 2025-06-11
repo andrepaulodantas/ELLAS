@@ -2042,8 +2042,8 @@ export const buildDynamicGraphQuery = async (
 ): Promise<string> => {
   // Base da consulta com prefixos
   // Filtrar extraFields para evitar duplicação de label
-  const filteredExtraFields = extraFields.filter(field => field !== 'label');
-  
+  const filteredExtraFields = extraFields.filter((field) => field !== "label");
+
   let query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -2068,11 +2068,11 @@ export const buildDynamicGraphQuery = async (
 
         // CORREÇÃO CRÍTICA: Escapar quebras de linha e caracteres especiais
         const escapedValue = value
-          .replace(/\\/g, '\\\\')    // Escapar barras invertidas
-          .replace(/"/g, '\\"')      // Escapar aspas duplas
-          .replace(/\n/g, '\\n')     // Escapar quebras de linha
-          .replace(/\r/g, '\\r')     // Escapar retorno de carro
-          .replace(/\t/g, '\\t');    // Escapar tabs
+          .replace(/\\/g, "\\\\") // Escapar barras invertidas
+          .replace(/"/g, '\\"') // Escapar aspas duplas
+          .replace(/\n/g, "\\n") // Escapar quebras de linha
+          .replace(/\r/g, "\\r") // Escapar retorno de carro
+          .replace(/\t/g, "\\t"); // Escapar tabs
 
         // Adicionar padrão de tripla para a propriedade
         query += `      ?entity Ellas:${property} ${varName} .\n`;
@@ -2111,16 +2111,19 @@ export const buildDynamicGraphQuery = async (
     LIMIT ${limit}
   `;
 
-  console.log(`🔍 DEBUG buildDynamicGraphQuery - Consulta completa gerada:`, query);
+  console.log(
+    `🔍 DEBUG buildDynamicGraphQuery - Consulta completa gerada:`,
+    query
+  );
   console.log(`🔍 DEBUG Parâmetros:`, {
     category,
     path,
     extraFields,
     limit,
     pathLength: path?.length,
-    hasPath: path && path.length > 0
+    hasPath: path && path.length > 0,
   });
-  
+
   return query;
 };
 
@@ -2134,7 +2137,11 @@ export const executeDynamicGraphQuery = async (
     // Construir a consulta dinâmica
     const query = await buildDynamicGraphQuery(category, path, extraFields);
 
-    console.log(`🔍 DEBUG executeDynamicGraphQuery: Categoria=${category}, Path=${JSON.stringify(path)}, ExtraFields=${JSON.stringify(extraFields)}`);
+    console.log(
+      `🔍 DEBUG executeDynamicGraphQuery: Categoria=${category}, Path=${JSON.stringify(
+        path
+      )}, ExtraFields=${JSON.stringify(extraFields)}`
+    );
     console.log(`🔍 DEBUG Consulta SPARQL gerada:`, query);
 
     // Executar a consulta
@@ -2144,30 +2151,35 @@ export const executeDynamicGraphQuery = async (
     console.log(`🔍 DEBUG Resultado bruto da fetchQuery:`, {
       hasResult: !!result,
       resultType: typeof result,
-      hasResults: !!(result?.results),
-      hasBindings: !!(result?.results?.bindings),
+      hasResults: !!result?.results,
+      hasBindings: !!result?.results?.bindings,
       bindingsLength: result?.results?.bindings?.length,
       firstBinding: result?.results?.bindings?.[0],
       isArrayBindings: Array.isArray(result?.results?.bindings),
       resultKeys: result ? Object.keys(result) : [],
-      resultsKeys: result?.results ? Object.keys(result.results) : []
+      resultsKeys: result?.results ? Object.keys(result.results) : [],
     });
 
     if (result && result.results && result.results.bindings) {
       const bindingsLength = result.results.bindings.length;
       console.log(`📊 DEBUG: Consulta retornou ${bindingsLength} resultados`);
-      
+
       // Verificar se sempre retorna 44
       if (bindingsLength === 44) {
-        console.error(`🚨 ALERTA: Sempre retorna 44 resultados! Pode ser dados de fallback!`);
-        console.log(`🔍 DEBUG Primeiros 3 resultados:`, result.results.bindings.slice(0, 3));
+        console.error(
+          `🚨 ALERTA: Sempre retorna 44 resultados! Pode ser dados de fallback!`
+        );
+        console.log(
+          `🔍 DEBUG Primeiros 3 resultados:`,
+          result.results.bindings.slice(0, 3)
+        );
         console.log(`🔍 DEBUG Fonte dos dados:`, {
           category,
           path,
-          query: query.substring(0, 200) + '...'
+          query: query.substring(0, 200) + "...",
         });
       }
-      
+
       return result;
     } else {
       console.warn("Consulta não retornou resultados");

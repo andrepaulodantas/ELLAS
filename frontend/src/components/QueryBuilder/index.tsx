@@ -204,33 +204,52 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       const loadInitialOptions = async () => {
         try {
           setIsLoadingOptions(true);
-          
+
           // Definir propriedades válidas por categoria
           const categoryPropertyMap: Record<string, string[]> = {
-            'Policy': [
-              'created_in', 'policy_type', 'start_date', 'policy_impact', 
-              'target_audience', 'located_in', 'description', 'objective',
-              'policy_impact_description', 'end_date'
+            Policy: [
+              "created_in",
+              "policy_type",
+              "start_date",
+              "policy_impact",
+              "target_audience",
+              "located_in",
+              "description",
+              "objective",
+              "policy_impact_description",
+              "end_date",
             ],
-            'Initiative': [
-              'created_in', 'initiative_reach', 'start_date', 'initiative_status', 
-              'initiative_format', 'coordinator_gender', 'description', 'objective',
-              'initiative_coordinator_gender', 'end_date'
+            Initiative: [
+              "created_in",
+              "initiative_reach",
+              "start_date",
+              "initiative_status",
+              "initiative_format",
+              "coordinator_gender",
+              "description",
+              "objective",
+              "initiative_coordinator_gender",
+              "end_date",
             ],
-            'Factor': [
-              'factor_type', 'impact_level', 'created_in', 'target_group',
-              'description', 'start_date'
-            ]
+            Factor: [
+              "factor_type",
+              "impact_level",
+              "created_in",
+              "target_group",
+              "description",
+              "start_date",
+            ],
           };
-          
+
           // Usar a função do serviço para obter propriedades
-          const allOptions = await queryMappingService.explorePropertiesForClass(
-            selectedCategory
-          );
-          
+          const allOptions =
+            await queryMappingService.explorePropertiesForClass(
+              selectedCategory
+            );
+
           // Filtrar propriedades válidas para a categoria
           const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-          const options = allOptions.filter(option => 
+          const options = allOptions.filter((option) =>
             allowedProperties.includes(option.value)
           );
 
@@ -288,30 +307,59 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       // VALIDAÇÃO RIGOROSA: Verificar se a propriedade é compatível com a categoria atual
       if (option.type === "property" && selectedCategory) {
         const categoryPropertyMap: Record<string, string[]> = {
-          'Policy': [
-            'created_in', 'policy_type', 'start_date', 'policy_impact', 
-            'target_audience', 'located_in', 'description', 'objective',
-            'policy_impact_description', 'end_date'
+          Policy: [
+            "created_in",
+            "policy_type",
+            "start_date",
+            "policy_impact",
+            "target_audience",
+            "located_in",
+            "description",
+            "objective",
+            "policy_impact_description",
+            "end_date",
           ],
-          'Initiative': [
-            'created_in', 'initiative_reach', 'start_date', 'initiative_status', 
-            'initiative_format', 'coordinator_gender', 'description', 'objective',
-            'initiative_coordinator_gender', 'end_date'
+          Initiative: [
+            "created_in",
+            "initiative_reach",
+            "start_date",
+            "initiative_status",
+            "initiative_format",
+            "coordinator_gender",
+            "description",
+            "objective",
+            "initiative_coordinator_gender",
+            "end_date",
           ],
-          'Factor': [
-            'factor_type', 'impact_level', 'created_in', 'target_group',
-            'description', 'start_date'
-          ]
+          Factor: [
+            "factor_type",
+            "impact_level",
+            "created_in",
+            "target_group",
+            "description",
+            "start_date",
+          ],
         };
-        
+
         const allowedProperties = categoryPropertyMap[selectedCategory];
         if (allowedProperties && !allowedProperties.includes(option.value)) {
-          console.error(`❌ PROPRIEDADE INCOMPATÍVEL: "${option.value}" não é válida para categoria "${selectedCategory}"`);
-          console.log(`📋 Propriedades válidas para ${selectedCategory}:`, allowedProperties);
-          
+          console.error(
+            `❌ PROPRIEDADE INCOMPATÍVEL: "${option.value}" não é válida para categoria "${selectedCategory}"`
+          );
+          console.log(
+            `📋 Propriedades válidas para ${selectedCategory}:`,
+            allowedProperties
+          );
+
           // Mostrar alerta visual ao usuário
-          alert(`⚠️ A propriedade "${option.value}" não é compatível com a categoria "${selectedCategory}".\n\nPropriedades válidas: ${allowedProperties.join(', ')}`);
-          
+          alert(
+            `⚠️ A propriedade "${
+              option.value
+            }" não é compatível com a categoria "${selectedCategory}".\n\nPropriedades válidas: ${allowedProperties.join(
+              ", "
+            )}`
+          );
+
           return; // Cancelar a seleção completamente
         }
       }
@@ -377,7 +425,9 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         // Se for um valor, apenas atualizar os filtros
         if (level > 0) {
           const property = selectedGraphPath[level * 2 - 2];
-          console.log(`🔍 handleOptionClick: Adicionando filtro: ${property} = ${option.value}`);
+          console.log(
+            `🔍 handleOptionClick: Adicionando filtro: ${property} = ${option.value}`
+          );
 
           // Atualizar filtros (o useEffect vai executar a consulta automaticamente)
           setSelectedFilters((prev) => ({
@@ -385,44 +435,70 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             [property]: option.value,
           }));
 
-          console.log(`🔍 handleOptionClick: Filtro adicionado, useEffect vai executar consulta automaticamente`);
+          console.log(
+            `🔍 handleOptionClick: Filtro adicionado, useEffect vai executar consulta automaticamente`
+          );
 
           // Carregar próximas propriedades disponíveis
           const loadNextProperties = async () => {
             try {
               setIsLoadingOptions(true);
-              
+
               // Definir propriedades válidas por categoria
               const categoryPropertyMap: Record<string, string[]> = {
-                'Policy': [
-                  'created_in', 'policy_type', 'start_date', 'policy_impact', 
-                  'target_audience', 'located_in', 'description', 'objective',
-                  'policy_impact_description', 'end_date'
+                Policy: [
+                  "created_in",
+                  "policy_type",
+                  "start_date",
+                  "policy_impact",
+                  "target_audience",
+                  "located_in",
+                  "description",
+                  "objective",
+                  "policy_impact_description",
+                  "end_date",
                 ],
-                'Initiative': [
-                  'created_in', 'initiative_reach', 'start_date', 'initiative_status', 
-                  'initiative_format', 'coordinator_gender', 'description', 'objective',
-                  'initiative_coordinator_gender', 'end_date'
+                Initiative: [
+                  "created_in",
+                  "initiative_reach",
+                  "start_date",
+                  "initiative_status",
+                  "initiative_format",
+                  "coordinator_gender",
+                  "description",
+                  "objective",
+                  "initiative_coordinator_gender",
+                  "end_date",
                 ],
-                'Factor': [
-                  'factor_type', 'impact_level', 'created_in', 'target_group',
-                  'description', 'start_date'
-                ]
+                Factor: [
+                  "factor_type",
+                  "impact_level",
+                  "created_in",
+                  "target_group",
+                  "description",
+                  "start_date",
+                ],
               };
 
-              const nextProps = await queryMappingService.explorePropertiesForClass(selectedCategory);
-              const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-              
+              const nextProps =
+                await queryMappingService.explorePropertiesForClass(
+                  selectedCategory
+                );
+              const allowedProperties =
+                categoryPropertyMap[selectedCategory] || [];
+
               // Filtrar propriedades: válidas para categoria + não já selecionadas
-              const filteredProps = nextProps.filter(p => 
-                allowedProperties.includes(p.value) && !selectedGraphPath.includes(p.value)
+              const filteredProps = nextProps.filter(
+                (p) =>
+                  allowedProperties.includes(p.value) &&
+                  !selectedGraphPath.includes(p.value)
               );
 
               console.log(`🔍 Propriedades carregadas para próximo nível:`, {
                 totalProps: nextProps.length,
                 filteredProps: filteredProps.length,
                 allowedForCategory: allowedProperties,
-                filteredPropValues: filteredProps.map(p => p.value)
+                filteredPropValues: filteredProps.map((p) => p.value),
               });
 
               setDynamicOptions((prev) => ({
@@ -462,19 +538,21 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                 className="graph-option-item"
                 onClick={async () => {
                   console.log(`🎯 Categoria selecionada: ${category.value}`);
-                  
+
                   // CORREÇÃO CRÍTICA: Limpar TUDO antes de definir nova categoria
-                  console.log(`🧹 Limpando estado completo antes de selecionar ${category.value}`);
+                  console.log(
+                    `🧹 Limpando estado completo antes de selecionar ${category.value}`
+                  );
                   setSelectedGraphPath([]);
                   setCurrentGraphLevel(0);
                   setSelectedFilters({});
                   setDynamicOptions({});
                   setQueryResults([]);
-                  
+
                   // Definir nova categoria e desativar visualização da raiz
                   setSelectedCategory(category.value);
                   setForceRootView(false);
-                  
+
                   // Carregar dados básicos da categoria imediatamente
                   await loadBasicCategoryData(category.value);
                 }}
@@ -496,65 +574,94 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     try {
       setIsExecutingQuery(true);
       console.log(`🔍 Carregando dados básicos para categoria: ${category}`);
-      
+
       // CORREÇÃO CRÍTICA: Limpar filtros e caminhos ao mudar de categoria
-      console.log(`🧹 Limpando filtros e caminhos antes de carregar dados para ${category}`);
+      console.log(
+        `🧹 Limpando filtros e caminhos antes de carregar dados para ${category}`
+      );
       setSelectedGraphPath([]);
       setCurrentGraphLevel(0);
       setSelectedFilters({});
       setDynamicOptions({});
-      
+
       console.log(`🔍 DEBUG: Estado atual queryResults antes da consulta:`, {
         length: queryResults?.length,
-        first3: queryResults?.slice(0, 3)
+        first3: queryResults?.slice(0, 3),
       });
 
       // Limpar resultados antes da nova consulta
       setQueryResults([]);
-      console.log(`🧹 Resultados limpos, iniciando nova consulta para ${category}`);
+      console.log(
+        `🧹 Resultados limpos, iniciando nova consulta para ${category}`
+      );
 
       // Executar uma consulta básica para obter exemplos da categoria
       console.log(`🚀 Executando consulta para categoria: ${category}`);
       const result = await queryMappingService.executeDynamicGraphQuery(
         category,
         [], // Caminho vazio para dados básicos - IMPORTANTE: sempre vazio para dados básicos
-        ["created_in", "start_date", "policy_type", "policy_impact", "description", "objective"] // campos que queremos recuperar (label já incluído por padrão)
+        [
+          "created_in",
+          "start_date",
+          "policy_type",
+          "policy_impact",
+          "description",
+          "objective",
+        ] // campos que queremos recuperar (label já incluído por padrão)
       );
 
-      console.log(`🔍 DEBUG: Resposta completa da API para categoria ${category}:`, {
-        hasResult: !!result,
-        hasResults: !!(result?.results),
-        hasBindings: !!(result?.results?.bindings),
-        bindingsLength: result?.results?.bindings?.length,
-        resultStructure: result ? Object.keys(result) : 'null',
-        sampleBinding: result?.results?.bindings?.[0],
-        fullResult: result
-      });
+      console.log(
+        `🔍 DEBUG: Resposta completa da API para categoria ${category}:`,
+        {
+          hasResult: !!result,
+          hasResults: !!result?.results,
+          hasBindings: !!result?.results?.bindings,
+          bindingsLength: result?.results?.bindings?.length,
+          resultStructure: result ? Object.keys(result) : "null",
+          sampleBinding: result?.results?.bindings?.[0],
+          fullResult: result,
+        }
+      );
 
-      if (result && result.results && result.results.bindings && result.results.bindings.length > 0) {
+      if (
+        result &&
+        result.results &&
+        result.results.bindings &&
+        result.results.bindings.length > 0
+      ) {
         const bindingsLength = result.results.bindings.length;
-        console.log(`📊 SUCESSO: Carregados ${bindingsLength} registros para ${category}`);
-        console.log(`🔍 DEBUG: Primeiros 3 registros:`, result.results.bindings.slice(0, 3));
-        
+        console.log(
+          `📊 SUCESSO: Carregados ${bindingsLength} registros para ${category}`
+        );
+        console.log(
+          `🔍 DEBUG: Primeiros 3 registros:`,
+          result.results.bindings.slice(0, 3)
+        );
+
         setQueryResults(result.results.bindings as QueryResult[]);
         // Forçar re-renderização da tabela quando carregamos novos dados
         setTableKey(Date.now().toString());
-        
+
         // Verificar se o estado foi atualizado corretamente
         setTimeout(() => {
           console.log(`🔍 DEBUG: Estado queryResults após setQueryResults:`, {
             length: queryResults?.length,
             category: category,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           });
         }, 100);
       } else {
-        console.error(`❌ PROBLEMA: Nenhum resultado encontrado para a categoria ${category}`);
+        console.error(
+          `❌ PROBLEMA: Nenhum resultado encontrado para a categoria ${category}`
+        );
         console.log(`🔍 DEBUG: Estrutura do resultado:`, result);
         setQueryResults([]);
       }
     } catch (error) {
-      console.error(`❌ ERRO CRÍTICO ao carregar dados básicos para ${category}:`, error);
+      console.error(
+        `❌ ERRO CRÍTICO ao carregar dados básicos para ${category}:`,
+        error
+      );
       setQueryResults([]);
     } finally {
       setIsExecutingQuery(false);
@@ -624,46 +731,71 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
     // VALIDAÇÃO RIGOROSA: Filtrar propriedades que não pertencem à categoria atual
     const categoryPropertyMap: Record<string, string[]> = {
-      'Policy': [
-        'created_in', 'policy_type', 'start_date', 'policy_impact', 
-        'target_audience', 'located_in', 'description', 'objective',
-        'policy_impact_description', 'end_date'
+      Policy: [
+        "created_in",
+        "policy_type",
+        "start_date",
+        "policy_impact",
+        "target_audience",
+        "located_in",
+        "description",
+        "objective",
+        "policy_impact_description",
+        "end_date",
       ],
-      'Initiative': [
-        'created_in', 'initiative_reach', 'start_date', 'initiative_status', 
-        'initiative_format', 'coordinator_gender', 'description', 'objective',
-        'initiative_coordinator_gender', 'end_date'
+      Initiative: [
+        "created_in",
+        "initiative_reach",
+        "start_date",
+        "initiative_status",
+        "initiative_format",
+        "coordinator_gender",
+        "description",
+        "objective",
+        "initiative_coordinator_gender",
+        "end_date",
       ],
-      'Factor': [
-        'factor_type', 'impact_level', 'created_in', 'target_group',
-        'description', 'start_date'
-      ]
+      Factor: [
+        "factor_type",
+        "impact_level",
+        "created_in",
+        "target_group",
+        "description",
+        "start_date",
+      ],
     };
 
     // VALIDAÇÃO CONTÍNUA: Verificar compatibilidade em todos os níveis
     if (selectedCategory && selectedGraphPath.length > 0) {
       // Verificar se todas as propriedades no path são válidas para a categoria
       const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-      
+
       // Extrair apenas as propriedades (elementos em posições ímpares após o primeiro)
       const pathProperties: string[] = [];
       for (let i = 0; i < selectedGraphPath.length; i += 2) {
         pathProperties.push(selectedGraphPath[i]);
       }
-      
+
       // Verificar se alguma propriedade é incompatível
-      const invalidProperty = pathProperties.find(prop => !allowedProperties.includes(prop));
-      
+      const invalidProperty = pathProperties.find(
+        (prop) => !allowedProperties.includes(prop)
+      );
+
       if (invalidProperty) {
-        console.error(`❌ PROPRIEDADE INCOMPATÍVEL: "${invalidProperty}" não é válida para categoria "${selectedCategory}"`);
-        console.log(`📋 Propriedades válidas para ${selectedCategory}:`, allowedProperties);
-        
+        console.error(
+          `❌ PROPRIEDADE INCOMPATÍVEL: "${invalidProperty}" não é válida para categoria "${selectedCategory}"`
+        );
+        console.log(
+          `📋 Propriedades válidas para ${selectedCategory}:`,
+          allowedProperties
+        );
+
         // Limpar path inválido automaticamente
         setSelectedGraphPath([]);
-        
+
         // Mostrar apenas propriedades da categoria atual
         optionsToShow = dynamicOptions[""] || [];
-        optionsToShow = optionsToShow.filter(option => 
+        optionsToShow = optionsToShow.filter((option) =>
           allowedProperties.includes(option.value)
         );
         optionsTitle = `Propriedades disponíveis para ${selectedCategory} (path limpo)`;
@@ -675,10 +807,13 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     if (selectedGraphPath.length === 0 && selectedCategory) {
       const allowedProperties = categoryPropertyMap[selectedCategory];
       if (allowedProperties) {
-        optionsToShow = optionsToShow.filter(option => 
+        optionsToShow = optionsToShow.filter((option) =>
           allowedProperties.includes(option.value)
         );
-        console.log(`🔍 Propriedades filtradas para ${selectedCategory}:`, optionsToShow.map(o => o.value));
+        console.log(
+          `🔍 Propriedades filtradas para ${selectedCategory}:`,
+          optionsToShow.map((o) => o.value)
+        );
       }
     }
 
@@ -707,30 +842,49 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       try {
         // Definir propriedades válidas por categoria
         const categoryPropertyMap: Record<string, string[]> = {
-          'Policy': [
-            'created_in', 'policy_type', 'start_date', 'policy_impact', 
-            'target_audience', 'located_in', 'description', 'objective',
-            'policy_impact_description', 'end_date'
+          Policy: [
+            "created_in",
+            "policy_type",
+            "start_date",
+            "policy_impact",
+            "target_audience",
+            "located_in",
+            "description",
+            "objective",
+            "policy_impact_description",
+            "end_date",
           ],
-          'Initiative': [
-            'created_in', 'initiative_reach', 'start_date', 'initiative_status', 
-            'initiative_format', 'coordinator_gender', 'description', 'objective',
-            'initiative_coordinator_gender', 'end_date'
+          Initiative: [
+            "created_in",
+            "initiative_reach",
+            "start_date",
+            "initiative_status",
+            "initiative_format",
+            "coordinator_gender",
+            "description",
+            "objective",
+            "initiative_coordinator_gender",
+            "end_date",
           ],
-          'Factor': [
-            'factor_type', 'impact_level', 'created_in', 'target_group',
-            'description', 'start_date'
-          ]
+          Factor: [
+            "factor_type",
+            "impact_level",
+            "created_in",
+            "target_group",
+            "description",
+            "start_date",
+          ],
         };
 
         // Se estamos no nível inicial, recarregar propriedades da categoria
         if (selectedGraphPath.length === 0) {
-          const allOptions = await queryMappingService.explorePropertiesForClass(
-            selectedCategory
-          );
+          const allOptions =
+            await queryMappingService.explorePropertiesForClass(
+              selectedCategory
+            );
           // Filtrar propriedades válidas para a categoria
           const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-          const options = allOptions.filter(option => 
+          const options = allOptions.filter((option) =>
             allowedProperties.includes(option.value)
           );
           setDynamicOptions((prev) => ({ ...prev, "": options }));
@@ -747,12 +901,13 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         }
         // Se estamos em um valor, recarregar próximas propriedades
         else {
-          const allOptions = await queryMappingService.explorePropertiesForClass(
-            selectedCategory
-          );
+          const allOptions =
+            await queryMappingService.explorePropertiesForClass(
+              selectedCategory
+            );
           // Filtrar propriedades válidas para a categoria
           const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-          const options = allOptions.filter(option => 
+          const options = allOptions.filter((option) =>
             allowedProperties.includes(option.value)
           );
           setDynamicOptions((prev) => ({ ...prev, "": options }));
@@ -988,38 +1143,65 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     const executeFilterQuery = async () => {
       // Só executar se temos categoria
       if (!selectedCategory) {
-        console.log("🔍 useEffect[filtros]: Sem categoria, ignorando execução automática");
+        console.log(
+          "🔍 useEffect[filtros]: Sem categoria, ignorando execução automática"
+        );
         return;
       }
 
       // Se não há filtros, carregar dados básicos da categoria
       if (selectedGraphPath.length === 0) {
-        console.log("🔍 useEffect[filtros]: Sem filtros, carregando dados básicos da categoria");
+        console.log(
+          "🔍 useEffect[filtros]: Sem filtros, carregando dados básicos da categoria"
+        );
         // Inline da função para evitar dependência circular
         try {
           setIsExecutingQuery(true);
-          console.log(`🔍 Carregando dados básicos para categoria: ${selectedCategory}`);
-          
+          console.log(
+            `🔍 Carregando dados básicos para categoria: ${selectedCategory}`
+          );
+
           setQueryResults([]);
-          console.log(`🧹 Resultados limpos, iniciando nova consulta para ${selectedCategory}`);
+          console.log(
+            `🧹 Resultados limpos, iniciando nova consulta para ${selectedCategory}`
+          );
 
           const result = await queryMappingService.executeDynamicGraphQuery(
             selectedCategory,
             [],
-            ["created_in", "start_date", "policy_type", "policy_impact", "description", "objective"]
+            [
+              "created_in",
+              "start_date",
+              "policy_type",
+              "policy_impact",
+              "description",
+              "objective",
+            ]
           );
 
-          if (result && result.results && result.results.bindings && result.results.bindings.length > 0) {
-            console.log(`📊 SUCESSO: Carregados ${result.results.bindings.length} registros para ${selectedCategory}`);
+          if (
+            result &&
+            result.results &&
+            result.results.bindings &&
+            result.results.bindings.length > 0
+          ) {
+            console.log(
+              `📊 SUCESSO: Carregados ${result.results.bindings.length} registros para ${selectedCategory}`
+            );
             setQueryResults(result.results.bindings as QueryResult[]);
             setTableKey(Date.now().toString());
           } else {
-            console.error(`❌ PROBLEMA: Nenhum resultado encontrado para a categoria ${selectedCategory}`);
+            console.error(
+              `❌ PROBLEMA: Nenhum resultado encontrado para a categoria ${selectedCategory}`
+            );
             setQueryResults([]);
             setTableKey(Date.now().toString());
           }
         } catch (error) {
-          console.error(`❌ ERRO CRÍTICO ao carregar dados básicos para ${selectedCategory}:`, error);
+          console.error(
+            `❌ ERRO CRÍTICO ao carregar dados básicos para ${selectedCategory}:`,
+            error
+          );
           setQueryResults([]);
           setTableKey(Date.now().toString());
         } finally {
@@ -1028,17 +1210,19 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         return;
       }
 
-      // CORREÇÃO: Com a nova estrutura, caminho completo deve ter comprimento par 
+      // CORREÇÃO: Com a nova estrutura, caminho completo deve ter comprimento par
       // (propriedade + valor)
       if (selectedGraphPath.length % 2 !== 0) {
-        console.log("🔍 useEffect[filtros]: Caminho incompleto, aguardando valor");
+        console.log(
+          "🔍 useEffect[filtros]: Caminho incompleto, aguardando valor"
+        );
         return;
       }
 
       console.log("🔍 useEffect[filtros]: Executando consulta automática", {
         selectedCategory,
         selectedGraphPath,
-        pathLength: selectedGraphPath.length
+        pathLength: selectedGraphPath.length,
       });
 
       try {
@@ -1048,7 +1232,10 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         // selectedGraphPath agora contém apenas [propriedade, valor, propriedade, valor...]
         const queryPath = selectedGraphPath;
 
-        console.log("🔍 useEffect[filtros]: Executando consulta com caminho:", queryPath);
+        console.log(
+          "🔍 useEffect[filtros]: Executando consulta com caminho:",
+          queryPath
+        );
 
         // Executar a consulta dinâmica
         const result = await queryMappingService.executeDynamicGraphQuery(
@@ -1056,16 +1243,18 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           queryPath,
           [
             "created_in",
-            "start_date", 
+            "start_date",
             "policy_type",
             "policy_impact",
             "description",
-            "objective"
+            "objective",
           ]
         );
 
         if (result && result.results && result.results.bindings) {
-          console.log(`🔍 useEffect[filtros]: Consulta executada com sucesso - ${result.results.bindings.length} resultados`);
+          console.log(
+            `🔍 useEffect[filtros]: Consulta executada com sucesso - ${result.results.bindings.length} resultados`
+          );
           setQueryResults(result.results.bindings as QueryResult[]);
           setTableKey(Date.now().toString()); // Forçar re-renderização da tabela
         } else {
@@ -1074,7 +1263,10 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           setTableKey(Date.now().toString());
         }
       } catch (error) {
-        console.error("🔍 useEffect[filtros]: Erro ao executar consulta:", error);
+        console.error(
+          "🔍 useEffect[filtros]: Erro ao executar consulta:",
+          error
+        );
         setQueryResults([]);
         setTableKey(Date.now().toString());
       } finally {
@@ -1097,7 +1289,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       queryResultsSample: queryResults?.slice(0, 2),
       selectedCategory,
       tableKey,
-      isArrayResults: Array.isArray(queryResults)
+      isArrayResults: Array.isArray(queryResults),
     });
 
     if (isExecutingQuery) {
@@ -1109,12 +1301,16 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       );
     }
 
-    if (!queryResults || !Array.isArray(queryResults) || queryResults.length === 0) {
+    if (
+      !queryResults ||
+      !Array.isArray(queryResults) ||
+      queryResults.length === 0
+    ) {
       console.log("🚫 Não renderizando tabela:", {
         noQueryResults: !queryResults,
         notArray: !Array.isArray(queryResults),
         lengthZero: queryResults?.length === 0,
-        actualLength: queryResults?.length
+        actualLength: queryResults?.length,
       });
       return (
         <div className="query-results empty">
@@ -1122,7 +1318,9 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             <h3>📊 Dados da Consulta</h3>
             <p>Selecione uma categoria para visualizar os dados na tabela.</p>
             <div className="instructions">
-              <p>💡 <strong>Como usar:</strong></p>
+              <p>
+                💡 <strong>Como usar:</strong>
+              </p>
               <ul>
                 <li>Clique em uma categoria (Initiative, Policy, Factor)</li>
                 <li>Os dados serão carregados automaticamente</li>
@@ -1151,7 +1349,8 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         // Se for um valor do SPARQL
         if (value.value.startsWith("http")) {
           // Se for uma URI, pegar só a última parte
-          const lastPart = value.value.split("#").pop() || value.value.split("/").pop();
+          const lastPart =
+            value.value.split("#").pop() || value.value.split("/").pop();
           return lastPart || value.value;
         }
         return value.value;
@@ -1167,8 +1366,8 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
     // Determinar colunas dinâmicas baseadas nos dados disponíveis
     const availableFields = new Set<string>();
-    queryResults.forEach(result => {
-      Object.keys(result).forEach(key => {
+    queryResults.forEach((result) => {
+      Object.keys(result).forEach((key) => {
         if (result[key] && formatValue(result[key]) !== "-") {
           availableFields.add(key);
         }
@@ -1182,21 +1381,21 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     });
 
     const columnConfig = [
-      { key: 'label', label: 'Nome', required: true },
-      { key: 'created_in', label: 'País', required: false },
-      { key: 'start_date', label: 'Data de Início', required: false },
-      { key: 'policy_type', label: 'Tipo', required: false },
-      { key: 'policy_impact', label: 'Impacto', required: false },
-      { key: 'description', label: 'Descrição', required: false },
-      { key: 'objective', label: 'Objetivo', required: false },
+      { key: "label", label: "Nome", required: true },
+      { key: "created_in", label: "País", required: false },
+      { key: "start_date", label: "Data de Início", required: false },
+      { key: "policy_type", label: "Tipo", required: false },
+      { key: "policy_impact", label: "Impacto", required: false },
+      { key: "description", label: "Descrição", required: false },
+      { key: "objective", label: "Objetivo", required: false },
     ];
 
-    const visibleColumns = columnConfig.filter(col => 
-      col.required || availableFields.has(col.key)
+    const visibleColumns = columnConfig.filter(
+      (col) => col.required || availableFields.has(col.key)
     );
 
     console.log("🔍 Debug colunas visíveis:", {
-      visibleColumns: visibleColumns.map(c => c.key),
+      visibleColumns: visibleColumns.map((c) => c.key),
       visibleColumnsCount: visibleColumns.length,
     });
 
@@ -1205,7 +1404,9 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         <div className="results-header">
           <h3>
             📊 Resultados da Consulta
-            <span className="results-count">({queryResults.length} registros)</span>
+            <span className="results-count">
+              ({queryResults.length} registros)
+            </span>
             {isExecutingQuery && (
               <span className="loading-indicator"> - Carregando...</span>
             )}
@@ -1225,12 +1426,12 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             </span>
           </div>
         </div>
-        
+
         <div className="results-table-container" key={`table-${tableKey}`}>
           <table className="results-table">
             <thead>
               <tr>
-                {visibleColumns.map(col => (
+                {visibleColumns.map((col) => (
                   <th key={col.key}>{col.label}</th>
                 ))}
               </tr>
@@ -1238,11 +1439,19 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             <tbody>
               {queryResults.map((result, index) => (
                 <tr key={`${tableKey}-row-${index}`}>
-                  {visibleColumns.map(col => (
-                    <td key={`${tableKey}-${col.key}-${index}`} className={`col-${col.key}`}>
-                      {col.key === 'start_date' ? (
-                        result[col.key] ? formatDate(formatValue(result[col.key])) : "-"
-                      ) : col.key === 'description' || col.key === 'objective' ? (
+                  {visibleColumns.map((col) => (
+                    <td
+                      key={`${tableKey}-${col.key}-${index}`}
+                      className={`col-${col.key}`}
+                    >
+                      {col.key === "start_date" ? (
+                        result[col.key] ? (
+                          formatDate(formatValue(result[col.key]))
+                        ) : (
+                          "-"
+                        )
+                      ) : col.key === "description" ||
+                        col.key === "objective" ? (
                         <span title={formatValue(result[col.key])}>
                           {truncateText(formatValue(result[col.key]))}
                         </span>
@@ -1259,8 +1468,10 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
         {queryResults.length > 10 && (
           <div className="results-footer">
-            <p>Mostrando todos os {queryResults.length} resultados encontrados.</p>
-            <button 
+            <p>
+              Mostrando todos os {queryResults.length} resultados encontrados.
+            </p>
+            <button
               className="export-button"
               onClick={() => {
                 // Implementar exportação futura

@@ -1211,3 +1211,80 @@
 .debug-button:hover {
   background-color: #cc0000 !important;
 }
+
+.no-category-selected,
+.no-results-warning {
+  padding: 2rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.no-results-warning {
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+  color: #856404;
+}
+
+.no-results-warning h3 {
+  color: #856404;
+  margin-bottom: 1rem;
+}
+
+.no-results-warning .filter-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.no-results-warning .filter-info ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0;
+}
+
+.no-results-warning .filter-info li {
+  padding: 0.25rem 0;
+  color: #666;
+}
+
+.clear-filters {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #0d6efd;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-filters:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+.instructions {
+  margin-top: 1rem;
+  color: #666;
+}
+
+.instructions ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+}
+
+.instructions li {
+  padding: 0.25rem 0;
+  position: relative;
+}
+
+.instructions li:before {
+  content: "•";
+  position: absolute;
+  left: -1rem;
+  color: #0d6efd;
+}

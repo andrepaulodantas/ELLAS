@@ -1,4 +1,5 @@
 import { ISPARQLExecutor, ISPARQLQueryBuilder, ISPARQLResultConverter, GraphOption, PropertyAvailability, EnhancedGraphOption } from './interfaces';
+import { requestManager } from './RequestManager';
 
 /**
  * Serviço para exploração de propriedades
@@ -14,24 +15,105 @@ export class PropertyExplorationService {
   /**
    * Explora propriedades disponíveis para uma categoria
    */
-  async explorePropertiesForClass(category: string): Promise<GraphOption[]> {
+  async explorePropertiesForCategory(category: string): Promise<GraphOption[]> {
+    console.log(`🔍 Explorando propriedades para categoria: ${category}`);
+
     try {
-      console.log(`🔍 Explorando propriedades para categoria: ${category}`);
-
-      const query = this.queryBuilder.buildPropertyExplorationQuery(category);
-      const result = await this.executor.executeQuery(query);
-
-      if (result.results.bindings.length > 0) {
-        console.log(`✅ Encontradas ${result.results.bindings.length} propriedades para ${category}`);
-        return this.converter.convertToGraphOptions(result);
+      let query;
+      
+      if (category === 'Factor') {
+        // Consulta específica para Fatores que considera a hierarquia de classes
+        query = `
+          PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          
+          SELECT DISTINCT ?property (STRAFTER(STR(?property), STR(Ellas:)) as ?propertyLabel) (COUNT(DISTINCT ?s) as ?count)
+          WHERE {
+            {
+              # Buscar fatores diretos
+              ?s rdf:type Ellas:Factor .
+              ?s ?property ?value .
+            }
+            UNION
+            {
+              # Buscar fatores contextuais
+              ?s rdf:type ?type .
+              ?type rdfs:subClassOf Ellas:Factor .
+              ?s ?property ?value .
+            }
+            
+            # Filtrar apenas propriedades Ellas e remover propriedades do sistema
+            FILTER(STRSTARTS(STR(?property), STR(Ellas:)))
+            FILTER(?property NOT IN (
+              rdf:type,
+              rdfs:label,
+              rdfs:subClassOf
+            ))
+          }
+          GROUP BY ?property
+          ORDER BY DESC(?count)
+        `;
       } else {
-        console.warn(`⚠️ Nenhuma propriedade encontrada para ${category}`);
+        // Consulta padrão para outras categorias
+        query = `
+          PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          
+          SELECT DISTINCT ?property (STRAFTER(STR(?property), STR(Ellas:)) as ?propertyLabel) (COUNT(?s) as ?count)
+          WHERE {
+            ?s rdf:type Ellas:${category} .
+            ?s ?property ?value .
+            
+            # Filtrar apenas propriedades Ellas e remover propriedades do sistema
+            FILTER(STRSTARTS(STR(?property), STR(Ellas:)))
+            FILTER(?property NOT IN (
+              rdf:type,
+              rdfs:label,
+              rdfs:subClassOf
+            ))
+          }
+          GROUP BY ?property
+          ORDER BY DESC(?count)
+        `;
+      }
+
+      console.log("📝 Executando consulta:", query);
+      const result = await this.executor.executeQuery(query);
+      
+      if (!result?.results?.bindings) {
+        console.log("⚠️ Nenhuma propriedade encontrada");
         return [];
       }
+
+      const properties = result.results.bindings.map(binding => ({
+        value: binding.propertyLabel.value,
+        label: this.formatPropertyLabel(binding.propertyLabel.value),
+        count: parseInt(binding.count.value),
+        type: 'property'
+      }));
+
+      console.log(`✅ Encontradas ${properties.length} propriedades:`, properties);
+      return properties;
     } catch (error) {
-      console.error(`❌ Erro ao explorar propriedades para ${category}:`, error);
-      return [];
+      console.error("❌ Erro ao explorar propriedades:", error);
+      throw error;
     }
+  }
+
+  /**
+   * Formata o label da propriedade para exibição
+   */
+  private formatPropertyLabel(propertyName: string): string {
+    // Remove prefixo "factors_" se existir
+    const name = propertyName.replace(/^factors_/, '');
+    
+    // Substitui underscores por espaços e capitaliza cada palavra
+    return name
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   /**
@@ -42,25 +124,124 @@ export class PropertyExplorationService {
     property: string,
     filters: Record<string, any> = {}
   ): Promise<GraphOption[]> {
+    console.log(`🔍 Explorando valores para propriedade: ${property} na categoria: ${category}`);
+    console.log(`📋 Filtros aplicados:`, filters);
+
     try {
-      console.log(`🔍 Explorando valores para propriedade: ${property} na categoria: ${category}`);
-
-      // Detectar categoria correta se necessário
-      const actualCategory = this.detectCorrectCategory(category, property);
+      // Detectar automaticamente a categoria correta se necessário
+      let actualCategory = category;
       
-      const query = this.queryBuilder.buildValueExplorationQuery(actualCategory, property, filters);
-      const result = await this.executor.executeQuery(query);
-
-      if (result.results.bindings.length > 0) {
-        console.log(`✅ Encontrados ${result.results.bindings.length} valores para ${property}`);
-        return this.converter.convertToGraphOptions(result);
-      } else {
-        console.warn(`⚠️ Nenhum valor encontrado para propriedade ${property}`);
-        return this.trySimplifiedQuery(actualCategory, property);
+      if (
+        (property.startsWith("factors_") && category !== "Factor") ||
+        (property.startsWith("initiative_") && category !== "Initiative") ||
+        (property.startsWith("policy_") && category !== "Policy")
+      ) {
+        console.log(`🔄 Detectando categoria automática para ${property}...`);
+        actualCategory = await this.detectCategoryForProperty(property);
       }
+
+      console.log(`📊 Usando categoria: ${actualCategory} para propriedade: ${property}`);
+
+      // Construir cláusulas de filtro
+      let filterClauses = "";
+      if (Object.keys(filters).length > 0) {
+        Object.entries(filters).forEach(([filterProp, filterValue]) => {
+          if (!filterProp || !filterValue) return;
+          if (actualCategory === 'Factor') {
+            filterClauses += `
+              ?contextualFactor Ellas:${filterProp} ?${filterProp}Filter .
+              FILTER(STR(?${filterProp}Filter) = "${filterValue}" || ?${filterProp}Filter = "${filterValue}"@en)
+            `;
+          } else {
+            filterClauses += `
+              ?s Ellas:${filterProp} ?${filterProp}Filter .
+              FILTER(STR(?${filterProp}Filter) = "${filterValue}" || ?${filterProp}Filter = "${filterValue}"@en)
+            `;
+          }
+        });
+      }
+
+      let query;
+      
+      if (actualCategory === 'Factor') {
+        // Consulta específica para valores de propriedades de Fatores
+        query = `
+          PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          
+          SELECT DISTINCT ?value (COUNT(DISTINCT ?s) as ?count)
+          WHERE {
+            {
+              # Buscar valores de fatores diretos
+              ?s rdf:type Ellas:Factor .
+              ?s Ellas:${property} ?propValue .
+            }
+            UNION
+            {
+              # Buscar valores de fatores contextuais
+              ?s rdf:type ?type .
+              ?type rdfs:subClassOf Ellas:Factor .
+              ?s Ellas:${property} ?propValue .
+            }
+            
+            OPTIONAL {
+              ?propValue rdfs:label ?label .
+              FILTER(LANG(?label) = "en" || LANG(?label) = "")
+            }
+            
+            BIND(COALESCE(?label, STR(?propValue)) as ?value)
+            
+            ${filterClauses}
+          }
+          GROUP BY ?value
+          ORDER BY DESC(?count)
+        `;
+      } else {
+        // Consulta padrão para outras categorias
+        query = `
+          PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+          PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+          
+          SELECT DISTINCT ?value (COUNT(?s) as ?count)
+          WHERE {
+            ?s rdf:type Ellas:${actualCategory} .
+            ?s Ellas:${property} ?propValue .
+            
+            OPTIONAL {
+              ?propValue rdfs:label ?label .
+              FILTER(LANG(?label) = "en" || LANG(?label) = "")
+            }
+            
+            BIND(COALESCE(?label, STR(?propValue)) as ?value)
+            
+            ${filterClauses}
+          }
+          GROUP BY ?value
+          ORDER BY DESC(?count)
+        `;
+      }
+
+      const result = await this.executor.executeQuery(query);
+      
+      if (!result?.results?.bindings) {
+        console.log("⚠️ Nenhum valor encontrado");
+        return [];
+      }
+
+      const values = result.results.bindings.map(binding => ({
+        value: binding.value.value,
+        label: binding.value.value,
+        count: parseInt(binding.count.value),
+        type: 'value'
+      }));
+
+      console.log(`✅ Encontrados ${values.length} valores distintos`);
+      return values;
     } catch (error) {
-      console.error(`❌ Erro ao explorar valores para ${property}:`, error);
-      return [];
+      console.error("❌ Erro ao explorar valores:", error);
+      throw error;
     }
   }
 
@@ -99,7 +280,7 @@ export class PropertyExplorationService {
     try {
       console.log(`🔍 Explorando propriedades com disponibilidade para: ${category}`);
 
-      const properties = await this.explorePropertiesForClass(category);
+      const properties = await this.explorePropertiesForCategory(category);
 
       const propertiesWithAvailability = await Promise.all(
         properties.map(async (prop) => {

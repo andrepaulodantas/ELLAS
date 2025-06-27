@@ -232,11 +232,36 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             ],
             Factor: [
               "factor_type",
-              "impact_level",
+              "factors_impact_type",
+              "factors_severity_level",
+              "factors_temporal_scope",
+              "factors_affects_population",
+              "factors_impact_level",
+              "factors_target_group",
+              "factors_context_type",
+              "factors_impact",
+              "analyzed_in",
+              "factors_description",
+              "factors_evidence",
+              "factors_source",
+              "factors_mitigation_strategy",
+              "factors_recommendation",
+              "factors_related_policy",
+              "factors_related_initiative",
+              "factors_stakeholder",
+              "factors_geographic_scope",
+              "factors_institutional_level",
+              "factors_educational_level",
+              "factors_stem_area",
+              "factors_gender_dimension",
+              "factors_intersectionality",
+              "factors_data_source",
+              "factors_methodology",
+              "factors_limitation",
+              "factors_future_research",
               "created_in",
-              "target_group",
               "description",
-              "start_date",
+              "start_date"
             ],
           };
 
@@ -246,26 +271,16 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
               selectedCategory
             );
 
-          // Filtrar propriedades válidas para a categoria
-          const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-          const options = allOptions.filter((option) =>
-            allowedProperties.includes(option.value)
+          // CORREÇÃO: Remover limitação de propriedades para todas as categorias
+          let filteredProps = allOptions.filter(
+            (p) => !selectedGraphPath.includes(p.value)
           );
+          console.log(`🔓 CORREÇÃO: Sem limitação - ${filteredProps.length} propriedades disponíveis para ${selectedCategory}`);
 
-          console.log(
-            `📋 Carregadas ${options.length}/${allOptions.length} propriedades filtradas para "${selectedCategory}"`,
-            options
-          );
-
-          // Atualizar opções dinâmicas diretamente no estado
-          setDynamicOptions((prevOptions) => {
-            const newOptions = { ...prevOptions, "": options };
-            console.log(
-              "Novo estado após carregar propriedades iniciais:",
-              newOptions
-            );
-            return newOptions;
-          });
+          setDynamicOptions((prev) => ({
+            ...prev,
+            [""]: filteredProps,
+          }));
         } catch (error) {
           console.error("Erro ao carregar opções iniciais:", error);
         } finally {
@@ -331,34 +346,44 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           ],
           Factor: [
             "factor_type",
-            "impact_level",
+            "factors_impact_type",
+            "factors_severity_level",
+            "factors_temporal_scope",
+            "factors_affects_population",
+            "factors_impact_level",
+            "factors_target_group",
+            "factors_context_type",
+            "factors_impact",
+            "analyzed_in",
+            "factors_description",
+            "factors_evidence",
+            "factors_source",
+            "factors_mitigation_strategy",
+            "factors_recommendation",
+            "factors_related_policy",
+            "factors_related_initiative",
+            "factors_stakeholder",
+            "factors_geographic_scope",
+            "factors_institutional_level",
+            "factors_educational_level",
+            "factors_stem_area",
+            "factors_gender_dimension",
+            "factors_intersectionality",
+            "factors_data_source",
+            "factors_methodology",
+            "factors_limitation",
+            "factors_future_research",
             "created_in",
-            "target_group",
             "description",
-            "start_date",
+            "start_date"
           ],
         };
 
         const allowedProperties = categoryPropertyMap[selectedCategory];
         if (allowedProperties && !allowedProperties.includes(option.value)) {
-          console.error(
-            `❌ PROPRIEDADE INCOMPATÍVEL: "${option.value}" não é válida para categoria "${selectedCategory}"`
-          );
           console.log(
-            `📋 Propriedades válidas para ${selectedCategory}:`,
-            allowedProperties
+            `📋 Propriedade ${option.value} não listada para ${selectedCategory}, mas será permitida`
           );
-
-          // Mostrar alerta visual ao usuário
-          alert(
-            `⚠️ A propriedade "${
-              option.value
-            }" não é compatível com a categoria "${selectedCategory}".\n\nPropriedades válidas: ${allowedProperties.join(
-              ", "
-            )}`
-          );
-
-          return; // Cancelar a seleção completamente
         }
       }
 
@@ -469,11 +494,36 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                 ],
                 Factor: [
                   "factor_type",
-                  "impact_level",
+                  "factors_impact_type",
+                  "factors_severity_level",
+                  "factors_temporal_scope",
+                  "factors_affects_population",
+                  "factors_impact_level",
+                  "factors_target_group",
+                  "factors_context_type",
+                  "factors_impact",
+                  "analyzed_in",
+                  "factors_description",
+                  "factors_evidence",
+                  "factors_source",
+                  "factors_mitigation_strategy",
+                  "factors_recommendation",
+                  "factors_related_policy",
+                  "factors_related_initiative",
+                  "factors_stakeholder",
+                  "factors_geographic_scope",
+                  "factors_institutional_level",
+                  "factors_educational_level",
+                  "factors_stem_area",
+                  "factors_gender_dimension",
+                  "factors_intersectionality",
+                  "factors_data_source",
+                  "factors_methodology",
+                  "factors_limitation",
+                  "factors_future_research",
                   "created_in",
-                  "target_group",
                   "description",
-                  "start_date",
+                  "start_date"
                 ],
               };
 
@@ -481,26 +531,16 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                 await queryMappingService.explorePropertiesForClass(
                   selectedCategory
                 );
-              const allowedProperties =
-                categoryPropertyMap[selectedCategory] || [];
-
-              // Filtrar propriedades: válidas para categoria + não já selecionadas
-              const filteredProps = nextProps.filter(
-                (p) =>
-                  allowedProperties.includes(p.value) &&
-                  !selectedGraphPath.includes(p.value)
+              
+              // CORREÇÃO: Remover limitação de propriedades para todas as categorias
+              let filteredProps = nextProps.filter(
+                (p) => !selectedGraphPath.includes(p.value)
               );
-
-              console.log(`🔍 Propriedades carregadas para próximo nível:`, {
-                totalProps: nextProps.length,
-                filteredProps: filteredProps.length,
-                allowedForCategory: allowedProperties,
-                filteredPropValues: filteredProps.map((p) => p.value),
-              });
+              console.log(`🔓 CORREÇÃO: Sem limitação - ${filteredProps.length} propriedades disponíveis para ${selectedCategory}`);
 
               setDynamicOptions((prev) => ({
                 ...prev,
-                "": filteredProps,
+                [level]: filteredProps,
               }));
             } catch (error) {
               console.error("Erro ao carregar próximas propriedades:", error);
@@ -753,11 +793,36 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       ],
       Factor: [
         "factor_type",
-        "impact_level",
+        "factors_impact_type",
+        "factors_severity_level",
+        "factors_temporal_scope",
+        "factors_affects_population",
+        "factors_impact_level",
+        "factors_target_group",
+        "factors_context_type",
+        "factors_impact",
+        "analyzed_in",
+        "factors_description",
+        "factors_evidence",
+        "factors_source",
+        "factors_mitigation_strategy",
+        "factors_recommendation",
+        "factors_related_policy",
+        "factors_related_initiative",
+        "factors_stakeholder",
+        "factors_geographic_scope",
+        "factors_institutional_level",
+        "factors_educational_level",
+        "factors_stem_area",
+        "factors_gender_dimension",
+        "factors_intersectionality",
+        "factors_data_source",
+        "factors_methodology",
+        "factors_limitation",
+        "factors_future_research",
         "created_in",
-        "target_group",
         "description",
-        "start_date",
+        "start_date"
       ],
     };
 
@@ -801,14 +866,21 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
     // Filtrar propriedades no nível raiz
     if (selectedGraphPath.length === 0 && selectedCategory) {
-      const allowedProperties = categoryPropertyMap[selectedCategory];
-      if (allowedProperties) {
-        optionsToShow = optionsToShow.filter((option) =>
-          allowedProperties.includes(option.value)
-        );
+      // CORREÇÃO: Remover limitação para Initiative
+      if (selectedCategory !== "Initiative") {
+        const allowedProperties = categoryPropertyMap[selectedCategory];
+        if (allowedProperties) {
+          optionsToShow = optionsToShow.filter((option) =>
+            allowedProperties.includes(option.value)
+          );
+          console.log(
+            `🔍 Propriedades filtradas para ${selectedCategory}:`,
+            optionsToShow.map((o) => o.value)
+          );
+        }
+      } else {
         console.log(
-          `🔍 Propriedades filtradas para ${selectedCategory}:`,
-          optionsToShow.map((o) => o.value)
+          `🔓 Initiative sem filtros: ${optionsToShow.length} propriedades disponíveis`
         );
       }
     }
@@ -829,89 +901,11 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         .replace(/^./, (str) => str.toUpperCase());
     }
 
-    // Função para recarregar dados manualmente
-    const handleReload = async () => {
-      if (!selectedCategory) return;
-
-      setIsLoadingOptions(true);
-
-      try {
-        // Definir propriedades válidas por categoria
-        const categoryPropertyMap: Record<string, string[]> = {
-          Policy: [
-            "created_in",
-            "policy_type",
-            "start_date",
-            "policy_impact",
-            "target_audience",
-            "description",
-            "objective",
-            "policy_impact_description",
-            "end_date",
-          ],
-          Initiative: [
-            "created_in",
-            "initiative_reach",
-            "start_date",
-            "initiative_status",
-            "initiative_format",
-            "coordinator_gender",
-            "description",
-            "objective",
-            "initiative_coordinator_gender",
-            "end_date",
-          ],
-          Factor: [
-            "factor_type",
-            "impact_level",
-            "created_in",
-            "target_group",
-            "description",
-            "start_date",
-          ],
-        };
-
-        // Se estamos no nível inicial, recarregar propriedades da categoria
-        if (selectedGraphPath.length === 0) {
-          const allOptions =
-            await queryMappingService.explorePropertiesForClass(
-              selectedCategory
-            );
-          // Filtrar propriedades válidas para a categoria
-          const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-          const options = allOptions.filter((option) =>
-            allowedProperties.includes(option.value)
-          );
-          setDynamicOptions((prev) => ({ ...prev, "": options }));
-        }
-        // Se estamos em uma propriedade, recarregar seus valores
-        else if (selectedGraphPath.length % 2 === 1) {
-          const propertyName = selectedGraphPath[selectedGraphPath.length - 1];
-          const values = await queryMappingService.exploreValuesForProperty(
-            selectedCategory,
-            propertyName,
-            {}
-          );
-          setDynamicOptions((prev) => ({ ...prev, [propertyName]: values }));
-        }
-        // Se estamos em um valor, recarregar próximas propriedades
-        else {
-          const allOptions =
-            await queryMappingService.explorePropertiesForClass(
-              selectedCategory
-            );
-          // Filtrar propriedades válidas para a categoria
-          const allowedProperties = categoryPropertyMap[selectedCategory] || [];
-          const options = allOptions.filter((option) =>
-            allowedProperties.includes(option.value)
-          );
-          setDynamicOptions((prev) => ({ ...prev, "": options }));
-        }
-      } catch (error) {
-        console.error("Erro ao recarregar dados:", error);
-      } finally {
-        setIsLoadingOptions(false);
-      }
+    // Função para limpar filtros e recarregar dados
+    const handleReload = () => {
+      setSelectedGraphPath([]);
+      setSelectedFilters({});
+      loadBasicCategoryData(selectedCategory);
     };
 
     return (
@@ -1062,7 +1056,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     );
   };
 
-  // Update the preview query
+  // Wrap updatePreviewQuery in useCallback
   const updatePreviewQuery = useCallback(() => {
     if (!selectedCategory) {
       setPreviewQuery(null);
@@ -1119,19 +1113,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   // Trigger preview update whenever relevant state changes
   useEffect(() => {
     updatePreviewQuery();
-  }, [
-    selectedCategory,
-    selectedSubCategory,
-    selectedCountries,
-    selectedFilters,
-    customFields,
-    startDate,
-    endDate,
-    sortBy,
-    sortOrder,
-    resultLimit,
-    selectedTags,
-  ]);
+  }, [updatePreviewQuery]);
 
   // useEffect para executar consulta automaticamente quando filtros mudarem
   useEffect(() => {
@@ -1394,88 +1376,136 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       visibleColumnsCount: visibleColumns.length,
     });
 
+    // Função para limpar filtros e recarregar dados
+    const handleReload = () => {
+      setSelectedGraphPath([]);
+      setSelectedFilters({});
+      loadBasicCategoryData(selectedCategory);
+    };
+
     return (
       <div className="query-results">
-        <div className="results-header">
-          <h3>
-            📊 Resultados da Consulta
-            <span className="results-count">
-              ({queryResults.length} registros)
-            </span>
-            {isExecutingQuery && (
-              <span className="loading-indicator"> - Carregando...</span>
-            )}
-          </h3>
-          <div className="results-info">
-            <span className="category-badge">{selectedCategory}</span>
+        {!selectedCategory && (
+          <div className="no-category-selected">
+            <h3>📊 Dados da Consulta</h3>
+            <p>Selecione uma categoria para visualizar os dados na tabela.</p>
+            <div className="instructions">
+              <p>
+                💡 <strong>Como usar:</strong>
+              </p>
+              <ul>
+                <li>Clique em uma categoria (Initiative, Policy, Factor)</li>
+                <li>Os dados serão carregados automaticamente</li>
+                <li>Use as propriedades para filtrar os resultados</li>
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {selectedCategory && queryResults.length === 0 && !isExecutingQuery && (
+          <div className="no-results-warning">
+            <h3>⚠️ Nenhum Resultado Encontrado</h3>
+            <p>A consulta atual não retornou nenhum resultado.</p>
             {selectedGraphPath.length > 0 && (
-              <span className="filter-info">
-                Filtrado por: {selectedGraphPath.join(" → ")}
-              </span>
-            )}
-            {selectedGraphPath.length === 0 && (
-              <span className="filter-info">Dados básicos da categoria</span>
-            )}
-            <span className="table-status">
-              Tabela atualizada: {new Date().toLocaleTimeString()}
-            </span>
-          </div>
-        </div>
-
-        <div className="results-table-container" key={`table-${tableKey}`}>
-          <table className="results-table">
-            <thead>
-              <tr>
-                {visibleColumns.map((col) => (
-                  <th key={col.key}>{col.label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {queryResults.map((result, index) => (
-                <tr key={`${tableKey}-row-${index}`}>
-                  {visibleColumns.map((col) => (
-                    <td
-                      key={`${tableKey}-${col.key}-${index}`}
-                      className={`col-${col.key}`}
-                    >
-                      {col.key === "start_date" ? (
-                        result[col.key] ? (
-                          formatDate(formatValue(result[col.key]))
-                        ) : (
-                          "-"
-                        )
-                      ) : col.key === "description" ||
-                        col.key === "objective" ? (
-                        <span title={formatValue(result[col.key])}>
-                          {truncateText(formatValue(result[col.key]))}
-                        </span>
-                      ) : (
-                        formatValue(result[col.key])
-                      )}
-                    </td>
+              <div className="filter-info">
+                <p>Filtros aplicados:</p>
+                <ul>
+                  {selectedGraphPath.map((path, index) => (
+                    <li key={index}>{path}</li>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {queryResults.length > 10 && (
-          <div className="results-footer">
-            <p>
-              Mostrando todos os {queryResults.length} resultados encontrados.
-            </p>
-            <button
-              className="export-button"
-              onClick={() => {
-                // Implementar exportação futura
-                console.log("Exportar dados:", queryResults);
-              }}
-            >
-              📄 Exportar Dados
-            </button>
+                </ul>
+                <button className="clear-filters" onClick={handleReload}>
+                  🔄 Limpar Filtros
+                </button>
+              </div>
+            )}
           </div>
+        )}
+
+        {selectedCategory && queryResults.length > 0 && (
+          <>
+            <div className="results-header">
+              <h3>
+                📊 Resultados da Consulta
+                <span className="results-count">
+                  ({queryResults.length} registros)
+                </span>
+                {isExecutingQuery && (
+                  <span className="loading-indicator"> - Carregando...</span>
+                )}
+              </h3>
+              <div className="results-info">
+                <span className="category-badge">{selectedCategory}</span>
+                {selectedGraphPath.length > 0 && (
+                  <span className="filter-info">
+                    Filtrado por: {selectedGraphPath.join(" → ")}
+                  </span>
+                )}
+                {selectedGraphPath.length === 0 && (
+                  <span className="filter-info">Dados básicos da categoria</span>
+                )}
+                <span className="table-status">
+                  Tabela atualizada: {new Date().toLocaleTimeString()}
+                </span>
+              </div>
+            </div>
+
+            <div className="results-table-container" key={`table-${tableKey}`}>
+              <table className="results-table">
+                <thead>
+                  <tr>
+                    {visibleColumns.map((col) => (
+                      <th key={col.key}>{col.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {queryResults.map((result, index) => (
+                    <tr key={`${tableKey}-row-${index}`}>
+                      {visibleColumns.map((col) => (
+                        <td
+                          key={`${tableKey}-${col.key}-${index}`}
+                          className={`col-${col.key}`}
+                        >
+                          {col.key === "start_date" ? (
+                            result[col.key] ? (
+                              formatDate(formatValue(result[col.key]))
+                            ) : (
+                              "-"
+                            )
+                          ) : col.key === "description" ||
+                            col.key === "objective" ? (
+                            <span title={formatValue(result[col.key])}>
+                              {truncateText(formatValue(result[col.key]))}
+                            </span>
+                          ) : (
+                            formatValue(result[col.key])
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {queryResults.length > 10 && (
+              <div className="results-footer">
+                <p>
+                  Mostrando todos os {queryResults.length} resultados encontrados.
+                </p>
+                <button
+                  className="export-button"
+                  onClick={() => {
+                    // Implementar exportação futura
+                    console.log("Exportar dados:", queryResults);
+                  }}
+                >
+                  📄 Exportar Dados
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     );

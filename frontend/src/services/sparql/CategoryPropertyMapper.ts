@@ -19,16 +19,42 @@ export class CategoryPropertyMapper {
     'policy_type': 'Policy',
     'policy_impact': 'Policy',
     'policy_impact_description': 'Policy',
+    'policy_status': 'Policy',
+    'policy_objective': 'Policy',
+    'policy_description': 'Policy',
+    'policy_start_date': 'Policy',
+    'policy_end_date': 'Policy',
     'target_audience': 'Policy',
     
     // Factor properties
     'factor_type': 'Factor',
-    'impact_type': 'Factor',
-    'severity_level': 'Factor',
-    'temporal_scope': 'Factor',
-    'affects_population': 'Factor',
-    'impact_level': 'Factor',
-    'target_group': 'Factor',
+    'factors_impact_type': 'Factor',
+    'factors_severity_level': 'Factor',
+    'factors_temporal_scope': 'Factor',
+    'factors_affects_population': 'Factor',
+    'factors_impact_level': 'Factor',
+    'factors_target_group': 'Factor',
+    'factors_context_type': 'Factor',
+    'factors_impact': 'Factor',
+    'analyzed_in': 'Factor',
+    'factors_description': 'Factor',
+    'factors_evidence': 'Factor',
+    'factors_source': 'Factor',
+    'factors_mitigation_strategy': 'Factor',
+    'factors_recommendation': 'Factor',
+    'factors_related_policy': 'Factor',
+    'factors_related_initiative': 'Factor',
+    'factors_stakeholder': 'Factor',
+    'factors_geographic_scope': 'Factor',
+    'factors_institutional_level': 'Factor',
+    'factors_educational_level': 'Factor',
+    'factors_stem_area': 'Factor',
+    'factors_gender_dimension': 'Factor',
+    'factors_intersectionality': 'Factor',
+    'factors_data_source': 'Factor',
+    'factors_methodology': 'Factor',
+    'factors_limitation': 'Factor',
+    'factors_future_research': 'Factor',
     
     // Common properties
     'created_in': 'All',
@@ -52,7 +78,7 @@ export class CategoryPropertyMapper {
     // Mapeia por prefixo
     if (property.startsWith('initiative_')) return 'Initiative';
     if (property.startsWith('policy_')) return 'Policy';
-    if (property.startsWith('factor_')) return 'Factor';
+    if (property.startsWith('factor_') || property.startsWith('factors_')) return 'Factor';
 
     return null;
   }
@@ -78,8 +104,12 @@ export class CategoryPropertyMapper {
         'policy_type',
         'target_audience',
         'policy_impact',
+        'policy_status',
         'created_in',
-        'start_date'
+        'start_date',
+        'end_date',
+        'description',
+        'objective'
       ],
       Initiative: [
         'initiative_status',
@@ -91,10 +121,31 @@ export class CategoryPropertyMapper {
       ],
       Factor: [
         'factor_type',
-        'impact_type',
-        'severity_level',
-        'temporal_scope',
-        'target_group'
+        'factors_impact_type',
+        'factors_severity_level',
+        'factors_temporal_scope',
+        'factors_target_group',
+        'factors_context_type',
+        'factors_impact',
+        'analyzed_in',
+        'factors_description',
+        'factors_evidence',
+        'factors_source',
+        'factors_mitigation_strategy',
+        'factors_recommendation',
+        'factors_related_policy',
+        'factors_related_initiative',
+        'factors_stakeholder',
+        'factors_geographic_scope',
+        'factors_institutional_level',
+        'factors_educational_level',
+        'factors_stem_area',
+        'factors_gender_dimension',
+        'factors_intersectionality',
+        'factors_data_source',
+        'factors_methodology',
+        'factors_limitation',
+        'factors_future_research'
       ]
     };
   }
@@ -128,22 +179,26 @@ export class CategoryPropertyMapper {
    * Obtém propriedades válidas para uma categoria
    */
   getValidPropertiesForCategory(category: string): string[] {
+    // Propriedades comuns para todas as categorias
+    const commonProperties = [
+      "created_in",
+      "located_in",
+      "start_date",
+      "end_date",
+      "description",
+      "objective"
+    ];
+
     const categoryMap: Record<string, string[]> = {
       Policy: [
-        "created_in",
         "policy_type",
-        "start_date",
         "policy_impact",
+        "policy_status",
         "target_audience",
-        "description",
-        "objective",
         "policy_impact_description",
-        "end_date",
       ],
       Initiative: [
-        "created_in",
         "initiative_reach",
-        "start_date",
         "initiative_status",
         "initiative_type",
         "initiative_data_source",
@@ -152,25 +207,41 @@ export class CategoryPropertyMapper {
         "initiative_format",
         "funded_by",
         "website",
-        "description",
-        "objective",
-        "end_date",
       ],
       Factor: [
-        "created_in",
-        "impact_type",
         "factor_type",
-        "severity_level",
-        "temporal_scope",
-        "affects_population",
-        "impact_level",
-        "target_group",
-        "description",
-        "start_date",
-      ],
+        "factors_impact_type",
+        "factors_severity_level",
+        "factors_temporal_scope",
+        "factors_affects_population",
+        "factors_impact_level",
+        "factors_target_group",
+        "factors_context_type",
+        "factors_impact",
+        "analyzed_in",
+        "factors_description",
+        "factors_evidence",
+        "factors_source",
+        "factors_mitigation_strategy",
+        "factors_recommendation",
+        "factors_related_policy",
+        "factors_related_initiative",
+        "factors_stakeholder",
+        "factors_geographic_scope",
+        "factors_institutional_level",
+        "factors_educational_level",
+        "factors_stem_area",
+        "factors_gender_dimension",
+        "factors_intersectionality",
+        "factors_data_source",
+        "factors_methodology",
+        "factors_limitation",
+        "factors_future_research"
+      ]
     };
 
-    return categoryMap[category] || [];
+    // Combinar propriedades específicas da categoria com propriedades comuns
+    return [...(categoryMap[category] || []), ...commonProperties];
   }
 
   /**

@@ -1538,11 +1538,7 @@ export const exploreValuesForProperty = async (
 const getPropertyDemoValues = (property: string): GraphOption[] => {
   console.log(`🎭 Gerando dados de demonstração para propriedade: ${property}`);
 
-  // REMOVIDO: Não retornar mais dados mockados de países
-  // Sempre retornar array vazio para forçar o uso de dados reais do SPARQL
-  console.warn(`⚠️ Propriedade ${property} não tem dados disponíveis no SPARQL - retornando array vazio`);
-  return [];
-  } else if (property === "impact_type") {
+  if (property === "impact_type") {
     return [
       { value: "Positive", label: "Positive", count: 6, type: "value" },
       { value: "Negative", label: "Negative", count: 5, type: "value" },

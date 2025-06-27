@@ -16,7 +16,7 @@ export class RequestManager {
   async executeRequest<T>(
     key: string,
     requestFn: () => Promise<T>,
-    cacheTimeout: number = 30000 // 30 segundos
+    cacheTimeout: number = 5000 // 5 segundos
   ): Promise<T> {
     // Verificar cache primeiro
     const cached = this.cache.get(key);

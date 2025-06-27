@@ -29,7 +29,7 @@ async function testSparqlFix() {
     console.log("📋 Teste 2: Consulta com filtro específico");
     const result2 = await executeDynamicGraphQuery(
       "Initiative",
-      ["created_in", "Brazil"], // Filtro por país
+      ["created_in", "Qualquer País"], // Filtro genérico 
       ["start_date", "policy_type"] // Campos extras sem 'label'
     );
 

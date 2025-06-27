@@ -15,6 +15,39 @@ export class SPARQLQueryBuilder implements ISPARQLQueryBuilder {
    * Constrói uma consulta para explorar propriedades de uma categoria
    */
   buildPropertyExplorationQuery(category: string): string {
+    if (category === "Factor") {
+      return `${SPARQLQueryBuilder.PREFIXES}
+        SELECT DISTINCT ?property ?propertyLabel (COUNT(DISTINCT ?s) as ?count)
+        WHERE {
+          {
+            # Buscar propriedades de fatores diretos
+            ?s rdf:type Ellas:Factor .
+            ?s ?property ?object .
+          }
+          UNION
+          {
+            # Buscar propriedades de fatores contextuais
+            ?s rdf:type ?type .
+            ?type rdfs:subClassOf Ellas:Factor .
+            ?s ?property ?object .
+          }
+          
+          # Filtrar apenas propriedades Ellas
+          FILTER(STRSTARTS(STR(?property), "https://ellas.ufmt.br/Ontology/Ellas#"))
+          
+          # Remover propriedades do sistema
+          FILTER(?property NOT IN (rdf:type, rdfs:label, rdfs:subClassOf))
+          
+          OPTIONAL { 
+            ?property rdfs:label ?propertyLabel .
+            FILTER(LANG(?propertyLabel) = "en" || LANG(?propertyLabel) = "" || LANG(?propertyLabel) = "pt")
+          }
+        }
+        GROUP BY ?property ?propertyLabel
+        ORDER BY DESC(?count)
+      `;
+    }
+    
     return `${SPARQLQueryBuilder.PREFIXES}
       SELECT DISTINCT ?property ?propertyLabel (COUNT(DISTINCT ?subject) as ?count)
       WHERE {
@@ -46,6 +79,39 @@ export class SPARQLQueryBuilder implements ISPARQLQueryBuilder {
     filters: Record<string, any> = {}
   ): string {
     const filterClauses = this.buildFilterClauses(filters);
+    
+    if (category === "Factor") {
+      return `${SPARQLQueryBuilder.PREFIXES}
+        SELECT DISTINCT ?value (COUNT(DISTINCT ?s) as ?count)
+        WHERE {
+          {
+            # Buscar valores de fatores diretos
+            ?s rdf:type Ellas:Factor .
+            ?s Ellas:${property} ?propValue .
+          }
+          UNION
+          {
+            # Buscar valores de fatores contextuais
+            ?s rdf:type ?type .
+            ?type rdfs:subClassOf Ellas:Factor .
+            ?s Ellas:${property} ?propValue .
+          }
+          
+          OPTIONAL { 
+            ?propValue rdfs:label ?label .
+            FILTER(LANG(?label) = "en" || LANG(?label) = "" || LANG(?label) = "pt" || LANG(?label) = "es")
+          }
+          BIND(COALESCE(?label, STR(?propValue)) AS ?value)
+          
+          FILTER(BOUND(?value) && ?value != "")
+          
+          ${filterClauses}
+        }
+        GROUP BY ?value
+        ORDER BY DESC(?count)
+        LIMIT 100
+      `;
+    }
     
     return `${SPARQLQueryBuilder.PREFIXES}
       SELECT DISTINCT ?value (COUNT(DISTINCT ?s) as ?count)

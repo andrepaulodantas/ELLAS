@@ -79,10 +79,10 @@ export class QueryMappingFacade {
   }
 
   /**
-   * Explorar propriedades para uma classe
+   * Explore properties for a given class/category
    */
   async explorePropertiesForClass(category: string): Promise<GraphOption[]> {
-    return this.propertyExplorer.explorePropertiesForClass(category);
+    return this.propertyExplorer.explorePropertiesForCategory(category);
   }
 
   /**

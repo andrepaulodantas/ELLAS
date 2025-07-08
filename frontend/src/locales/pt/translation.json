@@ -63,7 +63,57 @@
       "initiatives": "Eventos, programas e outras ações para inserção e permanência de mulheres nas carreiras de tecnologia",
       "factors": "Dados coletados pela equipe ELLAS para identificar fatores que afetam a presença de mulheres em STEM na América do Sul",
       "otherData": "Dados secundários de outras bases de dados associadas ao projeto ELLAS"
+    },
+    "categoryLabels": {
+      "Initiative": "Iniciativas",
+      "Policy": "Políticas", 
+      "Factor": "Fatores"
     }
+  },
+  "properties": {
+    "label": "Nome",
+    "created_in": "Criado em",
+    "description": "Descrição",
+    "start_date": "Data de Início",
+    "end_date": "Data de Fim",
+    "objective": "Objetivo",
+    "policy_type": "Tipo de Política",
+    "policy_impact": "Impacto da Política",
+    "policy_impact_description": "Descrição do Impacto da Política",
+    "target_audience": "Público-Alvo",
+    "initiative_reach": "Alcance da Iniciativa",
+    "initiative_status": "Status da Iniciativa",
+    "initiative_format": "Formato da Iniciativa",
+    "coordinator_gender": "Gênero do Coordenador",
+    "initiative_coordinator_gender": "Gênero do Coordenador da Iniciativa",
+    "factor_type": "Tipo de Fator",
+    "factors_impact_type": "Tipo de Impacto dos Fatores",
+    "factors_severity_level": "Nível de Severidade dos Fatores",
+    "factors_temporal_scope": "Escopo Temporal dos Fatores",
+    "factors_affects_population": "População Afetada pelos Fatores",
+    "factors_impact_level": "Nível de Impacto dos Fatores",
+    "factors_target_group": "Grupo-Alvo dos Fatores",
+    "factors_context_type": "Tipo de Contexto dos Fatores",
+    "factors_impact": "Impacto dos Fatores",
+    "analyzed_in": "Analisado em",
+    "factors_description": "Descrição dos Fatores",
+    "factors_evidence": "Evidências dos Fatores",
+    "factors_source": "Fonte dos Fatores",
+    "factors_mitigation_strategy": "Estratégia de Mitigação dos Fatores",
+    "factors_recommendation": "Recomendação dos Fatores",
+    "factors_related_policy": "Política Relacionada aos Fatores",
+    "factors_related_initiative": "Iniciativa Relacionada aos Fatores",
+    "factors_stakeholder": "Parte Interessada dos Fatores",
+    "factors_geographic_scope": "Escopo Geográfico dos Fatores",
+    "factors_institutional_level": "Nível Institucional dos Fatores",
+    "factors_educational_level": "Nível Educacional dos Fatores",
+    "factors_stem_area": "Área STEM dos Fatores",
+    "factors_gender_dimension": "Dimensão de Gênero dos Fatores",
+    "factors_intersectionality": "Interseccionalidade dos Fatores",
+    "factors_data_source": "Fonte de Dados dos Fatores",
+    "factors_methodology": "Metodologia dos Fatores",
+    "factors_limitation": "Limitação dos Fatores",
+    "factors_future_research": "Pesquisa Futura dos Fatores"
   },
   "filters": {
     "filterBy": "Filtrar por",
@@ -196,5 +246,103 @@
     "openData": "Dados Abertos",
     "supportELLAS": "Apoie ELLAS",
     "contact": "Contato"
+  },
+  "advancedSearch": {
+    "pageTitle": "ELLAS - Busca Avançada",
+    "pageDescription": "Construa consultas personalizadas para explorar os dados do projeto ELLAS sobre igualdade de gênero na América Latina.",
+    "title": "Busca Avançada",
+    "description": "Construa uma consulta personalizada para explorar os dados do projeto ELLAS sobre igualdade de gênero na América Latina",
+    "buildQuery": "Construir Consulta",
+    "loading": "Construindo sua consulta e buscando dados...",
+    "helpButton": "Mostrar ajuda",
+    "validation": {
+      "categoryRequired": "É necessário selecionar uma categoria"
+    },
+    "errors": {
+      "unknownError": "Erro desconhecido ao processar a consulta",
+      "close": "Fechar"
+    },
+    "searchCount": {
+      "label": "Consultas: {{count}}",
+      "tooltip": "Número de consultas realizadas",
+      "clearTooltip": "Limpar histórico"
+    },
+    "lastQuery": {
+      "label": "Última:",
+      "tooltip": "Sua última consulta",
+      "country": "país",
+      "countries": "países",
+      "allCountries": "todos os países"
+    },
+    "guide": {
+      "title": "Bem-vindo à Busca Avançada ELLAS",
+      "description": "Aqui você pode criar consultas personalizadas para explorar nossos dados de gênero e ciência na América Latina.",
+      "closeButton": "Entendi, vamos começar!",
+      "step1": {
+        "title": "Selecione uma categoria",
+        "description": "Comece escolhendo entre Políticas, Iniciativas ou Fatores."
+      },
+      "step2": {
+        "title": "Selecione países",
+        "description": "Escolha um ou mais países da América Latina para filtrar os resultados."
+      },
+      "step3": {
+        "title": "Configure filtros específicos",
+        "description": "Refine sua consulta com filtros adicionais como ano, tipo de política, status da iniciativa, etc."
+      },
+      "step4": {
+        "title": "Construa sua consulta",
+        "description": "Clique em \"Construir Consulta\" para ver os resultados em formato de mapa e tabela."
+      }
+    }
+  },    "queryBuilder": {
+      "selectCategory": "Selecione uma Categoria",
+      "propertiesAvailable": "Propriedades disponíveis para",
+      "selectCategoryToSeeConnections": "Selecione uma categoria para ver as conexões disponíveis.",
+      "valuesFor": "Valores para",
+      "loadingValuesFor": "Carregando valores para",
+      "nextProperties": "Próximas propriedades",
+      "noMoreConnections": "Não há mais conexões disponíveis neste caminho.",
+      "exploreConnectedData": "Explorar Dados Conectados",
+      "reloadData": "Recarregar Dados",
+      "currentPath": "Caminho",
+      "loadingOptions": "Carregando opções...",
+    "selectCategoryMessage": "Selecione uma categoria para ver as conexões disponíveis.",
+    "selectCategoryForTable": "Selecione uma categoria para visualizar os dados na tabela.",
+    "instructions": "Selecione uma <strong>Categoria</strong> (Políticas, Iniciativas ou Fatores) para começar a construir sua consulta personalizada.",
+    "howToSearch": {
+      "title": "Como realizar sua pesquisa",
+      "step1": "Selecione uma <strong>Categoria</strong> (Políticas, Iniciativas ou Fatores)",
+      "step2": "Explore as <strong>conexões disponíveis</strong> no grafo de dados",
+      "step3": "Siga o caminho de propriedades e valores para refinar sua consulta",
+      "step4": "Ou use o <strong>Editor SPARQL</strong> para consultas personalizadas avançadas",
+      "step5": "Clique no botão <strong>Pesquisar</strong> para visualizar os resultados"
+    },
+    "queryData": {
+      "title": "📊 Dados da Consulta",
+      "subtitle": "Selecione uma categoria para visualizar os dados na tabela.",
+      "howToUse": {
+        "title": "💡 Como usar:",
+        "step1": "Clique em uma categoria (Initiative, Policy, Factor)",
+        "step2": "Os dados serão carregados automaticamente",
+        "step3": "Use as propriedades para filtrar os resultados"
+      }
+    },
+    "queryPreview": {
+      "title": "Pré-visualização da Consulta"
+    },
+    "tabs": {
+      "title": "Consulta Avançada",
+      "basic": "Básico",
+      "advanced": "Avançado",
+      "expert": "Expert"
+    },
+    "results": {
+      "title": "📊 Resultados da Consulta",
+      "records": "registros",
+      "filteredBy": "Filtrado por",
+      "basicData": "Dados básicos da categoria",
+      "tableUpdated": "Tabela atualizada"
+    }
   }
 }

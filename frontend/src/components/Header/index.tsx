@@ -673,7 +673,7 @@ const Header = () => {
       path: "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/",
     },
     {
-      label: "Dados Abertos",
+      label: translations.navigation.openData,
       path: "/buscaone",
     },
     {

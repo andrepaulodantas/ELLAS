@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 import { QueryBuilder } from "../../components";
 import Header from "../../components/Header";
 import "./styles.css";
@@ -15,6 +16,7 @@ interface CustomQuery {
 
 const AdvancedSearchPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchCount, setSearchCount] = useState(() => {
     const savedCount = localStorage.getItem("advanced_search_count");
@@ -61,13 +63,13 @@ const AdvancedSearchPage: React.FC = () => {
 
     // Validação básica: apenas verificar se uma categoria foi selecionada
     if (!query.category) {
-      return "É necessário selecionar uma categoria";
+      return t("advancedSearch.validation.categoryRequired");
     }
 
     // Não exigir mais a seleção de país para nenhuma consulta
     // Todas as consultas agora são flexíveis e funcionam com ou sem país selecionado
     return null;
-  }, []);
+  }, [t]);
 
   const handleQuerySubmit = async (query: CustomQuery) => {
     setIsSubmitting(true);
@@ -149,7 +151,7 @@ const AdvancedSearchPage: React.FC = () => {
       setSearchError(
         error instanceof Error
           ? error.message
-          : "Erro desconhecido ao processar a consulta"
+          : t("advancedSearch.errors.unknownError")
       );
       setIsSubmitting(false);
     }
@@ -171,32 +173,31 @@ const AdvancedSearchPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>ELLAS - Busca Avançada</title>
+        <title>{t("advancedSearch.pageTitle")}</title>
         <meta
           name="description"
-          content="Construa consultas personalizadas para explorar os dados do projeto ELLAS sobre igualdade de gênero na América Latina."
+          content={t("advancedSearch.pageDescription")}
         />
       </Helmet>
 
       <Header />
       <div className="advanced-search-page">
         <div className="advanced-search-header">
-          <h1>Busca Avançada</h1>
+          <h1>{t("advancedSearch.title")}</h1>
           <p>
-            Construa uma consulta personalizada para explorar os dados do
-            projeto ELLAS sobre igualdade de gênero na América Latina
+            {t("advancedSearch.description")}
           </p>
 
           {searchCount > 0 && (
             <div
               className="search-count-badge"
-              title="Número de consultas realizadas"
+              title={t("advancedSearch.searchCount.tooltip")}
             >
-              Consultas: {searchCount}
+              {t("advancedSearch.searchCount.label", { count: searchCount })}
               <button
                 onClick={clearSearchHistory}
                 className="clear-history-button"
-                title="Limpar histórico"
+                title={t("advancedSearch.searchCount.clearTooltip")}
               >
                 ×
               </button>
@@ -204,15 +205,15 @@ const AdvancedSearchPage: React.FC = () => {
           )}
 
           {lastSuccessfulQuery && (
-            <div className="last-query-indicator" title="Sua última consulta">
-              Última: {lastSuccessfulQuery.category} -
+            <div className="last-query-indicator" title={t("advancedSearch.lastQuery.tooltip")}>
+              {t("advancedSearch.lastQuery.label")} {lastSuccessfulQuery.category} -
               {lastSuccessfulQuery.countries.length > 0
                 ? ` ${lastSuccessfulQuery.countries.length} ${
                     lastSuccessfulQuery.countries.length === 1
-                      ? "país"
-                      : "países"
+                      ? t("advancedSearch.lastQuery.country")
+                      : t("advancedSearch.lastQuery.countries")
                   }`
-                : " todos os países"}
+                : ` ${t("advancedSearch.lastQuery.allCountries")}`}
             </div>
           )}
         </div>
@@ -221,7 +222,7 @@ const AdvancedSearchPage: React.FC = () => {
         {searchError && (
           <div className="error-message">
             <p>⚠️ {searchError}</p>
-            <button onClick={() => setSearchError(null)}>Fechar</button>
+            <button onClick={() => setSearchError(null)}>{t("advancedSearch.errors.close")}</button>
           </div>
         )}
 
@@ -243,7 +244,7 @@ const AdvancedSearchPage: React.FC = () => {
             }}
             className="fixed-build-button-inner"
           >
-            Construir Consulta ➔
+            {t("advancedSearch.buildQuery")} ➔
           </button>
         </div>
 
@@ -251,19 +252,18 @@ const AdvancedSearchPage: React.FC = () => {
         {showGuide && (
           <div className="guide-overlay">
             <div className="guide-content">
-              <h2>Bem-vindo à Busca Avançada ELLAS</h2>
+              <h2>{t("advancedSearch.guide.title")}</h2>
               <p>
-                Aqui você pode criar consultas personalizadas para explorar
-                nossos dados de gênero e ciência na América Latina.
+                {t("advancedSearch.guide.description")}
               </p>
 
               <div className="guide-steps">
                 <div className="guide-step">
                   <div className="step-number">1</div>
                   <div className="step-content">
-                    <h3>Selecione uma categoria</h3>
+                    <h3>{t("advancedSearch.guide.step1.title")}</h3>
                     <p>
-                      Comece escolhendo entre Políticas, Iniciativas ou Fatores.
+                      {t("advancedSearch.guide.step1.description")}
                     </p>
                   </div>
                 </div>
@@ -271,10 +271,9 @@ const AdvancedSearchPage: React.FC = () => {
                 <div className="guide-step">
                   <div className="step-number">2</div>
                   <div className="step-content">
-                    <h3>Selecione países</h3>
+                    <h3>{t("advancedSearch.guide.step2.title")}</h3>
                     <p>
-                      Escolha um ou mais países da América Latina para filtrar
-                      os resultados.
+                      {t("advancedSearch.guide.step2.description")}
                     </p>
                   </div>
                 </div>
@@ -282,10 +281,9 @@ const AdvancedSearchPage: React.FC = () => {
                 <div className="guide-step">
                   <div className="step-number">3</div>
                   <div className="step-content">
-                    <h3>Configure filtros específicos</h3>
+                    <h3>{t("advancedSearch.guide.step3.title")}</h3>
                     <p>
-                      Refine sua consulta com filtros adicionais como ano, tipo
-                      de política, status da iniciativa, etc.
+                      {t("advancedSearch.guide.step3.description")}
                     </p>
                   </div>
                 </div>
@@ -293,17 +291,16 @@ const AdvancedSearchPage: React.FC = () => {
                 <div className="guide-step">
                   <div className="step-number">4</div>
                   <div className="step-content">
-                    <h3>Construa sua consulta</h3>
+                    <h3>{t("advancedSearch.guide.step4.title")}</h3>
                     <p>
-                      Clique em "Construir Consulta" para ver os resultados em
-                      formato de mapa e tabela.
+                      {t("advancedSearch.guide.step4.description")}
                     </p>
                   </div>
                 </div>
               </div>
 
               <button className="guide-close-button" onClick={closeGuide}>
-                Entendi, vamos começar!
+                {t("advancedSearch.guide.closeButton")}
               </button>
             </div>
           </div>
@@ -312,7 +309,7 @@ const AdvancedSearchPage: React.FC = () => {
         {isSubmitting && (
           <div className="loading-overlay">
             <div className="loading-spinner"></div>
-            <p>Construindo sua consulta e buscando dados...</p>
+            <p>{t("advancedSearch.loading")}</p>
           </div>
         )}
 
@@ -320,7 +317,7 @@ const AdvancedSearchPage: React.FC = () => {
         <button
           className="help-button"
           onClick={() => setShowGuide(true)}
-          aria-label="Mostrar ajuda"
+          aria-label={t("advancedSearch.helpButton")}
         >
           ?
         </button>

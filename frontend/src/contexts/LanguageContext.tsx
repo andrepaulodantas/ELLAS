@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import i18n from "../i18n";
 
 interface Card {
   title: string;
@@ -351,6 +352,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   // Save language to localStorage when it changes
   useEffect(() => {
     localStorage.setItem("language", language);
+    // Sync with i18next
+    i18n.changeLanguage(language);
   }, [language]);
 
   // Load translations based on language

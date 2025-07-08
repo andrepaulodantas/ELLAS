@@ -63,7 +63,57 @@
       "initiatives": "Events, programs and other actions for the inclusion and retention of women in technology careers",
       "factors": "Data collected by the ELLAS team to identify factors affecting the presence of women in STEM in South America",
       "otherData": "Secondary data from other databases associated with the ELLAS project"
+    },
+    "categoryLabels": {
+      "Initiative": "Initiatives",
+      "Policy": "Policies", 
+      "Factor": "Factors"
     }
+  },
+  "properties": {
+    "label": "Name",
+    "created_in": "Created in",
+    "description": "Description",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "objective": "Objective",
+    "policy_type": "Policy Type",
+    "policy_impact": "Policy Impact",
+    "policy_impact_description": "Policy Impact Description",
+    "target_audience": "Target Audience",
+    "initiative_reach": "Initiative Reach",
+    "initiative_status": "Initiative Status",
+    "initiative_format": "Initiative Format",
+    "coordinator_gender": "Coordinator Gender",
+    "initiative_coordinator_gender": "Initiative Coordinator Gender",
+    "factor_type": "Factor Type",
+    "factors_impact_type": "Factors Impact Type",
+    "factors_severity_level": "Factors Severity Level",
+    "factors_temporal_scope": "Factors Temporal Scope",
+    "factors_affects_population": "Population Affected by Factors",
+    "factors_impact_level": "Factors Impact Level",
+    "factors_target_group": "Factors Target Group",
+    "factors_context_type": "Factors Context Type",
+    "factors_impact": "Factors Impact",
+    "analyzed_in": "Analyzed in",
+    "factors_description": "Factors Description",
+    "factors_evidence": "Factors Evidence",
+    "factors_source": "Factors Source",
+    "factors_mitigation_strategy": "Factors Mitigation Strategy",
+    "factors_recommendation": "Factors Recommendation",
+    "factors_related_policy": "Factors Related Policy",
+    "factors_related_initiative": "Factors Related Initiative",
+    "factors_stakeholder": "Factors Stakeholder",
+    "factors_geographic_scope": "Factors Geographic Scope",
+    "factors_institutional_level": "Factors Institutional Level",
+    "factors_educational_level": "Factors Educational Level",
+    "factors_stem_area": "Factors STEM Area",
+    "factors_gender_dimension": "Factors Gender Dimension",
+    "factors_intersectionality": "Factors Intersectionality",
+    "factors_data_source": "Factors Data Source",
+    "factors_methodology": "Factors Methodology",
+    "factors_limitation": "Factors Limitation",
+    "factors_future_research": "Factors Future Research"
   },
   "filters": {
     "filterBy": "Filter by",
@@ -189,5 +239,110 @@
     "question": "Question",
     "selectCategory": "Select a Category",
     "selectQuestion": "Select a Question"
+  },
+  "advancedSearch": {
+    "pageTitle": "ELLAS - Advanced Search",
+    "pageDescription": "Build custom queries to explore ELLAS project data on gender equality in Latin America.",
+    "title": "Advanced Search",
+    "description": "Build a custom query to explore ELLAS project data on gender equality in Latin America",
+    "buildQuery": "Build Query",
+    "loading": "Building your query and searching data...",
+    "helpButton": "Show help",
+    "validation": {
+      "categoryRequired": "A category must be selected"
+    },
+    "errors": {
+      "unknownError": "Unknown error processing the query",
+      "close": "Close"
+    },
+    "searchCount": {
+      "label": "Queries: {{count}}",
+      "tooltip": "Number of queries performed",
+      "clearTooltip": "Clear history"
+    },
+    "lastQuery": {
+      "label": "Last:",
+      "tooltip": "Your last query",
+      "country": "country",
+      "countries": "countries",
+      "allCountries": "all countries"
+    },
+    "guide": {
+      "title": "Welcome to ELLAS Advanced Search",
+      "description": "Here you can create custom queries to explore our gender and science data in Latin America.",
+      "closeButton": "Got it, let's start!",
+      "step1": {
+        "title": "Select a category",
+        "description": "Start by choosing between Policies, Initiatives, or Factors."
+      },
+      "step2": {
+        "title": "Select countries",
+        "description": "Choose one or more Latin American countries to filter results."
+      },
+      "step3": {
+        "title": "Configure specific filters",
+        "description": "Refine your query with additional filters such as year, policy type, initiative status, etc."
+      },
+      "step4": {
+        "title": "Build your query",
+        "description": "Click \"Build Query\" to see results in map and table format."
+      }
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "openData": "Open Data",
+    "supportELLAS": "Support ELLAS",
+    "contact": "Contact"
+  },    "queryBuilder": {
+      "selectCategory": "Select a Category",
+      "propertiesAvailable": "Properties available for",
+      "selectCategoryToSeeConnections": "Select a category to see available connections.",
+      "valuesFor": "Values for",
+      "loadingValuesFor": "Loading values for",
+      "nextProperties": "Next properties",
+      "noMoreConnections": "No more connections available in this path.",
+      "exploreConnectedData": "Explore Connected Data",
+      "reloadData": "Reload Data",
+      "currentPath": "Path",
+      "loadingOptions": "Loading options...",
+    "selectCategoryMessage": "Select a category to see available connections.",
+    "selectCategoryForTable": "Select a category to visualize data in the table.",
+    "instructions": "Select a <strong>Category</strong> (Policies, Initiatives, or Factors) to start building your custom query.",
+    "howToSearch": {
+      "title": "How to perform your search",
+      "step1": "Select a <strong>Category</strong> (Policies, Initiatives, or Factors)",
+      "step2": "Explore the <strong>available connections</strong> in the data graph",
+      "step3": "Follow the path of properties and values to refine your query",
+      "step4": "Or use the <strong>SPARQL Editor</strong> for advanced custom queries",
+      "step5": "Click the <strong>Search</strong> button to view the results"
+    },
+    "queryData": {
+      "title": "📊 Query Data",
+      "subtitle": "Select a category to view the data in the table.",
+      "howToUse": {
+        "title": "💡 How to use:",
+        "step1": "Click on a category (Initiative, Policy, Factor)",
+        "step2": "Data will be loaded automatically",
+        "step3": "Use properties to filter results"
+      }
+    },
+    "queryPreview": {
+      "title": "Query Preview"
+    },
+    "tabs": {
+      "title": "Advanced Query",
+      "basic": "Basic",
+      "advanced": "Advanced",
+      "expert": "Expert"
+    },
+    "results": {
+      "title": "📊 Query Results",
+      "records": "records",
+      "filteredBy": "Filtered by",
+      "basicData": "Basic category data",
+      "tableUpdated": "Table updated"
+    }
   }
 }

@@ -1,0 +1,351 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "openData": "Datos Abiertos",
+    "supportELLAS": "Apoya a ELLAS",
+    "contact": "Contacto"
+  },
+  "home": {
+    "title": "Datos abiertos para la Equidad de Género en Ciencia y Tecnología en América Latina",
+    "exploreData": "Explora los datos",
+    "selectFeaturedQuestion": "Selecciona una de las preguntas más buscadas para comenzar.",
+    "featuredData": "Datos Destacados"
+  },
+  "explore": "Explorar",
+  "exploreDescription": "El portal ELLAS genera y difunde datos abiertos conectados con enfoque en países de América Latina. Surgió de la unión de instituciones de Brasil, Bolivia y Perú.",
+  "about": "Acerca de",
+  "openData": "Datos Abiertos",
+  "support": "Apoya a ELLAS",
+  "login": "Iniciar Sesión",
+  "search": "Buscar",
+  "chooseCategory": "Elija una Categoría",
+  "askData": "¿Qué desea preguntar a los datos?",
+  "learnMore": "Saber más",
+  "project": "El Proyecto",
+  "team": "El Equipo",
+  "partners": "Socios",
+  "institutions": "Instituciones",
+  "visualizations": "Visualizaciones",
+  "download": "Descargar",
+  "api": "API",
+  "visualization": {
+    "table": "Vista de Tabla",
+    "map": "Mapas",
+    "chart": "Vista de Gráfico",
+    "bars": "Barras",
+    "lines": "Líneas",
+    "description": "Explora iniciativas que apoyan a mujeres en STEM en América Latina"
+  },
+  "busca": {
+    "dadosAbertos": "Datos Abiertos",
+    "tabelaDeDados": "Tabla de Datos",
+    "totalPorPais": "Total por país",
+    "filter": "Filtrar",
+    "filterType": "Filtrar por tipo",
+    "filterCountry": "Filtrar por país",
+    "filterYear": "Filtrar por año",
+    "filterStatus": "Filtrar por estado",
+    "clearFilters": "Limpiar filtros",
+    "applyFilters": "Aplicar filtros",
+    "noResults": "Sin resultados para mostrar",
+    "totalResults": "Resultados totales",
+    "showingResults": "Mostrando {{count}} de {{total}} resultados",
+    "downloadData": "Descargar datos",
+    "shareResults": "Compartir resultados",
+    "viewDetails": "Ver detalles"
+  },
+  "contact": "Contacto",
+  "categories": {
+    "policies": "Políticas",
+    "initiatives": "Iniciativas",
+    "factors": "Factores",
+    "otherData": "Otros Datos",
+    "descriptions": {
+      "policies": "Legislaciones y decretos que promueven la participación de mujeres en las áreas STEM",
+      "initiatives": "Eventos, programas y otras acciones para la inserción y permanencia de mujeres en carreras de tecnología",
+      "factors": "Datos recopilados por el equipo ELLAS para identificar factores que afectan la presencia de mujeres en STEM en América del Sur",
+      "otherData": "Datos secundarios de otras bases de datos asociadas al proyecto ELLAS"
+    },
+    "categoryLabels": {
+      "Initiative": "Iniciativas",
+      "Policy": "Políticas", 
+      "Factor": "Factores"
+    }
+  },
+  "properties": {
+    "label": "Nombre",
+    "created_in": "Creado en",
+    "description": "Descripción",
+    "start_date": "Fecha de Inicio",
+    "end_date": "Fecha de Fin",
+    "objective": "Objetivo",
+    "policy_type": "Tipo de Política",
+    "policy_impact": "Impacto de la Política",
+    "policy_impact_description": "Descripción del Impacto de la Política",
+    "target_audience": "Público Objetivo",
+    "initiative_reach": "Alcance de la Iniciativa",
+    "initiative_status": "Estado de la Iniciativa",
+    "initiative_format": "Formato de la Iniciativa",
+    "coordinator_gender": "Género del Coordinador",
+    "initiative_coordinator_gender": "Género del Coordinador de la Iniciativa",
+    "factor_type": "Tipo de Factor",
+    "factors_impact_type": "Tipo de Impacto de los Factores",
+    "factors_severity_level": "Nivel de Severidad de los Factores",
+    "factors_temporal_scope": "Alcance Temporal de los Factores",
+    "factors_affects_population": "Población Afectada por los Factores",
+    "factors_impact_level": "Nivel de Impacto de los Factores",
+    "factors_target_group": "Grupo Objetivo de los Factores",
+    "factors_context_type": "Tipo de Contexto de los Factores",
+    "factors_impact": "Impacto de los Factores",
+    "analyzed_in": "Analizado en",
+    "factors_description": "Descripción de los Factores",
+    "factors_evidence": "Evidencia de los Factores",
+    "factors_source": "Fuente de los Factores",
+    "factors_mitigation_strategy": "Estrategia de Mitigación de los Factores",
+    "factors_recommendation": "Recomendación de los Factores",
+    "factors_related_policy": "Política Relacionada con los Factores",
+    "factors_related_initiative": "Iniciativa Relacionada con los Factores",
+    "factors_stakeholder": "Parte Interesada de los Factores",
+    "factors_geographic_scope": "Alcance Geográfico de los Factores",
+    "factors_institutional_level": "Nivel Institucional de los Factores",
+    "factors_educational_level": "Nivel Educativo de los Factores",
+    "factors_stem_area": "Área STEM de los Factores",
+    "factors_gender_dimension": "Dimensión de Género de los Factores",
+    "factors_intersectionality": "Interseccionalidad de los Factores",
+    "factors_data_source": "Fuente de Datos de los Factores",
+    "factors_methodology": "Metodología de los Factores",
+    "factors_limitation": "Limitación de los Factores",
+    "factors_future_research": "Investigación Futura de los Factores"
+  },
+    "filterBy": "Filtrar por",
+    "all": "Todos",
+    "country": "País",
+    "year": "Año",
+    "type": "Tipo",
+    "noData": "No hay datos disponibles",
+    "startDate": "Fecha de Inicio",
+    "policyTypes": {
+      "educational": "Educativo",
+      "legislation": "Legislación",
+      "program": "Programa"
+    }
+  },
+  "buttons": {
+    "reset": "Reiniciar",
+    "apply": "Aplicar",
+    "share": "Compartir",
+    "export": "Exportar",
+    "viewAll": "Ver Todos los Datos",
+    "explore": "Explorar"
+  },
+  "footer": {
+    "contacts": "Contactos",
+    "connect": "Conéctate con ELLAS",
+    "usefulLinks": {
+      "text": "Enlaces Útiles",
+      "url": "https://ellas.ufmt.br/es/enlaces-utiles/"
+    },
+    "accessibility": {
+      "text": "Accesibilidad Web",
+      "url": "https://ellas.ufmt.br/es/accesibilidad/"
+    },
+    "terms": {
+      "text": "Términos de Uso",
+      "url": "https://ellas.ufmt.br/es/terminos-de-uso/"
+    },
+    "privacy": {
+      "text": "Política de Privacidad",
+      "url": "https://ellas.ufmt.br/es/politica-de-privacidad/"
+    },
+    "rights": "Todos los derechos reservados",
+    "institutions": "Instituciones"
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "description": "Aquí hay algunas preguntas frecuentes para ayudarte a entender mejor nuestros servicios e iniciativas.",
+    "participation": "P: ¿Cómo puedo participar? R: Puedes participar a través de donaciones, voluntariado o asistiendo a eventos."
+  },
+  "featuredQuestions": {
+    "title": "¿No sabes por dónde empezar?",
+    "subtitle": "Selecciona una de las preguntas más buscadas para comenzar.",
+    "questions": [
+      {
+        "category": "Políticas",
+        "question": "¿Qué tipos de políticas de género se implementaron en los países en un año determinado?"
+      },
+      {
+        "category": "Políticas",
+        "question": "¿Cómo las políticas identificadas/analizadas están promoviendo la participación de las mujeres en las áreas STEM?"
+      },
+      {
+        "category": "Iniciativas",
+        "question": "¿Qué iniciativas se desarrollan por nivel escolar?"
+      },
+      {
+        "category": "Iniciativas",
+        "question": "¿Qué iniciativas atienden a las mujeres negras?"
+      },
+      {
+        "category": "Factores",
+        "question": "¿Cuáles son los factores contextuales que impactan positiva o negativamente al género femenino?"
+      },
+      {
+        "category": "Factores",
+        "question": "¿Cuáles son los factores contextuales que impactan positiva o negativamente (el liderazgo, motivación, etc.) en cada país?"
+      }
+    ]
+  },
+  "countries": {
+    "brasil": "Brasil",
+    "peru": "Perú",
+    "bolivia": "Bolivia",
+    "argentina": "Argentina"
+  },
+  "latinAmerica": {
+    "title": "¡América Latina en foco!",
+    "description": "El portal ELLAS genera y difunde datos abiertos conectados con enfoque en países de América Latina. Surgió de la unión de instituciones de Brasil, Bolivia y Perú.",
+    "interaction": "En una infraestructura de datos abiertos, es posible mapear información, visualizar datos y mejorar la colaboración entre los sectores de educación, gobierno e industria que buscan reducir la brecha de género STEM en América Latina.",
+    "learnMore": "Saber más"
+  },
+  "source": {
+    "inep": "Fuente: INEP, UNESCO y Datos Secundarios de la plataforma ELLAS"
+  },
+  "dataChart": {
+    "centerText1": "Categorías de",
+    "centerText2": "Datos en ELLAS",
+    "title": "Encuentra la información que necesitas en el Portal ELLAS",
+    "description1": "La falta de datos recientes y confiables es parcialmente responsable de las brechas de género en ciencia, tecnología, ingeniería y matemáticas (STEM) en América Latina.",
+    "description2": "El Portal ELLAS reúne datos de diversas fuentes para ayudar a investigadores, formuladores de políticas y educadores a comprender mejor los desafíos y oportunidades para las mujeres en STEM.",
+    "listItem1": "Evaluar políticas e intervenciones para reducir la brecha de género en STEM, especialmente aumentando el número de mujeres líderes en universidades, industrias e instituciones públicas.",
+    "listItem2": "Mapear factores que influyen en el desarrollo de la carrera de las mujeres en STEM, documentando y analizando iniciativas exitosas y no exitosas para identificar lecciones aprendidas.",
+    "categories": {
+      "policies": "Políticas",
+      "factors": "Factores",
+      "initiatives": "Iniciativas",
+      "secondary": "Secundarios"
+    }
+  },
+  "table": {
+    "title": "Datos abiertos",
+    "noData": "No hay datos disponibles",
+    "loading": "Cargando datos...",
+    "search": "Buscar",
+    "rowsPerPage": "Filas por página",
+    "of": "de",
+    "next": "Siguiente",
+    "previous": "Anterior"
+  },
+  "labels": {
+    "category": "Categoría",
+    "question": "Pregunta",
+    "selectCategory": "Selecciona una Categoría",
+    "selectQuestion": "Selecciona una Pregunta"
+  },
+  "common": {
+    "learnMore": "Saber más",
+    "chooseCategory": "Elija una Categoría",
+    "askData": "¿Qué desea preguntar a los datos?",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar",
+    "loading": "Cargando..."
+  },
+  "advancedSearch": {
+    "pageTitle": "ELLAS - Búsqueda Avanzada",
+    "pageDescription": "Construya consultas personalizadas para explorar los datos del proyecto ELLAS sobre igualdad de género en América Latina.",
+    "title": "Búsqueda Avanzada",
+    "description": "Construya una consulta personalizada para explorar los datos del proyecto ELLAS sobre igualdad de género en América Latina",
+    "buildQuery": "Construir Consulta",
+    "loading": "Construyendo su consulta y buscando datos...",
+    "helpButton": "Mostrar ayuda",
+    "validation": {
+      "categoryRequired": "Es necesario seleccionar una categoría"
+    },
+    "errors": {
+      "unknownError": "Error desconocido al procesar la consulta",
+      "close": "Cerrar"
+    },
+    "searchCount": {
+      "label": "Consultas: {{count}}",
+      "tooltip": "Número de consultas realizadas",
+      "clearTooltip": "Limpiar historial"
+    },
+    "lastQuery": {
+      "label": "Última:",
+      "tooltip": "Su última consulta",
+      "country": "país",
+      "countries": "países",
+      "allCountries": "todos los países"
+    },
+    "guide": {
+      "title": "Bienvenido a la Búsqueda Avanzada ELLAS",
+      "description": "Aquí puede crear consultas personalizadas para explorar nuestros datos de género y ciencia en América Latina.",
+      "closeButton": "¡Entendido, comencemos!",
+      "step1": {
+        "title": "Seleccione una categoría",
+        "description": "Comience eligiendo entre Políticas, Iniciativas o Factores."
+      },
+      "step2": {
+        "title": "Seleccione países",
+        "description": "Elija uno o más países de América Latina para filtrar los resultados."
+      },
+      "step3": {
+        "title": "Configure filtros específicos",
+        "description": "Refine su consulta con filtros adicionales como año, tipo de política, estado de la iniciativa, etc."
+      },
+      "step4": {
+        "title": "Construya su consulta",
+        "description": "Haga clic en \"Construir Consulta\" para ver los resultados en formato de mapa y tabla."
+      }
+    }
+  },    "queryBuilder": {
+      "selectCategory": "Seleccione una Categoría",
+      "propertiesAvailable": "Propiedades disponibles para",
+      "selectCategoryToSeeConnections": "Seleccione una categoría para ver las conexiones disponibles.",
+      "valuesFor": "Valores para",
+      "loadingValuesFor": "Cargando valores para",
+      "nextProperties": "Próximas propiedades",
+      "noMoreConnections": "No hay más conexiones disponibles en esta ruta.",
+      "exploreConnectedData": "Explorar Datos Conectados",
+      "reloadData": "Recargar Datos",
+      "currentPath": "Ruta",
+      "loadingOptions": "Cargando opciones...",
+    "selectCategoryMessage": "Seleccione una categoría para ver las conexiones disponibles.",
+    "selectCategoryForTable": "Seleccione una categoría para visualizar los datos en la tabla.",
+    "instructions": "Seleccione una <strong>Categoría</strong> (Políticas, Iniciativas o Factores) para comenzar a construir su consulta personalizada.",
+    "howToSearch": {
+      "title": "Cómo realizar su búsqueda",
+      "step1": "Seleccione una <strong>Categoría</strong> (Políticas, Iniciativas o Factores)",
+      "step2": "Explore las <strong>conexiones disponibles</strong> en el gráfico de datos",
+      "step3": "Siga el camino de propiedades y valores para refinar su consulta",
+      "step4": "O use el <strong>Editor SPARQL</strong> para consultas personalizadas avanzadas",
+      "step5": "Haga clic en el botón <strong>Buscar</strong> para visualizar los resultados"
+    },
+    "queryData": {
+      "title": "📊 Datos de la Consulta",
+      "subtitle": "Seleccione una categoría para visualizar los datos en la tabla.",
+      "howToUse": {
+        "title": "💡 Cómo usar:",
+        "step1": "Haga clic en una categoría (Initiative, Policy, Factor)",
+        "step2": "Los datos se cargarán automáticamente",
+        "step3": "Use las propiedades para filtrar los resultados"
+      }
+    },
+    "queryPreview": {
+      "title": "Vista previa de la Consulta"
+    },
+    "tabs": {
+      "title": "Consulta Avanzada",
+      "basic": "Básico",
+      "advanced": "Avanzado",
+      "expert": "Experto"
+    },
+    "results": {
+      "title": "📊 Resultados de la Consulta",
+      "records": "registros",
+      "filteredBy": "Filtrado por",
+      "basicData": "Datos básicos de la categoría",
+      "tableUpdated": "Tabla actualizada"
+    }
+  }
+}

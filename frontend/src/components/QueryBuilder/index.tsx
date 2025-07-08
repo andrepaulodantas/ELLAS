@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import queryMappingService from "../../services/queryMappingService";
 import SparqlEditor from "../SparqlEditor";
+import { useCategoryTranslations } from "../../utils/categoryTranslations";
+import { translatePropertyName } from "../../utils/propertyTranslations";
 import "./styles.css";
 
 interface QueryBuilderProps {
@@ -47,9 +50,20 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   onQuerySubmit,
   initialCategory,
 }) => {
+  const { t, i18n } = useTranslation();
+  const { getCurrentCategories } = useCategoryTranslations();
+  
   // State for selected options
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [forceRootView, setForceRootView] = useState<boolean>(true);
+  
+  // Estado para as categorias traduzidas
+  const [rootCategories, setRootCategories] = useState(() => getCurrentCategories());
+  
+  // Efeito para atualizar as categorias quando o idioma muda
+  useEffect(() => {
+    setRootCategories(getCurrentCategories());
+  }, [i18n.language, getCurrentCategories]);
 
   // Log para debug
   console.log("🔍 QueryBuilder State:", {
@@ -76,7 +90,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   const [endDate, setEndDate] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [resultLimit, setResultLimit] = useState<number>(50);
+  const [resultLimit, setResultLimit] = useState<number>(500);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [customSparql, setCustomSparql] = useState<string>("");
 
@@ -298,6 +312,55 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       console.log("✅ selectedCategory vazio, NÃO carregando propriedades");
     }
   }, [selectedCategory, forceRootView]);
+
+  // Efeito para recarregar opções quando o idioma muda
+  useEffect(() => {
+    if (selectedCategory && !forceRootView) {
+      console.log("🌐 Idioma mudou, recarregando opções para tradução");
+      // Recarregar as opções para que as traduções sejam atualizadas
+      const reloadOptions = async () => {
+        try {
+          setIsLoadingOptions(true);
+          const allOptions = await queryMappingService.explorePropertiesForClass(selectedCategory);
+          let filteredProps = allOptions.filter(
+            (p) => !selectedGraphPath.includes(p.value)
+          );
+          
+          setDynamicOptions((prev) => ({
+            ...prev,
+            "": filteredProps,
+          }));
+        } catch (error) {
+          console.error("Erro ao recarregar opções:", error);
+        } finally {
+          setIsLoadingOptions(false);
+        }
+      };
+      
+      reloadOptions();
+    }
+  }, [i18n.language, selectedCategory, forceRootView, selectedGraphPath]);
+
+  // Debug: Monitor mudanças nos resultados da consulta
+  useEffect(() => {
+    console.log("🔍 DEBUG - queryResults mudou:", {
+      length: queryResults.length,
+      selectedCategory,
+      isExecutingQuery,
+      firstFew: queryResults.slice(0, 3),
+      timestamp: new Date().toLocaleTimeString()
+    });
+  }, [queryResults, selectedCategory, isExecutingQuery]);
+
+  // Debug effect para monitorar mudanças no queryResults
+  useEffect(() => {
+    console.log(`🔍 DEBUG useEffect: queryResults mudou:`, {
+      length: queryResults.length,
+      selectedCategory,
+      timestamp: new Date().toISOString(),
+      sampleData: queryResults.slice(0, 2)
+    });
+  }, [queryResults, selectedCategory]);
 
   // Quando o usuário seleciona uma opção no caminho do grafo
   const handleGraphOptionSelect = useCallback(
@@ -561,12 +624,11 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     console.log(
       "✅ renderRootCategories chamada - mostrando 3 categorias principais"
     );
-    const rootCategories = queryMappingService.getRootCategories();
     console.log("📋 Categorias raiz:", rootCategories);
 
     return (
       <div className="form-section">
-        <h3>Selecione uma Categoria</h3>
+        <h3>{t("queryBuilder.selectCategory")}</h3>
         <div className="graph-options-container">
           <div className="graph-options-list">
             {rootCategories.map((category, index) => (
@@ -675,16 +737,26 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           result.results.bindings.slice(0, 3)
         );
 
+        // Log detalhado da atualização
+        console.log(`🔄 Atualizando queryResults com ${bindingsLength} registros`);
         setQueryResults(result.results.bindings as QueryResult[]);
+        
         // Forçar re-renderização da tabela quando carregamos novos dados
         setTableKey(Date.now().toString());
+
+        // IMPORTANTE: Verificar se há problemas de contagem
+        if (bindingsLength === 100) {
+          console.warn(`⚠️ ATENÇÃO: Exatamente 100 registros retornados. Pode ser limite SPARQL ou dados de demonstração!`);
+        }
 
         // Verificar se o estado foi atualizado corretamente
         setTimeout(() => {
           console.log(`🔍 DEBUG: Estado queryResults após setQueryResults:`, {
             length: queryResults?.length,
+            actualLength: result.results.bindings.length,
             category: category,
             timestamp: new Date().toISOString(),
+            message: `Deve mostrar ${result.results.bindings.length} registros reais na UI`
           });
         }, 100);
       } else {
@@ -740,6 +812,11 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     // Mostrar uma visualização do estado para debugging
     const allOptions = Object.entries(dynamicOptions);
 
+    // Função para formatar nome de propriedade usando tradução
+    const formatPropertyName = (name: string): string => {
+      return translatePropertyName(name);
+    };
+
     // Determinar qual conjunto de opções deve ser mostrado com base no caminho atual
     let optionsToShow: GraphOption[] = [];
     let emptyMessage = "Nenhuma opção disponível";
@@ -748,22 +825,21 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     if (selectedGraphPath.length === 0) {
       // No nível raiz, mostrar propriedades da categoria (chave vazia)
       optionsToShow = dynamicOptions[""] || [];
-      optionsTitle = `Propriedades disponíveis para ${selectedCategory}`;
-      emptyMessage =
-        "Selecione uma categoria para ver as conexões disponíveis.";
+      optionsTitle = `${t("queryBuilder.propertiesAvailable")} ${selectedCategory}`;
+      emptyMessage = t("queryBuilder.selectCategoryToSeeConnections");
     } else if (selectedGraphPath.length % 2 === 1) {
       // CORREÇÃO: selectedGraphPath agora contém apenas values
       // Se length é ímpar, estamos em uma propriedade (último elemento é a propriedade)
       const propertyName = selectedGraphPath[selectedGraphPath.length - 1];
       optionsToShow = dynamicOptions[propertyName] || [];
-      optionsTitle = `Valores para ${formatPropertyName(propertyName)}`;
-      emptyMessage = `Carregando valores para ${propertyName}...`;
+      optionsTitle = `${t("queryBuilder.valuesFor")} ${formatPropertyName(propertyName)}`;
+      emptyMessage = `${t("queryBuilder.loadingValuesFor")} ${propertyName}...`;
     } else {
       // Se o caminho termina em um valor, mostrar as próximas propriedades
       const fullPath = selectedGraphPath.join("/");
       optionsToShow = dynamicOptions[fullPath] || dynamicOptions[""] || [];
-      optionsTitle = "Próximas propriedades";
-      emptyMessage = "Não há mais conexões disponíveis neste caminho.";
+      optionsTitle = t("queryBuilder.nextProperties");
+      emptyMessage = t("queryBuilder.noMoreConnections");
     }
 
     // VALIDAÇÃO RIGOROSA: Filtrar propriedades que não pertencem à categoria atual
@@ -893,14 +969,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       return 0;
     });
 
-    // Função para formatar nome de propriedade (snake_case -> formato legível)
-    function formatPropertyName(name: string): string {
-      return name
-        .replace(/_/g, " ")
-        .replace(/([A-Z])/g, " $1")
-        .replace(/^./, (str) => str.toUpperCase());
-    }
-
     // Função para limpar filtros e recarregar dados
     const handleReload = () => {
       setSelectedGraphPath([]);
@@ -911,20 +979,20 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     return (
       <div className="dynamic-graph-explorer">
         <div className="explorer-header">
-          <h3>Explorar Dados Conectados</h3>
+          <h3>{t("queryBuilder.exploreConnectedData")}</h3>
           <button
             className="reload-button"
             onClick={handleReload}
             disabled={isLoadingOptions}
           >
-            {isLoadingOptions ? "Carregando..." : "Recarregar Dados"}
+            {isLoadingOptions ? t("common.loading") : t("queryBuilder.reloadData")}
           </button>
         </div>
 
         {/* Caminho atual */}
         {selectedGraphPath.length > 0 && (
           <div className="current-path">
-            <span>Caminho: </span>
+            <span>{t("queryBuilder.currentPath")}: </span>
             <span className="selected-category">{selectedCategory}</span>
             {selectedGraphPath.map((item, index) => (
               <span
@@ -951,7 +1019,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         {/* Mostrar opções ou indicador de carregamento */}
         <div className="graph-options-container">
           {isLoadingOptions ? (
-            <div className="loading-indicator">Carregando opções...</div>
+            <div className="loading-indicator">{t("queryBuilder.loadingOptions")}</div>
           ) : sortedOptions && sortedOptions.length > 0 ? (
             <div className="graph-options-list">
               {sortedOptions.map((option, index) => (
@@ -1292,16 +1360,16 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       return (
         <div className="query-results empty">
           <div className="empty-results-message">
-            <h3>📊 Dados da Consulta</h3>
-            <p>Selecione uma categoria para visualizar os dados na tabela.</p>
+            <h3>{t("queryBuilder.queryData.title")}</h3>
+            <p>{t("queryBuilder.queryData.subtitle")}</p>
             <div className="instructions">
               <p>
-                💡 <strong>Como usar:</strong>
+                <strong>{t("queryBuilder.queryData.howToUse.title")}</strong>
               </p>
               <ul>
-                <li>Clique em uma categoria (Initiative, Policy, Factor)</li>
-                <li>Os dados serão carregados automaticamente</li>
-                <li>Use as propriedades para filtrar os resultados</li>
+                <li>{t("queryBuilder.queryData.howToUse.step1")}</li>
+                <li>{t("queryBuilder.queryData.howToUse.step2")}</li>
+                <li>{t("queryBuilder.queryData.howToUse.step3")}</li>
               </ul>
             </div>
           </div>
@@ -1358,13 +1426,22 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     });
 
     const columnConfig = [
-      { key: "label", label: "Nome", required: true },
-      { key: "created_in", label: "País", required: false },
-      { key: "start_date", label: "Data de Início", required: false },
-      { key: "policy_type", label: "Tipo", required: false },
-      { key: "policy_impact", label: "Impacto", required: false },
-      { key: "description", label: "Descrição", required: false },
-      { key: "objective", label: "Objetivo", required: false },
+      { key: "label", label: t("properties.label"), required: true },
+      { key: "created_in", label: translatePropertyName("created_in"), required: false },
+      { key: "start_date", label: translatePropertyName("start_date"), required: false },
+      { key: "policy_type", label: translatePropertyName("policy_type"), required: false },
+      { key: "policy_impact", label: translatePropertyName("policy_impact"), required: false },
+      { key: "description", label: translatePropertyName("description"), required: false },
+      { key: "objective", label: translatePropertyName("objective"), required: false },
+      { key: "end_date", label: translatePropertyName("end_date"), required: false },
+      { key: "target_audience", label: translatePropertyName("target_audience"), required: false },
+      { key: "initiative_reach", label: translatePropertyName("initiative_reach"), required: false },
+      { key: "initiative_status", label: translatePropertyName("initiative_status"), required: false },
+      { key: "initiative_format", label: translatePropertyName("initiative_format"), required: false },
+      { key: "coordinator_gender", label: translatePropertyName("coordinator_gender"), required: false },
+      { key: "factor_type", label: translatePropertyName("factor_type"), required: false },
+      { key: "factors_impact_type", label: translatePropertyName("factors_impact_type"), required: false },
+      { key: "analyzed_in", label: translatePropertyName("analyzed_in"), required: false },
     ];
 
     const visibleColumns = columnConfig.filter(
@@ -1387,16 +1464,16 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       <div className="query-results">
         {!selectedCategory && (
           <div className="no-category-selected">
-            <h3>📊 Dados da Consulta</h3>
-            <p>Selecione uma categoria para visualizar os dados na tabela.</p>
+            <h3>{t("queryBuilder.queryData.title")}</h3>
+            <p>{t("queryBuilder.queryData.subtitle")}</p>
             <div className="instructions">
               <p>
-                💡 <strong>Como usar:</strong>
+                <strong>{t("queryBuilder.queryData.howToUse.title")}</strong>
               </p>
               <ul>
-                <li>Clique em uma categoria (Initiative, Policy, Factor)</li>
-                <li>Os dados serão carregados automaticamente</li>
-                <li>Use as propriedades para filtrar os resultados</li>
+                <li>{t("queryBuilder.queryData.howToUse.step1")}</li>
+                <li>{t("queryBuilder.queryData.howToUse.step2")}</li>
+                <li>{t("queryBuilder.queryData.howToUse.step3")}</li>
               </ul>
             </div>
           </div>
@@ -1426,26 +1503,26 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           <>
             <div className="results-header">
               <h3>
-                📊 Resultados da Consulta
+                {t("queryBuilder.results.title")}
                 <span className="results-count">
-                  ({queryResults.length} registros)
+                  ({queryResults.length} {t("queryBuilder.results.records")})
                 </span>
                 {isExecutingQuery && (
-                  <span className="loading-indicator"> - Carregando...</span>
+                  <span className="loading-indicator"> - {t("common.loading")}</span>
                 )}
               </h3>
               <div className="results-info">
-                <span className="category-badge">{selectedCategory}</span>
+                <span className="category-badge">{rootCategories.find(cat => cat.value === selectedCategory)?.label || selectedCategory}</span>
                 {selectedGraphPath.length > 0 && (
                   <span className="filter-info">
-                    Filtrado por: {selectedGraphPath.join(" → ")}
+                    {t("queryBuilder.results.filteredBy")}: {selectedGraphPath.join(" → ")}
                   </span>
                 )}
                 {selectedGraphPath.length === 0 && (
-                  <span className="filter-info">Dados básicos da categoria</span>
+                  <span className="filter-info">{t("queryBuilder.results.basicData")}</span>
                 )}
                 <span className="table-status">
-                  Tabela atualizada: {new Date().toLocaleTimeString()}
+                  {t("queryBuilder.results.tableUpdated")}: {new Date().toLocaleTimeString()}
                 </span>
               </div>
             </div>
@@ -1514,45 +1591,25 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   return (
     <div className="advanced-query-builder">
       <div className="query-builder-header">
-        <h2 className="query-builder-title">Consulta Avançada</h2>
+        <h2 className="query-builder-title">{t("queryBuilder.tabs.title")}</h2>
         <div className="query-builder-tabs">
           <button
             className={`tab-button ${activeTab === "basic" ? "active" : ""}`}
             onClick={() => setActiveTab("basic")}
           >
-            Básico
+            {t("queryBuilder.tabs.basic")}
           </button>
           <button
             className={`tab-button ${activeTab === "advanced" ? "active" : ""}`}
             onClick={() => setActiveTab("advanced")}
           >
-            Avançado
+            {t("queryBuilder.tabs.advanced")}
           </button>
           <button
             className={`tab-button ${activeTab === "expert" ? "active" : ""}`}
             onClick={() => setActiveTab("expert")}
           >
-            Expert
-          </button>
-          {/* Botão de debug para forçar raiz */}
-          <button
-            className="tab-button debug-button"
-            onClick={() => {
-              console.log("🔧 DEBUG: Forçando retorno à raiz");
-              setForceRootView(true);
-              setSelectedCategory("");
-              setSelectedGraphPath([]);
-              setCurrentGraphLevel(0);
-              setDynamicOptions({});
-              setIsLoadingOptions(false);
-            }}
-            style={{
-              backgroundColor: "#ff4444",
-              color: "white",
-              marginLeft: "10px",
-            }}
-          >
-            🔧 DEBUG: Forçar Raiz
+            {t("queryBuilder.tabs.expert")}
           </button>
         </div>
       </div>
@@ -1708,28 +1765,15 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             </svg>
           </div>
           <div className="search-instructions-content">
-            <h3>Como realizar sua pesquisa</h3>
+            <h3>{t("queryBuilder.howToSearch.title")}</h3>
             <ol>
+              <li dangerouslySetInnerHTML={{ __html: t("queryBuilder.howToSearch.step1") }} />
+              <li dangerouslySetInnerHTML={{ __html: t("queryBuilder.howToSearch.step2") }} />
               <li>
-                Selecione uma <strong>Categoria</strong> (Políticas, Iniciativas
-                ou Fatores)
+                {t("queryBuilder.howToSearch.step3")}
               </li>
-              <li>
-                Explore as <strong>conexões disponíveis</strong> no grafo de
-                dados
-              </li>
-              <li>
-                Siga o caminho de propriedades e valores para refinar sua
-                consulta
-              </li>
-              <li>
-                Ou use o <strong>Editor SPARQL</strong> para consultas
-                personalizadas avançadas
-              </li>
-              <li>
-                Clique no botão <strong>Pesquisar</strong> para visualizar os
-                resultados
-              </li>
+              <li dangerouslySetInnerHTML={{ __html: t("queryBuilder.howToSearch.step4") }} />
+              <li dangerouslySetInnerHTML={{ __html: t("queryBuilder.howToSearch.step5") }} />
             </ol>
           </div>
         </div>
@@ -1738,7 +1782,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         {previewQuery && (
           <div className="query-preview">
             <h3>
-              Pré-visualização da Consulta{" "}
+              {t("queryBuilder.queryPreview.title")}{" "}
               {queryCount > 0 && (
                 <span className="query-count">({queryCount} parâmetros)</span>
               )}

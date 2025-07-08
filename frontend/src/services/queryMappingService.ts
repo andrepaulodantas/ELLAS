@@ -1,6 +1,7 @@
 import * as apiService from "./apiService";
 import { fetchQuery } from "./apiService";
 import { getQueriesByCategory, getSparqlQuery } from "../data";
+import { getRootCategoriesWithTranslation } from '../utils/categoryTranslations';
 
 // Flag para forçar o uso de dados de demonstração no ambiente de desenvolvimento
 // Isso é útil quando o endpoint SPARQL não está disponível ou com problemas de CORS/autenticação
@@ -664,7 +665,7 @@ export const executeQueryWithParams = async (
         ${valueFilter}
       }
       ORDER BY ?${entityNameField}
-      LIMIT 100
+      LIMIT 500
     `;
     return await apiService.fetchQuery(query);
   }
@@ -1330,7 +1331,7 @@ export const exploreValuesForProperty = async (
       }
       GROUP BY ?value
       ORDER BY DESC(?count)
-      LIMIT 100
+      LIMIT 500
     `;
 
     console.log(`📝 Executando consulta SPARQL:`, query);
@@ -1927,7 +1928,7 @@ export const buildDynamicGraphQuery = async (
   category: string,
   path: string[], // Caminho alternado de propriedades e valores
   extraFields: string[] = [],
-  limit: number = 100
+  limit: number = 500
 ): Promise<string> => {
   // Base da consulta com prefixos
   // Filtrar extraFields para evitar duplicação de label
@@ -2053,10 +2054,10 @@ export const executeDynamicGraphQuery = async (
       const bindingsLength = result.results.bindings.length;
       console.log(`📊 DEBUG: Consulta retornou ${bindingsLength} resultados`);
 
-      // Verificar se sempre retorna 44
-      if (bindingsLength === 44) {
+      // Verificar se sempre retorna o mesmo número
+      if (bindingsLength === 100 || bindingsLength === 44) {
         console.error(
-          `🚨 ALERTA: Sempre retorna 44 resultados! Pode ser dados de fallback!`
+          `🚨 ALERTA: Sempre retorna ${bindingsLength} resultados! Pode ser dados de fallback ou limite SPARQL!`
         );
         console.log(
           `🔍 DEBUG Primeiros 3 resultados:`,
@@ -2123,11 +2124,7 @@ export const getFilterOptions = (
 
 // Função para obter as 3 categorias principais na raiz
 export const getRootCategories = (): GraphOption[] => {
-  return [
-    { value: "Initiative", label: "Iniciativas", count: 245, type: "category" },
-    { value: "Policy", label: "Políticas", count: 88, type: "category" },
-    { value: "Factor", label: "Fatores", count: 52, type: "category" },
-  ];
+  return getRootCategoriesWithTranslation();
 };
 
 // Função para determinar se estamos na raiz (sem categoria selecionada)

@@ -1,3 +1,5 @@
+import { getRootCategoriesWithTranslation } from '../../utils/categoryTranslations';
+
 /**
  * Mapeador de categorias e propriedades
  * Princípio da Responsabilidade Única: Apenas mapeia categorias e propriedades
@@ -161,11 +163,7 @@ export class CategoryPropertyMapper {
    * Obtém as categorias raiz com detalhes completos
    */
   getRootCategoriesWithDetails(): Array<{ value: string; label: string; count: number; type: string }> {
-    return [
-      { value: "Initiative", label: "Iniciativas", count: 245, type: "category" },
-      { value: "Policy", label: "Políticas", count: 88, type: "category" },
-      { value: "Factor", label: "Fatores", count: 52, type: "category" },
-    ];
+    return getRootCategoriesWithTranslation();
   }
 
   /**

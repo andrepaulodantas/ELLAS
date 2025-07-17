@@ -14,8 +14,9 @@ import { SelectOption } from "../../components/SelectBox";
 import { useLanguage } from "../../contexts/LanguageContext";
 import Sidebar from "../../components/Sidebar";
 import styled from "@emotion/styled";
-import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
-import IconWrapper from "../../components/IconWrapper";
+// Social media icons commented out as not currently used
+// import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+// import IconWrapper from "../../components/IconWrapper";
 
 interface DropDownOption extends SelectOption {
   value: string;
@@ -815,6 +816,40 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
               "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others) in the country X?",
           },
         ];
+      } else if (category === "indicators") {
+        return [
+          { value: "all", label: translations.filters?.all || "All" },
+          {
+            value: "gender-equality-metrics",
+            label:
+              translations.queries?.indicators?.genderEqualityMetrics ||
+              "What gender equality indicators are available in Latin America?",
+          },
+          {
+            value: "stem-participation",
+            label:
+              translations.queries?.indicators?.stemParticipation ||
+              "What are the STEM participation indicators for women?",
+          },
+          {
+            value: "education-indicators",
+            label:
+              translations.queries?.indicators?.educationIndicators ||
+              "What education indicators show gender gaps in STEM?",
+          },
+          {
+            value: "leadership-metrics",
+            label:
+              translations.queries?.indicators?.leadershipMetrics ||
+              "What indicators measure women's leadership in STEM?",
+          },
+          {
+            value: "progress-metrics",
+            label:
+              translations.queries?.indicators?.progressMetrics ||
+              "What indicators track progress in gender equality in STEM?",
+          },
+        ];
       }
       return [];
     },
@@ -879,6 +914,13 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
         } else {
           baseQuery =
             "What are the positive CONTEXTUAL FACTORS in COUNTRIES ANALYZED?";
+        }
+      } else if (categoryValue === "indicators") {
+        if (selectedCountry && selectedCountry.value !== "all") {
+          baseQuery = `What gender equality indicators are available for ${selectedCountry.value}?`;
+        } else {
+          baseQuery =
+            "What gender equality indicators are available in Latin America?";
         }
       }
     }
@@ -1279,18 +1321,44 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
     let filtered = [...data];
 
-    // Apply country filter
+    // Apply country filter with improved logic
     if (
       selectedCountry &&
       selectedCountry.value &&
       selectedCountry.value !== "all"
     ) {
-      filtered = filtered.filter((item) => {
-        const itemCountry = item.countryName || item.country || "";
-        return itemCountry
-          .toLowerCase()
-          .includes(selectedCountry.value.toLowerCase());
-      });
+      // Use the same logic as applyFilters function for consistency
+      if (
+        selectedCountry.value === "USA" ||
+        selectedCountry.value === "United States"
+      ) {
+        filtered = filtered.filter((item) => {
+          if (!item.countryName) return false;
+
+          // Parse the country string for multiple countries
+          const countries = parseCountryString(item.countryName);
+
+          // Check if any of the parsed countries matches USA or United States
+          return countries.some(
+            (country) =>
+              country.toLowerCase() === "united states" ||
+              country.toLowerCase() === "usa"
+          );
+        });
+      } else {
+        filtered = filtered.filter((item) => {
+          if (!item.countryName) return false;
+
+          // Parse the country string for multiple countries
+          const countries = parseCountryString(item.countryName);
+
+          // Check if any of the parsed countries matches the selected country
+          return countries.some(
+            (country) =>
+              country.toLowerCase() === selectedCountry.value.toLowerCase()
+          );
+        });
+      }
     }
 
     // Apply year filter
@@ -1365,6 +1433,38 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
 
     setSelectedCountries(countries);
   }, [data, selectedCountry, selectedYear, selectedStatus]);
+
+  // Additional useEffect to refetch data when country filter changes
+  // This handles the case when user selects only category (no specific question)
+  // and then changes country filter - we need to fetch new data for that country
+  useEffect(() => {
+    // Only trigger if we have a category but no specific question selected
+    // and we have a country selected
+    if (
+      selectedCategory &&
+      !selectedQuestion &&
+      (!selectedQueryType || selectedQueryType.value === "all") &&
+      selectedCountry &&
+      selectedCountry.value !== "all" &&
+      data.length > 0 // Only if we already have some data loaded
+    ) {
+      // Small delay to avoid too many rapid requests
+      const timeoutId = setTimeout(() => {
+        // Force a data refetch by triggering the main useEffect
+        // We do this by temporarily setting isLoading to true and then letting
+        // the main useEffect handle the data fetching
+        setIsLoading(true);
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [
+    selectedCountry,
+    selectedCategory,
+    selectedQuestion,
+    selectedQueryType,
+    data.length,
+  ]);
 
   // Clear all filters
   const handleReset = () => {
@@ -1530,8 +1630,8 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                 : "ELLAS - Dados";
               doc.text(title, 14, 22);
 
-              // Adicionar dados em formato de tabela
-              const tableData = data.map((item) => {
+              // Adicionar dados em formato de tabela (usando dados filtrados)
+              const tableData = filteredData.map((item) => {
                 return [
                   item.countryName || item.country || "",
                   item.name || "",

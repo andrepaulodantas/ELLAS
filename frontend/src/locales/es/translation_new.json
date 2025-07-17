@@ -1,0 +1,146 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "openData": "Datos Abiertos",
+    "supportELLAS": "Apoya a ELLAS",
+    "contact": "Contacto"
+  },
+  "home": {
+    "title": "Datos abiertos para Equidad de Género en Ciencia y Tecnología en América Latina",
+    "exploreData": "Explore los datos",
+    "selectFeaturedQuestion": "Selecciona una de las preguntas más buscadas para empezar.",
+    "featuredData": "Datos Destacados"
+  },
+  "common": {
+    "learnMore": "Saber más",
+    "chooseCategory": "Elige una Categoría",
+    "askData": "¿Qué quieres preguntar a los datos?",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar",
+    "loading": "Cargando..."
+  },
+  "explore": "Explorar",
+  "exploreDescription": "El portal ELLAS genera y divulga datos abiertos conectados con foco en países de América Latina. Surgió de la unión de instituciones de Brasil, Bolivia y Perú.",
+  "about": "Sobre",
+  "openData": "Datos Abiertos",
+  "support": "Apoya ELLAS",
+  "login": "Entrar",
+  "search": "Buscar",
+  "chooseCategory": "Elija una Categoría",
+  "askData": "¿Qué desea preguntar a los datos?",
+  "learnMore": "Saber más",
+  "institutions": "Instituciones",
+  "visualizations": "Visualizaciones",
+  "openDataPortal": "Portal de Datos Abiertos",
+  "supportELLAS": "Apoye ELLAS",
+  "freeResearch": "Investigación libre",
+  "tables": {
+    "table": "Visualización en Tabla",
+    "lines": "Líneas",
+    "chart": "Visualización en Gráfico",
+    "map": "Mapas",
+    "description": "Explora iniciativas que apoyan a las mujeres en STEM en América Latina"
+  },
+  "results": {
+    "totalResults": "Total de resultados",
+    "showingResults": "Mostrando {{start}} - {{end}} de {{total}} resultados",
+    "firstPage": "Primera página",
+    "previousPage": "Página anterior",
+    "nextPage": "Siguiente página",
+    "lastPage": "Última página",
+    "rowsPerPage": "Filas por página",
+    "page": "Página",
+    "of": "de",
+    "noResults": "Sin resultados para mostrar",
+    "loading": "Cargando resultados...",
+    "error": "Error al cargar los resultados",
+    "retry": "Intentar nuevamente",
+    "exportPDF": "Exportar PDF",
+    "exportCSV": "Exportar CSV",
+    "filters": {
+      "country": "País",
+      "year": "Año",
+      "type": "Tipo",
+      "status": "Estado",
+      "category": "Categoría",
+      "clear": "Limpiar filtros",
+      "apply": "Aplicar filtros"
+    },
+    "table": {
+      "actions": "Acciones",
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "sort": "Ordenar",
+      "filter": "Filtrar"
+    },
+    "pagination": {
+      "first": "Primero",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "last": "Último"
+    }
+  },
+  "categories": {
+    "policies": "Políticas",
+    "initiatives": "Iniciativas",
+    "factors": "Factores",
+    "secondary": "Secundarios",
+    "all": "Todas las Categorías"
+  },
+  "policies": {
+    "title": "Políticas",
+    "description": "Políticas públicas relacionadas con género y STEM",
+    "country": "País",
+    "year": "Año",
+    "type": "Tipo",
+    "noData": "No hay datos disponibles",
+    "startDate": "Fecha de Inicio",
+    "policyTypes": {
+      "educational": "Educativo",
+      "legislation": "Legislación",
+      "program": "Programa"
+    }
+  },
+  "buttons": {
+    "reset": "Reiniciar",
+    "apply": "Aplicar",
+    "share": "Compartir",
+    "export": "Exportar",
+    "viewAll": "Ver Todos los Datos",
+    "explore": "Explorar",
+    "details": "Detalles",
+    "submit": "Enviar",
+    "cancel": "Cancelar"
+  },
+  "advancedSearch": {
+    "title": "Búsqueda Avanzada",
+    "pageTitle": "ELLAS - Búsqueda Avanzada",
+    "pageDescription": "Construya consultas personalizadas para explorar los datos del proyecto ELLAS sobre igualdad de género en América Latina.",
+    "description": "Construya una consulta personalizada para explorar los datos del proyecto ELLAS sobre igualdad de género en América Latina",
+    "buildQuery": "Construir Consulta",
+    "loading": "Construyendo su consulta y buscando datos...",
+    "helpButton": "Mostrar ayuda",
+    "validation": {
+      "categoryRequired": "Es necesario seleccionar una categoría"
+    },
+    "errors": {
+      "unknownError": "Error desconocido al procesar la consulta",
+      "close": "Cerrar"
+    }
+  },
+  "queryBuilder": {
+    "selectCategory": "Seleccione una Categoría",
+    "propertiesAvailable": "Propiedades disponibles para",
+    "selectCategoryToSeeConnections": "Seleccione una categoría para ver las conexiones disponibles.",
+    "valuesFor": "Valores para",
+    "loadingValuesFor": "Cargando valores para",
+    "nextProperties": "Próximas propiedades",
+    "noMoreConnections": "No hay más conexiones disponibles en esta ruta.",
+    "exploreConnectedData": "Explorar Datos Conectados",
+    "reloadData": "Recargar Datos",
+    "currentPath": "Ruta",
+    "loadingOptions": "Cargando opciones..."
+  }
+}

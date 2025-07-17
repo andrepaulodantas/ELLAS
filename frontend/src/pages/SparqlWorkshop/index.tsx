@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
 import Header from "../../components/Header";
 import SparqlEditor from "../../components/SparqlEditor";
-import { processPropertyQueryResults } from "../../services/apiService";
 import "./styles.css";
 
 interface QueryResult {
@@ -12,9 +12,10 @@ interface QueryResult {
 }
 
 const SparqlWorkshopPage: React.FC = () => {
+  const { t } = useTranslation();
   const [queryResults, setQueryResults] = useState<QueryResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [tutorials, setTutorials] = useState([
+  const tutorials = [
     {
       title: "Consulta Básica de Políticas",
       description: "Lista todas as políticas com seus países",
@@ -82,7 +83,7 @@ GROUP BY ?factorName ?impactType ?countryName
 ORDER BY DESC(?relatedCount) ?countryName
 LIMIT 10`,
     },
-  ]);
+  ];
 
   const handleQueryExecute = async (results: any) => {
     setIsLoading(true);
@@ -102,7 +103,9 @@ LIMIT 10`,
             });
             return row;
           }),
-          title: `Resultados da Consulta SPARQL (${bindings.length} registros)`,
+          title: `${t("queryBuilder.results.title")} (${bindings.length} ${t(
+            "queryBuilder.results.records"
+          )})`,
         };
 
         setQueryResults(processedResults);
@@ -110,7 +113,8 @@ LIMIT 10`,
         setQueryResults({
           headers: [],
           rows: [],
-          title: "Nenhum resultado encontrado",
+          title:
+            t("queryBuilder.results.noData") || "Nenhum resultado encontrado",
         });
       }
     } catch (error) {
@@ -277,7 +281,7 @@ LIMIT 10`}
           {/* Results Section */}
           {(queryResults || isLoading) && (
             <div className="results-section">
-              <h2>📊 Resultados</h2>
+              <h2>{t("queryBuilder.results.title")}</h2>
               {isLoading ? (
                 <div className="loading-container">
                   <div className="loading-spinner"></div>

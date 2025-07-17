@@ -185,14 +185,23 @@ const MapComponent: React.FC<MapComponentProps> = ({
     return country;
   };
 
+  // Verificação de segurança para evitar renderização com traduções incompletas
+  if (!translations || !translations.buttons) {
+    return <div>Carregando mapa...</div>;
+  }
+
   return (
     <div className="relative w-full h-full">
       <div className="absolute top-0 left-0 z-10 p-4 bg-white/90 rounded-lg m-4 max-w-md">
         <Text size="md" className="font-semibold mb-2">
-          {translations.visualization.map}
+          {translations?.visualization?.map ||
+            translations?.tables?.map ||
+            "Mapa"}
         </Text>
         <Text size="md" className="mb-4">
-          {translations.visualization.description}
+          {translations?.visualization?.description ||
+            translations?.tables?.description ||
+            "Explore iniciativas que apoiam mulheres em STEM na América Latina"}
         </Text>
         <Button
           size="sm"
@@ -200,7 +209,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
           onClick={handleViewAllData}
           className="text-sm"
         >
-          {translations.buttons.viewAll}
+          {translations?.buttons?.viewAll || "Ver Todos os Dados"}
         </Button>
       </div>
 

@@ -57,20 +57,17 @@
     "policies": "Políticas",
     "initiatives": "Iniciativas",
     "factors": "Fatores",
-    "indicators": "Indicadores",
     "otherData": "Outros Dados",
     "descriptions": {
       "policies": "Legislações e decretos que promovem a participação de mulheres nas áreas STEM",
       "initiatives": "Eventos, programas e outras ações para inserção e permanência de mulheres nas carreiras de tecnologia",
       "factors": "Dados coletados pela equipe ELLAS para identificar fatores que afetam a presença de mulheres em STEM na América do Sul",
-      "indicators": "Métricas e estatísticas que medem o progresso da igualdade de gênero em STEM na América Latina",
       "otherData": "Dados secundários de outras bases de dados associadas ao projeto ELLAS"
     },
     "categoryLabels": {
       "Initiative": "Iniciativas",
-      "Policy": "Políticas",
-      "Factor": "Fatores",
-      "Indicator": "Indicadores"
+      "Policy": "Políticas", 
+      "Factor": "Fatores"
     }
   },
   "properties": {
@@ -298,19 +295,18 @@
         "description": "Clique em \"Construir Consulta\" para ver os resultados em formato de mapa e tabela."
       }
     }
-  },
-  "queryBuilder": {
-    "selectCategory": "Selecione uma Categoria",
-    "propertiesAvailable": "Propriedades disponíveis para",
-    "selectCategoryToSeeConnections": "Selecione uma categoria para ver as conexões disponíveis.",
-    "valuesFor": "Valores para",
-    "loadingValuesFor": "Carregando valores para",
-    "nextProperties": "Próximas propriedades",
-    "noMoreConnections": "Não há mais conexões disponíveis neste caminho.",
-    "exploreConnectedData": "Explorar Dados Conectados",
-    "reloadData": "Recarregar Dados",
-    "currentPath": "Caminho",
-    "loadingOptions": "Carregando opções...",
+  },    "queryBuilder": {
+      "selectCategory": "Selecione uma Categoria",
+      "propertiesAvailable": "Propriedades disponíveis para",
+      "selectCategoryToSeeConnections": "Selecione uma categoria para ver as conexões disponíveis.",
+      "valuesFor": "Valores para",
+      "loadingValuesFor": "Carregando valores para",
+      "nextProperties": "Próximas propriedades",
+      "noMoreConnections": "Não há mais conexões disponíveis neste caminho.",
+      "exploreConnectedData": "Explorar Dados Conectados",
+      "reloadData": "Recarregar Dados",
+      "currentPath": "Caminho",
+      "loadingOptions": "Carregando opções...",
     "selectCategoryMessage": "Selecione uma categoria para ver as conexões disponíveis.",
     "selectCategoryForTable": "Selecione uma categoria para visualizar os dados na tabela.",
     "instructions": "Selecione uma <strong>Categoria</strong> (Políticas, Iniciativas ou Fatores) para começar a construir sua consulta personalizada.",
@@ -323,10 +319,10 @@
       "step5": "Clique no botão <strong>Pesquisar</strong> para visualizar os resultados"
     },
     "queryData": {
-      "title": "Dados da Consulta",
+      "title": "📊 Dados da Consulta",
       "subtitle": "Selecione uma categoria para visualizar os dados na tabela.",
       "howToUse": {
-        "title": "Como usar:",
+        "title": "💡 Como usar:",
         "step1": "Clique em uma categoria (Initiative, Policy, Factor)",
         "step2": "Os dados serão carregados automaticamente",
         "step3": "Use as propriedades para filtrar os resultados"
@@ -342,31 +338,11 @@
       "expert": "Expert"
     },
     "results": {
-      "title": "Resultados da Consulta",
+      "title": "📊 Resultados da Consulta",
       "records": "registros",
       "filteredBy": "Filtrado por",
       "basicData": "Dados básicos da categoria",
       "tableUpdated": "Tabela atualizada"
-    },
-    "navigation": {
-      "categoryNavigation": "Navegação por Categorias",
-      "selectedCategory": "Categoria Selecionada",
-      "backToCategories": "Voltar às Categorias",
-      "propertiesAvailable": "Propriedades Disponíveis",
-      "noPropertiesFound": "Nenhuma propriedade encontrada para esta categoria",
-      "valuesFor": "Valores para",
-      "navigationPath": "Caminho de Navegação",
-      "noResultsFound": "Nenhum Resultado Encontrado",
-      "currentQueryNoResults": "A consulta atual não retornou nenhum resultado",
-      "filtersApplied": "Filtros aplicados",
-      "reloadButton": "Recarregar",
-      "exportData": "Exportar Dados",
-      "connectedDataExplorer": "Explorador de Dados Conectados"
     }
-  },
-  "homeQueries": {
-    "femaleLeadership": "Quais são os fatores contextuais que impactam positiva ou negativamente nas lideranças femininas?",
-    "blackWomenBrazil": "Quais iniciativas atendem mulheres negras?",
-    "genderEquality": "Que tipos de políticas/processos/práticas de gênero existem na América Latina?"
   }
 }

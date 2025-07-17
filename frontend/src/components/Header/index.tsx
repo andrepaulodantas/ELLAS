@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -17,20 +17,17 @@ import {
   List,
   ListItem,
   ListItemText,
-  Collapse,
   InputBase,
   Popper,
   Paper,
   ClickAwayListener,
   Grow,
 } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
-import CategoryIcon from "@mui/icons-material/Category";
+import CategoryIcon from "@mui/icons-material/Label";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -578,13 +575,13 @@ const AdvancedSearchButton = styled(Button)`
   display: flex;
   align-items: center;
   gap: 5px;
-  
+
   &:hover {
     background-color: #ff5672;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(255, 107, 129, 0.3);
   }
-  
+
   svg {
     font-size: 18px;
   }
@@ -791,13 +788,16 @@ const Header = () => {
                 </Box>
 
                 {/* Botão de Busca Avançada */}
-                <AdvancedSearchButton 
+                <AdvancedSearchButton
                   onClick={handleAdvancedSearch}
                   variant="contained"
                 >
                   <TuneIcon />
-                  {language === 'pt' ? 'Busca Avançada' : 
-                   language === 'es' ? 'Búsqueda Avanzada' : 'Advanced Search'}
+                  {language === "pt"
+                    ? "Busca Avançada"
+                    : language === "es"
+                    ? "Búsqueda Avanzada"
+                    : "Advanced Search"}
                 </AdvancedSearchButton>
               </NavContainer>
             )}
@@ -820,6 +820,26 @@ const Header = () => {
                 <ListItemText primary={item.label} />
               </DrawerListItem>
             ))}
+            {/* Botão de Busca Avançada no menu mobile */}
+            <DrawerListItem
+              onClick={() => {
+                handleAdvancedSearch();
+                setMobileOpen(false);
+              }}
+            >
+              <ListItemText
+                primary={
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <TuneIcon sx={{ color: "#ff6b81" }} />
+                    {language === "pt"
+                      ? "Busca Avançada"
+                      : language === "es"
+                      ? "Búsqueda Avanzada"
+                      : "Advanced Search"}
+                  </Box>
+                }
+              />
+            </DrawerListItem>
             <DrawerListItem>
               <LanguageSwitcher />
             </DrawerListItem>

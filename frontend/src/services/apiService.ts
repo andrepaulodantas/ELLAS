@@ -132,10 +132,10 @@ const fetchQuery = async (query: string) => {
   // Se todas as tentativas falharam, retornar estrutura vazia
   console.error("💥 Todas as tentativas de conectividade falharam");
   console.log("⚠️ Retornando estrutura vazia");
-  
+
   return {
     head: { vars: [] },
-    results: { bindings: [] }
+    results: { bindings: [] },
   };
 };
 
@@ -2254,6 +2254,113 @@ export const getVisualizationInfo = (type: keyof typeof visualizationTypes) => {
   return info[type];
 };
 
+// ===============================
+// INDICATOR FUNCTIONS
+// ===============================
+
+// Contar total de indicadores no sistema
+export const fetchIndicatorsCount = (query?: string) => {
+  const defaultQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    
+    SELECT (COUNT(DISTINCT ?indicator) as ?count) WHERE {
+      ?indicator a Ellas:Indicator.
+    }
+  `;
+  return fetchQuery(query || defaultQuery);
+};
+
+// Buscar indicadores de igualdade de gênero
+export const fetchGenderEqualityMetrics = (query?: string) => {
+  const defaultQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT ?indicatorName ?value ?country ?year WHERE {
+      ?indicator a Ellas:Indicator.
+      ?indicator rdfs:label ?indicatorName.
+      ?indicator Ellas:indicator_type "Gender Equality"@en.
+      ?indicator Ellas:current_value ?value.
+      ?indicator Ellas:created_in ?country.
+      ?indicator Ellas:start_date ?year.
+    } ORDER BY ?country ?year
+  `;
+  return fetchQuery(query || defaultQuery);
+};
+
+// Buscar indicadores de participação em STEM
+export const fetchSTEMParticipationMetrics = (query?: string) => {
+  const defaultQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT ?indicatorName ?value ?country ?targetGroup WHERE {
+      ?indicator a Ellas:Indicator.
+      ?indicator rdfs:label ?indicatorName.
+      ?indicator Ellas:indicator_category "STEM Participation"@en.
+      ?indicator Ellas:current_value ?value.
+      ?indicator Ellas:created_in ?country.
+      ?indicator Ellas:target_group ?targetGroup.
+    } ORDER BY ?country ?targetGroup
+  `;
+  return fetchQuery(query || defaultQuery);
+};
+
+// Buscar indicadores educacionais
+export const fetchEducationIndicators = (query?: string) => {
+  const defaultQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT ?indicatorName ?value ?country ?educationLevel WHERE {
+      ?indicator a Ellas:Indicator.
+      ?indicator rdfs:label ?indicatorName.
+      ?indicator Ellas:indicator_category "Education"@en.
+      ?indicator Ellas:current_value ?value.
+      ?indicator Ellas:created_in ?country.
+      ?indicator Ellas:related_education_level ?educationLevel.
+    } ORDER BY ?country ?educationLevel
+  `;
+  return fetchQuery(query || defaultQuery);
+};
+
+// Buscar indicadores de liderança
+export const fetchLeadershipMetrics = (query?: string) => {
+  const defaultQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT ?indicatorName ?value ?country ?sector WHERE {
+      ?indicator a Ellas:Indicator.
+      ?indicator rdfs:label ?indicatorName.
+      ?indicator Ellas:indicator_category "Leadership"@en.
+      ?indicator Ellas:current_value ?value.
+      ?indicator Ellas:created_in ?country.
+      ?indicator Ellas:related_sector ?sector.
+    } ORDER BY ?country ?sector
+  `;
+  return fetchQuery(query || defaultQuery);
+};
+
+// Buscar indicadores de progresso
+export const fetchProgressMetrics = (query?: string) => {
+  const defaultQuery = `
+    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    
+    SELECT ?indicatorName ?baseline ?target ?current ?trend ?country WHERE {
+      ?indicator a Ellas:Indicator.
+      ?indicator rdfs:label ?indicatorName.
+      ?indicator Ellas:baseline_value ?baseline.
+      ?indicator Ellas:target_value ?target.
+      ?indicator Ellas:current_value ?current.
+      ?indicator Ellas:trend_direction ?trend.
+      ?indicator Ellas:created_in ?country.
+    } ORDER BY ?country ?trend
+  `;
+  return fetchQuery(query || defaultQuery);
+};
+
 export const getQueriesByCategory = (
   category: string | undefined,
   lang: string = "pt"
@@ -2275,6 +2382,7 @@ export const getQueriesByCategory = (
         policies: {},
         initiatives: {},
         factors: {},
+        indicators: {},
       },
     },
     en: {
@@ -2282,6 +2390,7 @@ export const getQueriesByCategory = (
         policies: {},
         initiatives: {},
         factors: {},
+        indicators: {},
       },
     },
     es: {
@@ -2289,6 +2398,7 @@ export const getQueriesByCategory = (
         policies: {},
         initiatives: {},
         factors: {},
+        indicators: {},
       },
     },
   }[normalizedLang as "pt" | "en" | "es"];
@@ -2297,6 +2407,7 @@ export const getQueriesByCategory = (
   const policyCategories = ["políticas", "policies", "políticas"];
   const initiativeCategories = ["iniciativas", "initiatives", "iniciativas"];
   const factorCategories = ["fatores", "factors", "factores"];
+  const indicatorCategories = ["indicadores", "indicators", "indicadores"];
 
   const categoryLower = category.toLowerCase();
 
@@ -2307,6 +2418,8 @@ export const getQueriesByCategory = (
     return translationObj.queries.initiatives;
   } else if (factorCategories.includes(categoryLower)) {
     return translationObj.queries.factors;
+  } else if (indicatorCategories.includes(categoryLower)) {
+    return translationObj.queries.indicators;
   }
 
   return {};
@@ -2352,10 +2465,23 @@ const useApiService = () => {
     }
   };
 
+  const getIndicators = async (query: string) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}?query=${encodeURIComponent(query)}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching indicators:", error);
+      throw error;
+    }
+  };
+
   return {
     getPolicies,
     getInitiatives,
     getFactors,
+    getIndicators,
   };
 };
 

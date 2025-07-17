@@ -55,7 +55,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
   // State for selected options
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  // const [forceRootView, setForceRootView] = useState<boolean>(true); // Commented out as not used
+  const [forceRootView, setForceRootView] = useState<boolean>(true);
 
   // Estado para as categorias traduzidas
   const [rootCategories, setRootCategories] = useState(() =>
@@ -88,7 +88,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   const [dynamicOptions, setDynamicOptions] = useState<
     Record<string, GraphOption[]>
   >({});
-  // const [isLoadingOptions, setIsLoadingOptions] = useState<boolean>(false); // Commented out as not used
+  const [isLoadingOptions, setIsLoadingOptions] = useState<boolean>(false);
   const [selectedGraphPath, setSelectedGraphPath] = useState<string[]>([]);
   const [currentGraphLevel, setCurrentGraphLevel] = useState<number>(0);
   const [tableKey, setTableKey] = useState<string>(Date.now().toString());
@@ -164,7 +164,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       setDynamicOptions({});
       setQueryResults([]);
 
-      // Carregar dados básicos da categoria
       const result = await queryMappingService.executeDynamicGraphQuery(
         category,
         [],
@@ -190,133 +189,12 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         setQueryResults([]);
         setTableKey(Date.now().toString());
       }
-
-      // CORREÇÃO: Carregar as propriedades disponíveis para navegação do grafo
-      try {
-        const properties = await queryMappingService.explorePropertiesForClass(
-          category
-        );
-        if (properties && properties.length > 0) {
-          setDynamicOptions({
-            properties: properties,
-          });
-          console.log(
-            `Carregadas ${properties.length} propriedades para ${category}:`,
-            properties
-          );
-        }
-      } catch (propertyError) {
-        console.error("Erro ao carregar propriedades:", propertyError);
-      }
     } catch (error) {
       console.error("Erro ao carregar dados básicos:", error);
       setQueryResults([]);
       setTableKey(Date.now().toString());
     } finally {
       setIsExecutingQuery(false);
-    }
-  };
-
-  // Função para carregar valores de uma propriedade selecionada
-  const loadPropertyValues = async (property: string) => {
-    try {
-      // CORREÇÃO: Verificar se a propriedade já está no final do caminho
-      if (selectedGraphPath.length > 0 && selectedGraphPath[selectedGraphPath.length - 1] === property) {
-        console.log(`⚠️ Propriedade '${property}' já está no final do caminho, ignorando duplicação`);
-        return;
-      }
-      
-      setIsExecutingQuery(true);
-      console.log(`🔍 Carregando valores para propriedade: ${property}`);
-
-      const values = await queryMappingService.exploreValuesForProperty(
-        selectedCategory,
-        property,
-        selectedFilters
-      );
-
-      if (values && values.length > 0) {
-        // Atualizar o caminho do grafo
-        const newPath = [...selectedGraphPath, property];
-        setSelectedGraphPath(newPath);
-        setCurrentGraphLevel(currentGraphLevel + 1);
-
-        // CORREÇÃO: Atualizar as opções dinâmicas mantendo valores existentes
-        setDynamicOptions((prevOptions) => ({
-          ...prevOptions,
-          [`${property}_values`]: values,
-        }));
-
-        console.log(
-          `Carregados ${values.length} valores para ${property}:`,
-          values
-        );
-      } else {
-        console.warn(`Nenhum valor encontrado para propriedade: ${property}`);
-      }
-    } catch (error) {
-      console.error(`Erro ao carregar valores para ${property}:`, error);
-    } finally {
-      setIsExecutingQuery(false);
-    }
-  };
-
-  // Função para selecionar um valor de propriedade e navegar para o próximo nível
-  const selectPropertyValue = async (property: string, value: string) => {
-    try {
-      setIsExecutingQuery(true);
-      console.log(
-        `🎯 selectPropertyValue called: property='${property}', value='${value}'`
-      );
-
-      // Atualizar filtros selecionados
-      const newFilters = {
-        ...selectedFilters,
-        [property]: value,
-      };
-      setSelectedFilters(newFilters);
-      console.log(`📝 Updated filters:`, newFilters);
-
-      // Atualizar caminho do grafo - o useEffect vai detectar esta mudança e executar a consulta
-      // CORREÇÃO: Evitar elementos duplicados consecutivos no caminho
-      let newPath = [...selectedGraphPath];
-      
-      // Verificar se o último elemento não é igual à propriedade que estamos adicionando
-      if (newPath.length === 0 || newPath[newPath.length - 1] !== property) {
-        newPath.push(property);
-      }
-      newPath.push(value);
-      
-      setSelectedGraphPath(newPath);
-      setCurrentGraphLevel(currentGraphLevel + 1);
-      console.log(`🛤️ Updated graph path: [${newPath.join(" → ")}]`);
-
-      // Limpar valores de propriedade carregados para mostrar apenas as propriedades principais
-      setDynamicOptions((prevOptions) => {
-        const newOptions = { ...prevOptions };
-        // Remover todas as chaves que terminam com '_values'
-        Object.keys(newOptions).forEach((key) => {
-          if (key.endsWith("_values")) {
-            delete newOptions[key];
-          }
-        });
-        return newOptions;
-      });
-
-      console.log(`Caminho atualizado: ${newPath.join(" → ")}`);
-
-      // CORREÇÃO: Forçar atualização da tabela após delay para garantir que o estado foi atualizado
-      setTimeout(() => {
-        setTableKey(Date.now().toString());
-        console.log(`🔄 Forced table update after selectPropertyValue`);
-      }, 100);
-    } catch (error) {
-      console.error(
-        `Erro ao selecionar valor '${value}' para '${property}':`,
-        error
-      );
-    } finally {
-      // Não definir setIsExecutingQuery(false) aqui, deixar o useEffect cuidar disso
     }
   };
 
@@ -328,7 +206,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   // CORREÇÃO CRÍTICA: Sempre começar mostrando categorias raiz
   useEffect(() => {
     setSelectedCategory("");
-    // setForceRootView(true); // Commented out as not used
+    setForceRootView(true);
     setSelectedGraphPath([]);
     setCurrentGraphLevel(0);
     setDynamicOptions({});
@@ -339,7 +217,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   // CORREÇÃO ADICIONAL: Processar initialCategory corretamente
   useEffect(() => {
     setSelectedCategory("");
-    // setForceRootView(true); // Commented out as not used
+    setForceRootView(true);
     setSelectedGraphPath([]);
     setCurrentGraphLevel(0);
     setDynamicOptions({});
@@ -356,23 +234,10 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
   // useEffect para executar consulta automaticamente quando filtros mudarem
   useEffect(() => {
-    console.log(
-      `🔄 useEffect triggered - selectedCategory: ${selectedCategory}, selectedGraphPath: [${selectedGraphPath.join(
-        " → "
-      )}]`
-    );
-
     const executeFilterQuery = async () => {
       if (!selectedCategory) {
-        console.log("⚠️ No selectedCategory, skipping query execution");
         return;
       }
-
-      console.log(
-        `🚀 Executing query for category: ${selectedCategory}, path: [${selectedGraphPath.join(
-          " → "
-        )}]`
-      );
 
       if (selectedGraphPath.length === 0) {
         try {
@@ -398,13 +263,9 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             result.results.bindings &&
             result.results.bindings.length > 0
           ) {
-            console.log(
-              `✅ Initial query successful: ${result.results.bindings.length} results`
-            );
             setQueryResults(result.results.bindings as QueryResult[]);
             setTableKey(Date.now().toString());
           } else {
-            console.log("❌ Initial query returned no results");
             setQueryResults([]);
             setTableKey(Date.now().toString());
           }
@@ -418,7 +279,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       }
 
       if (selectedGraphPath.length % 2 !== 0) {
-        setIsExecutingQuery(false);
         return;
       }
 
@@ -440,34 +300,8 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         );
 
         if (result && result.results && result.results.bindings) {
-          console.log(
-            `✅ Filtered query successful: ${
-              result.results.bindings.length
-            } results for path [${queryPath.join(" → ")}]`
-          );
           setQueryResults(result.results.bindings as QueryResult[]);
           setTableKey(Date.now().toString());
-          console.log(
-            `Consulta retornou ${
-              result.results.bindings.length
-            } resultados para caminho: ${queryPath.join(" → ")}`
-          );
-
-          // Carregar propriedades disponíveis após executar a consulta
-          try {
-            const properties =
-              await queryMappingService.explorePropertiesForClass(
-                selectedCategory
-              );
-            if (properties && properties.length > 0) {
-              setDynamicOptions((prevOptions) => ({
-                ...prevOptions,
-                properties: properties,
-              }));
-            }
-          } catch (propertyError) {
-            console.error("Erro ao carregar propriedades:", propertyError);
-          }
         } else {
           setQueryResults([]);
           setTableKey(Date.now().toString());
@@ -485,12 +319,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
   // Renderizar os resultados da consulta
   const renderQueryResults = () => {
-    console.log(
-      `DEBUG renderQueryResults: isExecutingQuery=${isExecutingQuery}, queryResults.length=${
-        queryResults?.length || 0
-      }`
-    );
-
     if (isExecutingQuery) {
       return (
         <div className="query-results loading">
@@ -505,7 +333,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       !Array.isArray(queryResults) ||
       queryResults.length === 0
     ) {
-      console.log(`DEBUG: Mostrando mensagem de resultados vazios`);
       return (
         <div className="query-results empty">
           <div className="empty-results-message">
@@ -525,10 +352,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         </div>
       );
     }
-
-    console.log(
-      `DEBUG: Renderizando tabela com ${queryResults.length} resultados`
-    );
 
     // Format function for displaying values
     const formatValue = (value: any) => {
@@ -608,18 +431,18 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
         {selectedCategory && queryResults.length === 0 && !isExecutingQuery && (
           <div className="no-results-warning">
-            <h3>{t("queryBuilder.navigation.noResultsFound")}</h3>
-            <p>{t("queryBuilder.navigation.currentQueryNoResults")}</p>
+            <h3>⚠️ Nenhum Resultado Encontrado</h3>
+            <p>A consulta atual não retornou nenhum resultado.</p>
             {selectedGraphPath.length > 0 && (
               <div className="filter-info">
-                <p>{t("queryBuilder.navigation.filtersApplied")}:</p>
+                <p>Filtros aplicados:</p>
                 <ul>
                   {selectedGraphPath.map((path, index) => (
                     <li key={index}>{path}</li>
                   ))}
                 </ul>
                 <button className="reload-button" onClick={handleReload}>
-                  {t("queryBuilder.navigation.reloadButton")}
+                  🔄 Recarregar Dados
                 </button>
               </div>
             )}
@@ -710,7 +533,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                     // Implementar exportação futura
                   }}
                 >
-                  {t("queryBuilder.navigation.exportData")}
+                  📄 Exportar Dados
                 </button>
               </div>
             )}
@@ -724,150 +547,25 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   const renderDynamicGraphOptions = () => {
     return (
       <div className="dynamic-graph-container">
-        <h3>{t("queryBuilder.navigation.categoryNavigation")}</h3>
-
-        {/* Mostrar cartões de categoria quando nenhuma categoria estiver selecionada */}
-        {!selectedCategory && (
-          <div className="category-cards">
-            {rootCategories.map((category) => (
-              <div
-                key={category.value}
-                className={`category-card ${
-                  selectedCategory === category.value ? "selected" : ""
-                }`}
-                onClick={async () => {
-                  setSelectedCategory(category.value);
-                  // setForceRootView(false); // Commented out as not used
-                  await loadBasicCategoryData(category.value);
-                }}
-              >
-                <h4>{category.label}</h4>
-                <p>Explorar dados de {category.label.toLowerCase()}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Mostrar propriedades disponíveis quando uma categoria estiver selecionada */}
-        {selectedCategory && (
-          <div className="properties-navigation">
-            <div className="current-category">
-              <h4>
-                {t("queryBuilder.navigation.selectedCategory")}:{" "}
-                {rootCategories.find((cat) => cat.value === selectedCategory)
-                  ?.label || selectedCategory}
-              </h4>
-              <button
-                className="back-to-categories"
-                onClick={() => {
-                  setSelectedCategory("");
-                  setSelectedGraphPath([]);
-                  setDynamicOptions({});
-                  setQueryResults([]);
-                  // setForceRootView(true); // Commented out as not used
-                }}
-              >
-                ← {t("queryBuilder.navigation.backToCategories")}
-              </button>
+        <h3>🔍 Navegação por Categorias</h3>
+        <div className="category-cards">
+          {rootCategories.map((category) => (
+            <div
+              key={category.value}
+              className={`category-card ${
+                selectedCategory === category.value ? "selected" : ""
+              }`}
+              onClick={async () => {
+                setSelectedCategory(category.value);
+                setForceRootView(false);
+                await loadBasicCategoryData(category.value);
+              }}
+            >
+              <h4>{category.label}</h4>
+              <p>Explorar dados de {category.label.toLowerCase()}</p>
             </div>
-
-            {/* Mostrar propriedades disponíveis */}
-            {dynamicOptions.properties &&
-              dynamicOptions.properties.length > 0 && (
-                <div className="properties-section">
-                  <h5>{t("queryBuilder.navigation.propertiesAvailable")}:</h5>
-                  <div className="properties-grid">
-                    {dynamicOptions.properties.map((property) => (
-                      <div
-                        key={property.value}
-                        className="property-card"
-                        onClick={async () => {
-                          await loadPropertyValues(property.value);
-                        }}
-                      >
-                        <div className="property-name">{property.label}</div>
-                        {property.count && (
-                          <div className="property-count">
-                            {property.count} itens
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-            {/* Mostrar valores carregados de propriedades selecionadas */}
-            {Object.keys(dynamicOptions).some((key) =>
-              key.endsWith("_values")
-            ) && (
-              <div className="property-values-section">
-                {Object.entries(dynamicOptions)
-                  .filter(([key]) => key.endsWith("_values"))
-                  .map(([key, values]) => {
-                    const propertyName = key.replace("_values", "");
-                    return (
-                      <div key={key} className="property-values">
-                        <h5>
-                          {t("queryBuilder.navigation.valuesFor")}{" "}
-                          {propertyName}:
-                        </h5>
-                        <div className="values-grid">
-                          {(values as GraphOption[]).map((value) => (
-                            <div
-                              key={value.value}
-                              className="value-card"
-                              onClick={async () => {
-                                await selectPropertyValue(
-                                  propertyName,
-                                  value.value
-                                );
-                              }}
-                            >
-                              <div className="value-name">{value.label}</div>
-                              {value.count && (
-                                <div className="value-count">
-                                  {value.count} itens
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
-
-            {/* Mostrar caminho de navegação atual */}
-            {selectedGraphPath.length > 0 && (
-              <div className="navigation-path">
-                <h5>{t("queryBuilder.navigation.navigationPath")}:</h5>
-                <div className="path-breadcrumb">
-                  <span className="path-item category">
-                    {rootCategories.find(
-                      (cat) => cat.value === selectedCategory
-                    )?.label || selectedCategory}
-                  </span>
-                  {selectedGraphPath.map((item, index) => (
-                    <span key={index} className="path-item">
-                      → {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Mostrar mensagem se não houver propriedades */}
-            {(!dynamicOptions.properties ||
-              dynamicOptions.properties.length === 0) &&
-              !isExecutingQuery && (
-                <div className="no-properties">
-                  <p>{t("queryBuilder.navigation.noPropertiesFound")}</p>
-                </div>
-              )}
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     );
   };
@@ -1017,7 +715,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
 
             {selectedCategory && (
               <div className="form-section">
-                <h3>{t("queryBuilder.navigation.connectedDataExplorer")}</h3>
+                <h3>🔗 Explorador de Dados Conectados</h3>
                 <p className="section-description">
                   Explore as relações entre os dados navegando pelas
                   propriedades e valores disponíveis.
@@ -1107,7 +805,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
             type="button"
             className="reset-button"
             onClick={() => {
-              // setForceRootView(true); // Commented out as not used
+              setForceRootView(true);
               setSelectedCategory("");
               setSelectedSubCategory("");
               setSelectedCountries([]);

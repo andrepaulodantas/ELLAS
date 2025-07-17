@@ -39,9 +39,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   const { translations, language } = useLanguage();
 
   const categoryOptions = [
-    { label: translations.categories.initiatives, value: "initiatives" },
-    { label: translations.categories.policies, value: "policies" },
-    { label: translations.categories.factors, value: "factors" },
+    {
+      label: translations?.categories?.initiatives || "Iniciativas",
+      value: "initiatives",
+    },
+    {
+      label: translations?.categories?.policies || "Políticas",
+      value: "policies",
+    },
+    { label: translations?.categories?.factors || "Fatores", value: "factors" },
   ];
 
   // Check if the current question uses year filter
@@ -83,23 +89,27 @@ const Sidebar: React.FC<SidebarProps> = ({
   // Get question options based on selected category
   const getQuestionOptions = () => {
     if (!selectedCategory) return [];
-    
-    const options = questionQueries[selectedCategory]?.[language]?.map((q) => ({
-      label: q,
-      value: q,
-    })) || [];
-    
+
+    const options =
+      questionQueries[selectedCategory]?.[language]?.map((q) => ({
+        label: q,
+        value: q,
+      })) || [];
+
     // Make sure the currently selected question is in the options
-    if (selectedQuestion && !options.some(opt => opt.value === selectedQuestion)) {
+    if (
+      selectedQuestion &&
+      !options.some((opt) => opt.value === selectedQuestion)
+    ) {
       options.unshift({
         label: selectedQuestion,
-        value: selectedQuestion
+        value: selectedQuestion,
       });
     }
-    
+
     return options;
   };
-  
+
   // Force dropdown to show when component mounts if question is already selected
   useEffect(() => {
     // Show all dropdown elements if they have values selected
@@ -109,21 +119,28 @@ const Sidebar: React.FC<SidebarProps> = ({
         countryDropdown.style.display = "block";
       }
     }
-    
+
     if (showYearFilter || selectedYears.length > 0) {
       const yearDropdown = document.getElementById("yearDropdown");
       if (yearDropdown) {
         yearDropdown.style.display = "block";
       }
     }
-    
+
     if (showStatusFilter || selectedStatuses.length > 0) {
       const statusDropdown = document.getElementById("statusDropdown");
       if (statusDropdown) {
         statusDropdown.style.display = "block";
       }
     }
-  }, [selectedQuestion, showYearFilter, showStatusFilter, selectedCountries, selectedYears, selectedStatuses]);
+  }, [
+    selectedQuestion,
+    showYearFilter,
+    showStatusFilter,
+    selectedCountries,
+    selectedYears,
+    selectedStatuses,
+  ]);
 
   return (
     <div className="h-auto w-[29%] md:w-full lg:w-full bg-white-A700 shadow-md p-6 sm:p-4 sm:mb-4">
@@ -133,19 +150,25 @@ const Sidebar: React.FC<SidebarProps> = ({
         className="mb-4 gap-2.5 w-full rounded-[35px]"
         onClick={onReset}
       >
-        {translations.buttons.reset}
+        {translations?.buttons?.reset || "Reiniciar"}
       </Button>
 
       <div className="flex flex-col gap-6">
         {/* Category Selection */}
         <div>
-          <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium sm:text-xl">
-            {translations.labels.category}
+          <Text
+            size="3xl"
+            as="p"
+            className="mb-2 text-gray-700 font-medium sm:text-xl"
+          >
+            {translations?.labels?.category || "Categoria"}
           </Text>
           <SelectBox
             shape="round"
             name="categoria"
-            placeholder={translations.labels.selectCategory}
+            placeholder={
+              translations?.labels?.selectCategory || "Selecione uma categoria"
+            }
             options={categoryOptions}
             value={
               selectedCategory
@@ -166,13 +189,19 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Question Selection */}
         {selectedCategory && (
           <div>
-            <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium sm:text-xl">
-              {translations.labels.question}
+            <Text
+              size="3xl"
+              as="p"
+              className="mb-2 text-gray-700 font-medium sm:text-xl"
+            >
+              {translations?.labels?.question || "Pergunta"}
             </Text>
             <SelectBox
               shape="round"
               name="pergunta"
-              placeholder={translations.labels.selectQuestion}
+              placeholder={
+                translations?.labels?.selectQuestion || "Selecione uma pergunta"
+              }
               options={getQuestionOptions()}
               value={
                 selectedQuestion
@@ -191,8 +220,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Filters Section */}
         {selectedCategory && (
           <div className="flex flex-col gap-4">
-            <Text size="3xl" as="p" className="mb-2 text-gray-700 font-medium sm:text-xl">
-              {translations.labels.filters}
+            <Text
+              size="3xl"
+              as="p"
+              className="mb-2 text-gray-700 font-medium sm:text-xl"
+            >
+              {translations?.labels?.filters || "Filtros"}
             </Text>
 
             {/* Country Filter */}
@@ -207,8 +240,12 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }
                 }}
               >
-                <Text size="3xl" as="p" className="text-gray-700 font-medium sm:text-xl">
-                  {translations.filters.country}
+                <Text
+                  size="3xl"
+                  as="p"
+                  className="text-gray-700 font-medium sm:text-xl"
+                >
+                  {translations?.filters?.country || "País"}
                 </Text>
                 <svg
                   className="w-5 h-5 text-gray-500"
@@ -237,7 +274,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                         onChange={() => onCountryChange(country.value)}
                         className="w-4 h-4 text-deep_orange-200 border-gray-300 rounded focus:ring-deep_orange-200"
                       />
-                      <Text size="md" as="span" className="text-gray-700 sm:text-sm">
+                      <Text
+                        size="md"
+                        as="span"
+                        className="text-gray-700 sm:text-sm"
+                      >
                         {country.label}
                       </Text>
                     </label>
@@ -260,7 +301,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }}
                 >
                   <Text size="3xl" as="p" className="text-gray-700 font-medium">
-                    {translations.filters.startDate}
+                    {translations?.filters?.startDate || "Data de Início"}
                   </Text>
                   <svg
                     className="w-5 h-5 text-gray-500"
@@ -313,7 +354,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   }}
                 >
                   <Text size="3xl" as="p" className="text-gray-700 font-medium">
-                    {translations.filters.statuses}
+                    {translations?.filters?.statuses || "Status"}
                   </Text>
                   <svg
                     className="w-5 h-5 text-gray-500"

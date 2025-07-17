@@ -344,7 +344,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     colSpan={dynamicFields.length}
                     className="px-4 py-4 text-center text-gray-500 border-b border-gray-200"
                   >
-                    {translations.table.noData}
+                    {translations?.table?.noData || "Nenhum dado disponível"}
                   </td>
                 </tr>
               )}

@@ -379,10 +379,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     loadTranslations();
   }, [language]);
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <LanguageContext.Provider
       value={{ language, setLanguage, translations, isLoading }}

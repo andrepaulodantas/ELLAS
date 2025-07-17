@@ -57,17 +57,20 @@
     "policies": "Policies",
     "initiatives": "Initiatives",
     "factors": "Factors",
+    "indicators": "Indicators",
     "otherData": "Other Data",
     "descriptions": {
       "policies": "Legislation and decrees that promote the participation of women in STEM fields",
       "initiatives": "Events, programs and other actions for the inclusion and retention of women in technology careers",
       "factors": "Data collected by the ELLAS team to identify factors affecting the presence of women in STEM in South America",
+      "indicators": "Metrics and statistics that measure progress in gender equality in STEM in Latin America",
       "otherData": "Secondary data from other databases associated with the ELLAS project"
     },
     "categoryLabels": {
       "Initiative": "Initiatives",
-      "Policy": "Policies", 
-      "Factor": "Factors"
+      "Policy": "Policies",
+      "Factor": "Factors",
+      "Indicator": "Indicators"
     }
   },
   "properties": {
@@ -295,18 +298,19 @@
     "openData": "Open Data",
     "supportELLAS": "Support ELLAS",
     "contact": "Contact"
-  },    "queryBuilder": {
-      "selectCategory": "Select a Category",
-      "propertiesAvailable": "Properties available for",
-      "selectCategoryToSeeConnections": "Select a category to see available connections.",
-      "valuesFor": "Values for",
-      "loadingValuesFor": "Loading values for",
-      "nextProperties": "Next properties",
-      "noMoreConnections": "No more connections available in this path.",
-      "exploreConnectedData": "Explore Connected Data",
-      "reloadData": "Reload Data",
-      "currentPath": "Path",
-      "loadingOptions": "Loading options...",
+  },
+  "queryBuilder": {
+    "selectCategory": "Select a Category",
+    "propertiesAvailable": "Properties available for",
+    "selectCategoryToSeeConnections": "Select a category to see available connections.",
+    "valuesFor": "Values for",
+    "loadingValuesFor": "Loading values for",
+    "nextProperties": "Next properties",
+    "noMoreConnections": "No more connections available in this path.",
+    "exploreConnectedData": "Explore Connected Data",
+    "reloadData": "Reload Data",
+    "currentPath": "Path",
+    "loadingOptions": "Loading options...",
     "selectCategoryMessage": "Select a category to see available connections.",
     "selectCategoryForTable": "Select a category to visualize data in the table.",
     "instructions": "Select a <strong>Category</strong> (Policies, Initiatives, or Factors) to start building your custom query.",
@@ -319,10 +323,10 @@
       "step5": "Click the <strong>Search</strong> button to view the results"
     },
     "queryData": {
-      "title": "📊 Query Data",
+      "title": "Query Data",
       "subtitle": "Select a category to view the data in the table.",
       "howToUse": {
-        "title": "💡 How to use:",
+        "title": "How to use:",
         "step1": "Click on a category (Initiative, Policy, Factor)",
         "step2": "Data will be loaded automatically",
         "step3": "Use properties to filter results"
@@ -338,11 +342,31 @@
       "expert": "Expert"
     },
     "results": {
-      "title": "📊 Query Results",
+      "title": "Query Results",
       "records": "records",
       "filteredBy": "Filtered by",
       "basicData": "Basic category data",
       "tableUpdated": "Table updated"
+    },
+    "navigation": {
+      "categoryNavigation": "Category Navigation",
+      "selectedCategory": "Selected Category",
+      "backToCategories": "Back to Categories",
+      "propertiesAvailable": "Available Properties",
+      "noPropertiesFound": "No properties found for this category",
+      "valuesFor": "Values for",
+      "navigationPath": "Navigation Path",
+      "noResultsFound": "No Results Found",
+      "currentQueryNoResults": "The current query returned no results",
+      "filtersApplied": "Applied filters",
+      "reloadButton": "Reload",
+      "exportData": "Export Data",
+      "connectedDataExplorer": "Connected Data Explorer"
     }
+  },
+  "homeQueries": {
+    "femaleLeadership": "What are the contextual factors that positively or negatively impact female leadership?",
+    "blackWomenBrazil": "What initiatives serve black women?",
+    "genderEquality": "What types of gender policies/processes/practices exist in Latin America?"
   }
 }

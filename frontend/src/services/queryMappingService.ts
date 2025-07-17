@@ -1938,6 +1938,7 @@ export const buildDynamicGraphQuery = async (
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     
     SELECT DISTINCT ?entity ?label ${filteredExtraFields
       .map((field) => `?${field}`)
@@ -1967,16 +1968,33 @@ export const buildDynamicGraphQuery = async (
         // Adicionar padrão de tripla para a propriedade
         query += `      ?entity Ellas:${property} ${varName} .\n`;
 
-        // Adicionar padrão para o valor (tentando diferentes formas)
+        // CORREÇÃO PARA DATAS E VALORES NUMÉRICOS: Melhor tratamento de tipos
+        const isNumeric = /^\d+(\.\d+)?$/.test(value);
+        const isYear = /^\d{4}(\.\d+)?$/.test(value);
+        
         query += `      {\n`;
-        // Tentar com rdfs:label em inglês
-        query += `        ${varName} rdfs:label "${escapedValue}"@en .\n`;
-        query += `      } UNION {\n`;
-        // Tentar com rdfs:label sem idioma
-        query += `        ${varName} rdfs:label "${escapedValue}" .\n`;
-        query += `      } UNION {\n`;
-        // Tentar com o valor literal direto
-        query += `        FILTER(STR(${varName}) = "${escapedValue}")\n`;
+        
+        if (isNumeric || isYear) {
+          // Para valores numéricos, incluindo anos, tentar diferentes formatos
+          query += `        FILTER(STR(${varName}) = "${escapedValue}" || `;
+          query += `               ${varName} = ${value} || `;
+          if (isYear) {
+            // Para anos, também tentar como data
+            const yearInt = Math.floor(parseFloat(value));
+            query += `               YEAR(${varName}) = ${yearInt} || `;
+          }
+          query += `               ${varName} = "${escapedValue}"^^xsd:double || `;
+          query += `               ${varName} = "${escapedValue}"^^xsd:decimal || `;
+          query += `               ${varName} = "${escapedValue}"^^xsd:int)\n`;
+        } else {
+          // Para valores de texto, usar a lógica original
+          query += `        ${varName} rdfs:label "${escapedValue}"@en .\n`;
+          query += `      } UNION {\n`;
+          query += `        ${varName} rdfs:label "${escapedValue}" .\n`;
+          query += `      } UNION {\n`;
+          query += `        FILTER(STR(${varName}) = "${escapedValue}")\n`;
+        }
+        
         query += `      }\n`;
       }
     }
@@ -2032,6 +2050,12 @@ export const executeDynamicGraphQuery = async (
         path
       )}, ExtraFields=${JSON.stringify(extraFields)}`
     );
+    console.log(`🔍 DEBUG Path analysis:`, {
+      pathLength: path.length,
+      pathPairs: path.length / 2,
+      isEvenPath: path.length % 2 === 0,
+      pathElements: path.map((elem, idx) => `${idx}: ${elem}`),
+    });
     console.log(`🔍 DEBUG Consulta SPARQL gerada:`, query);
 
     // Executar a consulta

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Text,
   Img,
@@ -8,13 +9,9 @@ import {
   Button,
   Slider,
   DataChart,
-  DataCards,
-  Carousel,
 } from "../../components";
 import LatinAmericaSection from "../../components/LatinAmericaSection";
-import GoogleMapComponent from "../../components/GoogleMap";
 import Header from "../../components/Header";
-import { questionFunctions } from "../../services/apiService";
 import { useLanguage } from "../../contexts/LanguageContext";
 import ExploreCards from "../../components/ExploreCards";
 import StartSection from "../../components/StartSection";
@@ -23,11 +20,7 @@ import "./HomeOne.css";
 const HomeOnePage = () => {
   const navigate = useNavigate();
   const { translations, language } = useLanguage();
-
-  const [mapData, setMapData] = useState<any[]>([]);
-  const [highlightedCountries, setHighlightedCountries] = useState<string[]>(
-    []
-  );
+  const { t } = useTranslation();
 
   const handleCardClick = (queryType: string) => {
     const params = new URLSearchParams();
@@ -37,42 +30,21 @@ const HomeOnePage = () => {
         params.append("category", "factors");
         params.append(
           "queryType",
-          encodeURIComponent(
-            "What are the CONTEXTUAL FACTORS that impact Positively/Negatively on IMPACT (IMPACT=Leadership, permanence, motivation, others)?"
-          )
+          encodeURIComponent(t("homeQueries.femaleLeadership"))
         );
         break;
       case "blackWomenBrazil":
         params.append("category", "initiatives");
         params.append(
           "queryType",
-          encodeURIComponent(`
-PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender where {
-  ?initiative a Ellas:Initiative.
-  ?initiative rdfs:label ?initiativeName.
-  ?initiative Ellas:focused_on ?targetAudience.
-  ?targetAudience a Ellas:Target_Audience_Race.
-  ?targetAudience rdfs:label ?targetAudienceRace.
-  ?initiative Ellas:focused_on ?targetAudienceG.
-  ?targetAudienceG a Ellas:Target_Audience_Gender.
-  ?targetAudienceG rdfs:label ?targetAudienceGender.
-  ?initiative Ellas:created_in ?country.
-  ?country rdfs:label ?countryName.
-  filter( regex(str(?targetAudienceRace), "Black") || regex(str(?targetAudienceRace), "black") )
-  filter( regex(str(?targetAudienceGender), "Feminine"))
-  filter( regex(str(?countryName), "Brazil"))
-}`)
+          encodeURIComponent(t("homeQueries.blackWomenBrazil"))
         );
         break;
       case "genderEquality":
         params.append("category", "policies");
         params.append(
           "queryType",
-          encodeURIComponent(
-            "What types of gender policies/processes/practices exist in Latin America?"
-          )
+          encodeURIComponent(t("homeQueries.genderEquality"))
         );
         break;
     }
@@ -158,19 +130,22 @@ select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender wh
     featuredCardsData[language as keyof typeof featuredCardsData] ||
     featuredCardsData.pt;
 
-  const percentages = [
-    { range: "01-25%", color: "bg-red-300" },
-    { range: "26-50%", color: "bg-red-400" },
-    { range: "51-75%", color: "bg-red-500" },
-    { range: "76-100%", color: "bg-red-600" },
-    { range: translations?.filters?.noData || "No data", color: "bg-gray-300" },
-  ];
+  // Unused variables commented out to remove warnings
+  // const percentages = [
+  //   { range: "01-25%", color: "bg-red-300" },
+  //   { range: "26-50%", color: "bg-red-400" },
+  //   { range: "51-75%", color: "bg-red-500" },
+  //   { range: "76-100%", color: "bg-red-600" },
+  //   { range: translations?.filters?.noData || "No data", color: "bg-gray-300" },
+  // ];
 
-  const handleAboutClick = () => {
-    window.location.href = "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/";
-  };
+  // const handleAboutClick = () => {
+  //   window.location.href = "https://ellas.ufmt.br/pt/sobre-nos/o-projeto/";
+  // };
 
   useEffect(() => {
+    // Map data fetch commented out as variables are not used
+    /*
     const fetchData = async () => {
       const fetchFunction =
         questionFunctions["What data source are used for initiative?"];
@@ -186,14 +161,14 @@ select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender wh
               })
             );
 
-            setMapData(formattedData);
+            // setMapData(formattedData);
             const countries = formattedData
               .map((item) => item.country)
               .filter(
                 (country) =>
                   typeof country === "string" && country.trim() !== ""
               );
-            setHighlightedCountries(countries);
+            // setHighlightedCountries(countries);
           }
         } catch (error) {
           console.error("Error fetching map data:", error);
@@ -202,6 +177,7 @@ select ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender wh
     };
 
     fetchData();
+    */
   }, []);
 
   return (

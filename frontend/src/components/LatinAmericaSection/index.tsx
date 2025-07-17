@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import {
   countryPercentages,
-  getCountryPattern,
   southAmericaCountries,
-  mapConfig,
 } from "../../data/southAmericaData";
 import MapWithNoSSR from "./MapWithNoSSR";
 import "./styles.css";
@@ -56,64 +54,17 @@ const LatinAmericaSection: React.FC = () => {
     navigate("/buscaone");
   };
 
-  const getCountryStyle = (feature: any) => {
-    const percentage = feature.properties.percentage;
-    const pattern = getCountryPattern(percentage);
-
-    return {
-      fillColor: "transparent",
-      weight: 1.5,
-      opacity: 1,
-      color: "#fff",
-      fillOpacity: 1,
-      className: pattern,
-    };
-  };
-
-  const onEachFeature = (feature: any, layer: any) => {
-    if (feature.properties) {
-      const { name, percentage } = feature.properties;
-      const countryName = translations.countries[name?.toLowerCase()] || name;
-      const percentageText = percentage !== null && percentage !== undefined
-        ? `${percentage}%`
-        : translations.filters.noData;
-
-      layer.bindPopup(`<strong>${countryName}</strong>: ${percentageText}`);
-
-      layer.on({
-        click: () => {
-          const countryId = feature.id || name;
-          if (countryId) {
-            navigate(
-              `/buscaone?category=initiatives&question=country_initiatives&country=${countryName}`
-            );
-          }
-        },
-        mouseover: (e: any) => {
-          const layer = e.target;
-          layer.setStyle({
-            weight: 2,
-            color: "#553c9a",
-          });
-          layer.bringToFront();
-        },
-        mouseout: (e: any) => {
-          const layer = e.target;
-          layer.setStyle({
-            weight: 1.5,
-            color: "#fff",
-          });
-        },
-      });
-    }
-  };
-
   return (
     <section className="latin-america-section">
       <div className="content-container">
         <div className="text-content">
-          <h2>{translations.latinAmerica.title}</h2>
-          <p>{translations.latinAmerica.description}</p>
+          <h2>
+            {translations?.latinAmerica?.title || "¡América Latina en foco!"}
+          </h2>
+          <p>
+            {translations?.latinAmerica?.description ||
+              "El portal ELLAS genera y difunde datos abiertos conectados con enfoque en países de América Latina."}
+          </p>
         </div>
         <div className="map-interaction-container">
           <div className="map-container">
@@ -137,17 +88,20 @@ const LatinAmericaSection: React.FC = () => {
               </div>
               <div className="legend-item">
                 <div className="legend-color no-data"></div>
-                <span>{translations.filters.noData}</span>
+                <span>{translations?.filters?.noData || "No data"}</span>
               </div>
               <div className="legend-source">
-                {translations.source?.inep || "INEP"}
+                {translations?.source?.inep || "INEP"}
               </div>
             </div>
           </div>
           <div className="interaction-content">
-            <p>{translations.latinAmerica.interaction}</p>
+            <p>
+              {translations?.latinAmerica?.interaction ||
+                "En una infraestructura de datos abiertos es posible mapear información, visualizar datos y mejorar la colaboración entre los sectores."}
+            </p>
             <button className="learn-more-btn" onClick={handleLearnMoreClick}>
-              {translations.latinAmerica.learnMore}
+              {translations?.latinAmerica?.learnMore || "Saber más"}
             </button>
           </div>
         </div>

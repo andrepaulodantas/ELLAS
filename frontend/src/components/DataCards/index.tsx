@@ -63,25 +63,22 @@ const DataCards = () => {
 
   const categories = [
     {
-      title: translations.categories.policies,
-      description: "Políticas públicas e iniciativas para equidade de gênero",
-      icon: <PolicyIcon sx={{ fontSize: 40 }} />,
-      color: "#FF4081",
-      link: "/buscaone?category=policies&question=gender_equity_policies",
+      title: "Políticas de Igualdade de Gênero",
+      description: "Explore políticas implementadas para promover a igualdade de gênero na América Latina",
+      icon: "/images/policy-icon.svg",
+      link: "/open-data/1?category=policies&question=gender_equity_policies",
     },
     {
-      title: translations.categories.initiatives,
-      description: "Projetos e programas em andamento",
-      icon: <LightbulbIcon sx={{ fontSize: 40 }} />,
-      color: "#FFA07A",
-      link: "/buscaone?category=initiatives&question=active_initiatives",
+      title: "Iniciativas Ativas",
+      description: "Descubra iniciativas ativas que promovem a participação feminina em STEM",
+      icon: "/images/initiative-icon.svg",
+      link: "/open-data/1?category=initiatives&question=active_initiatives",
     },
     {
-      title: translations.categories.factors,
-      description: "Dados e análises sobre fatores de impacto",
-      icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
-      color: "#FF69B4",
-      link: "/buscaone?category=factors&question=impact_factors",
+      title: "Fatores de Impacto",
+      description: "Analise fatores contextuais que influenciam a participação feminina em STEM",
+      icon: "/images/factors-icon.svg",
+      link: "/open-data/1?category=factors&question=impact_factors",
     },
     {
       title: translations.categories.otherData,

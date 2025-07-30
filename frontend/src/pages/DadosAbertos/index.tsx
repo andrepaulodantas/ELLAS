@@ -8,7 +8,7 @@ import { saveAs } from "file-saver";
 import { useLanguage } from "../../contexts/LanguageContext";
 import "react-tabs/style/react-tabs.css";
 import styled from "@emotion/styled";
-import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import IconWrapper from "../../components/IconWrapper";
 
 // Styled component for question title (exactly matching BuscaTwo)
@@ -45,17 +45,19 @@ const QuestionTitle = styled(Heading)`
   }
 `;
 
-// Estilos para os ícones sociais - padronizado com BuscaOne
+// Estilos para os ícones sociais - posicionados à direita
 const SocialMediaContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-  margin-right: 20px;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  margin: 0;
+  position: static;
   z-index: 10;
+  
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `;
 
 const SocialIcon = styled.a`
@@ -114,15 +116,42 @@ const SocialIcon = styled.a`
 // Estilos para as abas superiores
 const TopTabsContainer = styled.div`
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
   background: #ffe4d9;
   border-radius: 12px 12px 0 0;
   margin: 0;
-  padding: 0;
+  padding: 8px 16px;
   width: 100%;
   min-height: 64px;
-  justify-content: space-between;
+  gap: 20px;
+  
+  .tabs-section {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .social-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px 8px;
+    
+    .tabs-section {
+      width: 100%;
+    }
+    
+    .social-section {
+      justify-content: center;
+    }
+  }
 `;
 
 const DadosAbertosPage = () => {
@@ -176,25 +205,6 @@ const DadosAbertosPage = () => {
     window.open(
       `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
         url
-      )}`,
-      "_blank"
-    );
-  };
-
-  const openInstagram = () => {
-    window.open("https://www.instagram.com/ellas.network/", "_blank");
-  };
-
-  const openLinkedin = () => {
-    window.open("https://www.linkedin.com/company/ellasnetwork/", "_blank");
-  };
-
-  const shareOnWhatsapp = () => {
-    const url = window.location.href;
-    const title = document.title;
-    window.open(
-      `https://api.whatsapp.com/send?text=${encodeURIComponent(
-        title + " " + url
       )}`,
       "_blank"
     );
@@ -256,59 +266,67 @@ const DadosAbertosPage = () => {
                 <div className="flex flex-col w-[70%] md:w-full">
                   {/* Tabs Section */}
                   <TopTabsContainer>
-                    <Tabs
-                      className="w-full"
-                      selectedTabClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C] bg-white-A700"
-                    >
-                      <TabList className="flex flex-row gap-4">
-                        <Tab
-                          className="p-4 flex items-center gap-2 cursor-pointer outline-none"
-                          selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
-                        >
-                          <Text as="p">Mapas</Text>
-                          <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
-                        </Tab>
-                        <Tab
-                          className="p-4 flex items-center gap-2 cursor-pointer outline-none"
-                          selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
-                        >
-                          <Text as="p">Barras</Text>
-                          <Img
-                            src="images/img_iconx18_11.svg"
-                            alt="Bars Icon"
-                          />
-                        </Tab>
-                        <Tab
-                          className="p-4 flex items-center gap-2 cursor-pointer outline-none"
-                          selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
-                        >
-                          <Text as="p">Linhas</Text>
-                          <Img
-                            src="images/img_iconx18_12.svg"
-                            alt="Lines Icon"
-                          />
-                        </Tab>
-                      </TabList>
-                    </Tabs>
+                    <div className="tabs-section">
+                      <Tabs
+                        className="w-auto"
+                        selectedTabClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C] bg-white-A700"
+                      >
+                        <TabList className="flex flex-row gap-4 w-auto flex-shrink-0 max-w-full">
+                          <Tab
+                            className="p-4 flex items-center gap-2 cursor-pointer outline-none flex-shrink-0 whitespace-nowrap"
+                            selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                          >
+                            <Text as="p">Mapas</Text>
+                            <Img src="images/img_iconx18_9.svg" alt="Map Icon" />
+                          </Tab>
+                          <Tab
+                            className="p-4 flex items-center gap-2 cursor-pointer outline-none flex-shrink-0 whitespace-nowrap"
+                            selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                          >
+                            <Text as="p">Barras</Text>
+                            <Img
+                              src="images/img_iconx18_11.svg"
+                              alt="Bars Icon"
+                            />
+                          </Tab>
+                          <Tab
+                            className="p-4 flex items-center gap-2 cursor-pointer outline-none flex-shrink-0 whitespace-nowrap"
+                            selectedClassName="!text-[#4A2B5C] border-b-2 border-[#4A2B5C]"
+                          >
+                            <Text as="p">Linhas</Text>
+                            <Img
+                              src="images/img_iconx18_12.svg"
+                              alt="Lines Icon"
+                            />
+                          </Tab>
+                        </TabList>
+                      </Tabs>
+                    </div>
 
-                    {/* Social Media Icons */}
-                    <SocialMediaContainer>
+                    {/* Social Media Icons - posicionados à direita */}
+                    <div className="social-section">
                       <SocialIcon
                         onClick={shareOnFacebook}
                         className="facebook"
+                        title="Compartilhar no Facebook"
                       >
                         <IconWrapper icon={FaFacebook} size={16} />
                       </SocialIcon>
-                      <SocialIcon onClick={shareOnTwitter} className="twitter">
+                      <SocialIcon 
+                        onClick={shareOnTwitter} 
+                        className="twitter"
+                        title="Compartilhar no Twitter"
+                      >
                         <IconWrapper icon={FaTwitter} size={16} />
                       </SocialIcon>
-                      <SocialIcon onClick={openLinkedin} className="linkedin">
+                      <SocialIcon 
+                        onClick={shareOnLinkedin} 
+                        className="linkedin"
+                        title="Compartilhar no LinkedIn"
+                      >
                         <IconWrapper icon={FaLinkedin} size={16} />
                       </SocialIcon>
-                      <SocialIcon onClick={openInstagram} className="instagram">
-                        <IconWrapper icon={FaWhatsapp} size={16} />
-                      </SocialIcon>
-                    </SocialMediaContainer>
+                    </div>
                   </TopTabsContainer>
 
                   {/* Tab Panels */}

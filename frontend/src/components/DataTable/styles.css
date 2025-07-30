@@ -181,3 +181,109 @@ td.cursor-pointer:active {
   transform: scale(0.98);
   transition: all 0.1s ease;
 }
+
+/* Estilos para links na tabela */
+.data-table td a {
+  color: #2563eb;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: -2px -4px;
+}
+
+.data-table td a:hover {
+  color: #1d4ed8;
+  background-color: #eff6ff;
+  text-decoration: underline;
+}
+
+.data-table td a:active {
+  background-color: #dbeafe;
+  transform: scale(0.98);
+}
+
+/* Garantir que links longos não quebrem o layout */
+.data-table td {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-table td a {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* Permitir quebra de linha apenas para links muito longos */
+.data-table td a.break-all {
+  white-space: normal;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+/* Estilos específicos para ícones de links */
+.data-table td a span {
+  flex-shrink: 0;
+  display: inline-block;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* Melhorar o contraste e legibilidade dos links */
+.data-table td a {
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+/* Estilos para diferentes tipos de links */
+.data-table td a[href*="facebook"] {
+  color: #1877f2;
+}
+
+.data-table td a[href*="twitter"] {
+  color: #1da1f2;
+}
+
+.data-table td a[href*="linkedin"] {
+  color: #0a66c2;
+}
+
+.data-table td a[href*="instagram"] {
+  color: #e4405f;
+}
+
+.data-table td a[href*="youtube"] {
+  color: #ff0000;
+}
+
+/* Hover states para links coloridos */
+.data-table td a[href*="facebook"]:hover {
+  color: #166fe5;
+  background-color: rgba(24, 119, 242, 0.1);
+}
+
+.data-table td a[href*="twitter"]:hover {
+  color: #1a91da;
+  background-color: rgba(29, 161, 242, 0.1);
+}
+
+.data-table td a[href*="linkedin"]:hover {
+  color: #094ea3;
+  background-color: rgba(10, 102, 194, 0.1);
+}
+
+.data-table td a[href*="instagram"]:hover {
+  color: #c13584;
+  background-color: rgba(228, 64, 95, 0.1);
+}
+
+.data-table td a[href*="youtube"]:hover {
+  color: #cc0000;
+  background-color: rgba(255, 0, 0, 0.1);
+}

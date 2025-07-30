@@ -33,7 +33,7 @@ export class DynamicQueryService {
 
       return result;
     } catch (error) {
-      console.error("❌ Erro ao executar consulta dinâmica:", error);
+      console.error("Erro ao executar consulta dinâmica:", error);
       return { results: { bindings: [] } };
     }
   }
@@ -61,7 +61,7 @@ export class DynamicQueryService {
       const query = this.buildParameterizedQuery(category, countries, filters);
       return await this.executor.executeQuery(query);
     } catch (error) {
-      console.error("❌ Erro ao executar consulta parametrizada:", error);
+      console.error("Erro ao executar consulta parametrizada:", error);
       return { results: { bindings: [] } };
     }
   }
@@ -177,7 +177,7 @@ export class DynamicQueryService {
     filters: Record<string, any> = {}
   ): Promise<string> {
     try {
-      console.log(`🔨 Construindo consulta dinâmica para ${category}:`, filters);
+      console.log(`Construindo consulta dinâmica para ${category}:`, filters);
       
       // Converter filters para format esperado pelo queryBuilder
       const countries: string[] = [];
@@ -189,7 +189,7 @@ export class DynamicQueryService {
       
       return this.queryBuilder.buildDynamicQuery(category, countries, filters);
     } catch (error) {
-      console.error(`❌ Erro ao construir consulta dinâmica:`, error);
+      console.error(`Erro ao construir consulta dinâmica:`, error);
       return "";
     }
   }
@@ -212,17 +212,17 @@ export class DynamicQueryService {
    */
   private logQueryResults(result: SPARQLResponse, category: string, path: string[]): void {
     if (result.results.bindings.length === 0) {
-      console.warn("⚠️ Consulta não retornou resultados");
+      console.warn("Consulta não retornou resultados");
       return;
     }
 
     const bindingsLength = result.results.bindings.length;
-    console.log(`📊 Consulta retornou ${bindingsLength} resultados`);
+    console.log(`Consulta retornou ${bindingsLength} resultados`);
 
     // Alerta para possíveis dados de fallback
     if (bindingsLength === 44) {
-      console.warn(`🚨 ALERTA: Sempre retorna 44 resultados! Pode ser dados de fallback!`);
-      console.log(`🔍 Fonte dos dados:`, { category, path });
+      console.warn(`ALERTA: Sempre retorna 44 resultados! Pode ser dados de fallback!`);
+      console.log(`Fonte dos dados:`, { category, path });
     }
   }
 }

@@ -78,6 +78,9 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
   );
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  
+  // State for tracking selected value cards
+  const [selectedValueCards, setSelectedValueCards] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [resultLimit, setResultLimit] = useState<number>(500);
@@ -153,6 +156,34 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
     resultLimit,
     selectedTags,
   ]);
+
+  // Update preview query when any relevant state changes
+  useEffect(() => {
+    updatePreviewQuery();
+  }, [updatePreviewQuery]);
+
+  // Effect to trigger table re-render when sorting options change
+  useEffect(() => {
+    if (queryResults.length > 0) {
+      // Force table re-render with new sort parameters
+      setTableKey(Date.now().toString());
+    }
+  }, [sortBy, sortOrder, resultLimit]);
+
+  // Function to reset all selections
+  const resetSelections = () => {
+    setSelectedCategory("");
+    setSelectedSubCategory("");
+    setSelectedCountries([]);
+    setSelectedFilters({});
+    setCustomFields({});
+    setSelectedGraphPath([]);
+    setSelectedValueCards(new Set()); // Clear visual selections
+    setDynamicOptions({});
+    setQueryResults([]);
+    setCurrentGraphLevel(0);
+    setPreviewQuery(null);
+  };
 
   // Função para carregar dados básicos de uma categoria
   const loadBasicCategoryData = async (category: string) => {
@@ -268,6 +299,18 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       console.log(
         `🎯 selectPropertyValue called: property='${property}', value='${value}'`
       );
+      
+      // Update selected value cards for visual feedback
+      const cardKey = `${property}-${value}`;
+      setSelectedValueCards(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(cardKey)) {
+          newSet.delete(cardKey);
+        } else {
+          newSet.add(cardKey);
+        }
+        return newSet;
+      });
 
       // Atualizar filtros selecionados
       const newFilters = {
@@ -319,11 +362,6 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       // Não definir setIsExecutingQuery(false) aqui, deixar o useEffect cuidar disso
     }
   };
-
-  // Trigger preview update whenever relevant state changes
-  useEffect(() => {
-    updatePreviewQuery();
-  }, [updatePreviewQuery]);
 
   // CORREÇÃO CRÍTICA: Sempre começar mostrando categorias raiz
   useEffect(() => {
@@ -526,8 +564,71 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
       );
     }
 
+    // Aplicar ordenação aos dados antes de renderizar
+    let sortedResults = [...queryResults];
+    
+    if (sortBy) {
+      sortedResults = sortedResults.sort((a, b) => {
+        let valueA = "";
+        let valueB = "";
+        
+        // Mapear os valores de sortBy para as chaves corretas dos dados
+        switch (sortBy) {
+          case "name":
+            valueA = formatValue(a.label) || "";
+            valueB = formatValue(b.label) || "";
+            break;
+          case "country":
+            valueA = formatValue(a.created_in) || "";
+            valueB = formatValue(b.created_in) || "";
+            break;
+          case "date":
+            // Melhor tratamento para datas
+            const dateA = formatValue(a.start_date) || "";
+            const dateB = formatValue(b.start_date) || "";
+            
+            // Tentar converter datas para números para comparação adequada
+            const yearA = parseInt(dateA.replace(/[^0-9]/g, '')) || 0;
+            const yearB = parseInt(dateB.replace(/[^0-9]/g, '')) || 0;
+            
+            if (yearA !== yearB) {
+              valueA = yearA.toString();
+              valueB = yearB.toString();
+            } else {
+              valueA = dateA;
+              valueB = dateB;
+            }
+            break;
+          case "relevance":
+            // Para relevância, ordenar por número de propriedades preenchidas
+            valueA = Object.keys(a).filter(key => a[key] && formatValue(a[key]) !== "-").length.toString();
+            valueB = Object.keys(b).filter(key => b[key] && formatValue(b[key]) !== "-").length.toString();
+            break;
+          default:
+            valueA = formatValue(a.label) || "";
+            valueB = formatValue(b.label) || "";
+        }
+        
+        // Normalizar valores para comparação
+        valueA = valueA.toLowerCase();
+        valueB = valueB.toLowerCase();
+        
+        // Aplicar ordenação
+        if (sortOrder === "asc") {
+          return valueA.localeCompare(valueB);
+        } else {
+          return valueB.localeCompare(valueA);
+        }
+      });
+    }
+
+    // Aplicar limite de resultados se definido
+    if (resultLimit && resultLimit > 0 && sortedResults.length > resultLimit) {
+      sortedResults = sortedResults.slice(0, resultLimit);
+    }
+
     console.log(
-      `DEBUG: Renderizando tabela com ${queryResults.length} resultados`
+      `DEBUG: Renderizando tabela com ${sortedResults.length} resultados`
     );
 
     // Format function for displaying values
@@ -544,12 +645,34 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
         }
       }
 
+      // Check if it's a URL
+      if (val.match(/^https?:\/\//i)) {
+        return (
+          <a
+            href={val}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={val}
+            style={{
+              color: '#007bff',
+              textDecoration: 'none',
+              wordBreak: 'break-all',
+              overflowWrap: 'break-word',
+              display: 'inline-block',
+              maxWidth: '100%'
+            }}
+          >
+            {val.length > 50 ? val.substring(0, 47) + '...' : val}
+          </a>
+        );
+      }
+
       return val;
     };
 
     // Determinar colunas dinâmicas baseadas nos dados disponíveis
     const availableFields = new Set<string>();
-    queryResults.forEach((result) => {
+    sortedResults.forEach((result) => {
       Object.keys(result).forEach((key) => {
         if (result[key] && formatValue(result[key]) !== "-") {
           availableFields.add(key);
@@ -606,7 +729,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           </div>
         )}
 
-        {selectedCategory && queryResults.length === 0 && !isExecutingQuery && (
+        {selectedCategory && sortedResults.length === 0 && !isExecutingQuery && (
           <div className="no-results-warning">
             <h3>{t("queryBuilder.navigation.noResultsFound")}</h3>
             <p>{t("queryBuilder.navigation.currentQueryNoResults")}</p>
@@ -626,14 +749,29 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
           </div>
         )}
 
-        {selectedCategory && queryResults.length > 0 && (
+        {selectedCategory && sortedResults.length > 0 && (
           <>
             <div className="results-header">
               <h3>
                 {t("queryBuilder.results.title")}
                 <span className="results-count">
-                  ({queryResults.length} {t("queryBuilder.results.records")})
+                  ({sortedResults.length} {t("queryBuilder.results.records")})
                 </span>
+                {sortBy && (
+                  <span className="sort-indicator">
+                    {" - Ordenado por "}
+                    <strong>
+                      {sortBy === "name" && "Nome"}
+                      {sortBy === "country" && "País"} 
+                      {sortBy === "date" && "Data"}
+                      {sortBy === "relevance" && "Relevância"}
+                    </strong>
+                    {" "}
+                    <span className={`sort-direction ${sortOrder}`}>
+                      {sortOrder === "asc" ? "↑" : "↓"}
+                    </span>
+                  </span>
+                )}
                 {isExecutingQuery && (
                   <span className="loading-indicator">
                     {" "}
@@ -676,7 +814,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {queryResults.map((result, index) => (
+                  {sortedResults.map((result, index) => (
                     <tr key={`${tableKey}-row-${index}`}>
                       {visibleColumns.map((col) => (
                         <td
@@ -685,7 +823,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                         >
                           {col.key === "start_date" ? (
                             <span className="date-value">
-                              📅 {formatValue(result[col.key])}
+                               {formatValue(result[col.key])}
                             </span>
                           ) : (
                             formatValue(result[col.key])
@@ -698,11 +836,17 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
               </table>
             </div>
 
-            {queryResults.length > 10 && (
+            {sortedResults.length > 10 && (
               <div className="results-footer">
                 <p>
-                  Mostrando todos os {queryResults.length} resultados
-                  encontrados.
+                  {resultLimit && resultLimit > 0 && queryResults.length > resultLimit ? (
+                    <>
+                      Mostrando {sortedResults.length} de {queryResults.length} resultados
+                      <span className="limit-indicator"> (limitado a {resultLimit})</span>
+                    </>
+                  ) : (
+                    <>Mostrando todos os {sortedResults.length} resultados encontrados.</>
+                  )}
                 </p>
                 <button
                   className="export-button"
@@ -813,25 +957,52 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                           {propertyName}:
                         </h5>
                         <div className="values-grid">
-                          {(values as GraphOption[]).map((value) => (
-                            <div
-                              key={value.value}
-                              className="value-card"
-                              onClick={async () => {
-                                await selectPropertyValue(
-                                  propertyName,
-                                  value.value
-                                );
-                              }}
-                            >
-                              <div className="value-name">{value.label}</div>
-                              {value.count && (
-                                <div className="value-count">
-                                  {value.count} itens
+                          {(values as GraphOption[]).map((value) => {
+                            const cardKey = `${propertyName}-${value.value}`;
+                            const isSelected = selectedValueCards.has(cardKey);
+                            
+                            return (
+                              <div
+                                key={value.value}
+                                className={`value-card ${isSelected ? 'value-card-selected' : ''}`}
+                                onClick={async () => {
+                                  await selectPropertyValue(
+                                    propertyName,
+                                    value.value
+                                  );
+                                }}
+                              >
+                                <div className="value-name">
+                                  {value.label && value.label.match(/^https?:\/\//i) ? (
+                                    <a
+                                      href={value.label}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      title={value.label}
+                                      onClick={(e) => e.stopPropagation()}
+                                      style={{
+                                        color: 'inherit',
+                                        textDecoration: 'none',
+                                        wordBreak: 'break-all',
+                                        overflowWrap: 'break-word',
+                                        display: 'block',
+                                        width: '100%'
+                                      }}
+                                    >
+                                      {value.label.length > 40 ? value.label.substring(0, 37) + '...' : value.label}
+                                    </a>
+                                  ) : (
+                                    value.label
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                          ))}
+                                {value.count && (
+                                  <div className="value-count">
+                                    {value.count} itens
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     );
@@ -957,7 +1128,7 @@ const QueryBuilder: React.FC<QueryBuilderProps> = ({
                 </div>
 
                 {sortBy && (
-                  <div className="sort-direction">
+                  <div className="sort-direction-controls">
                     <div className="sort-radio-group">
                       <input
                         type="radio"

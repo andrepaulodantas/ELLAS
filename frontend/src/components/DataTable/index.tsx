@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
-import {
-  executePropertyQuery,
-  processPropertyQueryResults,
-} from "../../services/apiService";
-import Modal from "../Modal";
-import PropertyResults from "../PropertyResults";
 import "./styles.css";
 
 // Define o tipo de dado para as linhas da tabela
@@ -22,12 +16,6 @@ interface SortConfig {
   direction: "asc" | "desc";
 }
 
-interface PropertyQueryResult {
-  headers: string[];
-  rows: Array<Record<string, any>>;
-  title: string;
-}
-
 const DataTable: React.FC<DataTableProps> = ({
   data,
   dynamicFields,
@@ -37,12 +25,6 @@ const DataTable: React.FC<DataTableProps> = ({
 }) => {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
-  const [propertyResults, setPropertyResults] =
-    useState<PropertyQueryResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { translations, language } = useLanguage();
 
   // Format column headers to be more user-friendly
@@ -96,21 +78,64 @@ const DataTable: React.FC<DataTableProps> = ({
 
   // Funções auxiliares
   const isValidUrl = (str: string) => {
+    if (!str || typeof str !== 'string') return false;
+    
     try {
-      new URL(str);
-      return true;
+      const url = new URL(str);
+      return url.protocol === 'http:' || url.protocol === 'https:';
     } catch {
       return false;
     }
   };
 
+  const normalizeUrl = (str: string) => {
+    if (!str || typeof str !== 'string') return str;
+    
+    // Remove espaços em branco
+    let url = str.trim();
+    
+    // Adiciona protocolo se não existir
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    
+    return url;
+  };
+
+  const truncateUrl = (url: string, maxLength: number = 50) => {
+    if (!url || typeof url !== 'string') return url;
+    
+    if (url.length <= maxLength) return url;
+    
+    const protocol = url.startsWith('https://') ? 'https://' : 'http://';
+    const domain = url.replace(protocol, '');
+    
+    if (domain.length <= maxLength - 3) {
+      return protocol + domain;
+    }
+    
+    return protocol + domain.substring(0, maxLength - 6) + '...';
+  };
+
+  const getLinkIcon = (url: string) => {
+    if (!url || typeof url !== 'string') return '🔗';
+    
+    const domain = url.toLowerCase();
+    
+    if (domain.includes('facebook.com')) return '📘';
+    if (domain.includes('twitter.com') || domain.includes('x.com')) return '🐦';
+    if (domain.includes('instagram.com')) return '📷';
+    if (domain.includes('linkedin.com')) return '💼';
+    if (domain.includes('youtube.com')) return '📺';
+    if (domain.includes('github.com')) return '💻';
+    if (domain.includes('whatsapp.com')) return '📱';
+    
+    return '🔗';
+  };
+
   const sortData = (key: string) => {
     let direction: "asc" | "desc" = "asc";
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "asc"
-    ) {
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
     }
     setSortConfig({ key, direction });
@@ -121,99 +146,6 @@ const DataTable: React.FC<DataTableProps> = ({
       ...prev,
       [field]: value,
     }));
-  };
-
-  // Função para determinar se um campo é uma propriedade clicável
-  const isClickableProperty = (field: string, value: any): boolean => {
-    if (!value || value === "N/A" || value === "") return false;
-
-    // Lista de campos que devem ser clicáveis (propriedades)
-    const clickableFields = [
-      "POLICYNAME",
-      "COUNTRYNAME",
-      "DESCRIPTION",
-      "POLICY_TYPE",
-      "INITIATIVENAME",
-      "ORGANIZATIONNAME",
-      "INITIATIVE_STATUS",
-      "INITIATIVE_FORMAT",
-      "FACTORNAME",
-      "FACTOR_TYPE",
-      "IMPACT_TYPE",
-      // Adicione mais campos conforme necessário
-    ];
-
-    return clickableFields.includes(field.toUpperCase());
-  };
-
-  // Função para lidar com clique em propriedades
-  const handlePropertyClick = async (
-    field: string,
-    value: any,
-    rowData: any
-  ) => {
-    if (!value || value === "N/A" || value === "") return;
-
-    setModalOpen(true);
-    setModalTitle(
-      `Dados relacionados: ${formatColumnHeader(field)} - ${value}`
-    );
-    setLoading(true);
-    setError(null);
-    setPropertyResults(null);
-
-    try {
-      // Converter campo para propriedade da ontologia
-      const propertyName = convertFieldToProperty(field);
-      const propertyPath = [propertyName];
-
-      console.log(
-        `Executando consulta para propriedade: ${propertyName}, valor: ${value}, categoria: ${category}`
-      );
-
-      const data = await executePropertyQuery(category, propertyPath, value);
-      const results = processPropertyQueryResults(data, category, propertyName);
-
-      setPropertyResults(results);
-    } catch (err) {
-      console.error("Erro ao executar consulta de propriedade:", err);
-      setError(err instanceof Error ? err.message : "Erro desconhecido");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Converter nomes de campos para propriedades da ontologia
-  const convertFieldToProperty = (field: string): string => {
-    const fieldToPropertyMap: { [key: string]: string } = {
-      POLICYNAME: "policy_name",
-      COUNTRYNAME: "created_in",
-      POLICY_TYPE: "policy_type",
-      INITIATIVENAME: "initiative_name",
-      INITIATIVE_STATUS: "initiative_status",
-      INITIATIVE_FORMAT: "initiative_format",
-      ORGANIZATIONNAME: "organization_name",
-      FACTORNAME: "factor_name",
-      FACTOR_TYPE: "factor_type",
-      IMPACT_TYPE: "impact_type",
-      // Adicione mais mapeamentos conforme necessário
-    };
-
-    return fieldToPropertyMap[field.toUpperCase()] || field.toLowerCase();
-  };
-
-  // Função para fechar o modal
-  const closeModal = () => {
-    setModalOpen(false);
-    setModalTitle("");
-    setPropertyResults(null);
-    setError(null);
-    setLoading(false);
-  };
-
-  // Função para retry
-  const handleRetry = () => {
-    // Implementar retry se necessário
   };
 
   // Aplicar filtros e ordenação
@@ -247,7 +179,7 @@ const DataTable: React.FC<DataTableProps> = ({
           className="overflow-y-auto"
           style={{ height: "calc(100vh - 400px)" }}
         >
-          <table className="w-full">
+          <table className="w-full data-table">
             <thead className="sticky top-0 bg-white z-10 border-b border-gray-200">
               <tr>
                 {dynamicFields.map((field) => (
@@ -298,39 +230,29 @@ const DataTable: React.FC<DataTableProps> = ({
                     {dynamicFields.map((field) => (
                       <td
                         key={`${rowIndex}-${field}`}
-                        className={`px-4 py-3 text-sm text-gray-700 border-b border-gray-200 break-words max-w-xs ${
-                          isClickableProperty(field, row[field])
-                            ? "cursor-pointer hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                            : ""
-                        }`}
-                        onClick={() =>
-                          isClickableProperty(field, row[field]) &&
-                          handlePropertyClick(field, row[field], row)
-                        }
-                        title={
-                          isClickableProperty(field, row[field])
-                            ? "Clique para ver dados relacionados"
-                            : undefined
-                        }
+                        className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200 break-words max-w-xs"
                       >
                         {isValidUrl(row[field]) ? (
                           <a
-                            href={row[field]}
+                            href={normalizeUrl(row[field])}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
+                            className="text-blue-600 hover:underline break-all"
+                            style={{
+                              maxWidth: '300px',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              wordBreak: 'break-all',
+                              overflowWrap: 'break-word'
+                            }}
+                            title={`${row[field]} - Clique para abrir em nova aba`}
                           >
-                            {row[field]}
+                            <span style={{ fontSize: '14px' }}>{getLinkIcon(row[field])}</span>
+                            {truncateUrl(row[field], 60)}
                           </a>
                         ) : (
-                          <span
-                            className={
-                              isClickableProperty(field, row[field])
-                                ? "underline-on-hover"
-                                : ""
-                            }
-                          >
+                          <span>
                             {row[field]}
                           </span>
                         )}
@@ -352,21 +274,6 @@ const DataTable: React.FC<DataTableProps> = ({
           </table>
         </div>
       </div>
-
-      {/* Modal para exibir resultados de propriedades */}
-      <Modal
-        isOpen={modalOpen}
-        onClose={closeModal}
-        title={modalTitle}
-        maxWidth="80vw"
-      >
-        <PropertyResults
-          result={propertyResults}
-          loading={loading}
-          error={error}
-          onRetry={handleRetry}
-        />
-      </Modal>
     </div>
   );
 };

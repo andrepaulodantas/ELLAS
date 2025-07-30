@@ -412,19 +412,19 @@
   border-radius: 30px;
   box-shadow: 0 5px 15px rgba(255, 107, 129, 0.5);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   animation: pulse 2s infinite;
 }
 
 .fixed-build-button-inner:hover {
   background-color: #ff5672;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(255, 107, 129, 0.7);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 16px rgba(255, 107, 129, 0.6);
 }
 
 .fixed-build-button-inner:active {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 10px rgba(255, 107, 129, 0.6);
+  transform: translateY(0px) scale(1.02);
+  box-shadow: 0 3px 8px rgba(255, 107, 129, 0.5);
 }
 
 /* Aumentar visibilidade do botão Construir Consulta dentro do QueryBuilder */

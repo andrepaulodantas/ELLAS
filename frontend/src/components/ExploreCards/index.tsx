@@ -104,7 +104,7 @@ const ExploreCards = () => {
         "Legislações e decretos que promovem a participação de mulheres nas áreas STEM",
       icon: "/images/policy-icon.svg",
       color: "#FF6B8B",
-      path: "/buscaone?category=policies",
+      path: "/open-data/1?category=policies",
     },
     {
       title: translations.categories?.initiatives || "Iniciativas",
@@ -113,7 +113,7 @@ const ExploreCards = () => {
         "Eventos, programas e outras ações para inserção e permanência de mulheres nas carreiras de tecnologia",
       icon: "/images/initiatives-icon.svg",
       color: "#FFA07A",
-      path: "/buscaone?category=initiatives",
+      path: "/open-data/1?category=initiatives",
     },
     {
       title: translations.categories?.factors || "Fatores",
@@ -122,7 +122,7 @@ const ExploreCards = () => {
         "Dados coletados pela equipe ELLAS para identificar fatores que afetam a presença de mulheres em STEM na América do Sul",
       icon: "/images/factors-icon.svg",
       color: "#E57FB3",
-      path: "/buscaone?category=factors",
+      path: "/open-data/1?category=factors",
     },
     {
       title: translations.categories?.otherData || "Outros Dados",
@@ -131,7 +131,7 @@ const ExploreCards = () => {
         "Dados secundários de outras bases de dados associadas ao projeto ELLAS",
       icon: "/images/other-data-icon.svg",
       color: "#B19CD9",
-      path: "/buscaone?category=otherData",
+      path: "/open-data/1?category=otherData",
     },
   ];
 

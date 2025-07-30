@@ -42,36 +42,56 @@ const QuestionTitle = styled(Heading)`
 const TopTabsContainer = styled.div`
   position: relative;
   display: flex;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   background: #ffe4d9;
   border-radius: 12px 12px 0 0;
   margin: 0;
-  padding: 0;
+  padding: 8px 16px;
   width: 100%;
   min-height: 64px;
-  flex-direction: row;
+  
+  .tabs-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .social-section {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    min-width: 150px;
+    justify-content: flex-end;
+  }
+  
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: center;
     min-height: unset;
     padding-bottom: 0.5rem;
+    
+    .tabs-section {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .social-section {
+      min-width: auto;
+      justify-content: center;
+    }
   }
 `;
 
 const TopTabsListWrapper = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 0;
-  transform: translateX(-50%);
-  height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   z-index: 2;
+  
   @media (max-width: 600px) {
-    position: static;
-    left: unset;
-    top: unset;
-    transform: none;
     width: 100%;
     justify-content: center;
     margin-bottom: 0.5rem;
@@ -81,7 +101,6 @@ const TopTabsListWrapper = styled.div`
 const TopTabsList = styled.div`
   display: flex;
   gap: 0;
-  margin: 0 auto;
 `;
 
 const TopTab = styled.div<{ selected?: boolean }>`
@@ -108,15 +127,15 @@ const TopTab = styled.div<{ selected?: boolean }>`
 const SocialMediaContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-  margin-left: auto;
-  margin-right: 20px;
+  margin: 0;
   position: static;
+  
   @media (max-width: 600px) {
-    margin: 0 auto;
     margin-top: 0.5rem;
-    justify-content: center;
     width: 100%;
+    justify-content: center;
     order: 2;
   }
 `;
@@ -722,7 +741,7 @@ const BuscaTwoOnePage = () => {
     setSelectedStatusFilter(null);
 
     // Clear URL params on reset
-    navigate("/buscatwoone", { replace: true });
+    navigate("/open-data/3", { replace: true });
   };
 
   const handleTimeChange = (option: SelectOption | null) => {
@@ -980,140 +999,90 @@ const BuscaTwoOnePage = () => {
               </DadosAbertosHeader>
 
               <TopTabsContainer>
-                <TopTabsListWrapper>
-                  <TopTabsList>
-                    <TopTab onClick={handleNavigation("/buscaone")}>
-                      {translations.visualization?.map || "Mapa"}{" "}
-                      <img src="/images/img_iconx18_9.svg" alt="Map Icon" />
-                    </TopTab>
-                    <TopTab onClick={handleNavigation("/buscatwo")}>
-                      {translations.visualization?.bars || "Barras"}{" "}
-                      <img src="/images/img_iconx18_11.svg" alt="Bars Icon" />
-                    </TopTab>
-                    <TopTab selected>
-                      {translations.visualization?.lines || "Linhas"}{" "}
-                      <img src="/images/img_iconx18_12.svg" alt="Lines Icon" />
-                    </TopTab>
-                  </TopTabsList>
-                </TopTabsListWrapper>
+                <div className="tabs-section">
+                  <TopTabsListWrapper>
+                    <TopTabsList>
+                      <TopTab onClick={handleNavigation("/open-data/1")}>
+                        {translations.visualization?.map || "Mapa"}{" "}
+                        <img src="/images/img_iconx18_9.svg" alt="Map Icon" />
+                      </TopTab>
+                      <TopTab onClick={handleNavigation("/open-data/2")}>
+                        {translations.visualization?.bars || "Barras"}{" "}
+                        <img src="/images/img_iconx18_11.svg" alt="Bars Icon" />
+                      </TopTab>
+                      <TopTab selected>
+                        {translations.visualization?.lines || "Linhas"}{" "}
+                        <img src="/images/img_iconx18_12.svg" alt="Lines Icon" />
+                      </TopTab>
+                    </TopTabsList>
+                  </TopTabsListWrapper>
+                </div>
 
-                <SocialMediaContainer>
-                  <SocialIcon
-                    href="https://www.facebook.com/ellasac.lat"
-                    target="_blank"
-                    className="facebook"
-                    title="Facebook"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 320 512"
-                      fill="currentColor"
+                <div className="social-section">
+                  <SocialMediaContainer>
+                    {/* Redes Sociais Reais */}
+                    <SocialIcon
+                      href="https://www.facebook.com/ellasac.lat"
+                      target="_blank"
+                      className="facebook"
+                      title="Facebook"
                     >
-                      <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
-                    </svg>
-                  </SocialIcon>
-                  <SocialIcon
-                    href="https://twitter.com/ellasac_lat"
-                    target="_blank"
-                    className="twitter"
-                    title="Twitter"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 512 512"
-                      fill="currentColor"
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 320 512"
+                        fill="currentColor"
+                      >
+                        <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
+                      </svg>
+                    </SocialIcon>
+                    <SocialIcon
+                      href="https://twitter.com/ellasac_lat"
+                      target="_blank"
+                      className="twitter"
+                      title="Twitter"
                     >
-                      <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
-                    </svg>
-                  </SocialIcon>
-                  <SocialIcon
-                    href="https://www.instagram.com/ellas.network/"
-                    target="_blank"
-                    className="instagram"
-                    title="Instagram"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 448 512"
-                      fill="currentColor"
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 512 512"
+                        fill="currentColor"
+                      >
+                        <path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
+                      </svg>
+                    </SocialIcon>
+                    <SocialIcon
+                      href="https://www.instagram.com/ellas.network/"
+                      target="_blank"
+                      className="instagram"
+                      title="Instagram"
                     >
-                      <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
-                    </svg>
-                  </SocialIcon>
-                  <SocialIcon
-                    href="https://www.linkedin.com/company/ellasnetwork/"
-                    target="_blank"
-                    className="linkedin"
-                    title="LinkedIn"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 448 512"
-                      fill="currentColor"
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 448 512"
+                        fill="currentColor"
+                      >
+                        <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+                      </svg>
+                    </SocialIcon>
+                    <SocialIcon
+                      href="https://www.linkedin.com/company/ellasnetwork/"
+                      target="_blank"
+                      className="linkedin"
+                      title="LinkedIn"
                     >
-                      <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" />
-                    </svg>
-                  </SocialIcon>
-                  <SocialIcon
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      exportDataAsPDF();
-                    }}
-                    className="facebook"
-                    title={translations.download?.pdf || "Baixar PDF"}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v1.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8c0-.55.45-1 1-1H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2c-.28 0-.5-.22-.5-.5v-5c0-.28.22-.5.5-.5h2c.83 0 1.5.67 1.5 1.5v3zm4-3.75c0 .41-.34.75-.75.75H19v1h.75c.41 0 .75.34.75.75s-.34.75-.75.75H19v1.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8c0-.55.45-1 1-1h1.25c.41 0 .75.34.75.75zM9 9.5h1v-1H9v1zM3 6c-.55 0-1 .45-1 1v13c0 1.1.9 2 2 2h13c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1-.45-1-1V7c0-.55-.45-1-1-1zm11 5.5h1v-3h-1v3z" />
-                    </svg>
-                  </SocialIcon>
-                  <SocialIcon
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      exportTableDataToCSV(filteredData, dynamicFields);
-                    }}
-                    className="twitter"
-                    title={translations.download?.csv || "Baixar CSV"}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zm1 5.5v-2h-4v2h4zm-4 1v2h4v-2h-4z" />
-                      <path d="M5 13h3v-3H5v3zm0 4h3v-3H5v3zm4-4h3v-3H9v3z" />
-                    </svg>
-                  </SocialIcon>
-                  <SocialIcon
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      exportTableAsPNG();
-                    }}
-                    className="instagram"
-                    title={translations.download?.image || "Baixar Imagem"}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-                    </svg>
-                  </SocialIcon>
-                </SocialMediaContainer>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 448 512"
+                        fill="currentColor"
+                      >
+                        <path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" />
+                      </svg>
+                    </SocialIcon>
+                  </SocialMediaContainer>
+                </div>
               </TopTabsContainer>
 
               {/* Main Content Section */}

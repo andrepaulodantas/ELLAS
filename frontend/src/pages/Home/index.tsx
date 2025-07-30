@@ -41,7 +41,7 @@ const Home = () => {
         break;
     }
 
-    navigate(`/buscaone?${params.toString()}`);
+    navigate(`/open-data/1?${params.toString()}`);
   };
 
   return (

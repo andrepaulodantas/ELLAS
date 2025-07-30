@@ -40,7 +40,7 @@ const FeaturedQuestions: React.FC<FeaturedQuestionsProps> = ({ className = '' })
     const params = new URLSearchParams();
     params.append('category', category);
     params.append('queryType', encodeURIComponent(question));
-    navigate(`/buscaone?${params.toString()}`);
+    navigate(`/open-data/1?${params.toString()}`);
   };
 
   return (

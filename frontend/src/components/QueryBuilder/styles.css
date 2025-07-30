@@ -1062,6 +1062,31 @@
   border-bottom: 1px solid #f8f9fa;
   vertical-align: top;
   line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 300px;
+}
+
+/* URL formatting styles */
+.results-table td a {
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.results-table td a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* Long text handling */
+.results-table td {
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .results-table tbody tr:hover {
@@ -1081,11 +1106,13 @@
   font-weight: 500;
   color: #2c3e50;
   max-width: 200px;
+  min-width: 150px;
 }
 
 .col-description,
 .col-objective {
   max-width: 300px;
+  min-width: 200px;
   color: #6c757d;
   font-size: 13px;
   line-height: 1.3;
@@ -1094,11 +1121,13 @@
 .col-start_date {
   white-space: nowrap;
   color: #495057;
+  min-width: 100px;
 }
 
 .col-created_in {
   font-weight: 500;
   color: #0056b3;
+  min-width: 120px;
 }
 
 .col-policy_type,
@@ -1110,6 +1139,7 @@
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  min-width: 100px;
 }
 
 .results-footer {
@@ -1504,6 +1534,24 @@
   text-align: center;
 }
 
+/* Selected state for value cards */
+.value-card-selected {
+  background: #ffe4d9 !important;
+  border-color: #e6a17a !important;
+  box-shadow: 0 2px 8px rgba(230, 161, 122, 0.3) !important;
+  transform: translateY(-1px);
+}
+
+.value-card-selected .value-name {
+  color: #b8621b !important;
+  font-weight: 600 !important;
+}
+
+.value-card-selected .value-count {
+  color: #8b4513 !important;
+  font-weight: 500 !important;
+}
+
 .value-card:hover {
   border-color: #28a745;
   background: #e8f5e8;
@@ -1511,11 +1559,36 @@
   transform: translateY(-1px);
 }
 
+/* Override hover when selected */
+.value-card-selected:hover {
+  background: #ffe4d9 !important;
+  border-color: #e6a17a !important;
+  box-shadow: 0 4px 12px rgba(230, 161, 122, 0.4) !important;
+  transform: translateY(-2px);
+}
+
 .value-name {
   font-weight: 500;
-  color: #28a745;
-  font-size: 13px;
-  margin-bottom: 3px;
+  color: #2c3e50;
+  margin-bottom: 4px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+}
+
+.value-name a {
+  color: inherit;
+  text-decoration: none;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  display: block;
+  width: 100%;
+  font-size: 0.9em;
+}
+
+.value-name a:hover {
+  text-decoration: underline;
+  color: #007bff;
 }
 
 .value-count {
@@ -1569,4 +1642,98 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Indicador de ordenação */
+.sort-indicator {
+  font-size: 0.9em;
+  color: #666;
+  margin-left: 8px;
+}
+
+.sort-indicator strong {
+  color: #e6a17a;
+  font-weight: 600;
+}
+
+.sort-direction {
+  font-size: 1.2em;
+  margin-left: 4px;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.sort-direction.asc {
+  color: #28a745;
+}
+
+.sort-direction.desc {
+  color: #dc3545;
+}
+
+/* Melhorar os controles de ordenação */
+.sort-controls {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
+.sort-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.sort-select {
+  min-width: 160px;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: white;
+  color: #495057;
+  font-size: 14px;
+}
+
+.sort-select:focus {
+  border-color: #e6a17a;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(230, 161, 122, 0.25);
+}
+
+.sort-direction-controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 5px;
+}
+
+.sort-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sort-radio-group input[type="radio"] {
+  margin: 0;
+  accent-color: #e6a17a;
+}
+
+.sort-radio-group label {
+  margin: 0;
+  color: #495057;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Indicador de limite de resultados */
+.limit-indicator {
+  color: #dc3545;
+  font-weight: 500;
+  font-size: 0.9em;
 }

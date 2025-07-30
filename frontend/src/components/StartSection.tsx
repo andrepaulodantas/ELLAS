@@ -133,7 +133,7 @@ const StartSection: React.FC = () => {
     }
     
     // Navigate to search page with parameters
-    navigate(`/buscaone?${params.toString()}`);
+    navigate(`/open-data/1?${params.toString()}`);
   };
 
   return (
@@ -149,7 +149,7 @@ const StartSection: React.FC = () => {
               className="card"
               onClick={() =>
                 navigate(
-                  `/buscaone?category=${item.apiCategory}&queryType=${encodeURIComponent(
+                  `/open-data/1?category=${item.apiCategory}&queryType=${encodeURIComponent(
                     item.question
                   )}&questionTitle=${encodeURIComponent(item.question)}`
                 )

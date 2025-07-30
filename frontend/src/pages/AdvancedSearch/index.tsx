@@ -143,7 +143,7 @@ const AdvancedSearchPage: React.FC = () => {
           "Navegando para BuscaOne com parâmetros:",
           params.toString()
         );
-        navigate(`/buscaone?${params.toString()}`);
+        navigate(`/open-data/1?${params.toString()}`);
         setIsSubmitting(false);
       }, 800);
     } catch (error) {
@@ -233,16 +233,9 @@ const AdvancedSearchPage: React.FC = () => {
         {/* Botão de Construir Consulta fixo na parte inferior */}
         <div className="fixed-build-button">
           <button
-            onClick={() => {
-              // Simular o clique no botão "Construir Consulta" dentro do QueryBuilder
-              const buildButton = document.querySelector(
-                ".advanced-search-content button.build-query-button"
-              ) as HTMLButtonElement;
-              if (buildButton) {
-                buildButton.click();
-              }
-            }}
+            onClick={() => setShowGuide(true)}
             className="fixed-build-button-inner"
+            title={t("advancedSearch.helpButton")}
           >
             {t("advancedSearch.buildQuery")} ➔
           </button>

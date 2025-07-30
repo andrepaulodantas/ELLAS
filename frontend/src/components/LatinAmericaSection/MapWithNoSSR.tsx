@@ -123,10 +123,10 @@ const MapWithNoSSR: React.FC<MapWithNoSSRProps> = ({ geoJsonData }) => {
                 params.append('country', countryName);
               }
               
-              navigate(`/buscaone?${params.toString()}`);
+              navigate(`/open-data/1?${params.toString()}`);
             } else {
               // Navegação padrão para países sem dados
-              navigate('/buscaone');
+              navigate('/open-data/1');
             }
           }
         },

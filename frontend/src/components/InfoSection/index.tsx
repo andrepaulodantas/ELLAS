@@ -9,7 +9,7 @@ const InfoSection = () => {
 
   const handleSaibaMaisClick = (e) => {
     e.preventDefault();
-    navigate("/buscaone");
+    navigate("/open-data/1");
   };
 
   return (

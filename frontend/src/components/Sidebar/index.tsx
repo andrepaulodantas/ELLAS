@@ -266,7 +266,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                   {countryOptions.map((country) => (
                     <label
                       key={country.value}
-                      className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
+                      className={`flex items-center gap-2 cursor-pointer p-2 rounded transition-all duration-200 ${
+                        isCountrySelected(country.value) 
+                          ? 'bg-[#ffe4d9] border border-[#e6a17a] shadow-sm' 
+                          : 'hover:bg-gray-50 border border-transparent'
+                      }`}
                     >
                       <input
                         type="checkbox"
@@ -322,7 +326,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {yearOptions.map((year) => (
                       <label
                         key={year}
-                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
+                        className={`flex items-center gap-2 cursor-pointer p-2 rounded transition-all duration-200 ${
+                          selectedYears.includes(year) 
+                            ? 'bg-[#ffe4d9] border border-[#e6a17a] shadow-sm' 
+                            : 'hover:bg-gray-50 border border-transparent'
+                        }`}
                       >
                         <input
                           type="checkbox"
@@ -375,7 +383,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                     {statusOptions.map((status) => (
                       <label
                         key={status.value}
-                        className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-1 rounded"
+                        className={`flex items-center gap-2 cursor-pointer p-2 rounded transition-all duration-200 ${
+                          selectedStatuses.includes(status.value) 
+                            ? 'bg-[#ffe4d9] border border-[#e6a17a] shadow-sm' 
+                            : 'hover:bg-gray-50 border border-transparent'
+                        }`}
                       >
                         <input
                           type="checkbox"

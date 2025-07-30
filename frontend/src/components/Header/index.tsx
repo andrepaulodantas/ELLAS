@@ -369,7 +369,7 @@ const CategorySelect = styled(Box)`
   min-width: 200px;
   margin: 0 8px;
 
-  select {
+      select {
     width: 100%;
     padding: 12px 16px;
     border: none;
@@ -671,7 +671,7 @@ const Header = () => {
     },
     {
       label: translations.navigation.openData,
-      path: "/buscaone",
+      path: "/open-data/1",
     },
     {
       label: translations.navigation.supportELLAS,
@@ -727,7 +727,7 @@ const Header = () => {
       params.append("queryType", encodeURIComponent(selectedQuestion));
     }
 
-    navigate(`/buscaone?${params.toString()}`);
+    navigate(`/open-data/1?${params.toString()}`);
   };
 
   // Função para obter o texto do placeholder de acordo com o idioma
@@ -768,7 +768,7 @@ const Header = () => {
                 aria-label="open drawer"
                 edge="start"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                sx={{ color: "#4A2B4E" }}
+                sx={{ color: "#4a2b4e" }}
               >
                 <MenuIcon />
               </IconButton>
@@ -894,7 +894,7 @@ const Header = () => {
                   variant="h3"
                   component="h1"
                   sx={{
-                    color: "#4A2B4E",
+                    color: "#4a2b4e",
                     fontWeight: 600,
                     mb: 3,
                     lineHeight: 1.3,
@@ -927,7 +927,7 @@ const Header = () => {
                         width: "100%",
                       }}
                     >
-                      <IconButton size="medium" sx={{ color: "#4A2B4E", p: 1 }}>
+                      <IconButton size="medium" sx={{ color: "#4a2b4e", p: 1 }}>
                         <CategoryIcon sx={{ fontSize: 22 }} />
                       </IconButton>
                       <CategorySelect sx={{ width: "100%" }}>
@@ -1005,7 +1005,7 @@ const Header = () => {
                           className="dropdown-text"
                           sx={{
                             color: selectedQuestion
-                              ? "#4A2B4E"
+                              ? "#4a2b4e"
                               : "rgba(0, 0, 0, 0.6)",
                             fontWeight: selectedQuestion ? 500 : 400,
                             fontSize: { xs: "14px", sm: "16px" },

@@ -84,7 +84,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   }, []);
 
   const handleViewAllData = () => {
-    navigate("/buscaone?category=initiatives&question=all_initiatives");
+    navigate("/open-data/1?category=initiatives&question=all_initiatives");
   };
 
   // Parse country data - to handle cases where multiple countries are listed in one field
@@ -112,7 +112,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   const handleCountryClick = (country: string) => {
     navigate(
-      `/buscaone?category=initiatives&question=country_initiatives&country=${country}`
+      `/open-data/1?category=initiatives&question=country_initiatives&country=${country}`
     );
   };
 

@@ -257,13 +257,13 @@ const SparqlEditor: React.FC<SparqlEditorProps> = ({
             onClick={() => setShowTemplates(!showTemplates)}
             className="template-button"
           >
-            📋 Templates
+            Templates
           </button>
           <button onClick={formatQuery} className="format-button">
-            🎨 Formatar
+            Formatar
           </button>
           <button onClick={clearQuery} className="clear-button">
-            🗑️ Limpar
+            Limpar
           </button>
         </div>
       </div>
@@ -342,7 +342,7 @@ LIMIT 10"
               disabled={isExecuting || !query.trim()}
               className="execute-button"
             >
-              {isExecuting ? "Executando..." : "▶️ Executar Consulta"}
+              {isExecuting ? "Executando..." : "▶Executar Consulta"}
             </button>
 
             {query.trim() && (

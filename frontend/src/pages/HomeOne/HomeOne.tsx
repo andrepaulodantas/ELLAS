@@ -49,7 +49,7 @@ const HomeOnePage = () => {
         break;
     }
 
-    navigate(`/buscaone?${params.toString()}`);
+    navigate(`/open-data/1?${params.toString()}`);
   };
 
   // Definindo textos dos cards destacados baseados no idioma

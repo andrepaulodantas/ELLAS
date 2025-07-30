@@ -51,7 +51,7 @@ const LatinAmericaSection: React.FC = () => {
   }, []);
 
   const handleLearnMoreClick = () => {
-    navigate("/buscaone");
+    navigate("/open-data/1");
   };
 
   return (

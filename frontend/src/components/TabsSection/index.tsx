@@ -18,9 +18,9 @@ const TabsSection: React.FC<TabsSectionProps> = ({
   const location = useLocation();
 
   const tabs = [
-    { path: "/buscaone", label: "Map", icon: "images/img_iconx18_9.svg" },
-    { path: "/buscatwo", label: "Bars", icon: "images/img_iconx18_11.svg" },
-    { path: "/buscatwoone", label: "Lines", icon: "images/img_iconx18_12.svg" },
+    { path: "/open-data/1", label: "Map", icon: "images/img_iconx18_9.svg" },
+    { path: "/open-data/2", label: "Bars", icon: "images/img_iconx18_11.svg" },
+    { path: "/open-data/3", label: "Lines", icon: "images/img_iconx18_12.svg" },
   ];
 
   const getTabClass = (tab: string) => {

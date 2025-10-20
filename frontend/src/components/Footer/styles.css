@@ -292,4 +292,44 @@
   .institution-logo {
     height: 2.25rem;
   }
+
+  .powered-by-container {
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+
+  .graphwise-logo {
+    height: 2rem;
+  }
+}
+
+/* Estilos para Powered by */
+.powered-by-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0 1rem 0;
+  gap: 0.5rem;
+}
+
+.powered-by-text {
+  font-size: 0.875rem;
+  color: #cccccc;
+  margin: 0;
+  font-weight: 300;
+}
+
+.graphwise-logo-link {
+  display: inline-block;
+  transition: opacity 0.3s ease;
+}
+
+.graphwise-logo-link:hover {
+  opacity: 0.8;
+}
+
+.graphwise-logo {
+  height: 2.5rem;
+  width: auto;
+  display: block;
 }

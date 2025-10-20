@@ -276,6 +276,23 @@ const Footer = () => {
                 </a>
               </div>
 
+              {/* Powered by Section */}
+              <div className="powered-by-container">
+                <p className="powered-by-text">Powered by</p>
+                <a
+                  href="https://graphwise.ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="graphwise-logo-link"
+                >
+                  <img
+                    src="/images/graphwise-logo-white.png"
+                    alt="GraphWise"
+                    className="graphwise-logo"
+                  />
+                </a>
+              </div>
+
               <div className="copyright-container">
                 <p className="copyright-text">
                   {translations?.footer?.rights || "All rights reserved"}

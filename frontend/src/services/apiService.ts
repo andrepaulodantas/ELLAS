@@ -143,7 +143,7 @@ const fetchQuery = async (query: string) => {
 export const testSparqlConnection = async () => {
   const testQuery = `
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    SELECT ?type (COUNT(?s) as ?count)
+    SELECT DISTINCT ?type (COUNT(?s) as ?count)
     WHERE { 
       ?s rdf:type ?type 
     }
@@ -203,7 +203,7 @@ const buildPolicyPropertyQuery = (
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     
-    SELECT ?policyName ?propertyValue ?countryName
+    SELECT DISTINCT ?policyName ?propertyValue ?countryName
     WHERE {
       ?policy rdf:type Ellas:Policy .
       ?policy rdfs:label ?policyName .
@@ -255,7 +255,7 @@ const buildInitiativePropertyQuery = (
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     
-    SELECT ?initiativeName ?propertyValue ?countryName
+    SELECT DISTINCT ?initiativeName ?propertyValue ?countryName
     WHERE {
       ?initiative rdf:type Ellas:Initiative .
       ?initiative rdfs:label ?initiativeName .
@@ -309,7 +309,7 @@ const buildFactorPropertyQuery = (
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     
-    SELECT ?factorName ?propertyValue ?countryName
+    SELECT DISTINCT ?factorName ?propertyValue ?countryName
     WHERE {
       ?factor rdf:type Ellas:Factor .
       ?contextualFactor rdfs:subClassOf ?factor .
@@ -450,7 +450,7 @@ export const fetchPoliciesAppliedInCountries = async () => {
   const query = `
   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    select ?policyName ?countryName where {
+    select DISTINCT ?policyName ?countryName where {
       ?policy a Ellas:Policy.
       ?policy rdfs:label ?policyName.
       ?policy Ellas:created_in ?country.
@@ -464,7 +464,7 @@ export const fetchPolicyTypesInLatinAmerica = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      select  ?policyName ?countryName ?policyType where {
+      select DISTINCT ?policyName ?countryName ?policyType where {
       ?policy a Ellas:Policy.
       ?policy rdfs:label ?policyName.
       ?policy Ellas:policy_type ?policyType.
@@ -479,7 +479,7 @@ export const fetchPoliciesPromotingWomenInSTEM = (query?: string) => {
   const defaultQuery = `
   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    select ?policyName ?countryName ?policyResults where {
+    select DISTINCT ?policyName ?countryName ?policyResults where {
     ?policy a Ellas:Policy.
     ?policy rdfs:label ?policyName.
     ?policy Ellas:policy_description ?policyResults.
@@ -498,7 +498,7 @@ export const fetchPoliciesImplementedInCountriesSince2015 = (
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-    select ?policyName ?countryName ?start_date where {
+    select DISTINCT ?policyName ?countryName ?start_date where {
 ?policy a Ellas:Policy.
 ?policy rdfs:label ?policyName.
 ?policy Ellas:created_in ?country.
@@ -517,7 +517,7 @@ export const fetchInitiativesByCountry = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?initiativeName ?countryName ?startDate ?status
+    SELECT DISTINCT ?initiativeName ?countryName ?startDate ?status
     WHERE {
       ?initiative a Ellas:Initiative.
       ?initiative rdfs:label ?initiativeName.
@@ -536,7 +536,7 @@ export const fetchDataSourcesForInitiatives = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?initiativeName ?datasource ?countryName
+    SELECT DISTINCT ?initiativeName ?datasource ?countryName
     WHERE {
       ?initiative a Ellas:Initiative.
       ?initiative rdfs:label ?initiativeName.
@@ -559,7 +559,7 @@ export const fetchSocialNetworksForInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?link where {
+select DISTINCT ?initiativeName ?countryName ?link where {
 
 ?initiative a Ellas:Initiative.
 
@@ -581,7 +581,7 @@ export const fetchProgramInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName where {
+select DISTINCT ?initiativeName ?countryName where {
 
 ?initiative a Ellas:Program.
 
@@ -601,7 +601,7 @@ export const fetchPublicPrivateInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?sector where {
+select DISTINCT ?initiativeName ?countryName ?sector where {
 
 ?initiative a Ellas:Program.
 
@@ -623,7 +623,7 @@ export const fetchIndividualCoordinatedInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?coordinatorType where {
+select DISTINCT ?initiativeName ?countryName ?coordinatorType where {
 
 ?initiative a Ellas:Initiative.
 
@@ -647,7 +647,7 @@ export const fetchCoordinatorGenderForInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?coordinatorGender where {
+select DISTINCT ?initiativeName ?countryName ?coordinatorGender where {
 
 ?initiative a Ellas:Initiative.
 
@@ -670,7 +670,7 @@ export const fetchInitiativeObjectives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?objective where {
+select DISTINCT ?initiativeName ?countryName ?objective where {
 
 ?initiative a Ellas:Initiative.
 
@@ -692,7 +692,7 @@ export const fetchInitiativeFormats = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?format where {
+select DISTINCT ?initiativeName ?countryName ?format where {
 
 ?initiative a Ellas:Initiative.
 
@@ -715,7 +715,7 @@ export const fetchInitiativesForGirlsOrAdolescents = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?targetAudienceAge where {
+select DISTINCT ?initiativeName ?countryName ?targetAudienceAge where {
 
 ?initiative a Ellas:Initiative.
 
@@ -745,7 +745,7 @@ export const fetchTargetAudienceGenderForInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?targetAudienceGender where {
+select DISTINCT ?initiativeName ?countryName ?targetAudienceGender where {
 
 ?initiative a Ellas:Initiative.
 
@@ -770,7 +770,7 @@ export const fetchInitiativesForBlackWomen = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-    SELECT ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender WHERE {
+    SELECT DISTINCT ?initiativeName ?countryName ?targetAudienceRace ?targetAudienceGender WHERE {
 ?initiative a Ellas:Initiative.
 ?initiative rdfs:label ?initiativeName.
 ?initiative Ellas:focused_on ?targetAudience.
@@ -799,7 +799,7 @@ export const fetchInitiativesByEducationalLevel = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?targetAudienceEducationalLevel where {
+select DISTINCT ?initiativeName ?countryName ?targetAudienceEducationalLevel where {
 
 ?initiative a Ellas:Initiative.
 
@@ -828,7 +828,7 @@ export const fetchInitiativesForVulnerableGroups = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?targetAudienceVulnerable where {
+select DISTINCT ?initiativeName ?countryName ?targetAudienceVulnerable where {
 
 ?initiative a Ellas:Initiative.
 
@@ -859,7 +859,7 @@ export const fetchSchoolCommunityInvolvementInInitiatives = (
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?targetAudienceStakeholders where {
+select DISTINCT ?initiativeName ?countryName ?targetAudienceStakeholders where {
 
 ?initiative a Ellas:Initiative.
 
@@ -887,7 +887,7 @@ export const fetchInitiativesByCity = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?cityName where {
+select DISTINCT ?initiativeName ?countryName ?cityName where {
 
 ?initiative a Ellas:Initiative.
 
@@ -915,7 +915,7 @@ export const fetchInitiativesByState = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?stateName where {
+select DISTINCT ?initiativeName ?countryName ?stateName where {
 
 ?initiative a Ellas:Initiative.
 
@@ -943,7 +943,7 @@ export const fetchInitiativesByArea = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?areaName where {
+select DISTINCT ?initiativeName ?countryName ?areaName where {
 
 ?initiative a Ellas:Initiative.
 
@@ -971,7 +971,7 @@ export const fetchInitiativesByRegion = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?regionName where {
+select DISTINCT ?initiativeName ?countryName ?regionName where {
 
 ?initiative a Ellas:Initiative.
 
@@ -999,7 +999,7 @@ export const fetchInitiativesByReach = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?regionName where {
+select DISTINCT ?initiativeName ?countryName ?regionName where {
 
 ?initiative a Ellas:Initiative.
 
@@ -1027,7 +1027,7 @@ export const fetchFundedInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?organizationName where {
+select DISTINCT ?initiativeName ?countryName ?organizationName where {
 
 ?initiative a Ellas:Initiative.
 
@@ -1052,7 +1052,7 @@ export const fetchInitiativeFundingSectors = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?sector where {
+select DISTINCT ?initiativeName ?countryName ?sector where {
 
 ?initiative a Ellas:Initiative.
 
@@ -1077,7 +1077,7 @@ export const fetchActiveInitiatives = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryname ?status where {
+select DISTINCT ?initiativeName ?countryname ?status where {
 
 ?initiative a Ellas:Initiative.
 
@@ -1101,7 +1101,7 @@ export const fetchInitiativesByPhase = (query?: string) => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?initiativeName ?countryName ?startDate where {
+select DISTINCT ?initiativeName ?countryName ?startDate where {
 
 ?initiative a Ellas:Initiative.
 
@@ -1127,7 +1127,7 @@ export const fetchFinishedInitiatives = (query?: string) => {
    PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-   SELECT ?initiativeName ?countryName ?finishDate 
+   SELECT DISTINCT ?initiativeName ?countryName ?finishDate 
    WHERE {
      ?initiative a Ellas:Initiative.
      ?initiative rdfs:label ?initiativeName.
@@ -1151,7 +1151,7 @@ export const fetchInitiativeWebsites = async () => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-    SELECT ?initiativeName ?countryName ?website 
+    SELECT DISTINCT ?initiativeName ?countryName ?website 
     WHERE {
       ?initiative a Ellas:Initiative.
       ?initiative rdfs:label ?initiativeName.
@@ -1177,7 +1177,7 @@ export const fetchCommunityInitiatives = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-    SELECT ?initiativeName ?countryName ?communityName 
+    SELECT DISTINCT ?initiativeName ?countryName ?communityName 
     WHERE {
       ?initiative a Ellas:Initiative.
       ?initiative rdfs:label ?initiativeName.
@@ -1202,7 +1202,7 @@ export const fetchPositiveContextualFactors = async () => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?contextualFactorName  ?countryName ?impactType where {
+select DISTINCT ?contextualFactorName  ?countryName ?impactType where {
 
 ?factor a Ellas:Factor.
 
@@ -1228,7 +1228,7 @@ export const fetchNegativeContextualFactorsInInstitution = async () => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?contextualFactorName ?impactType ?countryName ?contextType where {
+select DISTINCT ?contextualFactorName ?impactType ?countryName ?contextType where {
 
 ?factor a Ellas:Factor.
 
@@ -1258,7 +1258,7 @@ export const fetchContextualFactorsByEducationType = async () => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?contextualFactorName ?countryName ?factorName where {
+select DISTINCT ?contextualFactorName ?countryName ?factorName where {
 
 ?factor a Ellas:Factor.
 
@@ -1286,7 +1286,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-select ?contextualFactorName ?countryName ?impactType ?targetAudienceGender where {
+select DISTINCT ?contextualFactorName ?countryName ?impactType ?targetAudienceGender where {
 
 ?factor a Ellas:Factor.
 
@@ -1320,7 +1320,7 @@ export const fetchImpactsOfContextualFactor = async () => {
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     
-    SELECT ?contextualFactorName ?countryName ?impact 
+    SELECT DISTINCT ?contextualFactorName ?countryName ?impact 
     WHERE {
       ?factor a Ellas:Factor.
       ?contextualFactor rdfs:subClassOf ?factor.
@@ -1340,7 +1340,7 @@ export const fetchImpactTypesOfContextualFactors = async () => {
 
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-select ?contextualFactorName ?impactType ?countryName ?contextType where {
+select DISTINCT ?contextualFactorName ?impactType ?countryName ?contextType where {
 
 ?factor a Ellas:Factor.
 
@@ -1372,7 +1372,7 @@ export const fetchContextualFactorsImpactingSpecificImpacts = async () => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?contextualFactorName ?impactType ?impact ?countryName 
+    SELECT DISTINCT ?contextualFactorName ?impactType ?impact ?countryName 
     WHERE {
       ?factor a Ellas:Factor.
       ?contextualFactor rdfs:subClassOf ?factor.
@@ -2276,7 +2276,7 @@ export const fetchGenderEqualityMetrics = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?indicatorName ?value ?country ?year WHERE {
+    SELECT DISTINCT ?indicatorName ?value ?country ?year WHERE {
       ?indicator a Ellas:Indicator.
       ?indicator rdfs:label ?indicatorName.
       ?indicator Ellas:indicator_type "Gender Equality"@en.
@@ -2294,7 +2294,7 @@ export const fetchSTEMParticipationMetrics = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?indicatorName ?value ?country ?targetGroup WHERE {
+    SELECT DISTINCT ?indicatorName ?value ?country ?targetGroup WHERE {
       ?indicator a Ellas:Indicator.
       ?indicator rdfs:label ?indicatorName.
       ?indicator Ellas:indicator_category "STEM Participation"@en.
@@ -2312,7 +2312,7 @@ export const fetchEducationIndicators = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?indicatorName ?value ?country ?educationLevel WHERE {
+    SELECT DISTINCT ?indicatorName ?value ?country ?educationLevel WHERE {
       ?indicator a Ellas:Indicator.
       ?indicator rdfs:label ?indicatorName.
       ?indicator Ellas:indicator_category "Education"@en.
@@ -2330,7 +2330,7 @@ export const fetchLeadershipMetrics = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?indicatorName ?value ?country ?sector WHERE {
+    SELECT DISTINCT ?indicatorName ?value ?country ?sector WHERE {
       ?indicator a Ellas:Indicator.
       ?indicator rdfs:label ?indicatorName.
       ?indicator Ellas:indicator_category "Leadership"@en.
@@ -2348,7 +2348,7 @@ export const fetchProgressMetrics = (query?: string) => {
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
     
-    SELECT ?indicatorName ?baseline ?target ?current ?trend ?country WHERE {
+    SELECT DISTINCT ?indicatorName ?baseline ?target ?current ?trend ?country WHERE {
       ?indicator a Ellas:Indicator.
       ?indicator rdfs:label ?indicatorName.
       ?indicator Ellas:baseline_value ?baseline.

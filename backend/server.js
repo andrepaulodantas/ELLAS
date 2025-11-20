@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3002;
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:8080"], // Permitir ambas as portas
+    origin: true, // Permitir qualquer origem em desenvolvimento
     credentials: true, // If you need to handle cookies or authentication headers
   })
 );

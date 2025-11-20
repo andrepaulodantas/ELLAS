@@ -2,11 +2,14 @@
 
 # dependencies
 /node_modules
+node_modules/
 /.pnp
 .pnp.js
 
 # testing
 /coverage
+*.test.*
+*.spec.*
 
 # production
 /build
@@ -19,22 +22,35 @@
 .env.test.local
 .env.production.local
 
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-*.zip
-
-
-
-# Ignorar arquivos .zip
-*.zip
-
-# Ignorar a pasta node_modules
-node_modules/
-
-# Ignorar arquivos e pastas temporários
 *.log
+
+# temporary files
 *.tmp
 *.bak
+*.swp
+*~
+
+# archives
+*.zip
+*.tar
+*.gz
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Deprecated and backup files
+**/src/**/deprecated/
+**/_deprecated/
+*.backup
+*.old
+*.bkp

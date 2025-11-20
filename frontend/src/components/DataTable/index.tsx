@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { translateCountry } from "../../utils/exportUtils";
+import { translatePropertyName } from "../../utils/propertyTranslations";
 import "./styles.css";
 
 // Define o tipo de dado para as linhas da tabela
@@ -29,51 +31,9 @@ const DataTable: React.FC<DataTableProps> = ({
 
   // Format column headers to be more user-friendly
   const formatColumnHeader = (field: string): string => {
-    // Convert database field names to proper titles
-    const fieldMap: { [key: string]: string } = {
-      POLICYNAME: translations.categories.policies,
-      COUNTRYNAME: translations.filters.country,
-      START_DATE:
-        language === "pt"
-          ? "Data de Início"
-          : language === "es"
-          ? "Fecha de Inicio"
-          : "Start Date",
-      END_DATE:
-        language === "pt"
-          ? "Data de Término"
-          : language === "es"
-          ? "Fecha de Finalización"
-          : "End Date",
-      DESCRIPTION:
-        language === "pt"
-          ? "Descrição"
-          : language === "es"
-          ? "Descripción"
-          : "Description",
-      INITIATIVENAME: translations.categories.initiatives,
-      ORGANIZATIONNAME:
-        language === "pt"
-          ? "Organização"
-          : language === "es"
-          ? "Organización"
-          : "Organization",
-      FACTORNAME: translations.categories.factors,
-      // Add more mappings as needed
-    };
-
-    // If we have a specific mapping, use it
-    if (fieldMap[field]) {
-      return fieldMap[field];
-    }
-
-    // Otherwise, format the field name
-    // Convert snake_case or camelCase to Title Case with spaces
-    return field
-      .replace(/_/g, " ")
-      .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (str) => str.toUpperCase())
-      .trim();
+    if (field === 'countryName' || field === 'country') return translations.filters?.country || 'País';
+    if (field === 'initiativeName' || field === 'policyName' || field === 'factorName') return translations.properties?.label || 'Nome';
+    return translatePropertyName(field);
   };
 
   // Funções auxiliares
@@ -115,22 +75,6 @@ const DataTable: React.FC<DataTableProps> = ({
     }
     
     return protocol + domain.substring(0, maxLength - 6) + '...';
-  };
-
-  const getLinkIcon = (url: string) => {
-    if (!url || typeof url !== 'string') return '🔗';
-    
-    const domain = url.toLowerCase();
-    
-    if (domain.includes('facebook.com')) return '📘';
-    if (domain.includes('twitter.com') || domain.includes('x.com')) return '🐦';
-    if (domain.includes('instagram.com')) return '📷';
-    if (domain.includes('linkedin.com')) return '💼';
-    if (domain.includes('youtube.com')) return '📺';
-    if (domain.includes('github.com')) return '💻';
-    if (domain.includes('whatsapp.com')) return '📱';
-    
-    return '🔗';
   };
 
   const sortData = (key: string) => {
@@ -227,7 +171,15 @@ const DataTable: React.FC<DataTableProps> = ({
                       rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"
                     } hover:bg-gray-100 transition-colors`}
                   >
-                    {dynamicFields.map((field) => (
+                    {dynamicFields.map((field) => {
+                      let cellValue = row[field];
+                      
+                      // Translate country values
+                      if (field === 'countryName' || field === 'country' || field === 'created_in' || field === 'located_in' || field === 'analyzed_in') {
+                        cellValue = translateCountry(cellValue, translations);
+                      }
+
+                      return (
                       <td
                         key={`${rowIndex}-${field}`}
                         className="px-4 py-3 text-sm text-gray-700 border-b border-gray-200 break-words max-w-xs"
@@ -248,16 +200,16 @@ const DataTable: React.FC<DataTableProps> = ({
                             }}
                             title={`${row[field]} - Clique para abrir em nova aba`}
                           >
-                            <span style={{ fontSize: '14px' }}>{getLinkIcon(row[field])}</span>
                             {truncateUrl(row[field], 60)}
                           </a>
                         ) : (
                           <span>
-                            {row[field]}
+                            {cellValue}
                           </span>
                         )}
                       </td>
-                    ))}
+                    );
+                    })}
                   </tr>
                 ))
               ) : (

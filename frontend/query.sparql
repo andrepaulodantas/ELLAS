@@ -1,1 +1,0 @@
-PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?contextualFactorName ?countryName WHERE { ?factor a Ellas:Factor. ?contextualFactor rdfs:subClassOf ?factor. ?contextualFactor rdfs:label ?contextualFactorName. ?contextualFactor Ellas:analyzed_in ?country. ?country rdfs:label ?countryName. } LIMIT 5

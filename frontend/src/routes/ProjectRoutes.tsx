@@ -1,7 +1,7 @@
 // src/routes/ProjectRoutes.tsx
 import React from "react";
 import { useRoutes, Navigate } from "react-router-dom";
-import Home from "../pages/Home";
+import Home from "../pages/Home/Home";
 import Sobre from "../pages/Sobre/Sobre";
 import NotFound from "../pages/NotFound";
 import FazerLoginOne from "../pages/FazerLoginOne";
@@ -22,7 +22,6 @@ import GraphView from "../components/GraphView";
 import PrivateRoute from "../components/PrivateRoute"; // Import the PrivateRoute component
 import AdvancedSearchPage from "../pages/AdvancedSearch";
 import SparqlWorkshopPage from "../pages/SparqlWorkshop";
-import { PropertyTestComponent } from "../components";
 import DiagnosticTest from "../components/DiagnosticTest";
 
 const ProjectRoutes = () => {
@@ -74,7 +73,6 @@ const ProjectRoutes = () => {
     },
     { path: "/advanced-search", element: <AdvancedSearchPage /> },
     { path: "/sparql-workshop", element: <SparqlWorkshopPage /> },
-    { path: "/property-test", element: <PropertyTestComponent /> },
     { path: "/diagnostic-test", element: <DiagnosticTest /> },
   ]);
 

@@ -17,6 +17,7 @@ import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
 import Sidebar from "../../components/Sidebar";
 import { Bar } from "react-chartjs-2";
+import { generatePDF, organizeFields } from "../../utils/exportUtils";
 
 // Add styled component for question title (matching with BuscaOne)
 const QuestionTitle = styled(Heading)`
@@ -812,44 +813,12 @@ const BuscaTwoPage = () => {
   // Função para exportar os dados como PDF
   const exportDataAsPDF = () => {
     try {
-      import("jspdf")
-        .then(({ default: jsPDF }) => {
-          import("jspdf-autotable")
-            .then(({ default: autoTable }) => {
-              const doc = new jsPDF();
-
-              // Adicionar título
-              doc.setFontSize(18);
-              const title = selectedQuestion || "ELLAS - Dados";
-              doc.text(title, 14, 22);
-
-              // Adicionar dados em formato de tabela
-              const tableData = filteredData.map((item) => {
-                return [
-                  item.countryName || item.country || "",
-                  item.name || "",
-                  ...dynamicFields.map((field) => item[field] || ""),
-                ];
-              });
-
-              autoTable(doc, {
-                head: [["País", "Nome", ...dynamicFields]],
-                body: tableData,
-                startY: 30,
-                styles: { fontSize: 10, cellPadding: 2 },
-                headStyles: { fillColor: [74, 43, 78] },
-              });
-
-              doc.save("ellas_data.pdf");
-            })
-            .catch(() => {
-              alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
-            });
-        })
-        .catch(() => {
-          alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
-        });
+      const title = selectedQuestion || "ELLAS - Dados";
+      const fields = organizeFields(dynamicFields);
+      
+      generatePDF(filteredData, fields, title, translations);
     } catch (error) {
+      console.error("Erro ao exportar PDF:", error);
       alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
     }
   };

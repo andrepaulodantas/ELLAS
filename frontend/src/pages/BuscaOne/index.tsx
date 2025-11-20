@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 // Social media icons commented out as not currently used
 // import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 // import IconWrapper from "../../components/IconWrapper";
+import { generatePDF, organizeFields } from "../../utils/exportUtils";
 
 interface DropDownOption extends SelectOption {
   value: string;
@@ -1634,48 +1635,17 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   // Função para exportar os dados como PDF
   const exportDataAsPDF = () => {
     try {
-      import("jspdf")
-        .then(({ default: jsPDF }) => {
-          import("jspdf-autotable")
-            .then(({ default: autoTable }) => {
-              const doc = new jsPDF();
-
-              // Adicionar título
-              doc.setFontSize(18);
-              const title = selectedQuestion
-                ? typeof selectedQuestion === "string"
-                  ? selectedQuestion
-                  : selectedQuestion.label
-                : "ELLAS - Dados";
-              doc.text(title, 14, 22);
-
-              // Adicionar dados em formato de tabela (usando dados filtrados)
-              const tableData = filteredData.map((item) => {
-                return [
-                  item.countryName || item.country || "",
-                  item.name || "",
-                  ...dynamicFields.map((field) => item[field] || ""),
-                ];
-              });
-
-              autoTable(doc, {
-                head: [["País", "Nome", ...dynamicFields]],
-                body: tableData,
-                startY: 30,
-                styles: { fontSize: 10, cellPadding: 2 },
-                headStyles: { fillColor: [74, 43, 78] },
-              });
-
-              doc.save("ellas_data.pdf");
-            })
-            .catch(() => {
-              alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
-            });
-        })
-        .catch(() => {
-          alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
-        });
+      const title = selectedQuestion
+        ? typeof selectedQuestion === "string"
+          ? selectedQuestion
+          : selectedQuestion.label
+        : "ELLAS - Dados";
+      
+      const fields = organizeFields(dynamicFields);
+      
+      generatePDF(filteredData, fields, title, translations);
     } catch (error) {
+      console.error("Erro ao exportar PDF:", error);
       alert(translations.errors?.exportPDF || "Erro ao exportar PDF");
     }
   };

@@ -298,5 +298,9 @@
     "femaleLeadership": "¿Cuáles son los factores contextuales que impactan positiva o negativamente en el liderazgo femenino?",
     "blackWomenBrazil": "¿Qué iniciativas atienden a las mujeres negras?",
     "genderEquality": "¿Qué tipos de políticas/procesos/prácticas de género existen en América Latina?"
+  },
+  "surveyDownload": {
+    "title": "Descargar Datos del Survey:",
+    "loading": "Cargando datos del survey..."
   }
 }

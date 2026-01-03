@@ -18,6 +18,7 @@ import styled from "@emotion/styled";
 // import { FaFacebook, FaTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa";
 // import IconWrapper from "../../components/IconWrapper";
 import { generatePDF, organizeFields } from "../../utils/exportUtils";
+import SurveyDownload from "../../components/SurveyDownload";
 
 interface DropDownOption extends SelectOption {
   value: string;
@@ -1832,6 +1833,11 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
                   {translations.busca?.dadosAbertos || "Dados Abertos"}
                 </DadosAbertosTitle>
               </DadosAbertosHeader>
+
+              {/* Survey Data Download Section */}
+              <div style={{ width: '100%', padding: '16px 24px', background: '#f8f9fa' }}>
+                <SurveyDownload />
+              </div>
 
               <TopTabsContainer>
                 <div className="tabs-section">

@@ -26,6 +26,7 @@ import { questionQueries, timeRelatedQuestions } from "../../utils/questions";
 import DataTable from "components/DataTable";
 import Sidebar from "../../components/Sidebar";
 import { generatePDF, organizeFields } from "../../utils/exportUtils";
+import SurveyDownload from "../../components/SurveyDownload";
 
 // Add styled component for question title (matching with BuscaOne)
 const QuestionTitle = styled(Heading)`
@@ -963,6 +964,11 @@ const BuscaTwoOnePage = () => {
                   {translations.busca?.dadosAbertos || "Dados Abertos"}
                 </DadosAbertosTitle>
               </DadosAbertosHeader>
+
+              {/* Survey Data Download Section */}
+              <div style={{ width: '100%', padding: '16px 24px', background: '#f8f9fa' }}>
+                <SurveyDownload />
+              </div>
 
               <TopTabsContainer>
                 <div className="tabs-section">

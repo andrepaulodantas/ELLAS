@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-interface SurveyFile {
-  name: string;
-  size: number;
-  type: string;
-  url: string;
-}
+// Arquivos de survey estáticos - servidos diretamente pelo frontend
+const SURVEY_FILES = [
+  {
+    name: "Data_dictionary-2025-11-21.pdf",
+    size: 2.0 * 1024 * 1024, // ~2MB
+    type: "PDF",
+    url: "/survey/Data_dictionary-2025-11-21.pdf"
+  },
+  {
+    name: "surveyELLAS_2025-11-21_.csv",
+    size: 5.0 * 1024 * 1024, // ~5MB
+    type: "CSV",
+    url: "/survey/surveyELLAS_2025-11-21_.csv"
+  }
+];
 
 const DownloadContainer = styled.div`
   background: linear-gradient(135deg, #4a2b4e 0%, #6b3a6e 100%);
@@ -70,17 +79,6 @@ const DownloadButton = styled.a`
     }
   }
 
-  &.other {
-    background: #3498db;
-    color: white;
-
-    &:hover {
-      background: #2980b9;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
-    }
-  }
-
   svg {
     width: 16px;
     height: 16px;
@@ -91,12 +89,6 @@ const FileSize = styled.span`
   font-size: 11px;
   opacity: 0.8;
   margin-left: 4px;
-`;
-
-const LoadingText = styled.span`
-  color: #fff;
-  font-size: 13px;
-  opacity: 0.8;
 `;
 
 const formatFileSize = (bytes: number): string => {
@@ -144,82 +136,22 @@ const DataIcon = () => (
 );
 
 const SurveyDownload: React.FC = () => {
-  const [files, setFiles] = useState<SurveyFile[]>([]);
-  const [loading, setLoading] = useState(true);
   const { translations } = useLanguage();
 
-  // Detectar automaticamente a URL base da API
-  const getApiBaseUrl = (): string => {
-    // Se houver variável de ambiente definida, usar ela
-    if (process.env.REACT_APP_API_URL) {
-      return process.env.REACT_APP_API_URL;
-    }
-    
-    // Em produção, usar URL relativa (mesmo domínio)
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return ''; // URL relativa - a API está no mesmo domínio
-    }
-    
-    // Em desenvolvimento local
-    return 'http://localhost:3002';
-  };
-
-  const API_BASE_URL = getApiBaseUrl();
-
-  useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/survey-files`);
-        if (response.ok) {
-          const data = await response.json();
-          setFiles(data.files || []);
-        }
-      } catch (error) {
-        console.error("Error fetching survey files:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFiles();
-  }, [API_BASE_URL]);
-
-  if (loading) {
-    return (
-      <DownloadContainer>
-        <DownloadTitle>
-          <DataIcon />
-          {translations.surveyDownload?.loading || "Loading survey data..."}
-        </DownloadTitle>
-      </DownloadContainer>
-    );
-  }
-
-  if (files.length === 0) {
-    return null;
-  }
-
   const getButtonClass = (type: string): string => {
-    switch (type.toLowerCase()) {
-      case "csv":
-        return "csv";
-      case "pdf":
-        return "pdf";
-      default:
-        return "other";
-    }
+    return type.toLowerCase();
   };
 
   return (
     <DownloadContainer>
       <DownloadTitle>
         <DataIcon />
-        {translations.surveyDownload?.title || "Download Survey Data:"}
+        {translations.surveyDownload?.title || "Descargar Datos del Survey:"}
       </DownloadTitle>
-      {files.map((file, index) => (
+      {SURVEY_FILES.map((file, index) => (
         <DownloadButton
           key={index}
-          href={`${API_BASE_URL}${file.url}`}
+          href={file.url}
           download={file.name}
           target="_blank"
           rel="noopener noreferrer"
@@ -235,5 +167,3 @@ const SurveyDownload: React.FC = () => {
 };
 
 export default SurveyDownload;
-
-

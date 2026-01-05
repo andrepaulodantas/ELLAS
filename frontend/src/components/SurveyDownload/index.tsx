@@ -148,7 +148,23 @@ const SurveyDownload: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { translations } = useLanguage();
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3002";
+  // Detectar automaticamente a URL base da API
+  const getApiBaseUrl = (): string => {
+    // Se houver variável de ambiente definida, usar ela
+    if (process.env.REACT_APP_API_URL) {
+      return process.env.REACT_APP_API_URL;
+    }
+    
+    // Em produção, usar URL relativa (mesmo domínio)
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return ''; // URL relativa - a API está no mesmo domínio
+    }
+    
+    // Em desenvolvimento local
+    return 'http://localhost:3002';
+  };
+
+  const API_BASE_URL = getApiBaseUrl();
 
   useEffect(() => {
     const fetchFiles = async () => {

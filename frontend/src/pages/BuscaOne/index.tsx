@@ -1636,11 +1636,11 @@ const BuscaOne: React.FC<BuscaOneProps> = ({ onSearch }) => {
   // Função para exportar os dados como PDF
   const exportDataAsPDF = () => {
     try {
-      const title = selectedQuestion
-        ? typeof selectedQuestion === "string"
-          ? selectedQuestion
-          : selectedQuestion.label
-        : "ELLAS - Dados";
+              const title = selectedQuestion
+                ? typeof selectedQuestion === "string"
+                  ? selectedQuestion
+                  : selectedQuestion.label
+                : "ELLAS - Dados";
       
       const fields = organizeFields(dynamicFields);
       

@@ -814,7 +814,7 @@ const BuscaTwoPage = () => {
   // Função para exportar os dados como PDF
   const exportDataAsPDF = () => {
     try {
-      const title = selectedQuestion || "ELLAS - Dados";
+              const title = selectedQuestion || "ELLAS - Dados";
       const fields = organizeFields(dynamicFields);
       
       generatePDF(filteredData, fields, title, translations);

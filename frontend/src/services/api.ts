@@ -1,16 +1,17 @@
 import axios from "axios";
 
-// const BASE_URL = "http://200.17.60.189:7200/repositories/EllasV2";
-const BASE_URL = "https://app.ellas.ufmt.br/repositories/EllasV2";
+// Todas as consultas SPARQL passam pelo backend — credenciais ficam apenas no servidor
+const BACKEND_API =
+  process.env.NODE_ENV === "production"
+    ? "https://app.ellas.ufmt.br/api"
+    : "http://localhost:8082/api";
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: `${BACKEND_API}/sparql`,
   headers: {
-    "Content-Type": "application/sparql-query",
+    "Content-Type": "application/json",
     Accept: "application/sparql-results+json",
-    Authorization: "Basic " + btoa("integracao:Ellas@integration"),
   },
-  withCredentials: true,
 });
 
 export default api;

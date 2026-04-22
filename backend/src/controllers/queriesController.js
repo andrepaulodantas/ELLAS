@@ -1,8 +1,8 @@
 const axios = require('axios');
 
-const graphDBEndpoint = 'http://44.212.115.153:7200/repositories/EllasV2';
-const username = 'integracao';
-const password = 'Ellas@integration';
+const graphDBEndpoint = process.env.GRAPHDB_ENDPOINT || 'http://44.212.115.153:7200/repositories/EllasV2';
+const username = process.env.GRAPHDB_USER || 'integracao';
+const password = process.env.GRAPHDB_PASSWORD;
 
 // Function to execute SPARQL queries
 async function executeSparqlQuery(sparqlQuery) {

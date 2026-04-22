@@ -6,9 +6,18 @@ import { useLanguage } from "../../contexts/LanguageContext";
 const SURVEY_FILES = [
   {
     name: "Data_dictionary-2025-11-21.pdf",
-    size: 2.0 * 1024 * 1024, // ~2MB
+    size: 0.82 * 1024 * 1024, // ~819KB
     type: "PDF",
     url: "/survey/Data_dictionary-2025-11-21.pdf"
+  },
+  {
+    name: "data_dictionary-2026-04-21.csv",
+    size: 0.05 * 1024 * 1024, // ~50KB
+    type: "CSV",
+    url: "/survey/data_dictionary-2026-04-21.csv",
+    labelPt: "Dicionário de Dados (CSV)",
+    labelEn: "Data Dictionary (CSV)",
+    labelEs: "Diccionario de Datos (CSV)"
   },
   {
     name: "surveyELLAS_2025-11-21_.csv",
@@ -16,6 +25,18 @@ const SURVEY_FILES = [
     type: "CSV",
     url: "/survey/surveyELLAS_2025-11-21_.csv"
   }
+];
+
+// Dados brutos via backend (policies, initiatives, factors)
+const BACKEND_API =
+  process.env.NODE_ENV === "production"
+    ? "https://app.ellas.ufmt.br/api"
+    : "http://localhost:8082/api";
+
+const RAW_DATA_CATEGORIES = [
+  { key: "policies", label: "Políticas (CSV)", labelEn: "Policies (CSV)", labelEs: "Políticas (CSV)" },
+  { key: "initiatives", label: "Iniciativas (CSV)", labelEn: "Initiatives (CSV)", labelEs: "Iniciativas (CSV)" },
+  { key: "factors", label: "Fatores (CSV)", labelEn: "Factors (CSV)", labelEs: "Factores (CSV)" },
 ];
 
 const DownloadContainer = styled.div`
@@ -136,33 +157,72 @@ const DataIcon = () => (
 );
 
 const SurveyDownload: React.FC = () => {
-  const { translations } = useLanguage();
+  const { translations, language } = useLanguage();
 
   const getButtonClass = (type: string): string => {
     return type.toLowerCase();
   };
 
+  const getLangLabel = (cat: typeof RAW_DATA_CATEGORIES[0]) => {
+    if (language?.startsWith("pt")) return cat.label;
+    if (language?.startsWith("es")) return cat.labelEs;
+    return cat.labelEn;
+  };
+
+  const getFileLabel = (file: typeof SURVEY_FILES[0]) => {
+    if ((file as any).labelEn) {
+      if (language?.startsWith("pt")) return (file as any).labelPt;
+      if (language?.startsWith("es")) return (file as any).labelEs;
+      return (file as any).labelEn;
+    }
+    return file.type;
+  };
+
   return (
-    <DownloadContainer>
-      <DownloadTitle>
-        <DataIcon />
-        {translations.surveyDownload?.title || "Descargar Datos del Survey:"}
-      </DownloadTitle>
-      {SURVEY_FILES.map((file, index) => (
-        <DownloadButton
-          key={index}
-          href={file.url}
-          download={file.name}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={getButtonClass(file.type)}
-        >
-          <DownloadIcon />
-          {file.type}
-          <FileSize>({formatFileSize(file.size)})</FileSize>
-        </DownloadButton>
-      ))}
-    </DownloadContainer>
+    <>
+      {/* Documentação e survey */}
+      <DownloadContainer>
+        <DownloadTitle>
+          <DataIcon />
+          {translations.surveyDownload?.title || "Baixar Dados do Survey:"}
+        </DownloadTitle>
+        {SURVEY_FILES.map((file, index) => (
+          <DownloadButton
+            key={index}
+            href={file.url}
+            download={file.name}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={getButtonClass(file.type)}
+          >
+            <DownloadIcon />
+            {getFileLabel(file)}
+            <FileSize>({formatFileSize(file.size)})</FileSize>
+          </DownloadButton>
+        ))}
+      </DownloadContainer>
+
+      {/* Dados brutos por categoria */}
+      <DownloadContainer style={{ marginTop: 12 }}>
+        <DownloadTitle>
+          <DataIcon />
+          {translations.surveyDownload?.rawDataTitle || "Baixar Dados Brutos:"}
+        </DownloadTitle>
+        {RAW_DATA_CATEGORIES.map((cat) => (
+          <DownloadButton
+            key={cat.key}
+            href={`${BACKEND_API}/raw-data/${cat.key}`}
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            className="csv"
+          >
+            <DownloadIcon />
+            {getLangLabel(cat)}
+          </DownloadButton>
+        ))}
+      </DownloadContainer>
+    </>
   );
 };
 

@@ -67,12 +67,12 @@ cd backend
 npm install
 ```
 
-Configurar variáveis de ambiente (criar arquivo `.env`):
+Configurar variáveis de ambiente (copiar `.env.example` e preencher com suas credenciais):
 ```env
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
-NEO4J_PASSWORD=ellas2024
-JWT_SECRET=your_jwt_secret_key
+NEO4J_PASSWORD=sua_senha_aqui
+JWT_SECRET=seu_jwt_secret_aqui
 PORT=3002
 ```
 

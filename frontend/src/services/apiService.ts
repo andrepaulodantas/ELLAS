@@ -1,142 +1,59 @@
 import axios from "axios";
 import { questionQueries } from "../utils/questions";
 
-// Configuração para ambientes de desenvolvimento e produção
-const SPARQL_PATH = "/repositories/EllasV2";
-const BASE_URL =
+// Todas as queries SPARQL passam pelo backend (que mantém as credenciais do GraphDB)
+const BACKEND_API =
   process.env.NODE_ENV === "production"
-    ? "https://app.ellas.ufmt.br" + SPARQL_PATH
-    : SPARQL_PATH; // Em desenvolvimento, usa o proxy configurado em package.json
+    ? "https://app.ellas.ufmt.br/api"
+    : "http://localhost:8082/api";
+
+const SPARQL_URL = `${BACKEND_API}/sparql`;
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: SPARQL_URL,
   headers: {
-    "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Type": "application/json",
     Accept: "application/sparql-results+json",
-    // Adicionar autenticação básica que foi removida
-    Authorization: "Basic " + btoa("integracao:Ellas@integration"),
   },
-  // Adicionar credenciais para autenticação
-  withCredentials: false, // Para evitar problemas de CORS, não envie cookies com a solicitação
 });
 
 /**
- * Função atualizada para executar consultas SPARQL
- * Usa application/x-www-form-urlencoded para compatibilidade máxima
- * Com múltiplas tentativas e fallbacks
+ * Executa consultas SPARQL via proxy no backend.
+ * As credenciais do GraphDB ficam apenas no servidor — nunca no cliente.
+ * Filtra resultados para manter apenas labels em inglês, evitando triplicação
+ * causada por rdfs:label com múltiplas tags de idioma (en/pt/es).
  */
 const fetchQuery = async (query: string) => {
-  console.log("🚀 Iniciando execução de consulta SPARQL");
-  console.log(
-    "📝 Query:",
-    query.substring(0, 200) + (query.length > 200 ? "..." : "")
-  );
-
-  // Limpar e formatar a consulta
   const trimmedQuery = query.trim();
 
-  // Tentativa 1: POST com form-urlencoded (método preferido)
   try {
-    console.log("📡 Tentativa 1: POST com application/x-www-form-urlencoded");
-
-    const params = new URLSearchParams();
-    params.append("query", trimmedQuery);
-
-    const response = await axiosInstance.post("", params, {
-      timeout: 30000, // 30 segundos de timeout
-    });
-
-    console.log("✅ Sucesso na tentativa 1:", response.status);
-    console.log("📊 Dados recebidos:", response.data ? "Sim" : "Não");
-
-    return response.data;
-  } catch (error: any) {
-    console.error("❌ Tentativa 1 falhou:", error.message);
-
-    if (error.response) {
-      console.error("📋 Detalhes do erro:", {
-        status: error.response.status,
-        statusText: error.response.statusText,
-        data: error.response.data,
-        headers: error.response.headers,
-      });
-    }
-  }
-
-  // Tentativa 2: GET com query parameter
-  try {
-    console.log("📡 Tentativa 2: GET com query parameter");
-
-    const getResponse = await axios.get(
-      `${BASE_URL}?query=${encodeURIComponent(trimmedQuery)}`,
-      {
-        headers: {
-          Accept: "application/sparql-results+json",
-          Authorization: "Basic " + btoa("integracao:Ellas@integration"),
-        },
-        withCredentials: false,
-        timeout: 30000,
-      }
-    );
-
-    console.log("✅ Sucesso na tentativa 2:", getResponse.status);
-    return getResponse.data;
-  } catch (getError: any) {
-    console.error("❌ Tentativa 2 falhou:", getError.message);
-  }
-
-  // Tentativa 3: POST sem autenticação (caso o servidor aceite)
-  try {
-    console.log("📡 Tentativa 3: POST sem autenticação");
-
-    const params = new URLSearchParams();
-    params.append("query", trimmedQuery);
-
-    const response = await axios.post(BASE_URL, params, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Accept: "application/sparql-results+json",
-      },
+    const response = await axiosInstance.post("", { query: trimmedQuery }, {
       timeout: 30000,
     });
+    const data = response.data;
 
-    console.log("✅ Sucesso na tentativa 3:", response.status);
-    return response.data;
-  } catch (noAuthError: any) {
-    console.error("❌ Tentativa 3 falhou:", noAuthError.message);
+    // Remover linhas duplicadas causadas por labels em múltiplos idiomas.
+    // Mantém apenas rows onde todos os campos com xml:lang estão em "en".
+    if (data?.results?.bindings?.length > 0) {
+      data.results.bindings = data.results.bindings.filter((binding: any) => {
+        for (const key of Object.keys(binding)) {
+          const val = binding[key];
+          if (val && val["xml:lang"] && val["xml:lang"] !== "en") {
+            return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error("Falha ao executar SPARQL:", error.message);
+    return {
+      head: { vars: [] },
+      results: { bindings: [] },
+    };
   }
-
-  // Tentativa 4: POST com JSON (algumas implementações preferem)
-  try {
-    console.log("📡 Tentativa 4: POST com JSON");
-
-    const response = await axios.post(
-      BASE_URL,
-      { query: trimmedQuery },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/sparql-results+json",
-          Authorization: "Basic " + btoa("integracao:Ellas@integration"),
-        },
-        timeout: 30000,
-      }
-    );
-
-    console.log("✅ Sucesso na tentativa 4:", response.status);
-    return response.data;
-  } catch (jsonError: any) {
-    console.error("❌ Tentativa 4 falhou:", jsonError.message);
-  }
-
-  // Se todas as tentativas falharam, retornar estrutura vazia
-  console.error("💥 Todas as tentativas de conectividade falharam");
-  console.log("⚠️ Retornando estrutura vazia");
-
-  return {
-    head: { vars: [] },
-    results: { bindings: [] },
-  };
 };
 
 // Função de teste para consultas simples
@@ -450,11 +367,15 @@ export const fetchPoliciesAppliedInCountries = async () => {
   const query = `
   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    select DISTINCT ?policyName ?countryName where {
+    SELECT DISTINCT ?policyName ?countryName ?dataSource WHERE {
       ?policy a Ellas:Policy.
       ?policy rdfs:label ?policyName.
+      FILTER(LANG(?policyName) = "en")
       ?policy Ellas:created_in ?country.
-      ?country rdfs:label ?countryName.}
+      ?country rdfs:label ?countryName.
+      FILTER(LANG(?countryName) = "en")
+      OPTIONAL { ?policy Ellas:policy_source ?dataSource. }
+    }
 `;
   return await fetchQuery(query);
 };
@@ -464,12 +385,16 @@ export const fetchPolicyTypesInLatinAmerica = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      select DISTINCT ?policyName ?countryName ?policyType where {
+      SELECT DISTINCT ?policyName ?countryName ?policyType ?dataSource WHERE {
       ?policy a Ellas:Policy.
       ?policy rdfs:label ?policyName.
+      FILTER(LANG(?policyName) = "en")
       ?policy Ellas:policy_type ?policyType.
       ?policy Ellas:created_in ?country.
-      ?country rdfs:label ?countryName.}
+      ?country rdfs:label ?countryName.
+      FILTER(LANG(?countryName) = "en")
+      OPTIONAL { ?policy Ellas:policy_source ?dataSource. }
+    }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -479,12 +404,16 @@ export const fetchPoliciesPromotingWomenInSTEM = (query?: string) => {
   const defaultQuery = `
   PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    select DISTINCT ?policyName ?countryName ?policyResults where {
+    SELECT DISTINCT ?policyName ?countryName ?policyResults ?dataSource WHERE {
     ?policy a Ellas:Policy.
     ?policy rdfs:label ?policyName.
+    FILTER(LANG(?policyName) = "en")
     ?policy Ellas:policy_description ?policyResults.
     ?policy Ellas:created_in ?country.
-    ?country rdfs:label ?countryName.}
+    ?country rdfs:label ?countryName.
+    FILTER(LANG(?countryName) = "en")
+    OPTIONAL { ?policy Ellas:policy_source ?dataSource. }
+    }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -517,14 +446,17 @@ export const fetchInitiativesByCountry = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT DISTINCT ?initiativeName ?countryName ?startDate ?status
+    SELECT DISTINCT ?initiativeName ?countryName ?startDate ?status ?dataSource
     WHERE {
       ?initiative a Ellas:Initiative.
       ?initiative rdfs:label ?initiativeName.
+      FILTER(LANG(?initiativeName) = "en")
       ?initiative Ellas:created_in ?country.
       ?country rdfs:label ?countryName.
+      FILTER(LANG(?countryName) = "en")
       OPTIONAL { ?initiative Ellas:startDate ?startDate }
       OPTIONAL { ?initiative Ellas:initiative_status ?status }
+      OPTIONAL { ?initiative Ellas:initiative_data_source ?dataSource }
     }
   `;
   return fetchQuery(query || defaultQuery);
@@ -1074,22 +1006,18 @@ select DISTINCT ?initiativeName ?countryName ?sector where {
 export const fetchActiveInitiatives = (query?: string) => {
   const defaultQuery = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-select DISTINCT ?initiativeName ?countryname ?status where {
-
-?initiative a Ellas:Initiative.
-
-?initiative rdfs:label ?initiativeName.
-
-?initiative Ellas:initiative_status ?status.
-
-?initiative Ellas:created_in ?country.
-
-?country rdfs:label ?countryName.
-
-filter(?status="Active"@en) }
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT DISTINCT ?initiativeName ?countryName ?status ?dataSource WHERE {
+      ?initiative a Ellas:Initiative.
+      ?initiative rdfs:label ?initiativeName.
+      FILTER(LANG(?initiativeName) = "en")
+      ?initiative Ellas:initiative_status ?status.
+      FILTER(?status = "Active"@en)
+      ?initiative Ellas:created_in ?country.
+      ?country rdfs:label ?countryName.
+      FILTER(LANG(?countryName) = "en")
+      OPTIONAL { ?initiative Ellas:initiative_data_source ?dataSource }
+    }
   `;
   return fetchQuery(query || defaultQuery);
 };
@@ -1199,24 +1127,19 @@ export const fetchCommunityInitiatives = (query?: string) => {
 export const fetchPositiveContextualFactors = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-select DISTINCT ?contextualFactorName  ?countryName ?impactType where {
-
-?factor a Ellas:Factor.
-
-?contextualFactor rdfs:subClassOf ?factor.
-
-?contextualFactor rdfs:label ?contextualFactorName.
-
-?contextualFactor Ellas:factors_impact_type ?impactType.
-
-?contextualFactor Ellas:analyzed_in ?country.
-
-?country rdfs:label ?countryName.
-
-filter(?impactType ="Positive"@en)}
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT DISTINCT ?contextualFactorName ?countryName ?impactType ?dataSource WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      FILTER(LANG(?contextualFactorName) = "en")
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      FILTER(?impactType = "Positive"@en)
+      ?contextualFactor Ellas:analyzed_in ?country.
+      ?country rdfs:label ?countryName.
+      FILTER(LANG(?countryName) = "en")
+      OPTIONAL { ?contextualFactor Ellas:factors_source ?dataSource }
+    }
   `;
   return await fetchQuery(query);
 };
@@ -1225,28 +1148,21 @@ filter(?impactType ="Positive"@en)}
 export const fetchNegativeContextualFactorsInInstitution = async () => {
   const query = `
     PREFIX Ellas: <https://ellas.ufmt.br/Ontology/Ellas#>
-
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-select DISTINCT ?contextualFactorName ?impactType ?countryName ?contextType where {
-
-?factor a Ellas:Factor.
-
-?contextualFactor rdfs:subClassOf ?factor.
-
-?contextualFactor rdfs:label ?contextualFactorName.
-
-?contextualFactor Ellas:factors_impact_type ?impactType.
-
-?contextualFactor Ellas:analyzed_in ?country.
-
-?country rdfs:label ?countryName.
-
-?contextualFactor Ellas:factors_context_type ?contextType.
-
-filter(?impactType ="Negative"@en)
-
-filter(regex (str(?contextType),"University")) }
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    SELECT DISTINCT ?contextualFactorName ?impactType ?countryName ?contextType ?dataSource WHERE {
+      ?factor a Ellas:Factor.
+      ?contextualFactor rdfs:subClassOf ?factor.
+      ?contextualFactor rdfs:label ?contextualFactorName.
+      FILTER(LANG(?contextualFactorName) = "en")
+      ?contextualFactor Ellas:factors_impact_type ?impactType.
+      FILTER(?impactType = "Negative"@en)
+      ?contextualFactor Ellas:analyzed_in ?country.
+      ?country rdfs:label ?countryName.
+      FILTER(LANG(?countryName) = "en")
+      ?contextualFactor Ellas:factors_context_type ?contextType.
+      FILTER(REGEX(STR(?contextType), "University"))
+      OPTIONAL { ?contextualFactor Ellas:factors_source ?dataSource }
+    }
   `;
   return await fetchQuery(query);
 };

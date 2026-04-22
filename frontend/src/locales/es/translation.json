@@ -301,6 +301,7 @@
   },
   "surveyDownload": {
     "title": "Descargar Datos del Survey:",
+    "rawDataTitle": "Descargar Datos Brutos (SPARQL):",
     "loading": "Cargando datos del survey..."
   }
 }

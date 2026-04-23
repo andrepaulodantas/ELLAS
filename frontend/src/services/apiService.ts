@@ -3,9 +3,10 @@ import { questionQueries } from "../utils/questions";
 
 // Todas as queries SPARQL passam pelo backend (que mantém as credenciais do GraphDB)
 const BACKEND_API =
-  process.env.NODE_ENV === "production"
+  process.env.REACT_APP_BACKEND_URL ||
+  (process.env.NODE_ENV === "production"
     ? "https://app.ellas.ufmt.br/api"
-    : "http://localhost:8082/api";
+    : "http://localhost:8082/api");
 
 const SPARQL_URL = `${BACKEND_API}/sparql`;
 
@@ -2348,7 +2349,7 @@ const useApiService = () => {
   const getPolicies = async (query: string) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}?query=${encodeURIComponent(query)}`
+        `${SPARQL_URL}?query=${encodeURIComponent(query)}`
       );
       return response.data;
     } catch (error) {
@@ -2360,7 +2361,7 @@ const useApiService = () => {
   const getInitiatives = async (query: string) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}?query=${encodeURIComponent(query)}`
+        `${SPARQL_URL}?query=${encodeURIComponent(query)}`
       );
       return response.data;
     } catch (error) {
@@ -2372,7 +2373,7 @@ const useApiService = () => {
   const getFactors = async (query: string) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}?query=${encodeURIComponent(query)}`
+        `${SPARQL_URL}?query=${encodeURIComponent(query)}`
       );
       return response.data;
     } catch (error) {
@@ -2384,7 +2385,7 @@ const useApiService = () => {
   const getIndicators = async (query: string) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}?query=${encodeURIComponent(query)}`
+        `${SPARQL_URL}?query=${encodeURIComponent(query)}`
       );
       return response.data;
     } catch (error) {
